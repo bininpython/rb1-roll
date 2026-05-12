@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RB1 Roll — Sistema de controle de manutenção preditiva para rolos do forno de recozimento. Aperam.">
+    <title>RB1 Roll — Controle de Rolos | Aperam</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="ambient-bg"><div class="ambient-orb o1"></div><div class="ambient-orb o2"></div><div class="ambient-orb o3"></div></div>
+
+    <!-- HEADER -->
+    <header id="app-header">
+        <div class="header-inner">
+            <div class="brand">
+                <div class="brand-icon"><svg width="36" height="36" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="15" stroke="url(#bg)" stroke-width="2.5" fill="none"/><circle cx="18" cy="18" r="9" stroke="url(#bg)" stroke-width="2" fill="none" opacity=".5"/><circle cx="18" cy="18" r="3.5" fill="url(#bg)"/><defs><linearGradient id="bg" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#f97316"/><stop offset="1" stop-color="#ef4444"/></linearGradient></defs></svg></div>
+                <div><h1 class="brand-name">RB1 Roll</h1><span class="brand-sub">Linha de Recozimento · Aperam</span></div>
+            </div>
+            <div class="header-actions">
+                <div class="live-clock" id="liveClock"></div>
+                <div class="export-dropdown">
+                    <button class="btn btn-ghost" id="btnExportMenu">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Exportar ▾
+                    </button>
+                    <div class="dropdown-menu" id="exportDropdown">
+                        <button onclick="exportPDF('completo')">📄 Relatório Completo (PDF)</button>
+                        <button onclick="exportPDF('trocas')">📋 Relatório de Trocas (PDF)</button>
+                        <button onclick="exportPDF('kanban')">🎯 Relatório Kanban (PDF)</button>
+                        <button onclick="exportExcel()">📊 Planilha Completa (Excel)</button>
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="btnNovaSubstituicao">+ Nova Substituição</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main id="app-main">
+        <!-- Stats -->
+        <section class="stats-bar" id="statsBar"></section>
+
+        <!-- Furnace + Inventory -->
+        <section class="furnace-section">
+            <div class="furnace-panel">
+                <div class="panel-header">
+                    <h2>🔥 Forno de Recozimento — Visão em Corte</h2>
+                    <span class="badge badge-live"><span class="pulse-dot"></span>AO VIVO</span>
+                </div>
+                <!-- SVG Furnace Diagram -->
+                <div class="furnace-diagram-wrapper">
+                    <div class="furnace-diagram" id="furnaceDiagram"></div>
+                </div>
+                <!-- Roll detail cards -->
+                <div class="roll-cards" id="rollCards"></div>
+            </div>
+
+            <div class="inventory-panel">
+                <div class="panel-header">
+                    <h2>📦 Estoque</h2>
+                    <button class="btn btn-sm btn-outline" id="btnAddEstoque">+ Adicionar</button>
+                </div>
+                <div class="inventory-list" id="inventoryList"></div>
+                <div class="inventory-empty" id="inventoryEmpty" style="display:none;"><p>Nenhum rolo em estoque</p><span>Adicione rolos para substituição rápida</span></div>
+            </div>
+        </section>
+
+        <!-- History -->
+        <section class="history-section">
+            <div class="panel-header">
+                <h2>📊 Histórico de Substituições</h2>
+                <div class="history-filters">
+                    <select id="filterPosicao" class="select-filter"><option value="">Todas Posições</option><option value="0">Rolo 0</option><option value="1">Rolo 1</option><option value="2">Rolo 2</option><option value="3">Rolo 3</option><option value="4">Rolo 4</option></select>
+                    <select id="filterTurno" class="select-filter"><option value="">Todos Turnos</option><option value="TN">TN — Noite</option><option value="TM">TM — Manhã</option><option value="TT">TT — Tarde</option></select>
+                </div>
+            </div>
+            <div class="history-table-wrapper">
+                <table class="history-table" id="historyTable">
+                    <thead><tr><th>Data/Hora</th><th>Posição</th><th>Turno</th><th>Diâmetro</th><th>Motivo</th><th>Idade</th><th>Ações</th></tr></thead>
+                    <tbody id="historyBody"></tbody>
+                </table>
+                <div class="history-empty" id="historyEmpty" style="display:none;"><p>Nenhum registro encontrado</p></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal: Substituição -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header"><h3>Nova Substituição de Rolo</h3><button class="modal-close" id="modalClose">&times;</button></div>
+            <form id="formSubstituicao" class="modal-form">
+                <div class="form-row">
+                    <div class="form-group"><label>Posição *</label><select id="inputPosicao" required><option value="">Selecione...</option><option value="0">Rolo 0</option><option value="1">Rolo 1</option><option value="2">Rolo 2</option><option value="3">Rolo 3</option><option value="4">Rolo 4</option></select></div>
+                    <div class="form-group"><label>Turno *</label><select id="inputTurno" required><option value="">Selecione...</option><option value="TN">TN — Noite</option><option value="TM">TM — Manhã</option><option value="TT">TT — Tarde</option></select></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Diâmetro (mm) *</label><input type="number" id="inputDiametro" step="0.1" min="100" max="1000" placeholder="Ex: 320.5" required></div>
+                    <div class="form-group"><label>Data da Troca *</label><input type="datetime-local" id="inputData" required></div>
+                </div>
+                <div class="form-group">
+                    <label>Motivo da Troca *</label>
+                    <div class="motivo-chips" id="motivoChips">
+                        <button type="button" class="chip" data-motivo="Quebra">💥 Quebra</button>
+                        <button type="button" class="chip" data-motivo="Desgaste">⚙️ Desgaste</button>
+                        <button type="button" class="chip" data-motivo="Marca na chapa">📋 Marca na chapa</button>
+                        <button type="button" class="chip" data-motivo="Preventiva">🛡️ Preventiva</button>
+                        <button type="button" class="chip" data-motivo="Outro">📝 Outro</button>
+                    </div>
+                    <textarea id="inputMotivo" rows="2" placeholder="Descreva o motivo detalhado..." required></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-ghost" id="btnCancelModal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">✓ Registrar Substituição</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Estoque -->
+    <div class="modal-overlay" id="modalEstoqueOverlay">
+        <div class="modal">
+            <div class="modal-header"><h3>Adicionar Rolo ao Estoque</h3><button class="modal-close" id="modalEstoqueClose">&times;</button></div>
+            <form id="formEstoque" class="modal-form">
+                <div class="form-row">
+                    <div class="form-group"><label>Diâmetro (mm) *</label><input type="number" id="inputEstoqueDiametro" step="0.1" min="100" max="1000" placeholder="Ex: 320.5" required></div>
+                    <div class="form-group"><label>Observação</label><input type="text" id="inputEstoqueObs" placeholder="Ex: Novo, retificado..."></div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-ghost" id="btnCancelEstoque">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">✓ Adicionar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+    <script src="app.js"></script>
+    <script src="exports.js"></script>
+</body>
+</html>

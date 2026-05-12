@@ -145,26 +145,8 @@ export function removerEstoque(id: string): void {
   save(KEYS.E, estoque);
 }
 
-// ===== Demo Data =====
+// ===== Initialization =====
 export function initDemo(): void {
-  if (rolos.length || historico.length) return;
-  const n = Date.now(), d = 864e5;
-  rolos = [
-    { id: genId(), posicao: 0, data_troca: new Date(n - 2*d).toISOString(), turno: 'TM', diametro: 320.5, obs_motivo: 'Preventiva — troca programada' },
-    { id: genId(), posicao: 1, data_troca: new Date(n - 7*d).toISOString(), turno: 'TN', diametro: 315.0, obs_motivo: 'Desgaste detectado na inspeção' },
-    { id: genId(), posicao: 2, data_troca: new Date(n - 12*d).toISOString(), turno: 'TT', diametro: 310.2, obs_motivo: 'Marca na chapa — substituição urgente' },
-    { id: genId(), posicao: 3, data_troca: new Date(n - 4*d).toISOString(), turno: 'TM', diametro: 322.0, obs_motivo: 'Preventiva' },
-    { id: genId(), posicao: 4, data_troca: new Date(n - 9*d).toISOString(), turno: 'TN', diametro: 318.7, obs_motivo: 'Desgaste acumulado' }
-  ];
-  estoque = [
-    { id: genId(), diametro: 325.0, obs: 'Novo — lote 2026-A', data_entrada: new Date().toISOString() },
-    { id: genId(), diametro: 320.0, obs: 'Retificado', data_entrada: new Date().toISOString() },
-    { id: genId(), diametro: 318.5, obs: 'Novo', data_entrada: new Date().toISOString() }
-  ];
-  historico = [
-    { id: genId(), posicao: 0, data_troca: new Date(n - 20*d).toISOString(), turno: 'TN', diametro: 319.0, obs_motivo: 'Quebra — trinca superficial', idade_dias: 18, created_at: new Date(n - 2*d).toISOString() },
-    { id: genId(), posicao: 2, data_troca: new Date(n - 25*d).toISOString(), turno: 'TT', diametro: 312.5, obs_motivo: 'Desgaste excessivo', idade_dias: 13, created_at: new Date(n - 12*d).toISOString() },
-    { id: genId(), posicao: 1, data_troca: new Date(n - 15*d).toISOString(), turno: 'TM', diametro: 316.0, obs_motivo: 'Marca na chapa', idade_dias: 8, created_at: new Date(n - 7*d).toISOString() }
-  ];
-  save(KEYS.R, rolos); save(KEYS.E, estoque); save(KEYS.H, historico);
+  // O sistema agora inicia totalmente vazio ("virgem") conforme solicitado.
+  // Nenhuma carga de demonstração será injetada.
 }

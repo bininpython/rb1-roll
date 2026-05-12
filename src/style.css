@@ -109,7 +109,7 @@ body {
 .si-alert { background: var(--red-bg); color: var(--red); }
 .si-swaps { background: var(--yellow-bg); color: var(--yellow); }
 .stat-value { font-size: 1.35rem; font-weight: 800; display: block; line-height: 1.1; }
-.stat-label { font-size: .65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; }
+.stat-label { font-size: .65rem; color: #000000; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
 
 /* ===== Main Layout ===== */
 #app-main { padding-bottom: 2rem; }
@@ -202,8 +202,8 @@ body {
 .history-table-wrapper { overflow-x: auto; margin-top: .4rem; }
 .history-table { width: 100%; border-collapse: collapse; font-size: .75rem; }
 .history-table th {
-  text-align: left; padding: .5rem .65rem; font-size: .62rem; color: var(--text-muted);
-  text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid var(--border); font-weight: 600;
+  text-align: left; padding: .5rem .65rem; font-size: .62rem; color: #000000;
+  text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid var(--border); font-weight: 700;
 }
 .history-table td {
   padding: .55rem .65rem; border-bottom: 1px solid var(--border);

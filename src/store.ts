@@ -1,14 +1,14 @@
-import type { RoloRegistro, EstoqueItem, HistoricoTroca, Posicao, Turno } from './types';
+import type { Rolo, EstoqueItem, HistoricoRecord, Posicao, Turno, KanbanStatus } from './types';
 import { supabase } from './supabase';
 
-export let rolos: RoloRegistro[] = [];
+export let rolos: Rolo[] = [];
 export let estoque: EstoqueItem[] = [];
-export let historico: HistoricoTroca[] = [];
+export let historico: HistoricoRecord[] = [];
 
 // Funções Utilitárias e de Segurança
 export const genId = () => Math.random().toString(36).substring(2, 9);
 export const calcDays = (d: string) => Math.floor((Date.now() - new Date(d).getTime()) / 864e5);
-export const getStatus = (days: number | null) => { if (days === null) return 'empty'; return days <= 10 ? 'green' : days <= 15 ? 'yellow' : 'red'; };
+export const getStatus = (days: number | null): KanbanStatus => { if (days === null) return 'empty'; return days <= 10 ? 'green' : days <= 15 ? 'yellow' : 'red'; };
 export const getRolo = (p: number) => rolos.find(r => r.posicao === p);
 export const fmtDate = (d: string) => new Date(d).toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
 
@@ -51,11 +51,11 @@ export async function registrarSubstituicao(pos: Posicao, turno: Turno, estoqueI
   const age = oldRolo ? calcDays(oldRolo.data_troca) : 0;
   
   // Cria novos registros
-  const newHist: HistoricoTroca = {
+  const newHist: HistoricoRecord = {
     id: genId(), posicao: pos, data_troca: new Date(dtStr).toISOString(), turno,
     diametro: estItem.diametro, obs_motivo: motSafe, idade_dias: age, created_at: new Date().toISOString()
   };
-  const newRolo: RoloRegistro = {
+  const newRolo: Rolo = {
     id: genId(), posicao: pos, data_troca: new Date(dtStr).toISOString(),
     turno, diametro: estItem.diametro, obs_motivo: motSafe
   };

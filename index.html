@@ -5,30 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="RB1 Roll — Controle de manutenção preditiva para rolos do forno de recozimento Aperam.">
     <title>RB1 Roll — Controle de Rolos | Aperam</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="ambient-bg"><div class="ambient-orb o1"></div><div class="ambient-orb o2"></div><div class="ambient-orb o3"></div></div>
     <header id="app-header">
         <div class="header-inner">
             <div class="brand">
-                <div class="brand-icon"><svg width="36" height="36" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="15" stroke="url(#bg)" stroke-width="2.5" fill="none"/><circle cx="18" cy="18" r="9" stroke="url(#bg)" stroke-width="2" fill="none" opacity=".5"/><circle cx="18" cy="18" r="3.5" fill="url(#bg)"/><defs><linearGradient id="bg" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#f97316"/><stop offset="1" stop-color="#ef4444"/></linearGradient></defs></svg></div>
+                <svg class="brand-icon" width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="13" stroke="#2563eb" stroke-width="2.2" fill="none"/><circle cx="16" cy="16" r="7" stroke="#2563eb" stroke-width="1.5" fill="none" opacity=".4"/><circle cx="16" cy="16" r="3" fill="#2563eb"/></svg>
                 <div><h1 class="brand-name">RB1 Roll</h1><span class="brand-sub">Linha de Recozimento · Aperam</span></div>
             </div>
             <div class="header-actions">
                 <div class="live-clock" id="liveClock"></div>
-                <div class="export-dropdown">
-                    <button class="btn btn-ghost" id="btnExportMenu">↓ Exportar ▾</button>
-                    <div class="dropdown-menu" id="exportDropdown">
-                        <button id="expPdfFull">📄 Relatório Completo (PDF)</button>
-                        <button id="expPdfTrocas">📋 Relatório de Trocas (PDF)</button>
-                        <button id="expPdfKanban">🎯 Relatório Kanban (PDF)</button>
-                        <button id="expPdfMensal">📅 Relatório Mensal (PDF)</button>
-                        <button id="expExcel">📊 Planilha Completa (Excel)</button>
-                    </div>
-                </div>
                 <button class="btn btn-primary" id="btnNovaSub">+ Nova Substituição</button>
             </div>
         </div>
@@ -49,24 +35,28 @@
         </section>
         <section class="history-section">
             <div class="panel-header">
-                <h2>📊 Histórico de Substituições</h2>
+                <h2>📋 Histórico de Substituições</h2>
                 <div class="history-filters">
                     <select id="filterPos" class="select-filter"><option value="">Todas Posições</option><option value="0">Rolo 0</option><option value="1">Rolo 1</option><option value="2">Rolo 2</option><option value="3">Rolo 3</option><option value="4">Rolo 4</option></select>
                     <select id="filterTurno" class="select-filter"><option value="">Todos Turnos</option><option value="TN">TN — Noite</option><option value="TM">TM — Manhã</option><option value="TT">TT — Tarde</option></select>
                 </div>
             </div>
-            <div class="history-table-wrapper">
-                <table class="history-table"><thead><tr><th>Data/Hora</th><th>Posição</th><th>Turno</th><th>Diâmetro</th><th>Motivo</th><th>Idade</th><th>Ações</th></tr></thead><tbody id="histBody"></tbody></table>
-                <div class="history-empty" id="histEmpty"><p>Nenhum registro</p></div>
+            <div class="history-card">
+                <div class="history-table-wrapper">
+                    <table class="history-table"><thead><tr><th>Data/Hora</th><th>Posição</th><th>Turno</th><th>Diâmetro</th><th>Motivo</th><th>Idade</th><th>Ações</th></tr></thead><tbody id="histBody"></tbody></table>
+                    <div class="history-empty" id="histEmpty"><p>Nenhum registro encontrado</p></div>
+                </div>
             </div>
         </section>
         <section class="monthly-section">
             <div class="panel-header"><h2>📅 Trocas por Mês</h2><div class="month-year-select"><button class="btn btn-sm btn-ghost" id="prevYear">◀</button><span id="yearLabel"></span><button class="btn btn-sm btn-ghost" id="nextYear">▶</button></div></div>
-            <div class="month-tabs" id="monthTabs"></div>
-            <div class="monthly-content">
-                <table class="history-table"><thead><tr><th>Data/Hora</th><th>Posição</th><th>Turno</th><th>Diâmetro</th><th>Motivo</th><th>Idade</th></tr></thead><tbody id="monthBody"></tbody></table>
-                <div class="monthly-empty" id="monthEmpty"><p>Nenhuma troca neste mês</p></div>
-                <div class="monthly-summary" id="monthSummary"></div>
+            <div class="monthly-card">
+                <div class="month-tabs" id="monthTabs"></div>
+                <div class="monthly-content">
+                    <table class="history-table"><thead><tr><th>Data/Hora</th><th>Posição</th><th>Turno</th><th>Diâmetro</th><th>Motivo</th><th>Idade</th></tr></thead><tbody id="monthBody"></tbody></table>
+                    <div class="monthly-empty" id="monthEmpty"><p>Nenhuma troca neste mês</p></div>
+                    <div class="monthly-summary" id="monthSummary"></div>
+                </div>
             </div>
         </section>
     </main>
@@ -106,7 +96,7 @@
             <form id="formEst" class="modal-form">
                 <div class="form-row">
                     <div class="form-group"><label>Diâmetro (mm) *</label><input type="number" id="inEstDiam" step="0.1" min="100" max="1000" placeholder="Ex: 320.5" required></div>
-                    <div class="form-group"><label>Observação</label><input type="text" id="inEstObs" placeholder="Ex: Novo, retificado..."></div>
+                    <div class="form-group"><label>Observação</label><input type="text" id="inEstObs" placeholder="Ex: Novo, retificado..." maxlength="200"></div>
                 </div>
                 <div class="form-actions"><button type="button" class="btn btn-ghost" id="btnCancelEst">Cancelar</button><button type="submit" class="btn btn-primary">✓ Adicionar</button></div>
             </form>

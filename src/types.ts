@@ -30,37 +30,3 @@ export interface HistoricoRecord {
   readonly idade_dias: number;
   readonly created_at: string;
 }
-
-export interface RollView {
-  pos: Posicao;
-  days: number | null;
-  status: KanbanStatus;
-  rolo: Rolo | undefined;
-}
-
-export interface ExportRolo {
-  posicao: string;
-  status: string;
-  diametro: string;
-  idade: string;
-  turno: string;
-  motivo: string;
-  data_troca: string;
-}
-
-export interface ExportHist {
-  data: string;
-  posicao: string;
-  turno: string;
-  diametro: string;
-  motivo: string;
-  idade: string;
-}
-
-// jsPDF type augmentation
-declare module 'jspdf' {
-  interface jsPDF {
-    autoTable: (options: any) => void;
-    lastAutoTable: { finalY: number };
-  }
-}

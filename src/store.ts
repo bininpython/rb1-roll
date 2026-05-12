@@ -1,152 +1,116 @@
-/** RB1 Roll — Robust Data Store (localStorage with integrity & security) */
-import type { Rolo, EstoqueItem, HistoricoRecord, Posicao, Turno, KanbanStatus } from './types';
+import type { RoloRegistro, EstoqueItem, HistoricoTroca, Posicao, Turno } from './types';
+import { supabase } from './supabase';
 
-const KEYS = { R: 'rb1_v2_rolos', E: 'rb1_v2_estoque', H: 'rb1_v2_historico' } as const;
-const VALID_TURNOS: Turno[] = ['TN', 'TM', 'TT'];
-const VALID_POS: Posicao[] = [0, 1, 2, 3, 4];
+export let rolos: RoloRegistro[] = [];
+export let estoque: EstoqueItem[] = [];
+export let historico: HistoricoTroca[] = [];
 
-// ===== Security: Sanitize user text input =====
+// Funções Utilitárias e de Segurança
+export const genId = () => Math.random().toString(36).substring(2, 9);
+export const calcDays = (d: string) => Math.floor((Date.now() - new Date(d).getTime()) / 864e5);
+export const getStatus = (days: number | null) => { if (days === null) return 'empty'; return days <= 10 ? 'green' : days <= 15 ? 'yellow' : 'red'; };
+export const getRolo = (p: number) => rolos.find(r => r.posicao === p);
+export const fmtDate = (d: string) => new Date(d).toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+
 export function sanitize(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;')
-    .trim()
-    .slice(0, 500); // max length
+  const map: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;', "/": '&#x2F;' };
+  return str.replace(/[&<>"'/]/ig, match => (map[match]));
 }
 
-function isValidTurno(t: string): t is Turno { return VALID_TURNOS.includes(t as Turno); }
-function isValidPos(p: number): p is Posicao { return VALID_POS.includes(p as Posicao); }
-function isValidDate(d: string): boolean { return !isNaN(new Date(d).getTime()); }
-function isValidDiam(d: number): boolean { return typeof d === 'number' && d > 0 && d < 2000 && isFinite(d); }
+// ===== Cloud Sync (Supabase) =====
 
-function load<T>(key: string): T[] {
+// Carregar tudo do Supabase no início
+export async function loadData() {
   try {
-    const raw = localStorage.getItem(key);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch { return []; }
-}
-function save<T>(key: string, data: T[]): void {
-  localStorage.setItem(key, JSON.stringify(data));
-}
-
-export function genId(): string {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-}
-
-// ===== State =====
-export let rolos: Rolo[] = load<Rolo>(KEYS.R);
-export let estoque: EstoqueItem[] = load<EstoqueItem>(KEYS.E);
-export let historico: HistoricoRecord[] = load<HistoricoRecord>(KEYS.H);
-
-// ===== Kanban Logic =====
-export function calcDays(dateStr: string): number {
-  const ms = Date.now() - new Date(dateStr).getTime();
-  return Math.max(0, Math.floor(ms / 864e5));
-}
-
-export function getStatus(days: number | null): KanbanStatus {
-  if (days === null) return 'empty';
-  if (days <= 5) return 'green';
-  if (days <= 10) return 'yellow';
-  return 'red';
-}
-
-export function getRolo(pos: number): Rolo | undefined {
-  return rolos.find(r => r.posicao === pos);
-}
-
-export function fmtDate(d: string): string {
-  const date = new Date(d);
-  if (isNaN(date.getTime())) return '—';
-  return date.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
-}
-
-// ===== CRUD with full validation =====
-
-/** Register a new roll substitution. Archives old roll to history (IMMUTABLE). Removes stock item. */
-export function registrarSubstituicao(
-  posicao: Posicao, turno: Turno, estoqueId: string,
-  data_troca: string, obs_motivo: string
-): void {
-  // Validate all inputs
-  if (!isValidPos(posicao)) throw new Error('Posição inválida');
-  if (!isValidTurno(turno)) throw new Error('Turno inválido');
-  if (!isValidDate(data_troca)) throw new Error('Data inválida');
-  if (!obs_motivo.trim()) throw new Error('Motivo obrigatório');
-  if (typeof estoqueId !== 'string' || !estoqueId.trim()) throw new Error('Selecione um rolo do estoque');
-
-  const safeMotivo = sanitize(obs_motivo);
-
-  // Find stock item
-  const stockItem = estoque.find(e => e.id === estoqueId);
-  if (!stockItem) throw new Error('Rolo do estoque não encontrado');
-
-  // Archive existing roll to history (IMMUTABLE - never deleted)
-  const existing = getRolo(posicao);
-  if (existing) {
-    const record: HistoricoRecord = {
-      id: genId(),
-      posicao: existing.posicao,
-      data_troca: existing.data_troca,
-      turno: existing.turno,
-      diametro: existing.diametro,
-      obs_motivo: existing.obs_motivo,
-      idade_dias: calcDays(existing.data_troca),
-      created_at: new Date().toISOString()
-    };
-    historico = [...historico, record];
-    save(KEYS.H, historico);
+    const [resR, resE, resH] = await Promise.all([
+      supabase.from('rolos').select('*'),
+      supabase.from('estoque').select('*'),
+      supabase.from('historico').select('*')
+    ]);
+    if (resR.data) rolos = resR.data;
+    if (resE.data) estoque = resE.data;
+    if (resH.data) historico = resH.data;
+    // Dispara evento para o main.ts renderizar a tela após carregar
+    window.dispatchEvent(new Event('dataLoaded'));
+  } catch (e) {
+    console.error("Erro ao carregar do Supabase:", e);
   }
+}
 
-  // Remove old roll and install new from stock
-  rolos = rolos.filter(r => r.posicao !== posicao);
-  const newRolo: Rolo = {
-    id: genId(), posicao, data_troca, turno,
-    diametro: stockItem.diametro, obs_motivo: safeMotivo
+// ===== Operações CRUD Sincronizadas =====
+
+export async function registrarSubstituicao(pos: Posicao, turno: Turno, estoqueId: string, dtStr: string, motivo: string) {
+  const estItem = estoque.find(e => e.id === estoqueId);
+  if (!estItem) throw new Error('Rolo selecionado não existe mais no estoque.');
+  if (isNaN(new Date(dtStr).getTime())) throw new Error('Data inválida.');
+  if (!['TM', 'TT', 'TN'].includes(turno)) throw new Error('Turno inválido.');
+  if (pos < 0 || pos > 4) throw new Error('Posição inválida.');
+
+  const motSafe = sanitize(motivo);
+  const oldRolo = getRolo(pos);
+  const age = oldRolo ? calcDays(oldRolo.data_troca) : 0;
+  
+  // Cria novos registros
+  const newHist: HistoricoTroca = {
+    id: genId(), posicao: pos, data_troca: new Date(dtStr).toISOString(), turno,
+    diametro: estItem.diametro, obs_motivo: motSafe, idade_dias: age, created_at: new Date().toISOString()
   };
-  rolos = [...rolos, newRolo];
-  save(KEYS.R, rolos);
+  const newRolo: RoloRegistro = {
+    id: genId(), posicao: pos, data_troca: new Date(dtStr).toISOString(),
+    turno, diametro: estItem.diametro, obs_motivo: motSafe
+  };
 
-  // Remove stock item (auto-deduction)
+  // Atualização Otimista UI (Rápida)
+  historico.unshift(newHist);
+  const rIdx = rolos.findIndex(r => r.posicao === pos);
+  if (rIdx >= 0) rolos[rIdx] = newRolo; else rolos.push(newRolo);
   estoque = estoque.filter(e => e.id !== estoqueId);
-  save(KEYS.E, estoque);
+
+  // Background Sync com o Supabase
+  await supabase.from('historico').insert([newHist]);
+  if (rIdx >= 0) {
+    await supabase.from('rolos').update(newRolo).eq('posicao', pos);
+  } else {
+    await supabase.from('rolos').insert([newRolo]);
+  }
+  await supabase.from('estoque').delete().eq('id', estoqueId);
 }
 
-/** Edit a history record (only turno, data_troca, obs_motivo). NEVER delete. */
-export function editarHistorico(id: string, turno: Turno, data_troca: string, obs_motivo: string): void {
-  if (!isValidTurno(turno)) throw new Error('Turno inválido');
-  if (!isValidDate(data_troca)) throw new Error('Data inválida');
-  if (!obs_motivo.trim()) throw new Error('Motivo obrigatório');
-  const safeMotivo = sanitize(obs_motivo);
-  historico = historico.map(h =>
-    h.id === id ? { ...h, turno, data_troca, obs_motivo: safeMotivo } : h
-  );
-  save(KEYS.H, historico);
+export async function editarHistorico(id: string, turno: Turno, dtStr: string, motivo: string) {
+  const hIdx = historico.findIndex(h => h.id === id);
+  if (hIdx === -1) throw new Error('Registro não encontrado.');
+  if (!['TM', 'TT', 'TN'].includes(turno)) throw new Error('Turno inválido.');
+  
+  const h = historico[hIdx];
+  const dObj = new Date(dtStr);
+  if (dtStr && !isNaN(dObj.getTime())) h.data_troca = dObj.toISOString();
+  if (motivo) h.obs_motivo = sanitize(motivo);
+  h.turno = turno;
+
+  // Background Sync com o Supabase
+  await supabase.from('historico').update({ data_troca: h.data_troca, obs_motivo: h.obs_motivo, turno: h.turno }).eq('id', h.id);
 }
 
-/** Add a roll to stock */
-export function adicionarEstoque(diametro: number, obs: string): void {
-  if (!isValidDiam(diametro)) throw new Error('Diâmetro inválido');
-  const safeObs = sanitize(obs);
-  const item: EstoqueItem = { id: genId(), diametro, obs: safeObs, data_entrada: new Date().toISOString() };
-  estoque = [...estoque, item];
-  save(KEYS.E, estoque);
+export async function adicionarEstoque(diam: number, obs: string) {
+  if (diam < 100 || diam > 1000) throw new Error('Diâmetro fora do padrão (100-1000mm).');
+  
+  const newItem: EstoqueItem = {
+    id: genId(), diametro: diam, obs: sanitize(obs), data_entrada: new Date().toISOString()
+  };
+
+  // Atualização Otimista
+  estoque.unshift(newItem);
+
+  // Background Sync
+  await supabase.from('estoque').insert([newItem]);
 }
 
-/** Remove a stock item */
-export function removerEstoque(id: string): void {
-  if (typeof id !== 'string' || !id.trim()) return;
+export async function removerEstoque(id: string) {
   estoque = estoque.filter(e => e.id !== id);
-  save(KEYS.E, estoque);
+  await supabase.from('estoque').delete().eq('id', id);
 }
 
-// ===== Initialization =====
 export function initDemo(): void {
-  // O sistema agora inicia totalmente vazio ("virgem") conforme solicitado.
-  // Nenhuma carga de demonstração será injetada.
+  // Chamamos o carregamento assíncrono agora
+  loadData();
 }

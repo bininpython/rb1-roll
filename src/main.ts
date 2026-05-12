@@ -208,4 +208,5 @@ $('prevYear').addEventListener('click',()=>{selYear--;renderMonthly();});
 $('nextYear').addEventListener('click',()=>{selYear++;renderMonthly();});
 
 function renderAll(){renderStats();renderFurnace();renderInventory();renderHistory();renderMonthly();}
+window.addEventListener('dataLoaded', renderAll);
 initDemo(); renderAll(); setInterval(renderAll,60000);

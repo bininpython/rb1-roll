@@ -112,7 +112,26 @@ body{font-family:var(--font);background:var(--bg-primary);color:var(--text-prima
 @keyframes tIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 .toast.removing{animation:tOut .3s ease forwards}
 @keyframes tOut{to{transform:translateX(100%);opacity:0}}
+/* Monthly Section */
+.monthly-section{max-width:1480px;margin:1.2rem 2rem 0;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:1.3rem}
+@media(min-width:1520px){.monthly-section{margin-left:auto;margin-right:auto}}
+.month-year-select{display:flex;align-items:center;gap:.5rem}
+.month-year-select span{font-family:var(--mono);font-size:.9rem;font-weight:700;color:var(--text-primary);min-width:50px;text-align:center}
+.month-tabs{display:grid;grid-template-columns:repeat(12,1fr);gap:.35rem;margin-bottom:1rem}
+.month-tab{display:flex;flex-direction:column;align-items:center;gap:.2rem;padding:.5rem .3rem;background:var(--bg-secondary);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);cursor:pointer;transition:all .2s var(--ease);font-family:var(--font);color:var(--text-muted);font-size:.7rem;font-weight:600}
+.month-tab:hover{border-color:var(--border);color:var(--text-secondary);background:var(--bg-card-hover)}
+.month-tab.active{border-color:var(--accent);background:var(--accent-glow);color:var(--accent)}
+.month-tab.has-data .month-tab-name{color:var(--text-primary)}
+.month-tab-count{font-family:var(--mono);font-size:.6rem;background:var(--accent);color:#fff;padding:.1rem .35rem;border-radius:999px;line-height:1.2}
+.month-tab.active .month-tab-count{background:#fff;color:var(--accent)}
+.monthly-content{overflow-x:auto}
+.monthly-empty{text-align:center;padding:2rem;color:var(--text-muted)}
+.monthly-summary{margin-top:.8rem}
+.summary-row{display:flex;gap:.65rem;flex-wrap:wrap}
+.summary-card{background:var(--bg-secondary);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:.6rem .9rem;display:flex;flex-direction:column;min-width:100px}
+.summary-val{font-family:var(--mono);font-size:1.2rem;font-weight:800;color:var(--accent)}
+.summary-lbl{font-size:.62rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
 @media(max-width:1024px){.furnace-section{grid-template-columns:1fr}.stats-bar{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:768px){.header-inner{padding:.7rem 1rem}.header-actions span{display:none}.stats-bar,.furnace-section{padding:0 1rem}.history-section{margin:1rem}.roll-cards{grid-template-columns:repeat(3,1fr)}.form-row{grid-template-columns:1fr}.history-filters{flex-wrap:wrap}}
-@media(max-width:480px){.stats-bar{grid-template-columns:1fr}.roll-cards{grid-template-columns:repeat(2,1fr)}.brand-sub{display:none}}
+@media(max-width:768px){.header-inner{padding:.7rem 1rem}.header-actions span{display:none}.stats-bar,.furnace-section{padding:0 1rem}.history-section,.monthly-section{margin:1rem}.roll-cards{grid-template-columns:repeat(3,1fr)}.form-row{grid-template-columns:1fr}.history-filters{flex-wrap:wrap}.month-tabs{grid-template-columns:repeat(6,1fr)}}
+@media(max-width:480px){.stats-bar{grid-template-columns:1fr}.roll-cards{grid-template-columns:repeat(2,1fr)}.brand-sub{display:none}.month-tabs{grid-template-columns:repeat(4,1fr)}}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--text-muted)}

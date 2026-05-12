@@ -274,10 +274,65 @@ document.addEventListener('click', () => $('exportDropdown').classList.remove('o
 $('expPdfFull').addEventListener('click', () => exportPDF('completo'));
 $('expPdfTrocas').addEventListener('click', () => exportPDF('trocas'));
 $('expPdfKanban').addEventListener('click', () => exportPDF('kanban'));
+$('expPdfMensal').addEventListener('click', () => exportPDF('mensal'));
 $('expExcel').addEventListener('click', () => exportExcel());
 
+// ===== Monthly Tab =====
+const MONTH_NAMES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const MONTH_FULL = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+let selectedYear = new Date().getFullYear();
+let selectedMonth = new Date().getMonth();
+
+function renderMonthlyTabs() {
+  $('yearLabel').textContent = String(selectedYear);
+  $('monthTabs').innerHTML = MONTH_NAMES.map((m, i) => {
+    // Count changes for this month
+    const count = historico.filter(h => {
+      const d = new Date(h.data_troca);
+      return d.getFullYear() === selectedYear && d.getMonth() === i;
+    }).length;
+    const active = i === selectedMonth ? 'active' : '';
+    const hasData = count > 0 ? 'has-data' : '';
+    return `<button class="month-tab ${active} ${hasData}" data-month="${i}"><span class="month-tab-name">${m}</span>${count > 0 ? `<span class="month-tab-count">${count}</span>` : ''}</button>`;
+  }).join('');
+  $('monthTabs').querySelectorAll<HTMLButtonElement>('.month-tab').forEach(btn => {
+    btn.addEventListener('click', () => { selectedMonth = parseInt(btn.dataset.month!); renderMonthlyTabs(); renderMonthlyContent(); });
+  });
+}
+
+function renderMonthlyContent() {
+  const body = $('monthBody') as HTMLTableSectionElement;
+  const empty = $('monthEmpty');
+  const summary = $('monthSummary');
+  const data = historico.filter(h => {
+    const d = new Date(h.data_troca);
+    return d.getFullYear() === selectedYear && d.getMonth() === selectedMonth;
+  }).sort((a, b) => new Date(b.data_troca).getTime() - new Date(a.data_troca).getTime());
+
+  if (!data.length) {
+    body.innerHTML = '';
+    empty.style.display = 'block';
+    summary.innerHTML = '';
+    return;
+  }
+  empty.style.display = 'none';
+  body.innerHTML = data.map(h => {
+    const st = getStatus(h.idade_dias);
+    return `<tr><td style="font-family:var(--mono);font-size:.72rem">${fmtDate(h.data_troca)}</td><td><strong>Rolo ${h.posicao}</strong></td><td><span class="turno-badge turno-${h.turno}">${h.turno}</span></td><td style="font-family:var(--mono)">${h.diametro} mm</td><td style="max-width:180px">${h.obs_motivo}</td><td><span class="age-badge age-${st}">${h.idade_dias}d</span></td></tr>`;
+  }).join('');
+
+  // Monthly summary
+  const byPos: Record<number, number> = {};
+  data.forEach(h => { byPos[h.posicao] = (byPos[h.posicao] || 0) + 1; });
+  const avgAge = data.length ? Math.round(data.reduce((s, h) => s + h.idade_dias, 0) / data.length) : 0;
+  summary.innerHTML = `<div class="summary-row"><div class="summary-card"><span class="summary-val">${data.length}</span><span class="summary-lbl">Trocas em ${MONTH_FULL[selectedMonth]}</span></div><div class="summary-card"><span class="summary-val">${avgAge}d</span><span class="summary-lbl">Idade Média</span></div>${Object.entries(byPos).map(([pos, cnt]) => `<div class="summary-card"><span class="summary-val">${cnt}</span><span class="summary-lbl">Rolo ${pos}</span></div>`).join('')}</div>`;
+}
+
+$('prevYear').addEventListener('click', () => { selectedYear--; renderMonthlyTabs(); renderMonthlyContent(); });
+$('nextYear').addEventListener('click', () => { selectedYear++; renderMonthlyTabs(); renderMonthlyContent(); });
+
 // ===== Render All =====
-function renderAll() { renderStats(); renderFurnace(); renderInventory(); renderHistory(); }
+function renderAll() { renderStats(); renderFurnace(); renderInventory(); renderHistory(); renderMonthlyTabs(); renderMonthlyContent(); }
 
 // ===== Init =====
 initDemo();
@@ -286,3 +341,4 @@ setInterval(renderAll, 60000);
 
 // Expose toast globally for exports
 (window as any).__rb1Toast = toast;
+

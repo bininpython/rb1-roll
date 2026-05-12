@@ -25,6 +25,7 @@
                         <button id="expPdfFull">📄 Relatório Completo (PDF)</button>
                         <button id="expPdfTrocas">📋 Relatório de Trocas (PDF)</button>
                         <button id="expPdfKanban">🎯 Relatório Kanban (PDF)</button>
+                        <button id="expPdfMensal">📅 Relatório Mensal (PDF)</button>
                         <button id="expExcel">📊 Planilha Completa (Excel)</button>
                     </div>
                 </div>
@@ -57,6 +58,15 @@
             <div class="history-table-wrapper">
                 <table class="history-table"><thead><tr><th>Data/Hora</th><th>Posição</th><th>Turno</th><th>Diâmetro</th><th>Motivo</th><th>Idade</th><th>Ações</th></tr></thead><tbody id="histBody"></tbody></table>
                 <div class="history-empty" id="histEmpty"><p>Nenhum registro</p></div>
+            </div>
+        </section>
+        <section class="monthly-section">
+            <div class="panel-header"><h2>📅 Trocas por Mês</h2><div class="month-year-select"><button class="btn btn-sm btn-ghost" id="prevYear">◀</button><span id="yearLabel"></span><button class="btn btn-sm btn-ghost" id="nextYear">▶</button></div></div>
+            <div class="month-tabs" id="monthTabs"></div>
+            <div class="monthly-content">
+                <table class="history-table"><thead><tr><th>Data/Hora</th><th>Posição</th><th>Turno</th><th>Diâmetro</th><th>Motivo</th><th>Idade</th></tr></thead><tbody id="monthBody"></tbody></table>
+                <div class="monthly-empty" id="monthEmpty"><p>Nenhuma troca neste mês</p></div>
+                <div class="monthly-summary" id="monthSummary"></div>
             </div>
         </section>
     </main>

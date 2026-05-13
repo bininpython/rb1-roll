@@ -25,9 +25,13 @@ setInterval(tickClock, 1000); tickClock();
 function renderStats() {
   const alertas = rolos.filter(r => getStatus(calcDays(r.data_troca)) === 'red').length;
   const trocas30 = historico.filter(h => (Date.now() - new Date(h.created_at).getTime()) < 30*864e5).length;
+  
+  const estRetifica = estoque.filter(e => e.obs.toLowerCase().includes('retifica') || e.obs.toLowerCase().includes('retífica')).length;
+  const estRb1 = estoque.length - estRetifica;
+
   $('statsBar').innerHTML = [
-    {i:'🔄',v:rolos.length,l:'Rolos Ativos',c:'si-active'},
-    {i:'📦',v:estoque.length,l:'Em Estoque',c:'si-stock'},
+    {i:'🛠️',v:estRetifica,l:'Estoque Retífica',c:'si-stock'},
+    {i:'📦',v:estRb1,l:'Estoque RB1',c:'si-stock'},
     {i:'⚠️',v:alertas,l:'Em Alerta',c:'si-alert'},
     {i:'📊',v:trocas30,l:'Trocas (30d)',c:'si-swaps'}
   ].map(s=>`<div class="stat-card"><div class="stat-icon ${s.c}">${s.i}</div><div><span class="stat-value">${s.v}</span><span class="stat-label">${s.l}</span></div></div>`).join('');

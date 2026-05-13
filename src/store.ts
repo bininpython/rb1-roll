@@ -1,9 +1,9 @@
-import type { Rolo, EstoqueItem, HistoricoRecord, Posicao, Turno, KanbanStatus } from './types';
+import type { Rolo, EstoqueItem, HistoricoTroca, Posicao, Turno, KanbanStatus } from './types';
 import { supabase } from './supabase';
 
 export let rolos: Rolo[] = [];
 export let estoque: EstoqueItem[] = [];
-export let historico: HistoricoRecord[] = [];
+export let historico: HistoricoTroca[] = [];
 
 // Funções Utilitárias e de Segurança
 export const genId = () => Math.random().toString(36).substring(2, 9);
@@ -51,7 +51,7 @@ export async function registrarSubstituicao(pos: Posicao, turno: Turno, estoqueI
   const age = oldRolo ? calcDays(oldRolo.data_troca) : 0;
   
   // Cria novos registros
-  const newHist: HistoricoRecord = {
+  const newHist: HistoricoTroca = {
     id: genId(), posicao: pos, data_troca: new Date(dtStr).toISOString(), turno,
     diametro: estItem.diametro, obs_motivo: motSafe, idade_dias: age, created_at: new Date().toISOString()
   };

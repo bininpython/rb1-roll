@@ -90,26 +90,26 @@ body {
 
 /* ===== Stats ===== */
 .stats-bar {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem;
-  max-width: 1360px; margin: 1rem auto; padding: 0 1.5rem;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem;
+  max-width: 1360px; margin: .5rem auto; padding: 0 1.5rem;
 }
 .stat-card {
   background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: .85rem 1rem; display: flex; align-items: center; gap: .75rem;
+  padding: .5rem .75rem; display: flex; align-items: center; gap: .6rem;
   box-shadow: var(--shadow); transition: box-shadow .15s;
 }
 .stat-card:hover { box-shadow: var(--shadow-md); }
 .stat-icon {
-  width: 40px; height: 40px; border-radius: var(--radius-sm);
+  width: 34px; height: 34px; border-radius: var(--radius-sm);
   display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; font-size: 1.1rem;
+  flex-shrink: 0; font-size: .95rem;
 }
 .si-active { background: var(--green-bg); color: var(--green); }
 .si-stock { background: var(--accent-light); color: var(--accent); }
 .si-alert { background: var(--red-bg); color: var(--red); }
 .si-swaps { background: var(--yellow-bg); color: var(--yellow); }
-.stat-value { font-size: 1.35rem; font-weight: 800; display: block; line-height: 1.1; }
-.stat-label { font-size: .65rem; color: #000000; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+.stat-value { font-size: 1.15rem; font-weight: 800; display: block; line-height: 1.1; }
+.stat-label { font-size: .6rem; color: #000000; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
 
 /* ===== Main Layout ===== */
 #app-main { padding-bottom: 2rem; }

@@ -87,6 +87,10 @@ body {
   transition: all .15s; font-size: .72rem;
 }
 .btn-edit:hover { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
+.btn-retifica { border-color: #8b5cf6; color: #8b5cf6; }
+.btn-retifica:hover { background: #f5f3ff; }
+.btn-rb1 { border-color: var(--accent); color: var(--accent); }
+.btn-rb1:hover { background: var(--accent-light); }
 
 /* ===== Stats ===== */
 .stats-bar {
@@ -115,7 +119,6 @@ body {
 #app-main { padding-bottom: 2rem; }
 .furnace-section {
   max-width: 1360px; margin: 0 auto; padding: 0 1.5rem;
-  display: grid; grid-template-columns: 1fr 280px; gap: 1rem;
 }
 
 /* ===== Panel ===== */
@@ -159,12 +162,34 @@ body {
 .turno-TM { background: var(--yellow-bg); color: var(--yellow); }
 .turno-TT { background: #fff7ed; color: #ea580c; }
 
-/* ===== Inventory ===== */
-.inventory-panel {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 1.1rem; height: fit-content; box-shadow: var(--shadow);
+/* ===== Inventory Section ===== */
+.inventory-section {
+  max-width: 1360px; margin: 1rem auto 0; padding: 0 1.5rem;
 }
-.inventory-list { display: flex; flex-direction: column; gap: .4rem; max-height: 480px; overflow-y: auto; }
+.inventory-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.1rem; box-shadow: var(--shadow);
+}
+.inv-toggle {
+  display: flex; gap: .25rem; background: var(--bg); padding: .2rem;
+  border-radius: var(--radius-sm); border: 1px solid var(--border);
+}
+.inv-toggle-btn {
+  font-family: var(--font); font-size: .72rem; font-weight: 600;
+  padding: .35rem .75rem; border-radius: var(--radius-sm);
+  border: none; cursor: pointer; transition: all .15s;
+  background: transparent; color: var(--text-secondary);
+  display: flex; align-items: center; gap: .3rem;
+}
+.inv-toggle-btn:hover { color: var(--text); }
+.inv-toggle-btn.active { background: var(--accent); color: #fff; box-shadow: var(--shadow); }
+.inv-toggle-count {
+  font-family: var(--mono); font-size: .6rem;
+  padding: .05rem .3rem; border-radius: 999px;
+}
+.inv-toggle-btn.active .inv-toggle-count { background: rgba(255,255,255,.2); }
+.inv-toggle-btn:not(.active) .inv-toggle-count { background: var(--border); color: var(--text-muted); }
+.inventory-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: .5rem; }
 .inv-item {
   background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
   padding: .55rem .75rem; display: flex; align-items: center; justify-content: space-between;
@@ -318,8 +343,8 @@ body {
 
 /* ===== Responsive ===== */
 @media (max-width: 1024px) {
-  .furnace-section { grid-template-columns: 1fr; }
   .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .header-actions { flex-wrap: wrap; gap: .4rem; }
 }
 @media (max-width: 768px) {
   .header-inner { padding: .6rem 1rem; }

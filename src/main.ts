@@ -71,11 +71,20 @@ function renderFurnace() {
 }
 
 // Inventory
+let currentInvView: 'retifica' | 'rb1' = 'retifica';
 function renderInventory() {
   const list=$('inventoryList'), empty=$('inventoryEmpty');
-  if(!estoque.length){list.innerHTML='';empty.style.display='block';return;}
+  const estRetifica = estoque.filter(e => e.obs.toLowerCase().includes('retifica') || e.obs.toLowerCase().includes('retífica'));
+  const estRb1 = estoque.filter(e => !e.obs.toLowerCase().includes('retifica') && !e.obs.toLowerCase().includes('retífica'));
+  
+  $('countRetifica').textContent = estRetifica.length.toString();
+  $('countRb1').textContent = estRb1.length.toString();
+
+  const currentList = currentInvView === 'retifica' ? estRetifica : estRb1;
+
+  if(!currentList.length){list.innerHTML='';empty.style.display='block';return;}
   empty.style.display='none';
-  list.innerHTML=estoque.map(e=>`<div class="inv-item"><div class="inv-item-info"><span class="inv-item-diam">⊘ ${e.diametro} mm</span><span class="inv-item-obs">${sanitize(e.obs)||'Sem obs.'}</span></div><div class="inv-item-actions"><button data-remove-est="${e.id}" title="Remover">✕</button></div></div>`).join('');
+  list.innerHTML=currentList.map(e=>`<div class="inv-item"><div class="inv-item-info"><span class="inv-item-diam">⊘ ${e.diametro} mm</span><span class="inv-item-obs">${sanitize(e.obs)||'Sem obs.'}</span></div><div class="inv-item-actions"><button data-remove-est="${e.id}" title="Remover">✕</button></div></div>`).join('');
   list.querySelectorAll<HTMLButtonElement>('[data-remove-est]').forEach(btn=>{
     btn.addEventListener('click',()=>{removerEstoque(btn.dataset.removeEst!);renderAll();toast('Rolo removido','info');});
   });
@@ -142,7 +151,25 @@ document.querySelectorAll<HTMLButtonElement>('#motivoChips .chip').forEach(chip=
 });
 
 // Modal: Estoque
-$('btnAddEstoque').addEventListener('click',()=>$('modalEst').classList.add('active'));
+function openEstoqueModal(defaultObs: string) {
+  $('modalEst').classList.add('active');
+  ($('inEstObs') as HTMLInputElement).value = defaultObs;
+}
+$('btnAddEstRetifica').addEventListener('click',()=>openEstoqueModal('Retífica'));
+$('btnAddEstRb1').addEventListener('click',()=>openEstoqueModal(''));
+
+$('toggleRetifica').addEventListener('click', () => {
+  currentInvView = 'retifica';
+  $('toggleRetifica').classList.add('active');
+  $('toggleRb1').classList.remove('active');
+  renderInventory();
+});
+$('toggleRb1').addEventListener('click', () => {
+  currentInvView = 'rb1';
+  $('toggleRb1').classList.add('active');
+  $('toggleRetifica').classList.remove('active');
+  renderInventory();
+});
 $('modalEstClose').addEventListener('click',()=>{$('modalEst').classList.remove('active');($('formEst') as HTMLFormElement).reset();});
 $('btnCancelEst').addEventListener('click',()=>{$('modalEst').classList.remove('active');($('formEst') as HTMLFormElement).reset();});
 $('modalEst').addEventListener('click',e=>{if(e.target===$('modalEst')){$('modalEst').classList.remove('active');($('formEst') as HTMLFormElement).reset();}});

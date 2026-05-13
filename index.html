@@ -15,6 +15,8 @@
             </div>
             <div class="header-actions">
                 <div class="live-clock" id="liveClock"></div>
+                <button class="btn btn-outline btn-retifica" id="btnAddEstRetifica">+ Estoque Retífica</button>
+                <button class="btn btn-outline btn-rb1" id="btnAddEstRb1">+ Estoque RB1</button>
                 <button class="btn btn-primary" id="btnNovaSub">+ Nova Substituição</button>
             </div>
         </div>
@@ -27,10 +29,18 @@
                 <div class="furnace-diagram" id="furnaceDiagram"></div>
                 <div class="roll-cards" id="rollCards"></div>
             </div>
-            <div class="inventory-panel">
-                <div class="panel-header"><h2>📦 Estoque</h2><button class="btn btn-sm btn-outline" id="btnAddEstoque">+ Adicionar</button></div>
+        </section>
+        <section class="inventory-section">
+            <div class="panel-header">
+                <h2>📦 Estoque de Rolos</h2>
+                <div class="inv-toggle">
+                    <button class="inv-toggle-btn active" data-type="retifica" id="toggleRetifica">🛠️ Retífica <span class="inv-toggle-count" id="countRetifica">0</span></button>
+                    <button class="inv-toggle-btn" data-type="rb1" id="toggleRb1">📦 RB1 <span class="inv-toggle-count" id="countRb1">0</span></button>
+                </div>
+            </div>
+            <div class="inventory-card">
                 <div class="inventory-list" id="inventoryList"></div>
-                <div class="inventory-empty" id="inventoryEmpty"><p>Nenhum rolo em estoque</p><span>Adicione rolos para substituição</span></div>
+                <div class="inventory-empty" id="inventoryEmpty"><p>Nenhum rolo nesta categoria</p><span>Adicione rolos usando os botões no topo</span></div>
             </div>
         </section>
         <section class="history-section">

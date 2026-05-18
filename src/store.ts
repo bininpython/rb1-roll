@@ -8,7 +8,7 @@ export let historico: HistoricoRecord[] = [];
 // Funções Utilitárias e de Segurança
 export const genId = () => Math.random().toString(36).substring(2, 9);
 export const calcDays = (d: string) => Math.floor((Date.now() - new Date(d).getTime()) / 864e5);
-export const getStatus = (days: number | null): KanbanStatus => { if (days === null) return 'empty'; return days <= 10 ? 'green' : days <= 15 ? 'yellow' : 'red'; };
+export const getStatus = (days: number | null): KanbanStatus => { if (days === null) return 'empty'; return days <= 5 ? 'green' : days <= 10 ? 'yellow' : 'red'; };
 export const getRolo = (p: number) => rolos.find(r => r.posicao === p);
 export const fmtDate = (d: string) => new Date(d).toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
 

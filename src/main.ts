@@ -21,6 +21,24 @@ function tickClock() {
 }
 setInterval(tickClock, 1000); tickClock();
 
+// Tabs
+$('tabForno').addEventListener('click', () => {
+  $('tabForno').classList.add('active');
+  $('tabDecapagem').classList.remove('active');
+  $('viewForno').classList.remove('view-hidden');
+  $('viewForno').classList.add('view-active');
+  $('viewDecapagem').classList.remove('view-active');
+  $('viewDecapagem').classList.add('view-hidden');
+});
+$('tabDecapagem').addEventListener('click', () => {
+  $('tabDecapagem').classList.add('active');
+  $('tabForno').classList.remove('active');
+  $('viewDecapagem').classList.remove('view-hidden');
+  $('viewDecapagem').classList.add('view-active');
+  $('viewForno').classList.remove('view-active');
+  $('viewForno').classList.add('view-hidden');
+});
+
 // Stats
 function renderStats() {
   const alertas = rolos.filter(r => getStatus(calcDays(r.data_troca)) === 'red').length;
@@ -69,6 +87,67 @@ function renderFurnace() {
     const df = new Date(rd.rolo.data_troca).toLocaleDateString('pt-BR');
     return `<div class="roll-card"><div class="roll-card-header"><span class="roll-card-pos">Rolo ${rd.pos}</span><span class="roll-card-dot dot-${rd.status}"></span></div><div class="roll-card-row"><span>Diâmetro</span><span>${rd.rolo.diametro} mm</span></div><div class="roll-card-row"><span>Tempo</span><span>${rd.days}d</span></div><div class="roll-card-row"><span>Troca</span><span>${df}</span></div><div class="roll-card-row"><span>Turno</span><span class="turno-badge turno-${rd.rolo.turno}">${rd.rolo.turno}</span></div></div>`;
   }).join('');
+}
+
+// Decapagem SVG
+function renderDecapagem() {
+  const svgW = 1200, svgH = 300;
+  let s = `<svg viewBox="0 0 ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">`;
+  
+  // Background boxes and text
+  s += `<rect x="120" y="60" width="580" height="150" rx="4" fill="none" stroke="#f97316" stroke-width="2"/>`;
+  s += `<text x="410" y="50" text-anchor="middle" fill="#f97316" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="1">DECAPAGEM ELETROLÍTICA</text>`;
+  
+  s += `<rect x="710" y="60" width="280" height="150" rx="4" fill="none" stroke="#6b7280" stroke-width="1.5"/>`;
+  s += `<text x="850" y="50" text-anchor="middle" fill="#9ca3af" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="1">DECAPAGEM QUÍMICA</text>`;
+  
+  s += `<text x="50" y="70" fill="#9ca3af" font-family="Inter,sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">ENTRADA</text>`;
+  s += `<text x="1150" y="70" fill="#9ca3af" font-family="Inter,sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">SAÍDA</text>`;
+
+  function smallRoll(x:number, y:number) {
+    return `<circle cx="${x}" cy="${y}" r="8" fill="none" stroke="#d1d5db" stroke-width="2"/>`;
+  }
+  function largeRoll(x:number, y:number, inChem:boolean=false) {
+    let r = '';
+    r += `<rect x="${x-15}" y="${y+24}" width="30" height="20" rx="2" fill="#374151"/>`;
+    r += `<rect x="${x-20}" y="${y+44}" width="40" height="10" rx="2" fill="#1f2937"/>`;
+    r += `<circle cx="${x}" cy="${y}" r="24" fill="${inChem?'#1f2937':'none'}" stroke="#d1d5db" stroke-width="2"/>`;
+    return r;
+  }
+  function brushStation(x:number, y:number) {
+    let b = '';
+    b += `<rect x="${x-30}" y="${y-25}" width="60" height="50" rx="4" fill="none" stroke="#9ca3af" stroke-width="1.5"/>`;
+    b += `<circle cx="${x-15}" cy="${y-12}" r="8" fill="none" stroke="#d1d5db" stroke-width="2"/>`;
+    b += `<circle cx="${x+15}" cy="${y-12}" r="8" fill="none" stroke="#eab308" stroke-width="2"/>`;
+    b += `<circle cx="${x-15}" cy="${y+12}" r="8" fill="none" stroke="#eab308" stroke-width="2"/>`;
+    b += `<circle cx="${x+15}" cy="${y+12}" r="8" fill="none" stroke="#d1d5db" stroke-width="2"/>`;
+    b += `<rect x="${x-15}" y="${y+25}" width="30" height="15" rx="2" fill="#374151"/>`;
+    b += `<rect x="${x-20}" y="${y+40}" width="40" height="8" rx="2" fill="#1f2937"/>`;
+    return b;
+  }
+  
+  let r = '';
+  r += largeRoll(90, 150);
+  r += smallRoll(150, 142); r += smallRoll(180, 158); r += smallRoll(210, 142); r += smallRoll(240, 158);
+  r += largeRoll(320, 140);
+  r += smallRoll(390, 142); r += smallRoll(420, 158); r += smallRoll(450, 142); r += smallRoll(480, 158);
+  r += brushStation(570, 150);
+  r += smallRoll(650, 142); r += smallRoll(680, 158);
+  r += largeRoll(780, 165, true); r += largeRoll(880, 165, true);
+  r += brushStation(1030, 150);
+  r += smallRoll(1110, 142); r += smallRoll(1140, 158);
+  
+  let strip = `M 20 170 L 75 145 Q 90 120 105 145 L 125 150 `;
+  strip += `L 140 150 Q 150 160 160 150 L 170 150 Q 180 140 190 150 L 200 150 Q 210 160 220 150 L 230 150 Q 240 140 250 150 `;
+  strip += `L 290 150 Q 320 180 350 150 L 380 150 `;
+  strip += `Q 390 160 400 150 L 410 150 Q 420 140 430 150 L 440 150 Q 450 160 460 150 L 470 150 Q 480 140 490 150 `;
+  strip += `L 530 150 L 610 150 L 640 150 Q 650 160 660 150 L 670 150 Q 680 140 690 150 `;
+  strip += `L 720 150 L 730 165 L 930 165 L 940 150 `;
+  strip += `L 990 150 L 1070 150 L 1100 150 Q 1110 160 1120 150 L 1130 150 Q 1140 140 1150 150 L 1180 170`;
+  
+  s += r + `<path d="${strip}" fill="none" stroke="#d1d5db" stroke-width="2" stroke-linecap="round"/>`;
+  s += `</svg>`;
+  $('decapagemDiagram').innerHTML = s;
 }
 
 // Inventory
@@ -239,6 +318,6 @@ function renderMonthly(){
 $('prevYear').addEventListener('click',()=>{selYear--;renderMonthly();});
 $('nextYear').addEventListener('click',()=>{selYear++;renderMonthly();});
 
-function renderAll(){renderStats();renderFurnace();renderInventory();renderHistory();renderMonthly();}
+function renderAll(){renderStats();renderFurnace();renderDecapagem();renderInventory();renderHistory();renderMonthly();}
 window.addEventListener('dataLoaded', renderAll);
 initDemo(); renderAll(); setInterval(renderAll,60000);

@@ -95,57 +95,104 @@ function renderDecapagem() {
   let s = `<svg viewBox="0 0 ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">`;
   
   // Background boxes and text
-  s += `<rect x="120" y="60" width="580" height="150" rx="4" fill="none" stroke="#f97316" stroke-width="2"/>`;
-  s += `<text x="410" y="50" text-anchor="middle" fill="#f97316" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="1">DECAPAGEM ELETROLÍTICA</text>`;
+  s += `<rect x="110" y="50" width="555" height="180" rx="6" fill="none" stroke="#f97316" stroke-width="2"/>`;
+  s += `<text x="387" y="40" text-anchor="middle" fill="#f97316" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="1">DECAPAGEM ELETROLÍTICA</text>`;
   
-  s += `<rect x="710" y="60" width="280" height="150" rx="4" fill="none" stroke="#6b7280" stroke-width="1.5"/>`;
-  s += `<text x="850" y="50" text-anchor="middle" fill="#9ca3af" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="1">DECAPAGEM QUÍMICA</text>`;
+  s += `<rect x="680" y="50" width="180" height="180" rx="6" fill="none" stroke="#6b7280" stroke-width="1.5"/>`;
+  s += `<text x="770" y="40" text-anchor="middle" fill="#9ca3af" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="1">DECAPAGEM QUÍMICA</text>`;
   
-  s += `<text x="50" y="70" fill="#9ca3af" font-family="Inter,sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">ENTRADA</text>`;
-  s += `<text x="1150" y="70" fill="#9ca3af" font-family="Inter,sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">SAÍDA</text>`;
+  s += `<text x="40" y="55" fill="#9ca3af" font-family="Inter,sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">ENTRADA</text>`;
+  s += `<text x="1120" y="55" fill="#9ca3af" font-family="Inter,sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">SAÍDA</text>`;
 
-  function smallRoll(x:number, y:number) {
-    return `<circle cx="${x}" cy="${y}" r="8" fill="none" stroke="#d1d5db" stroke-width="2"/>`;
-  }
-  function largeRoll(x:number, y:number, inChem:boolean=false) {
-    let r = '';
-    r += `<rect x="${x-15}" y="${y+24}" width="30" height="20" rx="2" fill="#374151"/>`;
-    r += `<rect x="${x-20}" y="${y+44}" width="40" height="10" rx="2" fill="#1f2937"/>`;
-    r += `<circle cx="${x}" cy="${y}" r="24" fill="${inChem?'#1f2937':'none'}" stroke="#d1d5db" stroke-width="2"/>`;
-    return r;
-  }
-  function brushStation(x:number, y:number) {
+  let rBehind = '';
+  let rFront = '';
+
+  function baseBlock(x:number, y:number) {
     let b = '';
-    b += `<rect x="${x-30}" y="${y-25}" width="60" height="50" rx="4" fill="none" stroke="#9ca3af" stroke-width="1.5"/>`;
-    b += `<circle cx="${x-15}" cy="${y-12}" r="8" fill="none" stroke="#d1d5db" stroke-width="2"/>`;
-    b += `<circle cx="${x+15}" cy="${y-12}" r="8" fill="none" stroke="#eab308" stroke-width="2"/>`;
-    b += `<circle cx="${x-15}" cy="${y+12}" r="8" fill="none" stroke="#eab308" stroke-width="2"/>`;
-    b += `<circle cx="${x+15}" cy="${y+12}" r="8" fill="none" stroke="#d1d5db" stroke-width="2"/>`;
-    b += `<rect x="${x-15}" y="${y+25}" width="30" height="15" rx="2" fill="#374151"/>`;
-    b += `<rect x="${x-20}" y="${y+40}" width="40" height="8" rx="2" fill="#1f2937"/>`;
+    b += `<path d="M${x-12} ${y} L${x+12} ${y} L${x+12} ${y+8} L${x-12} ${y+8} Z" fill="#4b5563"/>`;
+    b += `<path d="M${x-16} ${y+8} L${x+16} ${y+8} L${x+16} ${y+16} L${x-16} ${y+16} Z" fill="#374151"/>`;
+    b += `<path d="M${x-20} ${y+16} L${x+20} ${y+16} L${x+20} ${y+26} L${x-20} ${y+26} Z" fill="#1f2937"/>`;
     return b;
   }
+  function addSmallRoll(x:number, y:number, isTop:boolean) {
+    let r = `<circle cx="${x}" cy="${y}" r="8" fill="#1a1c24" stroke="#d1d5db" stroke-width="2"/>`;
+    if (isTop) rFront += r; else rBehind += r;
+  }
+  function addPinchRolls(x:number, y:number) {
+    addSmallRoll(x, y - 8, true);
+    addSmallRoll(x, y + 8, false);
+  }
+  function addLargeRoll(x:number, y:number, blockY:number, isTop:boolean, inChem:boolean=false) {
+    rBehind += baseBlock(x, blockY);
+    let r = `<circle cx="${x}" cy="${y}" r="24" fill="${inChem?'#1f2937':'#1a1c24'}" stroke="#d1d5db" stroke-width="2"/>`;
+    if (isTop) rFront += r; else rBehind += r;
+  }
+  function addBrushStation(x:number, cy:number) {
+    let b = baseBlock(x, cy + 25);
+    b += `<rect x="${x-30}" y="${cy-25}" width="60" height="50" rx="4" fill="#1a1c24" stroke="#9ca3af" stroke-width="1.5"/>`;
+    rBehind += b;
+    rFront += `<circle cx="${x-15}" cy="${cy-8}" r="8" fill="#1a1c24" stroke="#d1d5db" stroke-width="2"/>`;
+    rFront += `<circle cx="${x+15}" cy="${cy-8}" r="8" fill="#1a1c24" stroke="#eab308" stroke-width="2"/>`;
+    rBehind += `<circle cx="${x-15}" cy="${cy+8}" r="8" fill="#1a1c24" stroke="#eab308" stroke-width="2"/>`;
+    rBehind += `<circle cx="${x+15}" cy="${cy+8}" r="8" fill="#1a1c24" stroke="#d1d5db" stroke-width="2"/>`;
+  }
   
-  let r = '';
-  r += largeRoll(90, 150);
-  r += smallRoll(150, 142); r += smallRoll(180, 158); r += smallRoll(210, 142); r += smallRoll(240, 158);
-  r += largeRoll(320, 140);
-  r += smallRoll(390, 142); r += smallRoll(420, 158); r += smallRoll(450, 142); r += smallRoll(480, 158);
-  r += brushStation(570, 150);
-  r += smallRoll(650, 142); r += smallRoll(680, 158);
-  r += largeRoll(780, 165, true); r += largeRoll(880, 165, true);
-  r += brushStation(1030, 150);
-  r += smallRoll(1110, 142); r += smallRoll(1140, 158);
+  // Entry roll: X=70, Center=136. Block at 160. Strip OVER it -> isTop=false
+  addLargeRoll(70, 136, 160, false);
   
-  let strip = `M 20 170 L 75 145 Q 90 120 105 145 L 125 150 `;
-  strip += `L 140 150 Q 150 160 160 150 L 170 150 Q 180 140 190 150 L 200 150 Q 210 160 220 150 L 230 150 Q 240 140 250 150 `;
-  strip += `L 290 150 Q 320 180 350 150 L 380 150 `;
-  strip += `Q 390 160 400 150 L 410 150 Q 420 140 430 150 L 440 150 Q 450 160 460 150 L 470 150 Q 480 140 490 150 `;
-  strip += `L 530 150 L 610 150 L 640 150 Q 650 160 660 150 L 670 150 Q 680 140 690 150 `;
-  strip += `L 720 150 L 730 165 L 930 165 L 940 150 `;
-  strip += `L 990 150 L 1070 150 L 1100 150 Q 1110 160 1120 150 L 1130 150 Q 1140 140 1150 150 L 1180 170`;
+  // 4 small rolls Eletrolitica
+  addSmallRoll(140, 156, true);
+  addSmallRoll(175, 164, false);
+  addSmallRoll(210, 156, true);
+  addSmallRoll(245, 164, false);
   
-  s += r + `<path d="${strip}" fill="none" stroke="#d1d5db" stroke-width="2" stroke-linecap="round"/>`;
+  // Large roll Eletrolitica: X=320, Center=166. Block at 190. Strip UNDER it -> isTop=true
+  addLargeRoll(320, 166, 190, true);
+  
+  // 4 small rolls Eletrolitica
+  addSmallRoll(395, 156, true);
+  addSmallRoll(430, 164, false);
+  addSmallRoll(465, 156, true);
+  addSmallRoll(500, 164, false);
+  
+  // Pinch 1
+  addPinchRolls(540, 160);
+  
+  // Brush 1
+  addBrushStation(590, 160);
+  
+  // Pinch 2
+  addPinchRolls(640, 160);
+  
+  // Quimica large rolls. Strip OVER/THROUGH them -> isTop=false
+  addLargeRoll(730, 160, 184, false, true);
+  addLargeRoll(810, 160, 184, false, true);
+  
+  // Pinch 3
+  addPinchRolls(890, 160);
+  
+  // Brush 2
+  addBrushStation(940, 160);
+  
+  // Pinch 4
+  addPinchRolls(990, 160);
+  
+  // Final small roll
+  addSmallRoll(1025, 156, true);
+  
+  // Strip Path
+  let strip = `M 20 190 L 55 125 Q 70 100 85 125 L 115 160 L 122.5 160 `;
+  strip += `Q 140 172 157.5 160 Q 175 148 192.5 160 Q 210 172 227.5 160 Q 245 148 262.5 160 `;
+  strip += `Q 320 228 377.5 160 `;
+  strip += `Q 395 172 412.5 160 Q 430 148 447.5 160 Q 465 172 482.5 160 Q 500 148 517.5 160 `;
+  strip += `L 1010 160 `;
+  strip += `Q 1025 172 1040 160 L 1080 190`;
+  
+  // Draw order: background rolls -> strip -> foreground rolls
+  s += rBehind;
+  s += `<path d="${strip}" fill="none" stroke="#d1d5db" stroke-width="2" stroke-linecap="round"/>`;
+  s += rFront;
+  
   s += `</svg>`;
   $('decapagemDiagram').innerHTML = s;
 }

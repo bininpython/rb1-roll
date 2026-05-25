@@ -94,12 +94,16 @@ function renderDecapagem() {
   const svgW = 1200, svgH = 300;
   let s = `<svg viewBox="0 0 ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">`;
   
-  // Background boxes and text
+  // Background boxes
   s += `<rect x="110" y="50" width="555" height="180" rx="6" fill="none" stroke="#f97316" stroke-width="2"/>`;
-  s += `<text x="387" y="40" text-anchor="middle" fill="#f97316" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="1">DECAPAGEM ELETROLÍTICA</text>`;
-  
   s += `<rect x="680" y="50" width="180" height="180" rx="6" fill="none" stroke="#6b7280" stroke-width="1.5"/>`;
-  s += `<text x="770" y="40" text-anchor="middle" fill="#9ca3af" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="1">DECAPAGEM QUÍMICA</text>`;
+  
+  // Texts breaking the box lines (using a background rect to occlude the line)
+  s += `<rect x="270" y="44" width="230" height="12" fill="#1a1c24"/>`;
+  s += `<text x="387" y="54" text-anchor="middle" fill="#f97316" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="1">DECAPAGEM ELETROLÍTICA</text>`;
+  
+  s += `<rect x="685" y="44" width="170" height="12" fill="#1a1c24"/>`;
+  s += `<text x="770" y="54" text-anchor="middle" fill="#9ca3af" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="1">DECAPAGEM QUÍMICA</text>`;
   
   s += `<text x="40" y="55" fill="#9ca3af" font-family="Inter,sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">ENTRADA</text>`;
   s += `<text x="1120" y="55" fill="#9ca3af" font-family="Inter,sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">SAÍDA</text>`;
@@ -109,9 +113,8 @@ function renderDecapagem() {
 
   function baseBlock(x:number, y:number) {
     let b = '';
-    b += `<path d="M${x-12} ${y} L${x+12} ${y} L${x+12} ${y+8} L${x-12} ${y+8} Z" fill="#4b5563"/>`;
-    b += `<path d="M${x-16} ${y+8} L${x+16} ${y+8} L${x+16} ${y+16} L${x-16} ${y+16} Z" fill="#374151"/>`;
-    b += `<path d="M${x-20} ${y+16} L${x+20} ${y+16} L${x+20} ${y+26} L${x-20} ${y+26} Z" fill="#1f2937"/>`;
+    b += `<path d="M${x-16} ${y} L${x+16} ${y} L${x+16} ${y+12} L${x-16} ${y+12} Z" fill="#374151"/>`;
+    b += `<path d="M${x-22} ${y+12} L${x+22} ${y+12} L${x+22} ${y+24} L${x-22} ${y+24} Z" fill="#1f2937"/>`;
     return b;
   }
   function addSmallRoll(x:number, y:number, isTop:boolean) {
@@ -119,8 +122,8 @@ function renderDecapagem() {
     if (isTop) rFront += r; else rBehind += r;
   }
   function addPinchRolls(x:number, y:number) {
-    addSmallRoll(x, y - 8, true);
-    addSmallRoll(x, y + 8, false);
+    addSmallRoll(x, y - 10, true);
+    addSmallRoll(x, y + 10, false);
   }
   function addLargeRoll(x:number, y:number, blockY:number, isTop:boolean, inChem:boolean=false) {
     rBehind += baseBlock(x, blockY);
@@ -131,29 +134,29 @@ function renderDecapagem() {
     let b = baseBlock(x, cy + 25);
     b += `<rect x="${x-30}" y="${cy-25}" width="60" height="50" rx="4" fill="#1a1c24" stroke="#9ca3af" stroke-width="1.5"/>`;
     rBehind += b;
-    rFront += `<circle cx="${x-15}" cy="${cy-8}" r="8" fill="#1a1c24" stroke="#d1d5db" stroke-width="2"/>`;
-    rFront += `<circle cx="${x+15}" cy="${cy-8}" r="8" fill="#1a1c24" stroke="#eab308" stroke-width="2"/>`;
-    rBehind += `<circle cx="${x-15}" cy="${cy+8}" r="8" fill="#1a1c24" stroke="#eab308" stroke-width="2"/>`;
-    rBehind += `<circle cx="${x+15}" cy="${cy+8}" r="8" fill="#1a1c24" stroke="#d1d5db" stroke-width="2"/>`;
+    rFront += `<circle cx="${x-15}" cy="${cy-10}" r="8" fill="#1a1c24" stroke="#d1d5db" stroke-width="2"/>`;
+    rFront += `<circle cx="${x+15}" cy="${cy-10}" r="8" fill="#1a1c24" stroke="#eab308" stroke-width="2"/>`;
+    rBehind += `<circle cx="${x-15}" cy="${cy+10}" r="8" fill="#1a1c24" stroke="#eab308" stroke-width="2"/>`;
+    rBehind += `<circle cx="${x+15}" cy="${cy+10}" r="8" fill="#1a1c24" stroke="#d1d5db" stroke-width="2"/>`;
   }
   
-  // Entry roll: X=70, Center=136. Block at 160. Strip OVER it -> isTop=false
-  addLargeRoll(70, 136, 160, false);
+  // Entry roll
+  addLargeRoll(70, 140, 164, false);
   
   // 4 small rolls Eletrolitica
-  addSmallRoll(140, 156, true);
-  addSmallRoll(175, 164, false);
-  addSmallRoll(210, 156, true);
-  addSmallRoll(245, 164, false);
+  addSmallRoll(140, 166, false);
+  addSmallRoll(175, 154, true);
+  addSmallRoll(210, 166, false);
+  addSmallRoll(245, 154, true);
   
-  // Large roll Eletrolitica: X=320, Center=166. Block at 190. Strip UNDER it -> isTop=true
-  addLargeRoll(320, 166, 190, true);
+  // Large roll Eletrolitica
+  addLargeRoll(320, 156, 180, true);
   
   // 4 small rolls Eletrolitica
-  addSmallRoll(395, 156, true);
-  addSmallRoll(430, 164, false);
-  addSmallRoll(465, 156, true);
-  addSmallRoll(500, 164, false);
+  addSmallRoll(395, 166, false);
+  addSmallRoll(430, 154, true);
+  addSmallRoll(465, 166, false);
+  addSmallRoll(500, 154, true);
   
   // Pinch 1
   addPinchRolls(540, 160);
@@ -164,7 +167,7 @@ function renderDecapagem() {
   // Pinch 2
   addPinchRolls(640, 160);
   
-  // Quimica large rolls. Strip OVER/THROUGH them -> isTop=false
+  // Quimica large rolls
   addLargeRoll(730, 160, 184, false, true);
   addLargeRoll(810, 160, 184, false, true);
   
@@ -178,17 +181,17 @@ function renderDecapagem() {
   addPinchRolls(990, 160);
   
   // Final small roll
-  addSmallRoll(1025, 156, true);
+  addSmallRoll(1025, 154, true);
   
   // Strip Path
-  let strip = `M 20 190 L 55 125 Q 70 100 85 125 L 115 160 L 122.5 160 `;
-  strip += `Q 140 172 157.5 160 Q 175 148 192.5 160 Q 210 172 227.5 160 Q 245 148 262.5 160 `;
-  strip += `Q 320 228 377.5 160 `;
-  strip += `Q 395 172 412.5 160 Q 430 148 447.5 160 Q 465 172 482.5 160 Q 500 148 517.5 160 `;
+  let strip = `M 20 190 L 50 130 Q 70 96 90 130 L 122.5 160 `;
+  strip += `Q 140 152 157.5 160 Q 175 168 192.5 160 Q 210 152 227.5 160 Q 245 168 262.5 160 `;
+  strip += `Q 320 208 377.5 160 `;
+  strip += `Q 395 152 412.5 160 Q 430 168 447.5 160 Q 465 152 482.5 160 Q 500 168 517.5 160 `;
   strip += `L 1010 160 `;
-  strip += `Q 1025 172 1040 160 L 1080 190`;
+  strip += `Q 1025 168 1040 160 L 1080 190`;
   
-  // Draw order: background rolls -> strip -> foreground rolls
+  // Draw order
   s += rBehind;
   s += `<path d="${strip}" fill="none" stroke="#d1d5db" stroke-width="2" stroke-linecap="round"/>`;
   s += rFront;

@@ -113,8 +113,9 @@ function renderDecapagem() {
 
   function baseBlock(x:number, y:number) {
     let b = '';
-    b += `<path d="M${x-16} ${y} L${x+16} ${y} L${x+16} ${y+12} L${x-16} ${y+12} Z" fill="#374151"/>`;
-    b += `<path d="M${x-22} ${y+12} L${x+22} ${y+12} L${x+22} ${y+24} L${x-22} ${y+24} Z" fill="#1f2937"/>`;
+    b += `<path d="M${x-14} ${y} L${x+14} ${y} L${x+14} ${y+6} L${x-14} ${y+6} Z" fill="#4b5563"/>`;
+    b += `<path d="M${x-18} ${y+6} L${x+18} ${y+6} L${x+18} ${y+14} L${x-18} ${y+14} Z" fill="#374151"/>`;
+    b += `<path d="M${x-22} ${y+14} L${x+22} ${y+14} L${x+22} ${y+24} L${x-22} ${y+24} Z" fill="#1f2937"/>`;
     return b;
   }
   function addSmallRoll(x:number, y:number, isTop:boolean) {
@@ -141,22 +142,22 @@ function renderDecapagem() {
   }
   
   // Entry roll
-  addLargeRoll(70, 140, 164, false);
+  addLargeRoll(70, 136, 160, false);
   
-  // 4 small rolls Eletrolitica
-  addSmallRoll(140, 166, false);
-  addSmallRoll(175, 154, true);
-  addSmallRoll(210, 166, false);
-  addSmallRoll(245, 154, true);
+  // 4 small rolls Eletrolitica (all centered horizontally at 160)
+  addSmallRoll(140, 160, true);  // Roll 1: strip goes UNDER -> isTop=true
+  addSmallRoll(175, 160, false); // Roll 2: strip goes OVER -> isTop=false
+  addSmallRoll(210, 160, true);  // Roll 3: strip goes UNDER -> isTop=true
+  addSmallRoll(245, 160, false); // Roll 4: strip goes OVER -> isTop=false
   
   // Large roll Eletrolitica
-  addLargeRoll(320, 156, 180, true);
+  addLargeRoll(320, 160, 184, true);
   
   // 4 small rolls Eletrolitica
-  addSmallRoll(395, 166, false);
-  addSmallRoll(430, 154, true);
-  addSmallRoll(465, 166, false);
-  addSmallRoll(500, 154, true);
+  addSmallRoll(395, 160, false); // Roll 5: strip goes OVER -> isTop=false
+  addSmallRoll(430, 160, true);  // Roll 6: strip goes UNDER -> isTop=true
+  addSmallRoll(465, 160, false); // Roll 7: strip goes OVER -> isTop=false
+  addSmallRoll(500, 160, true);  // Roll 8: strip goes UNDER -> isTop=true
   
   // Pinch 1
   addPinchRolls(540, 160);
@@ -181,15 +182,15 @@ function renderDecapagem() {
   addPinchRolls(990, 160);
   
   // Final small roll
-  addSmallRoll(1025, 154, true);
+  addSmallRoll(1025, 160, true); // strip goes UNDER -> isTop=true
   
   // Strip Path
-  let strip = `M 20 190 L 50 130 Q 70 96 90 130 L 122.5 160 `;
-  strip += `Q 140 152 157.5 160 Q 175 168 192.5 160 Q 210 152 227.5 160 Q 245 168 262.5 160 `;
-  strip += `Q 320 208 377.5 160 `;
-  strip += `Q 395 152 412.5 160 Q 430 168 447.5 160 Q 465 152 482.5 160 Q 500 168 517.5 160 `;
+  let strip = `M 20 190 L 50 120 Q 70 100 90 120 L 115 160 L 122.5 160 `;
+  strip += `Q 140 180 157.5 160 Q 175 140 192.5 160 Q 210 180 227.5 160 Q 245 140 262.5 160 `;
+  strip += `Q 320 216 377.5 160 `;
+  strip += `Q 395 140 412.5 160 Q 430 180 447.5 160 Q 465 140 482.5 160 Q 500 180 517.5 160 `;
   strip += `L 1010 160 `;
-  strip += `Q 1025 168 1040 160 L 1080 190`;
+  strip += `Q 1025 180 1040 160 L 1080 190`;
   
   // Draw order
   s += rBehind;

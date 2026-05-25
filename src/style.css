@@ -88,6 +88,10 @@ body {
 .decapagem-section {
   max-width: 1360px; margin: 1rem auto; padding: 0 1.5rem;
 }
+#decapagemDiagram {
+  background: #13161c;
+  border: 1px solid #20242e;
+}
 
 
 /* ===== Buttons ===== */

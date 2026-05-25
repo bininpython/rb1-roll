@@ -91,124 +91,102 @@ function renderFurnace() {
 
 // Decapagem SVG
 function renderDecapagem() {
-  const svgW = 1200, svgH = 300;
-  let s = `<svg viewBox="0 0 ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">`;
+  const svgW = 1700, svgH = 500;
+  let s = `<svg viewBox="0 0 ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;background-color:#13161c;">`;
   
-  // Background boxes
-  s += `<rect x="110" y="50" width="570" height="180" rx="6" fill="none" stroke="#f97316" stroke-width="2"/>`;
-  s += `<rect x="700" y="50" width="190" height="180" rx="6" fill="none" stroke="#6b7280" stroke-width="1.5"/>`;
+  s += `<defs>
+    <pattern id="verticalTexture" width="6" height="500" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="0" y2="500" stroke="rgba(255,255,255,0.015)" stroke-width="1.5" />
+    </pattern>
+  </defs>`;
   
-  // Texts breaking the box lines
-  s += `<rect x="280" y="44" width="230" height="12" fill="#1a1c24"/>`;
-  s += `<text x="395" y="54" text-anchor="middle" fill="#f97316" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="1">DECAPAGEM ELETROLÍTICA</text>`;
+  s += `<rect width="1700" height="500" fill="#13161c" />`;
+  s += `<rect width="1700" height="500" fill="url(#verticalTexture)" />`;
   
-  s += `<rect x="710" y="44" width="170" height="12" fill="#1a1c24"/>`;
-  s += `<text x="795" y="54" text-anchor="middle" fill="#9ca3af" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="1">DECAPAGEM QUÍMICA</text>`;
-  
-  s += `<text x="40" y="55" fill="#9ca3af" font-family="Inter,sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">ENTRADA</text>`;
-  s += `<text x="1120" y="55" fill="#9ca3af" font-family="Inter,sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">SAÍDA</text>`;
-
-  let rBehind = '';
-  let rFront = '';
-
-  function baseBlock(x:number, y:number) {
+  function baseBlock(x: number, y: number) {
     let b = '';
-    b += `<path d="M${x-14} ${y} L${x+14} ${y} L${x+14} ${y+6} L${x-14} ${y+6} Z" fill="#4b5563"/>`;
-    b += `<path d="M${x-18} ${y+6} L${x+18} ${y+6} L${x+18} ${y+14} L${x-18} ${y+14} Z" fill="#374151"/>`;
-    b += `<path d="M${x-22} ${y+14} L${x+22} ${y+14} L${x+22} ${y+24} L${x-22} ${y+24} Z" fill="#1f2937"/>`;
+    b += `<rect x="${x - 18}" y="${y}" width="36" height="8" rx="2" fill="#3a3d46" />`;
+    b += `<rect x="${x - 24}" y="${y + 8}" width="48" height="14" rx="2" fill="#2c2e35" />`;
+    b += `<rect x="${x - 30}" y="${y + 22}" width="60" height="10" rx="2" fill="#1e2025" />`;
     return b;
   }
-  function addSmallRoll(x:number, y:number, isTop:boolean) {
-    let r = `<circle cx="${x}" cy="${y}" r="8" fill="#1a1c24" stroke="#d1d5db" stroke-width="2"/>`;
-    if (isTop) rFront += r; else rBehind += r;
-  }
-  function addPinchRolls(x:number) {
-    addSmallRoll(x, 150, true);
-    addSmallRoll(x, 170, false);
-  }
-  function addLargeRoll(x:number, y:number, blockY:number, isTop:boolean, inChem:boolean=false) {
-    rBehind += baseBlock(x, blockY);
-    let r = `<circle cx="${x}" cy="${y}" r="24" fill="${inChem?'#1f2937':'#1a1c24'}" stroke="#d1d5db" stroke-width="2"/>`;
-    if (isTop) rFront += r; else rBehind += r;
-  }
-  function addBrushStation(x:number) {
-    let b = baseBlock(x, 185);
-    b += `<rect x="${x-30}" y="135" width="60" height="50" rx="4" fill="#1a1c24" stroke="#9ca3af" stroke-width="1.5"/>`;
-    rBehind += b;
-    rFront += `<circle cx="${x-15}" cy="150" r="8" fill="#1a1c24" stroke="#d1d5db" stroke-width="2"/>`;
-    rFront += `<circle cx="${x+15}" cy="150" r="8" fill="#1a1c24" stroke="#eab308" stroke-width="2"/>`;
-    rBehind += `<circle cx="${x-15}" cy="170" r="8" fill="#1a1c24" stroke="#eab308" stroke-width="2"/>`;
-    rBehind += `<circle cx="${x+15}" cy="170" r="8" fill="#1a1c24" stroke="#d1d5db" stroke-width="2"/>`;
+  
+  function largeCylinder(x: number, y: number) {
+    let c = '';
+    c += baseBlock(x, y + 28);
+    c += `<circle cx="${x}" cy="${y}" r="28" fill="#161a22" stroke="#e2e8f0" stroke-width="1.5" />`;
+    c += `<circle cx="${x}" cy="${y}" r="3" fill="#e2e8f0" opacity="0.3" />`;
+    return c;
   }
   
-  // Entry roll
-  addLargeRoll(70, 160, 184, false, false);
+  function smallRoll(x: number, y: number) {
+    return `<circle cx="${x}" cy="${y}" r="10" fill="#13161c" stroke="#e2e8f0" stroke-width="1.5" />`;
+  }
   
-  // Weave 1
-  addSmallRoll(140, 142, true);  // UP
-  addSmallRoll(180, 178, false); // DOWN
-  addSmallRoll(220, 142, true);  // UP
-  addSmallRoll(260, 178, false); // DOWN
+  function pinchRolls(x: number, y: number) {
+    let p = '';
+    p += `<circle cx="${x}" cy="${y - 10}" r="10" fill="#13161c" stroke="#e2e8f0" stroke-width="1.5" />`;
+    p += `<circle cx="${x}" cy="${y + 10}" r="10" fill="#13161c" stroke="#e2e8f0" stroke-width="1.5" />`;
+    return p;
+  }
   
-  // Large roll Eletrolitica (Filled Dark Gray)
-  addLargeRoll(340, 160, 184, false, true);
+  function brushStation(x: number, y: number) {
+    let b = '';
+    b += baseBlock(x, y + 28);
+    b += `<rect x="${x - 28}" y="${y - 28}" width="56" height="56" rx="4" fill="#161a22" stroke="#6b7280" stroke-width="1.5" />`;
+    b += `<circle cx="${x - 13}" cy="${y - 13}" r="9" fill="#161a22" stroke="#e2e8f0" stroke-width="1.5" />`;
+    b += `<circle cx="${x + 13}" cy="${y - 13}" r="9" fill="#161a22" stroke="#eab308" stroke-width="1.5" />`;
+    b += `<circle cx="${x - 13}" cy="${y + 13}" r="9" fill="#161a22" stroke="#eab308" stroke-width="1.5" />`;
+    b += `<circle cx="${x + 13}" cy="${y + 13}" r="9" fill="#161a22" stroke="#e2e8f0" stroke-width="1.5" />`;
+    return b;
+  }
+
+  let behind = '';
+  let front = '';
   
-  // Weave 2
-  addSmallRoll(420, 142, true);  // UP
-  addSmallRoll(460, 178, false); // DOWN
-  addSmallRoll(500, 142, true);  // UP
-  addSmallRoll(540, 178, false); // DOWN
+  behind += largeCylinder(140, 320);
   
-  // Pinch 1
-  addPinchRolls(580);
+  front += smallRoll(220, 282);
+  front += smallRoll(270, 302);
+  front += smallRoll(320, 282);
+  front += smallRoll(370, 302);
+  front += smallRoll(420, 282);
   
-  // Brush 1
-  addBrushStation(625);
+  behind += largeCylinder(540, 320);
   
-  // Pinch 2
-  addPinchRolls(670);
+  front += smallRoll(660, 282);
+  front += smallRoll(710, 302);
+  front += smallRoll(760, 282);
+  front += smallRoll(810, 302);
+  front += smallRoll(860, 282);
   
-  // Quimica large rolls
-  addLargeRoll(740, 160, 184, false, true);
-  addLargeRoll(850, 160, 184, false, true);
+  front += pinchRolls(910, 267);
+  behind += brushStation(960, 267);
+  front += pinchRolls(1010, 267);
   
-  // Pinch 3
-  addPinchRolls(930);
+  behind += largeCylinder(1150, 320);
+  behind += largeCylinder(1290, 320);
   
-  // Brush 2
-  addBrushStation(975);
+  front += pinchRolls(1390, 267);
+  behind += brushStation(1440, 267);
+  front += pinchRolls(1490, 267);
+  front += pinchRolls(1530, 267);
   
-  // Pinch 4
-  addPinchRolls(1020);
+  let pathStr = `M 30 330 L 140 292 L 880 292 L 900 267 L 1020 267 L 1040 292 L 1365 292 L 1380 267 L 1540 267 L 1650 330`;
+  let processLine = `<path d="${pathStr}" fill="none" stroke="#e2e8f0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />`;
   
-  // Final small roll
-  addSmallRoll(1060, 142, true); // UP
+  s += behind;
+  s += processLine;
+  s += front;
   
-  // Strip Path (Angular lines exactly like reference)
-  let strip = `M 20 160 L 50 160 L 70 132 L 90 160 L 120 160 `;
-  // Weave 1
-  strip += `L 132 152 L 148 152 `;
-  strip += `L 172 168 L 188 168 `;
-  strip += `L 212 152 L 228 152 `;
-  strip += `L 252 168 L 268 168 `;
-  // Eletrolitica Large
-  strip += `L 280 160 L 390 160 `;
-  // Weave 2
-  strip += `L 412 152 L 428 152 `;
-  strip += `L 452 168 L 468 168 `;
-  strip += `L 492 152 L 508 152 `;
-  strip += `L 532 168 L 548 168 `;
-  // Straight through Pinch, Brush, Quimica, Pinch, Brush, Pinch
-  strip += `L 560 160 L 1030 160 `;
-  // Final Roll
-  strip += `L 1052 152 L 1068 152 `;
-  // Exit
-  strip += `L 1080 170 L 1110 170`;
+  s += `<rect x="180" y="200" width="812" height="180" rx="10" fill="none" stroke="#e27b38" stroke-width="2" />`;
+  s += `<text x="586" y="192" text-anchor="middle" fill="#e27b38" font-family="'Inter', sans-serif" font-size="12" font-weight="700" letter-spacing="2">DECAPAGEM ELETROLÍTICA</text>`;
   
-  // Draw order
-  s += rBehind;
-  s += `<path d="${strip}" fill="none" stroke="#d1d5db" stroke-width="2" stroke-linejoin="miter"/>`;
-  s += rFront;
+  s += `<rect x="1095" y="200" width="250" height="180" rx="10" fill="none" stroke="#6b7280" stroke-width="1.5" />`;
+  s += `<text x="1220" y="192" text-anchor="middle" fill="#9ca3af" font-family="'Inter', sans-serif" font-size="12" font-weight="700" letter-spacing="2">DECAPAGEM QUÍMICA</text>`;
+  
+  s += `<text x="80" y="250" text-anchor="middle" fill="#9ca3af" font-family="'Inter', sans-serif" font-size="12" font-weight="700" letter-spacing="2">ENTRADA</text>`;
+  s += `<text x="1620" y="250" text-anchor="middle" fill="#9ca3af" font-family="'Inter', sans-serif" font-size="12" font-weight="700" letter-spacing="2">SAÍDA</text>`;
   
   s += `</svg>`;
   $('decapagemDiagram').innerHTML = s;

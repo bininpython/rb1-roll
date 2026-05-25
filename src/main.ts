@@ -164,15 +164,22 @@ function renderDecapagem() {
   behind += brushStation(960, 267);
   front += pinchRolls(1010, 267);
   
+  // Lower pinch roll pair on a pedestal for first brush station
+  behind += baseBlock(1060, 312);
+  front += pinchRolls(1060, 292);
+  
   behind += largeCylinder(1150, 320);
   behind += largeCylinder(1290, 320);
   
   front += pinchRolls(1390, 267);
   behind += brushStation(1440, 267);
   front += pinchRolls(1490, 267);
-  front += pinchRolls(1530, 267);
   
-  let pathStr = `M 30 330 L 140 292 L 880 292 L 900 267 L 1020 267 L 1040 292 L 1365 292 L 1380 267 L 1540 267 L 1650 330`;
+  // Lower pinch roll pair on a pedestal for second brush station
+  behind += baseBlock(1540, 312);
+  front += pinchRolls(1540, 292);
+  
+  let pathStr = `M 30 330 L 140 292 L 880 292 L 900 267 L 1025 267 L 1045 292 L 1365 292 L 1380 267 L 1505 267 L 1525 292 L 1560 292 L 1670 330`;
   let processLine = `<path d="${pathStr}" fill="none" stroke="#e2e8f0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />`;
   
   s += behind;

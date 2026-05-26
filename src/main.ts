@@ -242,16 +242,7 @@ function renderDecapagem() {
   s += processLine;
   s += front;
   
-  // 9. Highlight Boxes and Texts
-  // Section 1: Decapagem Eletrolítica (Orange Box)
-  s += `<rect x="180" y="230" width="880" height="180" rx="12" fill="none" stroke="#e27b38" stroke-width="2" />`;
-  s += `<text x="620" y="218" text-anchor="middle" fill="#e27b38" font-family="'Inter', sans-serif" font-size="11.5" font-weight="700" letter-spacing="2.5">DECAPAGEM ELETROLÍTICA</text>`;
-  
-  // Section 2: Decapagem Química (Grey Box)
-  s += `<rect x="1080" y="230" width="330" height="180" rx="12" fill="none" stroke="#4b5563" stroke-width="1.5" />`;
-  s += `<text x="1245" y="218" text-anchor="middle" fill="#9ca3af" font-family="'Inter', sans-serif" font-size="11.5" font-weight="700" letter-spacing="2.5">DECAPAGEM QUÍMICA</text>`;
-  
-  // Boundary Texts
+  // 9. Boundary Texts
   s += `<text x="70" y="280" text-anchor="middle" fill="#6b7280" font-family="'Inter', sans-serif" font-size="11" font-weight="600" letter-spacing="3">ENTRADA</text>`;
   s += `<text x="1640" y="280" text-anchor="middle" fill="#6b7280" font-family="'Inter', sans-serif" font-size="11" font-weight="600" letter-spacing="3">SAÍDA</text>`;
   

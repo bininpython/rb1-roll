@@ -137,24 +137,64 @@ function renderDecapagem() {
   }
   
   // Large Cylinders (Center y = 350, Radius = 30)
-  function largeCylinder(x: number, y: number) {
+  function largeCylinder(x: number, y: number, dir: 'cw' | 'ccw' = 'cw') {
     let c = '';
     c += baseBlock(x, y + 30); // Base starts at bottom of cylinder (350 + 30 = 380)
-    c += `<circle cx="${x}" cy="${y}" r="30" fill="#11141a" stroke="#e2e8f0" stroke-width="1.8" />`;
+    
+    // Rotating group for inner indicators (dashed circle and crosshair lines)
+    c += `<circle cx="${x}" cy="${y}" r="30" fill="#11141a" />`; // Backing circle
+    c += `<g>`;
+    const rotVal = dir === 'cw' ? `0 ${x} ${y};360 ${x} ${y}` : `360 ${x} ${y};0 ${x} ${y}`;
+    c += `<animateTransform attributeName="transform" type="rotate" values="${rotVal}" dur="12s" repeatCount="indefinite" />`;
+    // Crosshair spokes
+    c += `<line x1="${x - 22}" y1="${y}" x2="${x + 22}" y2="${y}" stroke="#e2e8f0" stroke-width="1" opacity="0.3" />`;
+    c += `<line x1="${x}" y1="${y - 22}" x2="${x}" y2="${y + 22}" stroke="#e2e8f0" stroke-width="1" opacity="0.3" />`;
+    // Inner dashed helper circle
+    c += `<circle cx="${x}" cy="${y}" r="20" fill="none" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3" opacity="0.3" />`;
+    c += `</g>`;
+    
+    // Solid casing ring on top
+    c += `<circle cx="${x}" cy="${y}" r="30" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
     c += `<circle cx="${x}" cy="${y}" r="3" fill="#e2e8f0" opacity="0.35" />`;
     return c;
   }
   
   // Small wave rollers (Radius = 10)
-  function smallRoll(x: number, y: number) {
-    return `<circle cx="${x}" cy="${y}" r="10" fill="#11141a" stroke="#e2e8f0" stroke-width="1.8" />`;
+  function smallRoll(x: number, y: number, dir: 'cw' | 'ccw') {
+    let s = '';
+    s += `<circle cx="${x}" cy="${y}" r="10" fill="#11141a" />`; // Backing
+    s += `<g>`;
+    const rotVal = dir === 'cw' ? `0 ${x} ${y};360 ${x} ${y}` : `360 ${x} ${y};0 ${x} ${y}`;
+    s += `<animateTransform attributeName="transform" type="rotate" values="${rotVal}" dur="5s" repeatCount="indefinite" />`;
+    // Indicator line to show rotation
+    s += `<line x1="${x - 7}" y1="${y}" x2="${x + 7}" y2="${y}" stroke="#e2e8f0" stroke-width="1" opacity="0.5" />`;
+    s += `</g>`;
+    s += `<circle cx="${x}" cy="${y}" r="10" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
+    return s;
   }
   
   // Vertical pinch pair (Radius = 8)
   function pinchRolls(x: number, y: number) {
     let p = '';
-    p += `<circle cx="${x}" cy="${y - 10}" r="8" fill="#11141a" stroke="#e2e8f0" stroke-width="1.8" />`;
-    p += `<circle cx="${x}" cy="${y + 10}" r="8" fill="#11141a" stroke="#e2e8f0" stroke-width="1.8" />`;
+    const cyTop = y - 10;
+    const cyBottom = y + 10;
+    
+    // Top roller (CCW)
+    p += `<circle cx="${x}" cy="${cyTop}" r="8" fill="#11141a" />`;
+    p += `<g>`;
+    p += `<animateTransform attributeName="transform" type="rotate" values="360 ${x} ${cyTop};0 ${x} ${cyTop}" dur="4s" repeatCount="indefinite" />`;
+    p += `<line x1="${x - 5}" y1="${cyTop}" x2="${x + 5}" y2="${cyTop}" stroke="#e2e8f0" stroke-width="1" opacity="0.5" />`;
+    p += `</g>`;
+    p += `<circle cx="${x}" cy="${cyTop}" r="8" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
+    
+    // Bottom roller (CW)
+    p += `<circle cx="${x}" cy="${cyBottom}" r="8" fill="#11141a" />`;
+    p += `<g>`;
+    p += `<animateTransform attributeName="transform" type="rotate" values="0 ${x} ${cyBottom};360 ${x} ${cyBottom}" dur="4s" repeatCount="indefinite" />`;
+    p += `<line x1="${x - 5}" y1="${cyBottom}" x2="${x + 5}" y2="${cyBottom}" stroke="#e2e8f0" stroke-width="1" opacity="0.5" />`;
+    p += `</g>`;
+    p += `<circle cx="${x}" cy="${cyBottom}" r="8" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
+    
     return p;
   }
   
@@ -164,15 +204,46 @@ function renderDecapagem() {
     b += tallBaseBlock(x, y + 30); // Stand starts at bottom of station box (320 + 30 = 350)
     // Outer station housing box
     b += `<rect x="${x - 30}" y="${y - 30}" width="60" height="60" rx="4" fill="none" stroke="#9ca3af" stroke-width="1.5" />`;
-    // Rollers in 2x2 grid
-    // Top-Left: White
-    b += `<circle cx="${x - 15}" cy="${y - 15}" r="8" fill="#11141a" stroke="#e2e8f0" stroke-width="1.8" />`;
-    // Top-Right: Yellow
-    b += `<circle cx="${x + 15}" cy="${y - 15}" r="8" fill="#eab308" stroke="#eab308" stroke-width="1.8" />`;
-    // Bottom-Left: Yellow
-    b += `<circle cx="${x - 15}" cy="${y + 15}" r="8" fill="#eab308" stroke="#eab308" stroke-width="1.8" />`;
-    // Bottom-Right: White
-    b += `<circle cx="${x + 15}" cy="${y + 15}" r="8" fill="#11141a" stroke="#e2e8f0" stroke-width="1.8" />`;
+    
+    const r = 8;
+    const dur = '4s';
+    
+    // Roller top-left: White, CCW
+    const cxTL = x - 15, cyTL = y - 15;
+    b += `<circle cx="${cxTL}" cy="${cyTL}" r="${r}" fill="#11141a" />`;
+    b += `<g>`;
+    b += `<animateTransform attributeName="transform" type="rotate" values="360 ${cxTL} ${cyTL};0 ${cxTL} ${cyTL}" dur="${dur}" repeatCount="indefinite" />`;
+    b += `<line x1="${cxTL - 5}" y1="${cyTL}" x2="${cxTL + 5}" y2="${cyTL}" stroke="#e2e8f0" stroke-width="1" opacity="0.5" />`;
+    b += `</g>`;
+    b += `<circle cx="${cxTL}" cy="${cyTL}" r="${r}" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
+    
+    // Roller top-right: Yellow, CCW
+    const cxTR = x + 15, cyTR = y - 15;
+    b += `<circle cx="${cxTR}" cy="${cyTR}" r="${r}" fill="#eab308" />`;
+    b += `<g>`;
+    b += `<animateTransform attributeName="transform" type="rotate" values="360 ${cxTR} ${cyTR};0 ${cxTR} ${cyTR}" dur="${dur}" repeatCount="indefinite" />`;
+    b += `<line x1="${cxTR - 5}" y1="${cyTR}" x2="${cxTR + 5}" y2="${cyTR}" stroke="#11141a" stroke-width="1" opacity="0.5" />`;
+    b += `</g>`;
+    b += `<circle cx="${cxTR}" cy="${cyTR}" r="${r}" fill="none" stroke="#eab308" stroke-width="1.8" />`;
+    
+    // Roller bottom-left: Yellow, CW
+    const cxBL = x - 15, cyBL = y + 15;
+    b += `<circle cx="${cxBL}" cy="${cyBL}" r="${r}" fill="#eab308" />`;
+    b += `<g>`;
+    b += `<animateTransform attributeName="transform" type="rotate" values="0 ${cxBL} ${cyBL};360 ${cxBL} ${cyBL}" dur="${dur}" repeatCount="indefinite" />`;
+    b += `<line x1="${cxBL - 5}" y1="${cyBL}" x2="${cxBL + 5}" y2="${cyBL}" stroke="#11141a" stroke-width="1" opacity="0.5" />`;
+    b += `</g>`;
+    b += `<circle cx="${cxBL}" cy="${cyBL}" r="${r}" fill="none" stroke="#eab308" stroke-width="1.8" />`;
+    
+    // Roller bottom-right: White, CW
+    const cxBR = x + 15, cyBR = y + 15;
+    b += `<circle cx="${cxBR}" cy="${cyBR}" r="${r}" fill="#11141a" />`;
+    b += `<g>`;
+    b += `<animateTransform attributeName="transform" type="rotate" values="0 ${cxBR} ${cyBR};360 ${cxBR} ${cyBR}" dur="${dur}" repeatCount="indefinite" />`;
+    b += `<line x1="${cxBR - 5}" y1="${cyBR}" x2="${cxBR + 5}" y2="${cyBR}" stroke="#e2e8f0" stroke-width="1" opacity="0.5" />`;
+    b += `</g>`;
+    b += `<circle cx="${cxBR}" cy="${cyBR}" r="${r}" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
+    
     return b;
   }
 
@@ -181,24 +252,24 @@ function renderDecapagem() {
   let front = '';
   
   // 1. Far Left Cylinder (outside orange box)
-  behind += largeCylinder(120, 350);
+  behind += largeCylinder(120, 350, 'cw');
   
-  // 2. First Wave of 5 Rollers (Orange box, left side)
-  front += smallRoll(220, 338); // Above
-  front += smallRoll(280, 362); // Below
-  front += smallRoll(340, 338); // Above
-  front += smallRoll(400, 362); // Below
-  front += smallRoll(460, 338); // Above
+  // 2. First Wave of 5 Rollers (left side, alternating directions)
+  front += smallRoll(220, 338, 'ccw'); // Above
+  front += smallRoll(280, 362, 'cw');  // Below
+  front += smallRoll(340, 338, 'ccw'); // Above
+  front += smallRoll(400, 362, 'cw');  // Below
+  front += smallRoll(460, 338, 'ccw'); // Above
   
-  // 3. Middle Cylinder (inside orange box)
-  behind += largeCylinder(540, 350);
+  // 3. Middle Cylinder
+  behind += largeCylinder(540, 350, 'cw');
   
-  // 4. Second Wave of 5 Rollers (Orange box, right side)
-  front += smallRoll(640, 338); // Above
-  front += smallRoll(700, 362); // Below
-  front += smallRoll(760, 338); // Above
-  front += smallRoll(820, 362); // Below
-  front += smallRoll(880, 338); // Above
+  // 4. Second Wave of 5 Rollers (right side, alternating directions)
+  front += smallRoll(640, 338, 'ccw'); // Above
+  front += smallRoll(700, 362, 'cw');  // Below
+  front += smallRoll(760, 338, 'ccw'); // Above
+  front += smallRoll(820, 362, 'cw');  // Below
+  front += smallRoll(880, 338, 'ccw'); // Above
   
   // 5. Orange Box Station (Left Pinch, 2x2 Unit, Right Pinch)
   front += pinchRolls(925, 335); // Centered at y=335 on slope up
@@ -206,8 +277,8 @@ function renderDecapagem() {
   front += pinchRolls(1035, 335); // Centered at y=335 on slope down
   
   // 6. Grey Box Cylinders (Chemical pickling)
-  behind += largeCylinder(1140, 350);
-  behind += largeCylinder(1320, 350);
+  behind += largeCylinder(1140, 350, 'cw');
+  behind += largeCylinder(1320, 350, 'cw');
   
   // 7. Right Station (Left Pinch, 2x2 Unit, Flanking Pinch)
   front += pinchRolls(1465, 335); // Centered at y=335 on slope up

@@ -103,12 +103,30 @@ function renderDecapagem() {
       <line x1="0" y1="0" x2="0" y2="500" stroke="rgba(255,255,255,0.015)" stroke-width="1.2" />
     </pattern>
     <filter id="subtleGlow" x="-10%" y="-10%" width="120%" height="120%">
-      <feGaussianBlur stdDeviation="1" result="blur" />
+      <feGaussianBlur stdDeviation="1.5" result="blur" />
       <feMerge>
         <feMergeNode in="blur" />
         <feMergeNode in="SourceGraphic" />
       </feMerge>
     </filter>
+    
+    <!-- Shifting metallic reflection gradient for white/grey steel rollers -->
+    <linearGradient id="metalRoll" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="25%" stop-color="#334155" />
+      <stop offset="50%" stop-color="#f8fafc" />
+      <stop offset="75%" stop-color="#334155" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+    
+    <!-- Shifting metallic reflection gradient for yellow brass rollers -->
+    <linearGradient id="yellowMetalRoll" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#854d0e" />
+      <stop offset="25%" stop-color="#ca8a04" />
+      <stop offset="50%" stop-color="#fef08a" />
+      <stop offset="75%" stop-color="#ca8a04" />
+      <stop offset="100%" stop-color="#854d0e" />
+    </linearGradient>
   </defs>`;
   
   // Background
@@ -141,21 +159,31 @@ function renderDecapagem() {
     let c = '';
     c += baseBlock(x, y + 30); // Base starts at bottom of cylinder (350 + 30 = 380)
     
-    // Rotating group for inner indicators (dashed circle and crosshair lines)
-    c += `<circle cx="${x}" cy="${y}" r="30" fill="#11141a" />`; // Backing circle
+    // Backing circle to hide the pedestal underneath
+    c += `<circle cx="${x}" cy="${y}" r="30" fill="#11141a" />`;
+    
+    // Rotating group for shifting metallic gradient, spokes and dashed ring
     c += `<g>`;
     const rotVal = dir === 'cw' ? `0 ${x} ${y};360 ${x} ${y}` : `360 ${x} ${y};0 ${x} ${y}`;
     c += `<animateTransform attributeName="transform" type="rotate" values="${rotVal}" dur="12s" repeatCount="indefinite" />`;
-    // Crosshair spokes
-    c += `<line x1="${x - 22}" y1="${y}" x2="${x + 22}" y2="${y}" stroke="#e2e8f0" stroke-width="1" opacity="0.3" />`;
-    c += `<line x1="${x}" y1="${y - 22}" x2="${x}" y2="${y + 22}" stroke="#e2e8f0" stroke-width="1" opacity="0.3" />`;
-    // Inner dashed helper circle
-    c += `<circle cx="${x}" cy="${y}" r="20" fill="none" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3" opacity="0.3" />`;
+    
+    // Shifting metal reflection fill
+    c += `<circle cx="${x}" cy="${y}" r="29.5" fill="url(#metalRoll)" />`;
+    
+    // Multi-spoke mechanical crosshairs (8 lines)
+    c += `<line x1="${x - 24}" y1="${y}" x2="${x + 24}" y2="${y}" stroke="#f8fafc" stroke-width="0.8" opacity="0.3" />`;
+    c += `<line x1="${x}" y1="${y - 24}" x2="${x}" y2="${y + 24}" stroke="#f8fafc" stroke-width="0.8" opacity="0.3" />`;
+    c += `<line x1="${x - 17}" y1="${y - 17}" x2="${x + 17}" y2="${y + 17}" stroke="#f8fafc" stroke-width="0.8" opacity="0.2" />`;
+    c += `<line x1="${x - 17}" y1="${y + 17}" x2="${x + 17}" y2="${y - 17}" stroke="#f8fafc" stroke-width="0.8" opacity="0.2" />`;
+    
+    // Inner dashed indicator circle
+    c += `<circle cx="${x}" cy="${y}" r="18" fill="none" stroke="#f8fafc" stroke-width="1" stroke-dasharray="2 3" opacity="0.35" />`;
     c += `</g>`;
     
-    // Solid casing ring on top
-    c += `<circle cx="${x}" cy="${y}" r="30" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
-    c += `<circle cx="${x}" cy="${y}" r="3" fill="#e2e8f0" opacity="0.35" />`;
+    // Static crisp casing ring on top
+    c += `<circle cx="${x}" cy="${y}" r="30" fill="none" stroke="#e2e8f0" stroke-width="2" />`;
+    c += `<circle cx="${x}" cy="${y}" r="4.5" fill="#11141a" stroke="#e2e8f0" stroke-width="1.5" />`;
+    c += `<circle cx="${x}" cy="${y}" r="1.5" fill="#e2e8f0" />`;
     return c;
   }
   
@@ -166,10 +194,18 @@ function renderDecapagem() {
     s += `<g>`;
     const rotVal = dir === 'cw' ? `0 ${x} ${y};360 ${x} ${y}` : `360 ${x} ${y};0 ${x} ${y}`;
     s += `<animateTransform attributeName="transform" type="rotate" values="${rotVal}" dur="5s" repeatCount="indefinite" />`;
-    // Indicator line to show rotation
-    s += `<line x1="${x - 7}" y1="${y}" x2="${x + 7}" y2="${y}" stroke="#e2e8f0" stroke-width="1" opacity="0.5" />`;
+    
+    // Shifting metal reflection fill
+    s += `<circle cx="${x}" cy="${y}" r="9.5" fill="url(#metalRoll)" />`;
+    
+    // Inner crosshairs
+    s += `<line x1="${x - 7}" y1="${y}" x2="${x + 7}" y2="${y}" stroke="#f8fafc" stroke-width="0.8" opacity="0.35" />`;
+    s += `<line x1="${x}" y1="${y - 7}" x2="${x}" y2="${y + 7}" stroke="#f8fafc" stroke-width="0.8" opacity="0.35" />`;
     s += `</g>`;
+    
+    // Outer crisp ring
     s += `<circle cx="${x}" cy="${y}" r="10" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
+    s += `<circle cx="${x}" cy="${y}" r="1.5" fill="#e2e8f0" />`;
     return s;
   }
   
@@ -178,22 +214,30 @@ function renderDecapagem() {
     let p = '';
     const cyTop = y - 10;
     const cyBottom = y + 10;
+    const r = 8;
+    const dur = '4s';
     
     // Top roller (CCW)
-    p += `<circle cx="${x}" cy="${cyTop}" r="8" fill="#11141a" />`;
+    p += `<circle cx="${x}" cy="${cyTop}" r="${r}" fill="#11141a" />`;
     p += `<g>`;
-    p += `<animateTransform attributeName="transform" type="rotate" values="360 ${x} ${cyTop};0 ${x} ${cyTop}" dur="4s" repeatCount="indefinite" />`;
-    p += `<line x1="${x - 5}" y1="${cyTop}" x2="${x + 5}" y2="${cyTop}" stroke="#e2e8f0" stroke-width="1" opacity="0.5" />`;
+    p += `<animateTransform attributeName="transform" type="rotate" values="360 ${x} ${cyTop};0 ${x} ${cyTop}" dur="${dur}" repeatCount="indefinite" />`;
+    p += `<circle cx="${x}" cy="${cyTop}" r="${r - 0.5}" fill="url(#metalRoll)" />`;
+    p += `<line x1="${x - 5}" y1="${cyTop}" x2="${x + 5}" y2="${cyTop}" stroke="#f8fafc" stroke-width="0.8" opacity="0.35" />`;
+    p += `<line x1="${x}" y1="${cyTop - 5}" x2="${x}" y2="${cyTop + 5}" stroke="#f8fafc" stroke-width="0.8" opacity="0.35" />`;
     p += `</g>`;
-    p += `<circle cx="${x}" cy="${cyTop}" r="8" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
+    p += `<circle cx="${x}" cy="${cyTop}" r="${r}" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
+    p += `<circle cx="${x}" cy="${cyTop}" r="1.5" fill="#e2e8f0" />`;
     
     // Bottom roller (CW)
-    p += `<circle cx="${x}" cy="${cyBottom}" r="8" fill="#11141a" />`;
+    p += `<circle cx="${x}" cy="${cyBottom}" r="${r}" fill="#11141a" />`;
     p += `<g>`;
-    p += `<animateTransform attributeName="transform" type="rotate" values="0 ${x} ${cyBottom};360 ${x} ${cyBottom}" dur="4s" repeatCount="indefinite" />`;
-    p += `<line x1="${x - 5}" y1="${cyBottom}" x2="${x + 5}" y2="${cyBottom}" stroke="#e2e8f0" stroke-width="1" opacity="0.5" />`;
+    p += `<animateTransform attributeName="transform" type="rotate" values="0 ${x} ${cyBottom};360 ${x} ${cyBottom}" dur="${dur}" repeatCount="indefinite" />`;
+    p += `<circle cx="${x}" cy="${cyBottom}" r="${r - 0.5}" fill="url(#metalRoll)" />`;
+    p += `<line x1="${x - 5}" y1="${cyBottom}" x2="${x + 5}" y2="${cyBottom}" stroke="#f8fafc" stroke-width="0.8" opacity="0.35" />`;
+    p += `<line x1="${x}" y1="${cyBottom - 5}" x2="${x}" y2="${cyBottom + 5}" stroke="#f8fafc" stroke-width="0.8" opacity="0.35" />`;
     p += `</g>`;
-    p += `<circle cx="${x}" cy="${cyBottom}" r="8" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
+    p += `<circle cx="${x}" cy="${cyBottom}" r="${r}" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
+    p += `<circle cx="${x}" cy="${cyBottom}" r="1.5" fill="#e2e8f0" />`;
     
     return p;
   }
@@ -213,36 +257,48 @@ function renderDecapagem() {
     b += `<circle cx="${cxTL}" cy="${cyTL}" r="${r}" fill="#11141a" />`;
     b += `<g>`;
     b += `<animateTransform attributeName="transform" type="rotate" values="360 ${cxTL} ${cyTL};0 ${cxTL} ${cyTL}" dur="${dur}" repeatCount="indefinite" />`;
-    b += `<line x1="${cxTL - 5}" y1="${cyTL}" x2="${cxTL + 5}" y2="${cyTL}" stroke="#e2e8f0" stroke-width="1" opacity="0.5" />`;
+    b += `<circle cx="${cxTL}" cy="${cyTL}" r="${r - 0.5}" fill="url(#metalRoll)" />`;
+    b += `<line x1="${cxTL - 5}" y1="${cyTL}" x2="${cxTL + 5}" y2="${cyTL}" stroke="#f8fafc" stroke-width="0.8" opacity="0.35" />`;
+    b += `<line x1="${cxTL}" y1="${cyTL - 5}" x2="${cxTL}" y2="${cyTL + 5}" stroke="#f8fafc" stroke-width="0.8" opacity="0.35" />`;
     b += `</g>`;
     b += `<circle cx="${cxTL}" cy="${cyTL}" r="${r}" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
+    b += `<circle cx="${cxTL}" cy="${cyTL}" r="1.5" fill="#e2e8f0" />`;
     
     // Roller top-right: Yellow, CCW
     const cxTR = x + 15, cyTR = y - 15;
-    b += `<circle cx="${cxTR}" cy="${cyTR}" r="${r}" fill="#eab308" />`;
+    b += `<circle cx="${cxTR}" cy="${cyTR}" r="${r}" fill="#11141a" />`;
     b += `<g>`;
     b += `<animateTransform attributeName="transform" type="rotate" values="360 ${cxTR} ${cyTR};0 ${cxTR} ${cyTR}" dur="${dur}" repeatCount="indefinite" />`;
-    b += `<line x1="${cxTR - 5}" y1="${cyTR}" x2="${cxTR + 5}" y2="${cyTR}" stroke="#11141a" stroke-width="1" opacity="0.5" />`;
+    b += `<circle cx="${cxTR}" cy="${cyTR}" r="${r - 0.5}" fill="url(#yellowMetalRoll)" />`;
+    b += `<line x1="${cxTR - 5}" y1="${cyTR}" x2="${cxTR + 5}" y2="${cyTR}" stroke="#78350f" stroke-width="0.8" opacity="0.45" />`;
+    b += `<line x1="${cxTR}" y1="${cyTR - 5}" x2="${cxTR}" y2="${cyTR + 5}" stroke="#78350f" stroke-width="0.8" opacity="0.45" />`;
     b += `</g>`;
     b += `<circle cx="${cxTR}" cy="${cyTR}" r="${r}" fill="none" stroke="#eab308" stroke-width="1.8" />`;
+    b += `<circle cx="${cxTR}" cy="${cyTR}" r="1.5" fill="#78350f" />`;
     
     // Roller bottom-left: Yellow, CW
     const cxBL = x - 15, cyBL = y + 15;
-    b += `<circle cx="${cxBL}" cy="${cyBL}" r="${r}" fill="#eab308" />`;
+    b += `<circle cx="${cxBL}" cy="${cyBL}" r="${r}" fill="#11141a" />`;
     b += `<g>`;
     b += `<animateTransform attributeName="transform" type="rotate" values="0 ${cxBL} ${cyBL};360 ${cxBL} ${cyBL}" dur="${dur}" repeatCount="indefinite" />`;
-    b += `<line x1="${cxBL - 5}" y1="${cyBL}" x2="${cxBL + 5}" y2="${cyBL}" stroke="#11141a" stroke-width="1" opacity="0.5" />`;
+    b += `<circle cx="${cxBL}" cy="${cyBL}" r="${r - 0.5}" fill="url(#yellowMetalRoll)" />`;
+    b += `<line x1="${cxBL - 5}" y1="${cyBL}" x2="${cxBL + 5}" y2="${cyBL}" stroke="#78350f" stroke-width="0.8" opacity="0.45" />`;
+    b += `<line x1="${cxBL}" y1="${cyBL - 5}" x2="${cxBL}" y2="${cyBL + 5}" stroke="#78350f" stroke-width="0.8" opacity="0.45" />`;
     b += `</g>`;
     b += `<circle cx="${cxBL}" cy="${cyBL}" r="${r}" fill="none" stroke="#eab308" stroke-width="1.8" />`;
+    b += `<circle cx="${cxBL}" cy="${cyBL}" r="1.5" fill="#78350f" />`;
     
     // Roller bottom-right: White, CW
     const cxBR = x + 15, cyBR = y + 15;
     b += `<circle cx="${cxBR}" cy="${cyBR}" r="${r}" fill="#11141a" />`;
     b += `<g>`;
     b += `<animateTransform attributeName="transform" type="rotate" values="0 ${cxBR} ${cyBR};360 ${cxBR} ${cyBR}" dur="${dur}" repeatCount="indefinite" />`;
-    b += `<line x1="${cxBR - 5}" y1="${cyBR}" x2="${cxBR + 5}" y2="${cyBR}" stroke="#e2e8f0" stroke-width="1" opacity="0.5" />`;
+    b += `<circle cx="${cxBR}" cy="${cyBR}" r="${r - 0.5}" fill="url(#metalRoll)" />`;
+    b += `<line x1="${cxBR - 5}" y1="${cyBR}" x2="${cxBR + 5}" y2="${cyBR}" stroke="#f8fafc" stroke-width="0.8" opacity="0.35" />`;
+    b += `<line x1="${cxBR}" y1="${cyBR - 5}" x2="${cxBR}" y2="${cyBR + 5}" stroke="#f8fafc" stroke-width="0.8" opacity="0.35" />`;
     b += `</g>`;
     b += `<circle cx="${cxBR}" cy="${cyBR}" r="${r}" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
+    b += `<circle cx="${cxBR}" cy="${cyBR}" r="1.5" fill="#e2e8f0" />`;
     
     return b;
   }
@@ -307,7 +363,13 @@ function renderDecapagem() {
   pathStr += 'L 1620 350 '; // Slope down from Station 2 (Pinches at x=1575, y=327.5 and x=1605, y=342.5)
   pathStr += 'L 1665 350'; // Exit to right
   
-  let processLine = `<path d="${pathStr}" fill="none" stroke="#f8fafc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#subtleGlow)" opacity="0.9" />`;
+  // High-fidelity double-layer process line:
+  // Layer 1: Solid base white sheet
+  let processLine = `<path d="${pathStr}" fill="none" stroke="#f8fafc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85" />`;
+  // Layer 2: Glowing sliding pulse in orange to represent physical flow/movement
+  processLine += `<path d="${pathStr}" fill="none" stroke="#e27b38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 24" filter="url(#subtleGlow)">
+    <animate attributeName="stroke-dashoffset" values="96;0" dur="2.5s" repeatCount="indefinite" />
+  </path>`;
   
   // Assemble the Layers
   s += behind;

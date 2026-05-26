@@ -1,4 +1,4 @@
-/** RB1 Roll - Type Definitions */
+/** RB1 System - Type Definitions */
 export type Turno = 'TN' | 'TM' | 'TT';
 export type KanbanStatus = 'green' | 'yellow' | 'red' | 'empty';
 export type Posicao = number;

@@ -1,4 +1,4 @@
-/** RB1 Roll v3 — Main Application (Clean, No Exports) */
+/** RB1 System v3 — Main Application (Clean, No Exports) */
 import './style.css';
 import { rolos, estoque, historico, calcDays, getStatus, getRolo, fmtDate, sanitize,
   registrarSubstituicao, editarHistorico, adicionarEstoque, removerEstoque, initDemo, DECAPAGEM_MAP } from './store';
@@ -381,7 +381,7 @@ function renderDecapagem() {
   s += front;
   
   // 9. Section Headings (Eletrolítico and Químico)
-  s += `<text x="540" y="190" text-anchor="middle" fill="#ff7a30" font-family="'Inter', sans-serif" font-size="24" font-weight="700" letter-spacing="0.5">Eletrolítico</text>`;
+  s += `<text x="540" y="190" text-anchor="middle" fill="#f1511b" font-family="'Inter', sans-serif" font-size="24" font-weight="700" letter-spacing="0.5">Eletrolítico</text>`;
   s += `<text x="1230" y="190" text-anchor="middle" fill="#f8fafc" font-family="'Inter', sans-serif" font-size="24" font-weight="700" letter-spacing="0.5">Quimico</text>`;
   
   // 10. Boundary Texts

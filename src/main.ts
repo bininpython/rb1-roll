@@ -41,11 +41,15 @@ $('tabDecapagem').addEventListener('click', () => {
 
 // Stats
 function renderStats() {
-  const alertas = rolos.filter(r => getStatus(calcDays(r.data_troca)) === 'red').length;
-  const trocas30 = historico.filter(h => (Date.now() - new Date(h.created_at).getTime()) < 30*864e5).length;
+  const alertas = [0,1,2,3,4].filter(pos => {
+    const r = getRolo(pos);
+    return r && getStatus(calcDays(r.data_troca)) === 'red';
+  }).length;
+  const trocas30 = historico.filter(h => h.posicao < 100 && (Date.now() - new Date(h.created_at).getTime()) < 30*864e5).length;
   
-  const estRetifica = estoque.filter(e => e.obs.toLowerCase().includes('retifica') || e.obs.toLowerCase().includes('retífica')).length;
-  const estRb1 = estoque.length - estRetifica;
+  const fornoEstoque = estoque.filter(e => !e.obs.startsWith('[Decapagem]'));
+  const estRetifica = fornoEstoque.filter(e => e.obs.toLowerCase().includes('retifica') || e.obs.toLowerCase().includes('retífica')).length;
+  const estRb1 = fornoEstoque.length - estRetifica;
 
   $('statsBar').innerHTML = [
     {i:'🛠️',v:estRetifica,l:'Estoque Retífica',c:'si-stock'},
@@ -53,6 +57,28 @@ function renderStats() {
     {i:'⚠️',v:alertas,l:'Em Alerta',c:'si-alert'},
     {i:'📊',v:trocas30,l:'Trocas (30d)',c:'si-swaps'}
   ].map(s=>`<div class="stat-card"><div class="stat-icon ${s.c}">${s.i}</div><div><span class="stat-value">${s.v}</span><span class="stat-label">${s.l}</span></div></div>`).join('');
+}
+
+function renderDecapagemStats() {
+  const alertas = DECAPAGEM_ORDER.filter(pos => {
+    const r = getRolo(pos);
+    return r && getStatus(calcDays(r.data_troca)) === 'red';
+  }).length;
+  const trocas30 = historico.filter(h => h.posicao >= 100 && (Date.now() - new Date(h.created_at).getTime()) < 30*864e5).length;
+  
+  const decapagemEstoque = estoque.filter(e => e.obs.startsWith('[Decapagem]'));
+  const estRetifica = decapagemEstoque.filter(e => e.obs.toLowerCase().includes('retifica') || e.obs.toLowerCase().includes('retífica')).length;
+  const estRb1 = decapagemEstoque.length - estRetifica;
+
+  const bar = $('statsDecapagemBar');
+  if (bar) {
+    bar.innerHTML = [
+      {i:'🛠️',v:estRetifica,l:'Estoque Retífica',c:'si-stock'},
+      {i:'📦',v:estRb1,l:'Estoque RB1',c:'si-stock'},
+      {i:'⚠️',v:alertas,l:'Em Alerta',c:'si-alert'},
+      {i:'📊',v:trocas30,l:'Trocas (30d)',c:'si-swaps'}
+    ].map(s=>`<div class="stat-card"><div class="stat-icon ${s.c}">${s.i}</div><div><span class="stat-value">${s.v}</span><span class="stat-label">${s.l}</span></div></div>`).join('');
+  }
 }
 
 // Furnace SVG (Roll 0 OUTSIDE, Rolls 1-4 INSIDE)
@@ -822,6 +848,7 @@ $('nextDecapagemYear').addEventListener('click',()=>{selDecapagemYear++;renderDe
 
 function renderAll(){
   renderStats();
+  renderDecapagemStats();
   renderFurnace();
   renderDecapagem();
   renderDecapagemTable();

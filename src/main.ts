@@ -92,108 +92,168 @@ function renderFurnace() {
 // Decapagem SVG
 function renderDecapagem() {
   const svgW = 1700, svgH = 500;
-  let s = `<svg viewBox="0 0 ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;background-color:#13161c;">`;
+  let s = `<svg viewBox="0 0 ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;background-color:#11141a;">`;
   
   s += `<defs>
-    <pattern id="verticalTexture" width="6" height="500" patternUnits="userSpaceOnUse">
-      <line x1="0" y1="0" x2="0" y2="500" stroke="rgba(255,255,255,0.015)" stroke-width="1.5" />
+    <linearGradient id="bgGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#11141a" />
+      <stop offset="100%" stop-color="#181c25" />
+    </linearGradient>
+    <pattern id="verticalTexture" width="8" height="500" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="0" y2="500" stroke="rgba(255,255,255,0.015)" stroke-width="1.2" />
     </pattern>
+    <filter id="subtleGlow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="1" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
   </defs>`;
   
-  s += `<rect width="1700" height="500" fill="#13161c" />`;
-  s += `<rect width="1700" height="500" fill="url(#verticalTexture)" />`;
+  // Background
+  s += `<rect width="${svgW}" height="${svgH}" fill="url(#bgGradient)" />`;
+  s += `<rect width="${svgW}" height="${svgH}" fill="url(#verticalTexture)" />`;
   
+  // Custom base pedestal for large cylinders and stations
   function baseBlock(x: number, y: number) {
     let b = '';
-    b += `<rect x="${x - 18}" y="${y}" width="36" height="8" rx="2" fill="#3a3d46" />`;
-    b += `<rect x="${x - 24}" y="${y + 8}" width="48" height="14" rx="2" fill="#2c2e35" />`;
-    b += `<rect x="${x - 30}" y="${y + 22}" width="60" height="10" rx="2" fill="#1e2025" />`;
-    return b;
-  }
-  
-  function largeCylinder(x: number, y: number) {
-    let c = '';
-    c += baseBlock(x, y + 28);
-    c += `<circle cx="${x}" cy="${y}" r="28" fill="#161a22" stroke="#e2e8f0" stroke-width="1.5" />`;
-    c += `<circle cx="${x}" cy="${y}" r="3" fill="#e2e8f0" opacity="0.3" />`;
-    return c;
-  }
-  
-  function smallRoll(x: number, y: number) {
-    return `<circle cx="${x}" cy="${y}" r="10" fill="#13161c" stroke="#e2e8f0" stroke-width="1.5" />`;
-  }
-  
-  function pinchRolls(x: number, y: number) {
-    let p = '';
-    p += `<circle cx="${x}" cy="${y - 10}" r="10" fill="#13161c" stroke="#e2e8f0" stroke-width="1.5" />`;
-    p += `<circle cx="${x}" cy="${y + 10}" r="10" fill="#13161c" stroke="#e2e8f0" stroke-width="1.5" />`;
-    return p;
-  }
-  
-  function brushStation(x: number, y: number) {
-    let b = '';
-    b += baseBlock(x, y + 28);
-    b += `<rect x="${x - 28}" y="${y - 28}" width="56" height="56" rx="4" fill="#161a22" stroke="#6b7280" stroke-width="1.5" />`;
-    b += `<circle cx="${x - 13}" cy="${y - 13}" r="9" fill="#161a22" stroke="#e2e8f0" stroke-width="1.5" />`;
-    b += `<circle cx="${x + 13}" cy="${y - 13}" r="9" fill="#161a22" stroke="#eab308" stroke-width="1.5" />`;
-    b += `<circle cx="${x - 13}" cy="${y + 13}" r="9" fill="#161a22" stroke="#eab308" stroke-width="1.5" />`;
-    b += `<circle cx="${x + 13}" cy="${y + 13}" r="9" fill="#161a22" stroke="#e2e8f0" stroke-width="1.5" />`;
+    // Top flat mounting plate
+    b += `<rect x="${x - 20}" y="${y}" width="40" height="8" rx="1" fill="#444852" />`;
+    // Vertical main column
+    b += `<rect x="${x - 14}" y="${y + 8}" width="28" height="24" rx="1" fill="#2d3038" />`;
+    // Stepped bottom base plate
+    b += `<rect x="${x - 24}" y="${y + 32}" width="48" height="13" rx="2" fill="#1e2026" />`;
     return b;
   }
 
+  // Base for 2x2 station (taller column to match the higher mounting point)
+  function tallBaseBlock(x: number, y: number) {
+    let b = '';
+    b += `<rect x="${x - 20}" y="${y}" width="40" height="8" rx="1" fill="#444852" />`;
+    b += `<rect x="${x - 14}" y="${y + 8}" width="28" height="54" rx="1" fill="#2d3038" />`;
+    b += `<rect x="${x - 24}" y="${y + 62}" width="48" height="13" rx="2" fill="#1e2026" />`;
+    return b;
+  }
+  
+  // Large Cylinders (Center y = 350, Radius = 30)
+  function largeCylinder(x: number, y: number) {
+    let c = '';
+    c += baseBlock(x, y + 30); // Base starts at bottom of cylinder (350 + 30 = 380)
+    c += `<circle cx="${x}" cy="${y}" r="30" fill="#11141a" stroke="#e2e8f0" stroke-width="1.8" />`;
+    c += `<circle cx="${x}" cy="${y}" r="3" fill="#e2e8f0" opacity="0.35" />`;
+    return c;
+  }
+  
+  // Small wave rollers (Radius = 10)
+  function smallRoll(x: number, y: number) {
+    return `<circle cx="${x}" cy="${y}" r="10" fill="#11141a" stroke="#e2e8f0" stroke-width="1.8" />`;
+  }
+  
+  // Vertical pinch pair (Radius = 8)
+  function pinchRolls(x: number, y: number) {
+    let p = '';
+    p += `<circle cx="${x}" cy="${y - 10}" r="8" fill="#11141a" stroke="#e2e8f0" stroke-width="1.8" />`;
+    p += `<circle cx="${x}" cy="${y + 10}" r="8" fill="#11141a" stroke="#e2e8f0" stroke-width="1.8" />`;
+    return p;
+  }
+  
+  // 2x2 Station (with 2 yellow and 2 white rollers)
+  function brushStation(x: number, y: number) {
+    let b = '';
+    b += tallBaseBlock(x, y + 30); // Stand starts at bottom of station box (320 + 30 = 350)
+    // Outer station housing box
+    b += `<rect x="${x - 30}" y="${y - 30}" width="60" height="60" rx="4" fill="none" stroke="#9ca3af" stroke-width="1.5" />`;
+    // Rollers in 2x2 grid
+    // Top-Left: White
+    b += `<circle cx="${x - 15}" cy="${y - 15}" r="8" fill="#11141a" stroke="#e2e8f0" stroke-width="1.8" />`;
+    // Top-Right: Yellow
+    b += `<circle cx="${x + 15}" cy="${y - 15}" r="8" fill="#eab308" stroke="#eab308" stroke-width="1.8" />`;
+    // Bottom-Left: Yellow
+    b += `<circle cx="${x - 15}" cy="${y + 15}" r="8" fill="#eab308" stroke="#eab308" stroke-width="1.8" />`;
+    // Bottom-Right: White
+    b += `<circle cx="${x + 15}" cy="${y + 15}" r="8" fill="#11141a" stroke="#e2e8f0" stroke-width="1.8" />`;
+    return b;
+  }
+
+  // Draw layers chronologically to ensure proper SVG layering
   let behind = '';
   let front = '';
   
-  behind += largeCylinder(140, 320);
+  // 1. Far Left Cylinder (outside orange box)
+  behind += largeCylinder(120, 350);
   
-  front += smallRoll(220, 282);
-  front += smallRoll(270, 302);
-  front += smallRoll(320, 282);
-  front += smallRoll(370, 302);
-  front += smallRoll(420, 282);
+  // 2. First Wave of 5 Rollers (Orange box, left side)
+  front += smallRoll(220, 338); // Above
+  front += smallRoll(280, 362); // Below
+  front += smallRoll(340, 338); // Above
+  front += smallRoll(400, 362); // Below
+  front += smallRoll(460, 338); // Above
   
-  behind += largeCylinder(540, 320);
+  // 3. Middle Cylinder (inside orange box)
+  behind += largeCylinder(540, 350);
   
-  front += smallRoll(660, 282);
-  front += smallRoll(710, 302);
-  front += smallRoll(760, 282);
-  front += smallRoll(810, 302);
-  front += smallRoll(860, 282);
+  // 4. Second Wave of 5 Rollers (Orange box, right side)
+  front += smallRoll(640, 338); // Above
+  front += smallRoll(700, 362); // Below
+  front += smallRoll(760, 338); // Above
+  front += smallRoll(820, 362); // Below
+  front += smallRoll(880, 338); // Above
   
-  front += pinchRolls(910, 267);
-  behind += brushStation(960, 267);
-  front += pinchRolls(1010, 267);
+  // 5. Orange Box Station (Left Pinch, 2x2 Unit, Right Pinch)
+  front += pinchRolls(925, 320);
+  behind += brushStation(980, 320);
+  front += pinchRolls(1035, 320);
   
-  // Lower pinch roll pair on a pedestal for first brush station
-  behind += baseBlock(1060, 312);
-  front += pinchRolls(1060, 292);
+  // 6. Grey Box Cylinders (Chemical pickling)
+  behind += largeCylinder(1140, 350);
+  behind += largeCylinder(1320, 350);
   
-  behind += largeCylinder(1150, 320);
-  behind += largeCylinder(1290, 320);
+  // 7. Right Station (Left Pinch, 2x2 Unit, Flanking Double Pinch)
+  front += pinchRolls(1465, 320);
+  behind += brushStation(1520, 320);
+  front += pinchRolls(1575, 320);
+  front += pinchRolls(1605, 320);
   
-  front += pinchRolls(1390, 267);
-  behind += brushStation(1440, 267);
-  front += pinchRolls(1490, 267);
+  // 8. Mathematically Rounded and Connected Process Line Path
+  let pathStr = '';
+  pathStr += 'M 40 380 '; // Start far left
+  pathStr += 'L 90 350 '; // Approach Cylinder 1
+  pathStr += 'A 30 30 0 0 1 150 350 '; // Wrap over Cylinder 1
+  pathStr += 'L 510 350 '; // Straight through first wave of rollers
+  pathStr += 'A 30 30 0 0 1 570 350 '; // Wrap over Cylinder 2
+  pathStr += 'L 910 350 '; // Straight to slope
+  pathStr += 'L 940 320 '; // Slope up to Station 1
+  pathStr += 'L 1050 320 '; // Through Station 1
+  pathStr += 'L 1080 350 '; // Slope down from Station 1
+  pathStr += 'L 1110 350 '; // Approach Cylinder 3
+  pathStr += 'A 30 30 0 0 1 1170 350 '; // Wrap over Cylinder 3
+  pathStr += 'L 1290 350 '; // Gap between Cylinder 3 and 4
+  pathStr += 'A 30 30 0 0 1 1350 350 '; // Wrap over Cylinder 4
+  pathStr += 'L 1420 350 '; // Exit Cylinder 4
+  pathStr += 'L 1450 320 '; // Slope up to Station 2
+  pathStr += 'L 1620 320 '; // Through Station 2 and flanking pinches
+  pathStr += 'L 1665 350'; // Slope down to exit
   
-  // Lower pinch roll pair on a pedestal for second brush station
-  behind += baseBlock(1540, 312);
-  front += pinchRolls(1540, 292);
+  let processLine = `<path d="${pathStr}" fill="none" stroke="#f8fafc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#subtleGlow)" opacity="0.9" />`;
   
-  let pathStr = `M 30 330 L 140 292 L 880 292 L 900 267 L 1025 267 L 1045 292 L 1365 292 L 1380 267 L 1505 267 L 1525 292 L 1560 292 L 1670 330`;
-  let processLine = `<path d="${pathStr}" fill="none" stroke="#e2e8f0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />`;
-  
+  // Assemble the Layers
   s += behind;
   s += processLine;
   s += front;
   
-  s += `<rect x="180" y="200" width="812" height="180" rx="10" fill="none" stroke="#e27b38" stroke-width="2" />`;
-  s += `<text x="586" y="192" text-anchor="middle" fill="#e27b38" font-family="'Inter', sans-serif" font-size="12" font-weight="700" letter-spacing="2">DECAPAGEM ELETROLÍTICA</text>`;
+  // 9. Highlight Boxes and Texts
+  // Section 1: Decapagem Eletrolítica (Orange Box)
+  s += `<rect x="180" y="230" width="880" height="180" rx="12" fill="none" stroke="#e27b38" stroke-width="2" />`;
+  s += `<text x="620" y="218" text-anchor="middle" fill="#e27b38" font-family="'Inter', sans-serif" font-size="11.5" font-weight="700" letter-spacing="2.5">DECAPAGEM ELETROLÍTICA</text>`;
   
-  s += `<rect x="1095" y="200" width="250" height="180" rx="10" fill="none" stroke="#6b7280" stroke-width="1.5" />`;
-  s += `<text x="1220" y="192" text-anchor="middle" fill="#9ca3af" font-family="'Inter', sans-serif" font-size="12" font-weight="700" letter-spacing="2">DECAPAGEM QUÍMICA</text>`;
+  // Section 2: Decapagem Química (Grey Box)
+  s += `<rect x="1080" y="230" width="330" height="180" rx="12" fill="none" stroke="#4b5563" stroke-width="1.5" />`;
+  s += `<text x="1245" y="218" text-anchor="middle" fill="#9ca3af" font-family="'Inter', sans-serif" font-size="11.5" font-weight="700" letter-spacing="2.5">DECAPAGEM QUÍMICA</text>`;
   
-  s += `<text x="80" y="250" text-anchor="middle" fill="#9ca3af" font-family="'Inter', sans-serif" font-size="12" font-weight="700" letter-spacing="2">ENTRADA</text>`;
-  s += `<text x="1620" y="250" text-anchor="middle" fill="#9ca3af" font-family="'Inter', sans-serif" font-size="12" font-weight="700" letter-spacing="2">SAÍDA</text>`;
+  // Boundary Texts
+  s += `<text x="70" y="280" text-anchor="middle" fill="#6b7280" font-family="'Inter', sans-serif" font-size="11" font-weight="600" letter-spacing="3">ENTRADA</text>`;
+  s += `<text x="1640" y="280" text-anchor="middle" fill="#6b7280" font-family="'Inter', sans-serif" font-size="11" font-weight="600" letter-spacing="3">SAÍDA</text>`;
   
   s += `</svg>`;
   $('decapagemDiagram').innerHTML = s;

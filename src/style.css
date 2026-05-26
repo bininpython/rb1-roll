@@ -418,3 +418,86 @@ body {
 .decapagem-interactive-roll:hover {
   filter: drop-shadow(0 0 5px #e27b38) brightness(1.3);
 }
+
+/* ===== HMI Online Status LED ===== */
+.hmi-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  padding: 0.35rem 0.6rem;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.5px;
+}
+.pulse-dot-green {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+  display: inline-block;
+  animation: pulseGreen 2s ease-in-out infinite;
+}
+@keyframes pulseGreen {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px #10b981; }
+  50% { opacity: 0.3; box-shadow: 0 0 2px #10b981; }
+}
+
+/* ===== Telemetry Brand Icon Animations ===== */
+.brand-icon {
+  overflow: visible;
+}
+.brand-icon circle:nth-of-type(1) {
+  transform-origin: 16px 16px;
+  animation: brandPulseOuter 4s ease-in-out infinite;
+}
+.brand-icon circle:nth-of-type(2) {
+  stroke-dasharray: 5 3;
+  transform-origin: 16px 16px;
+  animation: brandRadarRotate 12s linear infinite;
+}
+.brand-icon circle:nth-of-type(3) {
+  transform-origin: 16px 16px;
+  animation: brandPulseDot 2s ease-in-out infinite;
+}
+
+@keyframes brandPulseOuter {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.03); opacity: 0.95; }
+}
+@keyframes brandRadarRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes brandPulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.7; }
+}
+
+/* ===== Smooth Tab View Transitions ===== */
+.view-active {
+  display: block;
+  animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Micro-interactions for buttons ===== */
+.btn {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+.btn:active {
+  transform: translateY(0);
+}
+

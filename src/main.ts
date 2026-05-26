@@ -391,36 +391,39 @@ function renderDecapagem() {
   // 11. Custom Technical Labels overlay exactly as in annotated blueprint (White text for high visibility)
   s += `<g font-family="'Inter', sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="0.5" pointer-events="none">`;
   
+  // Defletor Entrada (Large Left Cylinder)
+  s += `<text x="120" y="306">Defletor Entrada<tspan x="120" dy="11" font-size="7.5" fill="rgba(255,255,255,0.7)">3140 mm</tspan></text>`;
+
   // First Wave
-  s += `<text x="220" y="322">Defletor</text>`;
-  s += `<text x="280" y="385">Fundo Tanque</text>`;
-  s += `<text x="340" y="322">Mergulhador ELE</text>`;
-  s += `<text x="400" y="385">Fundo tanque</text>`;
-  s += `<text x="460" y="322">Defletor</text>`;
+  s += `<text x="220" y="320">Defletor 1<tspan x="220" dy="11" font-size="7.5" fill="rgba(255,255,255,0.7)">1884 mm</tspan></text>`;
+  s += `<text x="280" y="383">Fundo Tanque 1<tspan x="280" dy="11" font-size="7.5" fill="rgba(255,255,255,0.7)">320 mm</tspan></text>`;
+  s += `<text x="340" y="320">Mergulhador ELE 1<tspan x="340" dy="11" font-size="7.5" fill="rgba(255,255,255,0.7)">3925 mm</tspan></text>`;
+  s += `<text x="400" y="383">Fundo tanque 2<tspan x="400" dy="11" font-size="7.5" fill="rgba(255,255,255,0.7)">320 mm</tspan></text>`;
+  s += `<text x="460" y="320">Defletor 2<tspan x="460" dy="11" font-size="7.5" fill="rgba(255,255,255,0.7)">1884 mm</tspan></text>`;
   
   // Large Center
-  s += `<text x="540" y="308">Centragem</text>`;
+  s += `<text x="540" y="306">Centragem<tspan x="540" dy="11" font-size="7.5" fill="rgba(255,255,255,0.7)">3140 mm</tspan></text>`;
   
   // Second Wave
-  s += `<text x="640" y="322">Defletor</text>`;
-  s += `<text x="700" y="385">Fundo tanque</text>`;
-  s += `<text x="760" y="322">Mergulhador ELE</text>`;
-  s += `<text x="820" y="385">Fundo tanque</text>`;
-  s += `<text x="880" y="322">Defletor</text>`;
+  s += `<text x="640" y="320">Defletor 3<tspan x="640" dy="11" font-size="7.5" fill="rgba(255,255,255,0.7)">1884 mm</tspan></text>`;
+  s += `<text x="700" y="383">Fundo tanque 3<tspan x="700" dy="11" font-size="7.5" fill="rgba(255,255,255,0.7)">320 mm</tspan></text>`;
+  s += `<text x="760" y="320">Mergulhador ELE 2<tspan x="760" dy="11" font-size="7.5" fill="rgba(255,255,255,0.7)">3925 mm</tspan></text>`;
+  s += `<text x="820" y="383">Fundo tanque 4<tspan x="820" dy="11" font-size="7.5" fill="rgba(255,255,255,0.7)">320 mm</tspan></text>`;
+  s += `<text x="880" y="320">Defletor 4<tspan x="880" dy="11" font-size="7.5" fill="rgba(255,255,255,0.7)">1884 mm</tspan></text>`;
   
   // Station 1 Block
-  s += `<text x="925" y="365" font-size="8">Espremedor 1</text>`;
-  s += `<text x="980" y="278" fill="#ff7a30" font-size="9">Escovador 1</text>`;
-  s += `<text x="1035" y="365" font-size="8">Espremedor 2</text>`;
+  s += `<text x="925" y="363" font-size="8">Espremedor 1<tspan x="925" dy="10" font-size="7.2" fill="rgba(255,255,255,0.7)">800 mm</tspan></text>`;
+  s += `<text x="980" y="278" fill="#ff7a30" font-size="9">Escovador 1<tspan x="980" dy="11" font-size="7.5" fill="rgba(255,255,255,0.75)">1036 / 785 mm</tspan></text>`;
+  s += `<text x="1035" y="363" font-size="8">Espremedor 2<tspan x="1035" dy="10" font-size="7.2" fill="rgba(255,255,255,0.7)">800 mm</tspan></text>`;
   
   // Chemical Cylinders
-  s += `<text x="1140" y="308">Mergulhador QUIM</text>`;
-  s += `<text x="1320" y="308">Mergulhador QUIM</text>`;
+  s += `<text x="1140" y="306">Mergulhador QUIM 1<tspan x="1140" dy="11" font-size="7.5" fill="rgba(255,255,255,0.7)">3140 mm</tspan></text>`;
+  s += `<text x="1320" y="306">Mergulhador QUIM 2<tspan x="1320" dy="11" font-size="7.5" fill="rgba(255,255,255,0.7)">3140 mm</tspan></text>`;
   
   // Station 2 Block
-  s += `<text x="1465" y="365" font-size="8">Espremedor 3</text>`;
-  s += `<text x="1520" y="278" fill="#f8fafc" font-size="9">Escovador 2</text>`;
-  s += `<text x="1605" y="372" font-size="8">Espremedor 4</text>`;
+  s += `<text x="1465" y="363" font-size="8">Espremedor 3<tspan x="1465" dy="10" font-size="7.2" fill="rgba(255,255,255,0.7)">800 mm</tspan></text>`;
+  s += `<text x="1520" y="278" fill="#ffffff" font-size="9">Escovador 2<tspan x="1520" dy="11" font-size="7.5" fill="rgba(255,255,255,0.75)">1036 / 785 mm</tspan></text>`;
+  s += `<text x="1605" y="370" font-size="8">Espremedor 4<tspan x="1605" dy="10" font-size="7.2" fill="rgba(255,255,255,0.7)">800 mm</tspan></text>`;
   
   s += `</g>`;
   

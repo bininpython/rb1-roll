@@ -503,10 +503,13 @@ function renderDecapagemTable() {
 
 // Inventory
 let currentInvView: 'retifica' | 'rb1' = 'retifica';
+let currentDecapagemInvView: 'retifica' | 'rb1' = 'retifica';
+
 function renderInventory() {
   const list=$('inventoryList'), empty=$('inventoryEmpty');
-  const estRetifica = estoque.filter(e => e.obs.toLowerCase().includes('retifica') || e.obs.toLowerCase().includes('retífica'));
-  const estRb1 = estoque.filter(e => !e.obs.toLowerCase().includes('retifica') && !e.obs.toLowerCase().includes('retífica'));
+  const fornoEstoque = estoque.filter(e => !e.obs.startsWith('[Decapagem]'));
+  const estRetifica = fornoEstoque.filter(e => e.obs.toLowerCase().includes('retifica') || e.obs.toLowerCase().includes('retífica'));
+  const estRb1 = fornoEstoque.filter(e => !e.obs.toLowerCase().includes('retifica') && !e.obs.toLowerCase().includes('retífica'));
   
   $('countRetifica').textContent = estRetifica.length.toString();
   $('countRb1').textContent = estRb1.length.toString();
@@ -515,7 +518,32 @@ function renderInventory() {
 
   if(!currentList.length){list.innerHTML='';empty.style.display='block';return;}
   empty.style.display='none';
-  list.innerHTML=currentList.map(e=>`<div class="inv-item"><div class="inv-item-info"><span class="inv-item-diam">⊘ ${e.diametro} mm</span><span class="inv-item-obs">${sanitize(e.obs)||'Sem obs.'}</span></div><div class="inv-item-actions"><button data-remove-est="${e.id}" title="Remover">✕</button></div></div>`).join('');
+  list.innerHTML=currentList.map(e=>{
+    const cleaned = e.obs.replace(/^\[Forno\]\s*/, '');
+    return `<div class="inv-item"><div class="inv-item-info"><span class="inv-item-diam">⊘ ${e.diametro} mm</span><span class="inv-item-obs">${sanitize(cleaned)||'Sem obs.'}</span></div><div class="inv-item-actions"><button data-remove-est="${e.id}" title="Remover">✕</button></div></div>`;
+  }).join('');
+  list.querySelectorAll<HTMLButtonElement>('[data-remove-est]').forEach(btn=>{
+    btn.addEventListener('click',()=>{removerEstoque(btn.dataset.removeEst!);renderAll();toast('Rolo removido','info');});
+  });
+}
+
+function renderDecapagemInventory() {
+  const list=$('inventoryDecapagemList'), empty=$('inventoryDecapagemEmpty');
+  const decapagemEstoque = estoque.filter(e => e.obs.startsWith('[Decapagem]'));
+  const estRetifica = decapagemEstoque.filter(e => e.obs.toLowerCase().includes('retifica') || e.obs.toLowerCase().includes('retífica'));
+  const estRb1 = decapagemEstoque.filter(e => !e.obs.toLowerCase().includes('retifica') && !e.obs.toLowerCase().includes('retífica'));
+  
+  $('countDecapagemRetifica').textContent = estRetifica.length.toString();
+  $('countDecapagemRb1').textContent = estRb1.length.toString();
+
+  const currentList = currentDecapagemInvView === 'retifica' ? estRetifica : estRb1;
+
+  if(!currentList.length){list.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  list.innerHTML=currentList.map(e=>{
+    const cleaned = e.obs.replace(/^\[Decapagem\]\s*/, '');
+    return `<div class="inv-item"><div class="inv-item-info"><span class="inv-item-diam">⊘ ${e.diametro} mm</span><span class="inv-item-obs">${sanitize(cleaned)||'Sem obs.'}</span></div><div class="inv-item-actions"><button data-remove-est="${e.id}" title="Remover">✕</button></div></div>`;
+  }).join('');
   list.querySelectorAll<HTMLButtonElement>('[data-remove-est]').forEach(btn=>{
     btn.addEventListener('click',()=>{removerEstoque(btn.dataset.removeEst!);renderAll();toast('Rolo removido','info');});
   });
@@ -542,7 +570,17 @@ function renderHistory() {
 function populateEstoqueSelect(){
   const sel=$('inEstoqueRolo') as HTMLSelectElement;
   sel.innerHTML='<option value="">Selecione um rolo do estoque...</option>';
-  estoque.forEach(e=>{sel.innerHTML+=`<option value="${e.id}">⊘ ${e.diametro} mm — ${sanitize(e.obs)||'Sem obs.'}</option>`;});
+  const posVal = parseInt(($('inPos') as HTMLSelectElement).value);
+  const isDecapagem = !isNaN(posVal) && posVal >= 100;
+  
+  const filteredEstoque = isDecapagem 
+    ? estoque.filter(e => e.obs.startsWith('[Decapagem]'))
+    : estoque.filter(e => !e.obs.startsWith('[Decapagem]'));
+    
+  filteredEstoque.forEach(e=>{
+    const cleaned = e.obs.replace(/^\[Forno\]\s*|^\[Decapagem\]\s*/, '');
+    sel.innerHTML+=`<option value="${e.id}">⊘ ${e.diametro} mm — ${sanitize(cleaned)||'Sem obs.'}</option>`;
+  });
 }
 
 function updateSubModalFields() {
@@ -634,6 +672,18 @@ $('toggleRb1').addEventListener('click', () => {
   $('toggleRetifica').classList.remove('active');
   renderInventory();
 });
+$('toggleDecapagemRetifica').addEventListener('click', () => {
+  currentDecapagemInvView = 'retifica';
+  $('toggleDecapagemRetifica').classList.add('active');
+  $('toggleDecapagemRb1').classList.remove('active');
+  renderDecapagemInventory();
+});
+$('toggleDecapagemRb1').addEventListener('click', () => {
+  currentDecapagemInvView = 'rb1';
+  $('toggleDecapagemRb1').classList.add('active');
+  $('toggleDecapagemRetifica').classList.remove('active');
+  renderDecapagemInventory();
+});
 $('modalEstClose').addEventListener('click',()=>{$('modalEst').classList.remove('active');($('formEst') as HTMLFormElement).reset();});
 $('btnCancelEst').addEventListener('click',()=>{$('modalEst').classList.remove('active');($('formEst') as HTMLFormElement).reset();});
 $('modalEst').addEventListener('click',e=>{if(e.target===$('modalEst')){$('modalEst').classList.remove('active');($('formEst') as HTMLFormElement).reset();}});
@@ -642,7 +692,15 @@ $('modalEst').addEventListener('click',e=>{if(e.target===$('modalEst')){$('modal
   const d=parseFloat(($('inEstDiam') as HTMLInputElement).value);
   const obs=($('inEstObs') as HTMLInputElement).value.trim();
   if(!d){toast('Informe o diâmetro!','error');return;}
-  try{adicionarEstoque(d,obs);$('modalEst').classList.remove('active');($('formEst') as HTMLFormElement).reset();renderAll();toast('Rolo adicionado!','success');}catch(err:any){toast(err.message,'error');}
+  try{
+    const isDecTab = $('tabDecapagem').classList.contains('active');
+    const taggedObs = isDecTab ? '[Decapagem] ' + obs : '[Forno] ' + obs;
+    adicionarEstoque(d,taggedObs);
+    $('modalEst').classList.remove('active');
+    ($('formEst') as HTMLFormElement).reset();
+    renderAll();
+    toast('Rolo adicionado!','success');
+  }catch(err:any){toast(err.message,'error');}
 });
 
 // Modal: Edit History
@@ -706,11 +764,12 @@ $('filterTurno').addEventListener('change',renderHistory);
 const MN=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 const MF=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 let selYear=new Date().getFullYear(), selMonth=new Date().getMonth();
+let selDecapagemYear=new Date().getFullYear(), selDecapagemMonth=new Date().getMonth();
 
 function renderMonthly(){
   $('yearLabel').textContent=String(selYear);
   $('monthTabs').innerHTML=MN.map((m,i)=>{
-    const cnt=historico.filter(h=>{const d=new Date(h.data_troca);return d.getFullYear()===selYear&&d.getMonth()===i;}).length;
+    const cnt=historico.filter(h=>{const d=new Date(h.data_troca);return h.posicao < 100 && d.getFullYear()===selYear&&d.getMonth()===i;}).length;
     return `<button class="month-tab ${i===selMonth?'active':''} ${cnt>0?'has-data':''}" data-month="${i}"><span class="month-tab-name">${m}</span>${cnt>0?`<span class="month-tab-count">${cnt}</span>`:''}</button>`;
   }).join('');
   $('monthTabs').querySelectorAll<HTMLButtonElement>('.month-tab').forEach(btn=>{
@@ -718,7 +777,7 @@ function renderMonthly(){
   });
   // Content
   const body=$('monthBody') as HTMLTableSectionElement, empty=$('monthEmpty'), summary=$('monthSummary');
-  const data=historico.filter(h=>{const d=new Date(h.data_troca);return d.getFullYear()===selYear&&d.getMonth()===selMonth;}).sort((a,b)=>new Date(b.data_troca).getTime()-new Date(a.data_troca).getTime());
+  const data=historico.filter(h=>{const d=new Date(h.data_troca);return h.posicao < 100 && d.getFullYear()===selYear&&d.getMonth()===selMonth;}).sort((a,b)=>new Date(b.data_troca).getTime()-new Date(a.data_troca).getTime());
   if(!data.length){body.innerHTML='';empty.style.display='block';summary.innerHTML='';return;}
   empty.style.display='none';
   body.innerHTML=data.map(h=>{const st=getStatus(h.idade_dias);return `<tr><td style="font-family:var(--mono);font-size:.7rem">${fmtDate(h.data_troca)}</td><td><strong>Rolo ${h.posicao}</strong></td><td><span class="turno-badge turno-${h.turno}">${h.turno}</span></td><td style="font-family:var(--mono)">${h.diametro} mm</td><td>${sanitize(h.obs_motivo)}</td><td><span class="age-badge age-${st}">${h.idade_dias}d</span></td></tr>`;}).join('');
@@ -726,9 +785,51 @@ function renderMonthly(){
   const avg=data.length?Math.round(data.reduce((s,h)=>s+h.idade_dias,0)/data.length):0;
   summary.innerHTML=`<div class="summary-row"><div class="summary-card"><span class="summary-val">${data.length}</span><span class="summary-lbl">Trocas em ${MF[selMonth]}</span></div><div class="summary-card"><span class="summary-val">${avg}d</span><span class="summary-lbl">Tempo Médio</span></div>${Object.entries(byPos).map(([p,c])=>`<div class="summary-card"><span class="summary-val">${c}</span><span class="summary-lbl">Rolo ${p}</span></div>`).join('')}</div>`;
 }
+
+function renderDecapagemMonthly(){
+  $('yearDecapagemLabel').textContent=String(selDecapagemYear);
+  $('monthDecapagemTabs').innerHTML=MN.map((m,i)=>{
+    const cnt=historico.filter(h=>{const d=new Date(h.data_troca);return h.posicao >= 100 && d.getFullYear()===selDecapagemYear&&d.getMonth()===i;}).length;
+    return `<button class="month-tab ${i===selDecapagemMonth?'active':''} ${cnt>0?'has-data':''}" data-month="${i}"><span class="month-tab-name">${m}</span>${cnt>0?`<span class="month-tab-count">${cnt}</span>`:''}</button>`;
+  }).join('');
+  $('monthDecapagemTabs').querySelectorAll<HTMLButtonElement>('.month-tab').forEach(btn=>{
+    btn.addEventListener('click',()=>{selDecapagemMonth=parseInt(btn.dataset.month!);renderDecapagemMonthly();});
+  });
+  // Content
+  const body=$('monthDecapagemBody') as HTMLTableSectionElement, empty=$('monthDecapagemEmpty'), summary=$('monthDecapagemSummary');
+  const data=historico.filter(h=>{const d=new Date(h.data_troca);return h.posicao >= 100 && d.getFullYear()===selDecapagemYear&&d.getMonth()===selDecapagemMonth;}).sort((a,b)=>new Date(b.data_troca).getTime()-new Date(a.data_troca).getTime());
+  if(!data.length){body.innerHTML='';empty.style.display='block';summary.innerHTML='';return;}
+  empty.style.display='none';
+  body.innerHTML=data.map(h=>{
+    const st=getStatus(h.idade_dias);
+    const meta = DECAPAGEM_MAP[h.posicao];
+    const name = meta ? meta.nome : `Rolo ${h.posicao}`;
+    return `<tr><td style="font-family:var(--mono);font-size:.7rem">${fmtDate(h.data_troca)}</td><td><strong>${name}</strong></td><td><span class="turno-badge turno-${h.turno}">${h.turno}</span></td><td style="font-family:var(--mono)">${h.diametro} mm</td><td>${sanitize(h.obs_motivo)}</td><td><span class="age-badge age-${st}">${h.idade_dias}d</span></td></tr>`;
+  }).join('');
+  const byPos:Record<number,number>={};data.forEach(h=>{byPos[h.posicao]=(byPos[h.posicao]||0)+1;});
+  const avg=data.length?Math.round(data.reduce((s,h)=>s+h.idade_dias,0)/data.length):0;
+  summary.innerHTML=`<div class="summary-row"><div class="summary-card"><span class="summary-val">${data.length}</span><span class="summary-lbl">Trocas em ${MF[selDecapagemMonth]}</span></div><div class="summary-card"><span class="summary-val">${avg}d</span><span class="summary-lbl">Tempo Médio</span></div>${Object.entries(byPos).map(([p,c])=>{
+    const meta = DECAPAGEM_MAP[parseInt(p)];
+    const name = meta ? meta.nome : `Rolo ${p}`;
+    return `<div class="summary-card"><span class="summary-val">${c}</span><span class="summary-lbl">${name}</span></div>`;
+  }).join('')}</div>`;
+}
+
 $('prevYear').addEventListener('click',()=>{selYear--;renderMonthly();});
 $('nextYear').addEventListener('click',()=>{selYear++;renderMonthly();});
+$('prevDecapagemYear').addEventListener('click',()=>{selDecapagemYear--;renderDecapagemMonthly();});
+$('nextDecapagemYear').addEventListener('click',()=>{selDecapagemYear++;renderDecapagemMonthly();});
 
-function renderAll(){renderStats();renderFurnace();renderDecapagem();renderDecapagemTable();renderInventory();renderHistory();renderMonthly();}
+function renderAll(){
+  renderStats();
+  renderFurnace();
+  renderDecapagem();
+  renderDecapagemTable();
+  renderInventory();
+  renderDecapagemInventory();
+  renderHistory();
+  renderMonthly();
+  renderDecapagemMonthly();
+}
 window.addEventListener('dataLoaded', renderAll);
 initDemo(); renderAll(); setInterval(renderAll,60000);

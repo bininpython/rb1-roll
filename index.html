@@ -163,6 +163,49 @@
                     </div>
                 </div>
             </section>
+            <section class="inventory-section" style="max-width: 1360px; margin: 1.5rem auto; padding: 0 1.5rem;">
+                <div class="panel-header">
+                    <h2>📦 Estoque de Rolos (Decapagem)</h2>
+                    <div class="inv-toggle">
+                        <button class="inv-toggle-btn active" data-type="retifica" id="toggleDecapagemRetifica">🛠️ Retífica <span class="inv-toggle-count" id="countDecapagemRetifica">0</span></button>
+                        <button class="inv-toggle-btn" data-type="rb1" id="toggleDecapagemRb1">📦 RB1 <span class="inv-toggle-count" id="countDecapagemRb1">0</span></button>
+                    </div>
+                </div>
+                <div class="inventory-card">
+                    <div class="inventory-list" id="inventoryDecapagemList"></div>
+                    <div class="inventory-empty" id="inventoryDecapagemEmpty"><p>Nenhum rolo nesta categoria</p><span>Adicione rolos usando os botões no topo</span></div>
+                </div>
+            </section>
+            <section class="monthly-section" style="max-width: 1360px; margin: 1.5rem auto; padding: 0 1.5rem;">
+                <div class="panel-header">
+                    <h2>📅 Trocas por Mês (Decapagem)</h2>
+                    <div class="month-year-select">
+                        <button class="btn btn-sm btn-ghost" id="prevDecapagemYear">◀</button>
+                        <span id="yearDecapagemLabel"></span>
+                        <button class="btn btn-sm btn-ghost" id="nextDecapagemYear">▶</button>
+                    </div>
+                </div>
+                <div class="monthly-card">
+                    <div class="month-tabs" id="monthDecapagemTabs"></div>
+                    <div class="monthly-content">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Data/Hora</th>
+                                    <th>Posição / Nome</th>
+                                    <th>Turno</th>
+                                    <th>Diâmetro</th>
+                                    <th>Motivo</th>
+                                    <th>Idade</th>
+                                </tr>
+                            </thead>
+                            <tbody id="monthDecapagemBody"></tbody>
+                        </table>
+                        <div class="monthly-empty" id="monthDecapagemEmpty"><p>Nenhuma troca neste mês</p></div>
+                        <div class="monthly-summary" id="monthDecapagemSummary"></div>
+                    </div>
+                </div>
+            </section>
         </div>
     </main>
     <!-- Modal: Substituição -->

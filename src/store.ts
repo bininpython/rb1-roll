@@ -15,42 +15,54 @@ export interface DecapagemRollerInfo {
 }
 
 export const DECAPAGEM_MAP: Record<number, DecapagemRollerInfo> = {
-  100: { posicao: 100, nome: 'Deflector Entrada', perimetro: 3140, diametroPadrao: 1000, tipo: 'Rolo', secao: 'Eletrolítico' },
-  101: { posicao: 101, nome: 'Deflector 1', perimetro: 1884, diametroPadrao: 600, tipo: 'Rolo', secao: 'Eletrolítico' },
+  100: { posicao: 100, nome: 'Defletor Entrada', perimetro: 3140, diametroPadrao: 1000, tipo: 'Rolo', secao: 'Eletrolítico' },
+  101: { posicao: 101, nome: 'Defletor 1', perimetro: 1884, diametroPadrao: 600, tipo: 'Rolo', secao: 'Eletrolítico' },
   102: { posicao: 102, nome: 'Fundo do tanque 1', perimetro: 320, diametroPadrao: 101.9, tipo: 'Rolo', secao: 'Eletrolítico' },
   103: { posicao: 103, nome: 'Mergulhador ELE 1', perimetro: 3925, diametroPadrao: 1250, tipo: 'Rolo', secao: 'Eletrolítico' },
   104: { posicao: 104, nome: 'Fundo do tanque 2', perimetro: 320, diametroPadrao: 101.9, tipo: 'Rolo', secao: 'Eletrolítico' },
-  105: { posicao: 105, nome: 'Deflector 2', perimetro: 1884, diametroPadrao: 600, tipo: 'Rolo', secao: 'Eletrolítico' },
+  105: { posicao: 105, nome: 'Defletor 2', perimetro: 1884, diametroPadrao: 600, tipo: 'Rolo', secao: 'Eletrolítico' },
   106: { posicao: 106, nome: 'Centragem', perimetro: 3140, diametroPadrao: 1000, tipo: 'Rolo', secao: 'Eletrolítico' },
-  107: { posicao: 107, nome: 'Deflector 3', perimetro: 1884, diametroPadrao: 600, tipo: 'Rolo', secao: 'Eletrolítico' },
+  107: { posicao: 107, nome: 'Defletor 3', perimetro: 1884, diametroPadrao: 600, tipo: 'Rolo', secao: 'Eletrolítico' },
   108: { posicao: 108, nome: 'Fundo do tanque 3', perimetro: 320, diametroPadrao: 101.9, tipo: 'Rolo', secao: 'Eletrolítico' },
   109: { posicao: 109, nome: 'Mergulhador ELE 2', perimetro: 3925, diametroPadrao: 1250, tipo: 'Rolo', secao: 'Eletrolítico' },
   110: { posicao: 110, nome: 'Fundo do tanque 4', perimetro: 320, diametroPadrao: 101.9, tipo: 'Rolo', secao: 'Eletrolítico' },
-  111: { posicao: 111, nome: 'Deflector 4', perimetro: 1884, diametroPadrao: 600, tipo: 'Rolo', secao: 'Eletrolítico' },
-  112: { posicao: 112, nome: 'Espremedor 1', perimetro: 800, diametroPadrao: 254.6, tipo: 'Rolo', secao: 'Eletrolítico' },
+  111: { posicao: 111, nome: 'Defletor 4', perimetro: 1884, diametroPadrao: 600, tipo: 'Rolo', secao: 'Eletrolítico' },
+  // Espremedor 1 - Expandido
+  112: { posicao: 112, nome: 'Espremedor 1 — Superior', perimetro: 800, diametroPadrao: 254.6, tipo: 'Rolo', secao: 'Eletrolítico' },
+  126: { posicao: 126, nome: 'Espremedor 1 — Inferior', perimetro: 800, diametroPadrao: 254.6, tipo: 'Rolo', secao: 'Eletrolítico' },
   // Escovador 1 (Eletrolítico) - Expandido
   113: { posicao: 113, nome: 'Escovador 1 — Rolo de encosto escova superior', perimetro: 1036, diametroPadrao: 329.8, tipo: 'Rolo', secao: 'Eletrolítico' },
   120: { posicao: 120, nome: 'Escovador 1 — Escova superior', perimetro: 785, diametroPadrao: 250, tipo: 'Escova', secao: 'Eletrolítico' },
   121: { posicao: 121, nome: 'Escovador 1 — Rolo de encosto escova inferior', perimetro: 1036, diametroPadrao: 329.8, tipo: 'Rolo', secao: 'Eletrolítico' },
   122: { posicao: 122, nome: 'Escovador 1 — Escova inferior', perimetro: 785, diametroPadrao: 250, tipo: 'Escova', secao: 'Eletrolítico' },
-  114: { posicao: 114, nome: 'Espremedor 2', perimetro: 800, diametroPadrao: 254.6, tipo: 'Rolo', secao: 'Eletrolítico' },
+  // Espremedor 2 - Expandido
+  114: { posicao: 114, nome: 'Espremedor 2 — Superior', perimetro: 800, diametroPadrao: 254.6, tipo: 'Rolo', secao: 'Eletrolítico' },
+  127: { posicao: 127, nome: 'Espremedor 2 — Inferior', perimetro: 800, diametroPadrao: 254.6, tipo: 'Rolo', secao: 'Eletrolítico' },
+  
   115: { posicao: 115, nome: 'Mergulhador QUIM 1', perimetro: 3140, diametroPadrao: 1000, tipo: 'Rolo', secao: 'Químico' },
   116: { posicao: 116, nome: 'Mergulhador QUIM 2', perimetro: 3140, diametroPadrao: 1000, tipo: 'Rolo', secao: 'Químico' },
-  117: { posicao: 117, nome: 'Espremedor 3', perimetro: 800, diametroPadrao: 254.6, tipo: 'Rolo', secao: 'Químico' },
+  // Espremedor 3 - Expandido
+  117: { posicao: 117, nome: 'Espremedor 3 — Superior', perimetro: 800, diametroPadrao: 254.6, tipo: 'Rolo', secao: 'Químico' },
+  128: { posicao: 128, nome: 'Espremedor 3 — Inferior', perimetro: 800, diametroPadrao: 254.6, tipo: 'Rolo', secao: 'Químico' },
   // Escovador 2 (Químico) - Expandido
   118: { posicao: 118, nome: 'Escovador 2 — Rolo de encosto escova superior', perimetro: 1036, diametroPadrao: 329.8, tipo: 'Rolo', secao: 'Químico' },
   123: { posicao: 123, nome: 'Escovador 2 — Escova superior', perimetro: 785, diametroPadrao: 250, tipo: 'Escova', secao: 'Químico' },
   124: { posicao: 124, nome: 'Escovador 2 — Rolo de encosto escova inferior', perimetro: 1036, diametroPadrao: 329.8, tipo: 'Rolo', secao: 'Químico' },
   125: { posicao: 125, nome: 'Escovador 2 — Escova inferior', perimetro: 785, diametroPadrao: 250, tipo: 'Escova', secao: 'Químico' },
-  119: { posicao: 119, nome: 'Espremedor 4', perimetro: 800, diametroPadrao: 254.6, tipo: 'Rolo', secao: 'Químico' }
+  // Espremedor 4 - Expandido
+  119: { posicao: 119, nome: 'Espremedor 4 — Superior', perimetro: 800, diametroPadrao: 254.6, tipo: 'Rolo', secao: 'Químico' },
+  129: { posicao: 129, nome: 'Espremedor 4 — Inferior', perimetro: 800, diametroPadrao: 254.6, tipo: 'Rolo', secao: 'Químico' }
 };
 
 export const DECAPAGEM_ORDER = [
-  100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112,
+  100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111,
+  112, 126, // Espremedor 1 (Sup / Inf)
   113, 120, 121, 122, // Escovador 1
-  114, 115, 116, 117,
+  114, 127, // Espremedor 2 (Sup / Inf)
+  115, 116,
+  117, 128, // Espremedor 3 (Sup / Inf)
   118, 123, 124, 125, // Escovador 2
-  119
+  119, 129 // Espremedor 4 (Sup / Inf)
 ];
 
 // Funções Utilitárias e de Segurança

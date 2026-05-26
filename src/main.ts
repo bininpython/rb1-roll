@@ -71,7 +71,7 @@ function renderFurnace() {
     s+=`<circle cx="${cx}" cy="${cy}" r="3" fill="${c}" opacity=".5"/>`;
     s+=`<text x="${cx}" y="${cy+5}" text-anchor="middle" fill="${c}" font-family="JetBrains Mono,monospace" font-weight="700" font-size="14">${idx}</text>`;
     const ly=cy+rollR+50;
-    s+=`<text x="${cx}" y="${ly}" text-anchor="middle" fill="rgba(255,255,255,.45)" font-family="Inter,sans-serif" font-size="9" font-weight="600" letter-spacing="1">ROLO ${idx}</text>`;
+    s+=`<text x="${cx}" y="${ly}" text-anchor="middle" fill="#ffffff" font-family="Inter,sans-serif" font-size="9" font-weight="600" letter-spacing="1">ROLO ${idx}</text>`;
     s+=`<text x="${cx}" y="${ly+13}" text-anchor="middle" fill="${c}" font-family="JetBrains Mono,monospace" font-size="10" font-weight="600">${rollData[idx].days!==null?rollData[idx].days+'d':'—'}</text>`;
     s+=`<text x="${cx}" y="${ly+26}" text-anchor="middle" fill="rgba(255,255,255,.3)" font-family="JetBrains Mono,monospace" font-size="9" font-weight="500">${rollData[idx].rolo?rollData[idx].rolo.diametro+'mm':'—'}</text>`;
     if(st==='red') s+=`<circle cx="${cx}" cy="${cy}" r="${rollR}" fill="none" stroke="${c}" stroke-width="1" opacity=".3"><animate attributeName="r" values="${rollR};${rollR+8};${rollR}" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".3;0;.3" dur="2s" repeatCount="indefinite"/></circle>`;
@@ -388,39 +388,39 @@ function renderDecapagem() {
   s += `<text x="70" y="280" text-anchor="middle" fill="#6b7280" font-family="'Inter', sans-serif" font-size="11" font-weight="600" letter-spacing="3">ENTRADA</text>`;
   s += `<text x="1640" y="280" text-anchor="middle" fill="#6b7280" font-family="'Inter', sans-serif" font-size="11" font-weight="600" letter-spacing="3">SAÍDA</text>`;
   
-  // 11. Custom Technical Labels overlay exactly as in annotated blueprint
-  s += `<g font-family="'Inter', sans-serif" font-size="9" font-weight="700" fill="rgba(255,255,255,0.4)" text-anchor="middle" letter-spacing="0.5" pointer-events="none">`;
+  // 11. Custom Technical Labels overlay exactly as in annotated blueprint (White text for high visibility)
+  s += `<g font-family="'Inter', sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="0.5" pointer-events="none">`;
   
   // First Wave
-  s += `<text x="220" y="322">Deflector</text>`;
+  s += `<text x="220" y="322">Defletor</text>`;
   s += `<text x="280" y="385">Fundo Tanque</text>`;
   s += `<text x="340" y="322">Mergulhador ELE</text>`;
   s += `<text x="400" y="385">Fundo tanque</text>`;
-  s += `<text x="460" y="322">Deflector</text>`;
+  s += `<text x="460" y="322">Defletor</text>`;
   
   // Large Center
   s += `<text x="540" y="308">Centragem</text>`;
   
   // Second Wave
-  s += `<text x="640" y="322">Deflector</text>`;
+  s += `<text x="640" y="322">Defletor</text>`;
   s += `<text x="700" y="385">Fundo tanque</text>`;
   s += `<text x="760" y="322">Mergulhador ELE</text>`;
   s += `<text x="820" y="385">Fundo tanque</text>`;
-  s += `<text x="880" y="322">Deflector</text>`;
+  s += `<text x="880" y="322">Defletor</text>`;
   
   // Station 1 Block
-  s += `<text x="925" y="365" font-size="8">Espremedor</text>`;
+  s += `<text x="925" y="365" font-size="8">Espremedor 1</text>`;
   s += `<text x="980" y="278" fill="#ff7a30" font-size="9">Escovador 1</text>`;
-  s += `<text x="1035" y="365" font-size="8">Espremedor</text>`;
+  s += `<text x="1035" y="365" font-size="8">Espremedor 2</text>`;
   
   // Chemical Cylinders
   s += `<text x="1140" y="308">Mergulhador QUIM</text>`;
   s += `<text x="1320" y="308">Mergulhador QUIM</text>`;
   
   // Station 2 Block
-  s += `<text x="1465" y="365" font-size="8">Espremedor</text>`;
+  s += `<text x="1465" y="365" font-size="8">Espremedor 3</text>`;
   s += `<text x="1520" y="278" fill="#f8fafc" font-size="9">Escovador 2</text>`;
-  s += `<text x="1605" y="372" font-size="8">Espremedor</text>`;
+  s += `<text x="1605" y="372" font-size="8">Espremedor 4</text>`;
   
   s += `</g>`;
   

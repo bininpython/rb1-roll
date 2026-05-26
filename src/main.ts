@@ -376,7 +376,11 @@ function renderDecapagem() {
   s += processLine;
   s += front;
   
-  // 9. Boundary Texts
+  // 9. Section Headings (Eletrolítico and Químico)
+  s += `<text x="540" y="190" text-anchor="middle" fill="#ff7a30" font-family="'Inter', sans-serif" font-size="24" font-weight="700" letter-spacing="0.5">Eletrolítico</text>`;
+  s += `<text x="1230" y="190" text-anchor="middle" fill="#f8fafc" font-family="'Inter', sans-serif" font-size="24" font-weight="700" letter-spacing="0.5">Quimico</text>`;
+  
+  // 10. Boundary Texts
   s += `<text x="70" y="280" text-anchor="middle" fill="#6b7280" font-family="'Inter', sans-serif" font-size="11" font-weight="600" letter-spacing="3">ENTRADA</text>`;
   s += `<text x="1640" y="280" text-anchor="middle" fill="#6b7280" font-family="'Inter', sans-serif" font-size="11" font-weight="600" letter-spacing="3">SAÍDA</text>`;
   

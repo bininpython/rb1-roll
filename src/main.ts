@@ -1,7 +1,7 @@
 /** RB1 System v3 — Main Application (Clean, No Exports) */
 import './style.css';
 import { rolos, estoque, historico, calcDays, getStatus, getRolo, fmtDate, sanitize,
-  registrarSubstituicao, editarHistorico, adicionarEstoque, removerEstoque, initDemo, DECAPAGEM_MAP } from './store';
+  registrarSubstituicao, editarHistorico, adicionarEstoque, removerEstoque, initDemo, DECAPAGEM_MAP, DECAPAGEM_ORDER } from './store';
 import type { Posicao, Turno, KanbanStatus } from './types';
 
 const $ = (id: string) => document.getElementById(id)!;
@@ -446,8 +446,9 @@ function renderDecapagemTable() {
   const body = $('decapagemTableBody') as HTMLTableSectionElement;
   if (!body) return;
   
-  const rowsHtml = Object.entries(DECAPAGEM_MAP).map(([pStr, meta]) => {
-    const p = parseInt(pStr);
+  const rowsHtml = DECAPAGEM_ORDER.map(p => {
+    const meta = DECAPAGEM_MAP[p];
+    if (!meta) return '';
     const rolo = getRolo(p);
     if (!rolo) return '';
     
@@ -462,8 +463,7 @@ function renderDecapagemTable() {
     return `
       <tr>
         <td>
-          <div style="font-weight:700;color:var(--text);font-size:0.85rem;">Pos. ${p}</div>
-          <div style="font-size:0.75rem;color:var(--text-secondary);font-weight:500;">${meta.nome}</div>
+          <div style="font-weight:700;color:var(--text);font-size:0.85rem;">${meta.nome}</div>
         </td>
         <td>${typeBadge}</td>
         <td style="font-family:var(--mono);font-weight:600;font-size:0.82rem;">${rolo.diametro} mm</td>
@@ -489,6 +489,9 @@ function renderDecapagemTable() {
   openSubModal();
   const selPos = $('inPos') as HTMLSelectElement;
   selPos.value = String(pos);
+  if (typeof (window as any).updateSubModalFields === 'function') {
+    (window as any).updateSubModalFields();
+  }
   // Trigger diameter sync based on selected position
   const estSelect = $('inEstoqueRolo') as HTMLSelectElement;
   estSelect.value = '';
@@ -538,10 +541,42 @@ function populateEstoqueSelect(){
   sel.innerHTML='<option value="">Selecione um rolo do estoque...</option>';
   estoque.forEach(e=>{sel.innerHTML+=`<option value="${e.id}">⊘ ${e.diametro} mm — ${sanitize(e.obs)||'Sem obs.'}</option>`;});
 }
+
+function updateSubModalFields() {
+  const posVal = parseInt(($('inPos') as HTMLSelectElement).value);
+  const isDecapagem = !isNaN(posVal) && posVal >= 100;
+  
+  const inTurno = $('inTurno') as HTMLSelectElement;
+  const inMotivo = $('inMotivo') as HTMLTextAreaElement;
+  const labelMotivo = inMotivo.previousElementSibling as HTMLElement;
+  
+  if (isDecapagem) {
+    inTurno.innerHTML = '<option value="TT" selected>TT — Tarde</option>';
+    inMotivo.removeAttribute('required');
+    if (labelMotivo) {
+      labelMotivo.innerHTML = 'Motivo da Troca <span style="opacity:0.5; font-size:0.75rem;">(Opcional)</span>';
+    }
+  } else {
+    inTurno.innerHTML = `
+      <option value="">Selecione...</option>
+      <option value="TN">TN — Noite</option>
+      <option value="TM">TM — Manhã</option>
+      <option value="TT">TT — Tarde</option>
+    `;
+    inMotivo.setAttribute('required', 'required');
+    if (labelMotivo) {
+      labelMotivo.innerHTML = 'Motivo da Troca *';
+    }
+  }
+}
+(window as any).updateSubModalFields = updateSubModalFields;
+$('inPos').addEventListener('change', updateSubModalFields);
+
 function openSubModal(){
   const now=new Date(); now.setMinutes(now.getMinutes()-now.getTimezoneOffset());
   ($('inData') as HTMLInputElement).value=now.toISOString().slice(0,16);
   populateEstoqueSelect(); $('modalSub').classList.add('active');
+  updateSubModalFields();
 }
 function closeSubModal(){$('modalSub').classList.remove('active');($('formSub') as HTMLFormElement).reset();document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));($('inDiam') as HTMLInputElement).value='';}
 
@@ -571,7 +606,8 @@ document.querySelectorAll<HTMLButtonElement>('#motivoChips .chip').forEach(chip=
   const estId=($('inEstoqueRolo') as HTMLSelectElement).value;
   const dt=($('inData') as HTMLInputElement).value;
   const mot=($('inMotivo') as HTMLTextAreaElement).value.trim();
-  if(isNaN(pos)||!turno||!estId||!dt||!mot){toast('Preencha todos os campos!','error');return;}
+  const isDecapagem = pos >= 100;
+  if(isNaN(pos)||!turno||!estId||!dt||(!isDecapagem && !mot)){toast('Preencha todos os campos!','error');return;}
   try{registrarSubstituicao(pos,turno,estId,dt,mot);closeSubModal();renderAll();toast(`Rolo ${pos} substituído!`,'success');}catch(err:any){toast(err.message,'error');}
 });
 
@@ -611,11 +647,35 @@ function openEditModal(id:string){
   const rec=historico.find(h=>h.id===id); if(!rec) return;
   ($('editId') as HTMLInputElement).value=rec.id;
   ($('editPos') as HTMLInputElement).value=`Rolo ${rec.posicao}`;
-  ($('editTurno') as HTMLSelectElement).value=rec.turno;
   ($('editDiam') as HTMLInputElement).value=String(rec.diametro);
   const dt=new Date(rec.data_troca);dt.setMinutes(dt.getMinutes()-dt.getTimezoneOffset());
   ($('editData') as HTMLInputElement).value=dt.toISOString().slice(0,16);
   ($('editMotivo') as HTMLTextAreaElement).value=rec.obs_motivo;
+  
+  const editTurno = $('editTurno') as HTMLSelectElement;
+  const editMotivo = $('editMotivo') as HTMLTextAreaElement;
+  const labelEditMotivo = editMotivo.previousElementSibling as HTMLElement;
+  const isDecapagem = rec.posicao >= 100;
+  
+  if (isDecapagem) {
+    editTurno.innerHTML = '<option value="TT" selected>TT — Tarde</option>';
+    editMotivo.removeAttribute('required');
+    if (labelEditMotivo) {
+      labelEditMotivo.innerHTML = 'Motivo da Troca <span style="opacity:0.5; font-size:0.75rem;">(Opcional)</span>';
+    }
+  } else {
+    editTurno.innerHTML = `
+      <option value="TN">TN — Noite</option>
+      <option value="TM">TM — Manhã</option>
+      <option value="TT">TT — Tarde</option>
+    `;
+    editTurno.value = rec.turno;
+    editMotivo.setAttribute('required', 'required');
+    if (labelEditMotivo) {
+      labelEditMotivo.innerHTML = 'Motivo da Troca';
+    }
+  }
+  
   $('modalEdit').classList.add('active');
 }
 function closeEditModal(){$('modalEdit').classList.remove('active');}
@@ -628,7 +688,10 @@ $('modalEdit').addEventListener('click',e=>{if(e.target===$('modalEdit'))closeEd
   const turno=($('editTurno') as HTMLSelectElement).value as Turno;
   const dt=($('editData') as HTMLInputElement).value;
   const mot=($('editMotivo') as HTMLTextAreaElement).value.trim();
-  if(!mot){toast('Motivo obrigatório!','error');return;}
+  const rec=historico.find(h=>h.id===id);
+  const pos = rec ? rec.posicao : 0;
+  const isDecapagem = pos >= 100;
+  if(!isDecapagem && !mot){toast('Motivo obrigatório!','error');return;}
   try{editarHistorico(id,turno,dt,mot);closeEditModal();renderAll();toast('Registro atualizado!','success');}catch(err:any){toast(err.message,'error');}
 });
 

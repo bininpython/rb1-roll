@@ -28,14 +28,30 @@ export const DECAPAGEM_MAP: Record<number, DecapagemRollerInfo> = {
   110: { posicao: 110, nome: 'Fundo do tanque 4', perimetro: 320, diametroPadrao: 101.9, tipo: 'Rolo', secao: 'Eletrolítico' },
   111: { posicao: 111, nome: 'Deflector 4', perimetro: 1884, diametroPadrao: 600, tipo: 'Rolo', secao: 'Eletrolítico' },
   112: { posicao: 112, nome: 'Espremedor 1', perimetro: 800, diametroPadrao: 254.6, tipo: 'Rolo', secao: 'Eletrolítico' },
-  113: { posicao: 113, nome: 'Escovador 1', perimetro: 785, diametroPadrao: 250, tipo: 'Escova', secao: 'Eletrolítico' },
+  // Escovador 1 (Eletrolítico) - Expandido
+  113: { posicao: 113, nome: 'Escovador 1 — Rolo de encosto escova superior', perimetro: 1036, diametroPadrao: 329.8, tipo: 'Rolo', secao: 'Eletrolítico' },
+  120: { posicao: 120, nome: 'Escovador 1 — Escova superior', perimetro: 785, diametroPadrao: 250, tipo: 'Escova', secao: 'Eletrolítico' },
+  121: { posicao: 121, nome: 'Escovador 1 — Rolo de encosto escova inferior', perimetro: 1036, diametroPadrao: 329.8, tipo: 'Rolo', secao: 'Eletrolítico' },
+  122: { posicao: 122, nome: 'Escovador 1 — Escova inferior', perimetro: 785, diametroPadrao: 250, tipo: 'Escova', secao: 'Eletrolítico' },
   114: { posicao: 114, nome: 'Espremedor 2', perimetro: 800, diametroPadrao: 254.6, tipo: 'Rolo', secao: 'Eletrolítico' },
   115: { posicao: 115, nome: 'Mergulhador QUIM 1', perimetro: 3140, diametroPadrao: 1000, tipo: 'Rolo', secao: 'Químico' },
   116: { posicao: 116, nome: 'Mergulhador QUIM 2', perimetro: 3140, diametroPadrao: 1000, tipo: 'Rolo', secao: 'Químico' },
   117: { posicao: 117, nome: 'Espremedor 3', perimetro: 800, diametroPadrao: 254.6, tipo: 'Rolo', secao: 'Químico' },
-  118: { posicao: 118, nome: 'Escovador 2', perimetro: 785, diametroPadrao: 250, tipo: 'Escova', secao: 'Químico' },
+  // Escovador 2 (Químico) - Expandido
+  118: { posicao: 118, nome: 'Escovador 2 — Rolo de encosto escova superior', perimetro: 1036, diametroPadrao: 329.8, tipo: 'Rolo', secao: 'Químico' },
+  123: { posicao: 123, nome: 'Escovador 2 — Escova superior', perimetro: 785, diametroPadrao: 250, tipo: 'Escova', secao: 'Químico' },
+  124: { posicao: 124, nome: 'Escovador 2 — Rolo de encosto escova inferior', perimetro: 1036, diametroPadrao: 329.8, tipo: 'Rolo', secao: 'Químico' },
+  125: { posicao: 125, nome: 'Escovador 2 — Escova inferior', perimetro: 785, diametroPadrao: 250, tipo: 'Escova', secao: 'Químico' },
   119: { posicao: 119, nome: 'Espremedor 4', perimetro: 800, diametroPadrao: 254.6, tipo: 'Rolo', secao: 'Químico' }
 };
+
+export const DECAPAGEM_ORDER = [
+  100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112,
+  113, 120, 121, 122, // Escovador 1
+  114, 115, 116, 117,
+  118, 123, 124, 125, // Escovador 2
+  119
+];
 
 // Funções Utilitárias e de Segurança
 export const genId = () => Math.random().toString(36).substring(2, 9);
@@ -45,22 +61,20 @@ export const getStatus = (days: number | null): KanbanStatus => { if (days === n
 export const getRolo = (p: number): Rolo | undefined => {
   const r = rolos.find(x => x.posicao === p);
   if (r) return r;
-  if (p >= 100 && p <= 119) {
-    const meta = DECAPAGEM_MAP[p];
-    if (meta) {
-      // Consistent fallback data based on position
-      const daysAgo = (p % 4) + 1; // 1 to 4 days ago
-      const dt = new Date();
-      dt.setDate(dt.getDate() - daysAgo);
-      return {
-        id: `virtual-${p}`,
-        posicao: p,
-        data_troca: dt.toISOString(),
-        turno: (['TN', 'TM', 'TT'][p % 3]) as Turno,
-        diametro: meta.diametroPadrao,
-        obs_motivo: 'Inicialização automática do sistema'
-      };
-    }
+  const meta = DECAPAGEM_MAP[p];
+  if (meta) {
+    // Consistent fallback data based on position
+    const daysAgo = (p % 4) + 1; // 1 to 4 days ago
+    const dt = new Date();
+    dt.setDate(dt.getDate() - daysAgo);
+    return {
+      id: `virtual-${p}`,
+      posicao: p,
+      data_troca: dt.toISOString(),
+      turno: 'TT',
+      diametro: meta.diametroPadrao,
+      obs_motivo: ''
+    };
   }
   return undefined;
 };
@@ -99,7 +113,7 @@ export async function registrarSubstituicao(pos: Posicao, turno: Turno, estoqueI
   if (!estItem) throw new Error('Rolo selecionado não existe mais no estoque.');
   if (isNaN(new Date(dtStr).getTime())) throw new Error('Data inválida.');
   if (!['TM', 'TT', 'TN'].includes(turno)) throw new Error('Turno inválido.');
-  if ((pos < 0 || pos > 4) && (pos < 100 || pos > 119)) throw new Error('Posição inválida.');
+  if ((pos < 0 || pos > 4) && !DECAPAGEM_MAP[pos]) throw new Error('Posição inválida.');
 
   const motSafe = sanitize(motivo);
   const oldRolo = getRolo(pos);

@@ -201,19 +201,19 @@ function renderDecapagem() {
   front += smallRoll(880, 338); // Above
   
   // 5. Orange Box Station (Left Pinch, 2x2 Unit, Right Pinch)
-  front += pinchRolls(925, 320);
+  front += pinchRolls(925, 335); // Centered at y=335 on slope up
   behind += brushStation(980, 320);
-  front += pinchRolls(1035, 320);
+  front += pinchRolls(1035, 335); // Centered at y=335 on slope down
   
   // 6. Grey Box Cylinders (Chemical pickling)
   behind += largeCylinder(1140, 350);
   behind += largeCylinder(1320, 350);
   
   // 7. Right Station (Left Pinch, 2x2 Unit, Flanking Double Pinch)
-  front += pinchRolls(1465, 320);
+  front += pinchRolls(1465, 335); // Centered at y=335 on slope up
   behind += brushStation(1520, 320);
-  front += pinchRolls(1575, 320);
-  front += pinchRolls(1605, 320);
+  front += pinchRolls(1575, 327.5); // Centered at y=327.5 on slope down
+  front += pinchRolls(1605, 342.5); // Centered at y=342.5 on slope down
   
   // 8. Mathematically Rounded and Connected Process Line Path
   let pathStr = '';
@@ -223,17 +223,19 @@ function renderDecapagem() {
   pathStr += 'L 510 350 '; // Straight through first wave of rollers
   pathStr += 'A 30 30 0 0 1 570 350 '; // Wrap over Cylinder 2
   pathStr += 'L 910 350 '; // Straight to slope
-  pathStr += 'L 940 320 '; // Slope up to Station 1
-  pathStr += 'L 1050 320 '; // Through Station 1
-  pathStr += 'L 1080 350 '; // Slope down from Station 1
+  pathStr += 'L 940 320 '; // Slope up to Station 1 (Left pinch at x=925, y=335)
+  pathStr += 'L 1020 320 '; // Through Station 1
+  pathStr += 'L 1050 350 '; // Slope down from Station 1 (Right pinch at x=1035, y=335)
   pathStr += 'L 1110 350 '; // Approach Cylinder 3
   pathStr += 'A 30 30 0 0 1 1170 350 '; // Wrap over Cylinder 3
   pathStr += 'L 1290 350 '; // Gap between Cylinder 3 and 4
   pathStr += 'A 30 30 0 0 1 1350 350 '; // Wrap over Cylinder 4
   pathStr += 'L 1420 350 '; // Exit Cylinder 4
-  pathStr += 'L 1450 320 '; // Slope up to Station 2
-  pathStr += 'L 1620 320 '; // Through Station 2 and flanking pinches
-  pathStr += 'L 1665 350'; // Slope down to exit
+  pathStr += 'L 1450 350 '; // Gap before Station 2
+  pathStr += 'L 1480 320 '; // Slope up to Station 2 (Left pinch at x=1465, y=335)
+  pathStr += 'L 1560 320 '; // Through Station 2
+  pathStr += 'L 1620 350 '; // Slope down from Station 2 (Pinches at x=1575, y=327.5 and x=1605, y=342.5)
+  pathStr += 'L 1665 350'; // Exit to right
   
   let processLine = `<path d="${pathStr}" fill="none" stroke="#f8fafc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#subtleGlow)" opacity="0.9" />`;
   

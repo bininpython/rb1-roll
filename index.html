@@ -54,7 +54,40 @@
             <div class="panel-header">
                 <h2>📋 Histórico de Substituições</h2>
                 <div class="history-filters">
-                    <select id="filterPos" class="select-filter"><option value="">Todas Posições</option><option value="0">Rolo 0</option><option value="1">Rolo 1</option><option value="2">Rolo 2</option><option value="3">Rolo 3</option><option value="4">Rolo 4</option></select>
+                    <select id="filterPos" class="select-filter">
+                        <option value="">Todas Posições</option>
+                        <optgroup label="🔥 Forno de Recozimento">
+                            <option value="0">Rolo 0</option>
+                            <option value="1">Rolo 1</option>
+                            <option value="2">Rolo 2</option>
+                            <option value="3">Rolo 3</option>
+                            <option value="4">Rolo 4</option>
+                        </optgroup>
+                        <optgroup label="⚡ Decapagem Eletrolítica">
+                            <option value="100">Rolo 100 — Deflector Entrada</option>
+                            <option value="101">Rolo 101 — Deflector 1</option>
+                            <option value="102">Rolo 102 — Fundo Tanque 1</option>
+                            <option value="103">Rolo 103 — Mergulhador ELE 1</option>
+                            <option value="104">Rolo 104 — Fundo Tanque 2</option>
+                            <option value="105">Rolo 105 — Deflector 2</option>
+                            <option value="106">Rolo 106 — Centragem</option>
+                            <option value="107">Rolo 107 — Deflector 3</option>
+                            <option value="108">Rolo 108 — Fundo Tanque 3</option>
+                            <option value="109">Rolo 109 — Mergulhador ELE 2</option>
+                            <option value="110">Rolo 110 — Fundo Tanque 4</option>
+                            <option value="111">Rolo 111 — Deflector 4</option>
+                            <option value="112">Rolo 112 — Espremedor 1</option>
+                            <option value="113">Escova 113 — Escovador 1</option>
+                            <option value="114">Rolo 114 — Espremedor 2</option>
+                        </optgroup>
+                        <optgroup label="⚡ Decapagem Química">
+                            <option value="115">Rolo 115 — Mergulhador QUIM 1</option>
+                            <option value="116">Rolo 116 — Mergulhador QUIM 2</option>
+                            <option value="117">Rolo 117 — Espremedor 3</option>
+                            <option value="118">Escova 118 — Escovador 2</option>
+                            <option value="119">Rolo 119 — Espremedor 4</option>
+                        </optgroup>
+                    </select>
                     <select id="filterTurno" class="select-filter"><option value="">Todos Turnos</option><option value="TN">TN — Noite</option><option value="TM">TM — Manhã</option><option value="TT">TT — Tarde</option></select>
                 </div>
             </div>
@@ -84,6 +117,31 @@
                     <div class="furnace-diagram" id="decapagemDiagram"></div>
                 </div>
             </section>
+            <section class="decapagem-table-section" style="max-width: 1360px; margin: 1.5rem auto; padding: 0 1.5rem;">
+                <div class="history-card">
+                    <div class="panel-header">
+                        <h2>📋 Status e Identificação dos Rolos e Escovas (Decapagem)</h2>
+                    </div>
+                    <div class="history-table-wrapper">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Posição / Nome</th>
+                                    <th>Tipo</th>
+                                    <th>Diâmetro</th>
+                                    <th>Perímetro</th>
+                                    <th>Instalação</th>
+                                    <th>Turno</th>
+                                    <th>Tempo Ativo</th>
+                                    <th>Motivo / Obs</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="decapagemTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
         </div>
     </main>
     <!-- Modal: Substituição -->
@@ -92,7 +150,43 @@
             <div class="modal-header"><h3>Nova Substituição de Rolo</h3><button class="modal-close" id="modalSubClose">&times;</button></div>
             <form id="formSub" class="modal-form">
                 <div class="form-row">
-                    <div class="form-group"><label>Posição do Rolo *</label><select id="inPos" required><option value="">Selecione...</option><option value="0">Rolo 0</option><option value="1">Rolo 1</option><option value="2">Rolo 2</option><option value="3">Rolo 3</option><option value="4">Rolo 4</option></select></div>
+                    <div class="form-group">
+                        <label>Posição do Rolo *</label>
+                        <select id="inPos" required>
+                            <option value="">Selecione...</option>
+                            <optgroup label="🔥 Forno de Recozimento">
+                                <option value="0">Rolo 0</option>
+                                <option value="1">Rolo 1</option>
+                                <option value="2">Rolo 2</option>
+                                <option value="3">Rolo 3</option>
+                                <option value="4">Rolo 4</option>
+                            </optgroup>
+                            <optgroup label="⚡ Decapagem Eletrolítica">
+                                <option value="100">Pos. 100 — Deflector Entrada</option>
+                                <option value="101">Pos. 101 — Deflector 1</option>
+                                <option value="102">Pos. 102 — Fundo do tanque 1</option>
+                                <option value="103">Pos. 103 — Mergulhador ELE 1</option>
+                                <option value="104">Pos. 104 — Fundo do tanque 2</option>
+                                <option value="105">Pos. 105 — Deflector 2</option>
+                                <option value="106">Pos. 106 — Centragem</option>
+                                <option value="107">Pos. 107 — Deflector 3</option>
+                                <option value="108">Pos. 108 — Fundo do tanque 3</option>
+                                <option value="109">Pos. 109 — Mergulhador ELE 2</option>
+                                <option value="110">Pos. 110 — Fundo do tanque 4</option>
+                                <option value="111">Pos. 111 — Deflector 4</option>
+                                <option value="112">Pos. 112 — Espremedor 1</option>
+                                <option value="113">Pos. 113 — Escovador 1</option>
+                                <option value="114">Pos. 114 — Espremedor 2</option>
+                            </optgroup>
+                            <optgroup label="⚡ Decapagem Química">
+                                <option value="115">Pos. 115 — Mergulhador QUIM 1</option>
+                                <option value="116">Pos. 116 — Mergulhador QUIM 2</option>
+                                <option value="117">Pos. 117 — Espremedor 3</option>
+                                <option value="118">Pos. 118 — Escovador 2</option>
+                                <option value="119">Pos. 119 — Espremedor 4</option>
+                            </optgroup>
+                        </select>
+                    </div>
                     <div class="form-group"><label>Turno *</label><select id="inTurno" required><option value="">Selecione...</option><option value="TN">TN — Noite</option><option value="TM">TM — Manhã</option><option value="TT">TT — Tarde</option></select></div>
                 </div>
                 <div class="form-group"><label>Selecionar Rolo do Estoque *</label><select id="inEstoqueRolo" required><option value="">Selecione um rolo do estoque...</option></select></div>

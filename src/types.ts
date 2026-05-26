@@ -1,7 +1,7 @@
 /** RB1 Roll - Type Definitions */
 export type Turno = 'TN' | 'TM' | 'TT';
 export type KanbanStatus = 'green' | 'yellow' | 'red' | 'empty';
-export type Posicao = 0 | 1 | 2 | 3 | 4;
+export type Posicao = number;
 
 export interface Rolo {
         readonly id: string;

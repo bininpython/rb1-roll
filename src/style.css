@@ -397,3 +397,13 @@ body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ===== Interactive Decapagem Rollers ===== */
+.decapagem-interactive-roll {
+  transition: filter 0.2s ease-in-out, transform 0.2s ease;
+  cursor: pointer;
+}
+.decapagem-interactive-roll:hover {
+  filter: drop-shadow(0 0 5px #e27b38) brightness(1.3);
+}
+

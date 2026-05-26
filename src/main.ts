@@ -1,7 +1,7 @@
 /** RB1 Roll v3 — Main Application (Clean, No Exports) */
 import './style.css';
 import { rolos, estoque, historico, calcDays, getStatus, getRolo, fmtDate, sanitize,
-  registrarSubstituicao, editarHistorico, adicionarEstoque, removerEstoque, initDemo } from './store';
+  registrarSubstituicao, editarHistorico, adicionarEstoque, removerEstoque, initDemo, DECAPAGEM_MAP } from './store';
 import type { Posicao, Turno, KanbanStatus } from './types';
 
 const $ = (id: string) => document.getElementById(id)!;
@@ -155,8 +155,8 @@ function renderDecapagem() {
   }
   
   // Large Cylinders (Center y = 350, Radius = 30)
-  function largeCylinder(x: number, y: number, dir: 'cw' | 'ccw' = 'cw') {
-    let c = '';
+  function largeCylinder(x: number, y: number, dir: 'cw' | 'ccw' = 'cw', pos: number) {
+    let c = `<g class="decapagem-interactive-roll" data-pos="${pos}">`;
     c += baseBlock(x, y + 30); // Base starts at bottom of cylinder (350 + 30 = 380)
     
     // Backing circle to hide the pedestal underneath
@@ -184,12 +184,13 @@ function renderDecapagem() {
     c += `<circle cx="${x}" cy="${y}" r="30" fill="none" stroke="#e2e8f0" stroke-width="2" />`;
     c += `<circle cx="${x}" cy="${y}" r="4.5" fill="#11141a" stroke="#e2e8f0" stroke-width="1.5" />`;
     c += `<circle cx="${x}" cy="${y}" r="1.5" fill="#e2e8f0" />`;
+    c += `</g>`;
     return c;
   }
   
   // Small wave rollers (Radius = 10)
-  function smallRoll(x: number, y: number, dir: 'cw' | 'ccw') {
-    let s = '';
+  function smallRoll(x: number, y: number, dir: 'cw' | 'ccw', pos: number) {
+    let s = `<g class="decapagem-interactive-roll" data-pos="${pos}">`;
     s += `<circle cx="${x}" cy="${y}" r="10" fill="#11141a" />`; // Backing
     s += `<g>`;
     const rotVal = dir === 'cw' ? `0 ${x} ${y};360 ${x} ${y}` : `360 ${x} ${y};0 ${x} ${y}`;
@@ -206,12 +207,13 @@ function renderDecapagem() {
     // Outer crisp ring
     s += `<circle cx="${x}" cy="${y}" r="10" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
     s += `<circle cx="${x}" cy="${y}" r="1.5" fill="#e2e8f0" />`;
+    s += `</g>`;
     return s;
   }
   
   // Vertical pinch pair (Radius = 8)
-  function pinchRolls(x: number, y: number) {
-    let p = '';
+  function pinchRolls(x: number, y: number, pos: number) {
+    let p = `<g class="decapagem-interactive-roll" data-pos="${pos}">`;
     const cyTop = y - 10;
     const cyBottom = y + 10;
     const r = 8;
@@ -238,13 +240,14 @@ function renderDecapagem() {
     p += `</g>`;
     p += `<circle cx="${x}" cy="${cyBottom}" r="${r}" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
     p += `<circle cx="${x}" cy="${cyBottom}" r="1.5" fill="#e2e8f0" />`;
+    p += `</g>`;
     
     return p;
   }
   
   // 2x2 Station (with 2 yellow and 2 white rollers)
-  function brushStation(x: number, y: number) {
-    let b = '';
+  function brushStation(x: number, y: number, pos: number) {
+    let b = `<g class="decapagem-interactive-roll" data-pos="${pos}">`;
     b += tallBaseBlock(x, y + 30); // Stand starts at bottom of station box (320 + 30 = 350)
     // Outer station housing box
     b += `<rect x="${x - 30}" y="${y - 30}" width="60" height="60" rx="4" fill="none" stroke="#9ca3af" stroke-width="1.5" />`;
@@ -299,6 +302,7 @@ function renderDecapagem() {
     b += `</g>`;
     b += `<circle cx="${cxBR}" cy="${cyBR}" r="${r}" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
     b += `<circle cx="${cxBR}" cy="${cyBR}" r="1.5" fill="#e2e8f0" />`;
+    b += `</g>`;
     
     return b;
   }
@@ -308,38 +312,38 @@ function renderDecapagem() {
   let front = '';
   
   // 1. Far Left Cylinder (outside orange box)
-  behind += largeCylinder(120, 350, 'cw');
+  behind += largeCylinder(120, 350, 'cw', 100);
   
   // 2. First Wave of 5 Rollers (left side, alternating directions)
-  front += smallRoll(220, 338, 'ccw'); // Above
-  front += smallRoll(280, 362, 'cw');  // Below
-  front += smallRoll(340, 338, 'ccw'); // Above
-  front += smallRoll(400, 362, 'cw');  // Below
-  front += smallRoll(460, 338, 'ccw'); // Above
+  front += smallRoll(220, 338, 'ccw', 101); // Above
+  front += smallRoll(280, 362, 'cw', 102);  // Below
+  front += smallRoll(340, 338, 'ccw', 103); // Above
+  front += smallRoll(400, 362, 'cw', 104);  // Below
+  front += smallRoll(460, 338, 'ccw', 105); // Above
   
   // 3. Middle Cylinder
-  behind += largeCylinder(540, 350, 'cw');
+  behind += largeCylinder(540, 350, 'cw', 106);
   
   // 4. Second Wave of 5 Rollers (right side, alternating directions)
-  front += smallRoll(640, 338, 'ccw'); // Above
-  front += smallRoll(700, 362, 'cw');  // Below
-  front += smallRoll(760, 338, 'ccw'); // Above
-  front += smallRoll(820, 362, 'cw');  // Below
-  front += smallRoll(880, 338, 'ccw'); // Above
+  front += smallRoll(640, 338, 'ccw', 107); // Above
+  front += smallRoll(700, 362, 'cw', 108);  // Below
+  front += smallRoll(760, 338, 'ccw', 109); // Above
+  front += smallRoll(820, 362, 'cw', 110);  // Below
+  front += smallRoll(880, 338, 'ccw', 111); // Above
   
   // 5. Orange Box Station (Left Pinch, 2x2 Unit, Right Pinch)
-  front += pinchRolls(925, 335); // Centered at y=335 on slope up
-  behind += brushStation(980, 320);
-  front += pinchRolls(1035, 335); // Centered at y=335 on slope down
+  front += pinchRolls(925, 335, 112); // Centered at y=335 on slope up
+  behind += brushStation(980, 320, 113);
+  front += pinchRolls(1035, 335, 114); // Centered at y=335 on slope down
   
   // 6. Grey Box Cylinders (Chemical pickling)
-  behind += largeCylinder(1140, 350, 'cw');
-  behind += largeCylinder(1320, 350, 'cw');
+  behind += largeCylinder(1140, 350, 'cw', 115);
+  behind += largeCylinder(1320, 350, 'cw', 116);
   
   // 7. Right Station (Left Pinch, 2x2 Unit, Flanking Pinch)
-  front += pinchRolls(1465, 335); // Centered at y=335 on slope up
-  behind += brushStation(1520, 320);
-  front += pinchRolls(1605, 342.5); // Centered at y=342.5 on slope down
+  front += pinchRolls(1465, 335, 117); // Centered at y=335 on slope up
+  behind += brushStation(1520, 320, 118);
+  front += pinchRolls(1605, 342.5, 119); // Centered at y=342.5 on slope down
   
   // 8. Mathematically Rounded and Connected Process Line Path
   let pathStr = '';
@@ -384,9 +388,112 @@ function renderDecapagem() {
   s += `<text x="70" y="280" text-anchor="middle" fill="#6b7280" font-family="'Inter', sans-serif" font-size="11" font-weight="600" letter-spacing="3">ENTRADA</text>`;
   s += `<text x="1640" y="280" text-anchor="middle" fill="#6b7280" font-family="'Inter', sans-serif" font-size="11" font-weight="600" letter-spacing="3">SAÍDA</text>`;
   
+  // 11. Custom Technical Labels overlay exactly as in annotated blueprint
+  s += `<g font-family="'Inter', sans-serif" font-size="9" font-weight="700" fill="rgba(255,255,255,0.4)" text-anchor="middle" letter-spacing="0.5" pointer-events="none">`;
+  
+  // First Wave
+  s += `<text x="220" y="322">Deflector</text>`;
+  s += `<text x="280" y="385">Fundo Tanque</text>`;
+  s += `<text x="340" y="322">Mergulhador ELE</text>`;
+  s += `<text x="400" y="385">Fundo tanque</text>`;
+  s += `<text x="460" y="322">Deflector</text>`;
+  
+  // Large Center
+  s += `<text x="540" y="308">Centragem</text>`;
+  
+  // Second Wave
+  s += `<text x="640" y="322">Deflector</text>`;
+  s += `<text x="700" y="385">Fundo tanque</text>`;
+  s += `<text x="760" y="322">Mergulhador ELE</text>`;
+  s += `<text x="820" y="385">Fundo tanque</text>`;
+  s += `<text x="880" y="322">Deflector</text>`;
+  
+  // Station 1 Block
+  s += `<text x="925" y="365" font-size="8">Espremedor</text>`;
+  s += `<text x="980" y="278" fill="#ff7a30" font-size="9">Escovador 1</text>`;
+  s += `<text x="1035" y="365" font-size="8">Espremedor</text>`;
+  
+  // Chemical Cylinders
+  s += `<text x="1140" y="308">Mergulhador QUIM</text>`;
+  s += `<text x="1320" y="308">Mergulhador QUIM</text>`;
+  
+  // Station 2 Block
+  s += `<text x="1465" y="365" font-size="8">Espremedor</text>`;
+  s += `<text x="1520" y="278" fill="#f8fafc" font-size="9">Escovador 2</text>`;
+  s += `<text x="1605" y="372" font-size="8">Espremedor</text>`;
+  
+  s += `</g>`;
+  
   s += `</svg>`;
   $('decapagemDiagram').innerHTML = s;
+  
+  // Click handler on Decapagem diagram for SVG interactive rollers selection
+  const diag = $('decapagemDiagram');
+  diag.onclick = (e) => {
+    const interactive = (e.target as Element).closest('.decapagem-interactive-roll');
+    if (interactive) {
+      const posStr = interactive.getAttribute('data-pos');
+      if (posStr) {
+        const pos = parseInt(posStr);
+        (window as any).openSubModalForDecapagem(pos);
+      }
+    }
+  };
 }
+
+// Global active rollers & brushes table rendering for Decapagem
+function renderDecapagemTable() {
+  const body = $('decapagemTableBody') as HTMLTableSectionElement;
+  if (!body) return;
+  
+  const rowsHtml = Object.entries(DECAPAGEM_MAP).map(([pStr, meta]) => {
+    const p = parseInt(pStr);
+    const rolo = getRolo(p);
+    if (!rolo) return '';
+    
+    const days = calcDays(rolo.data_troca);
+    const st = getStatus(days);
+    const formattedDate = fmtDate(rolo.data_troca);
+    
+    const typeBadge = meta.tipo === 'Escova' 
+      ? `<span class="turno-badge" style="background-color:#78350f;color:#fef08a;border:1px solid #eab308;padding:2px 6px;">🧹 Escova</span>`
+      : `<span class="turno-badge" style="background-color:#1e293b;color:#f8fafc;border:1px solid #475569;padding:2px 6px;">⚙️ Rolo</span>`;
+      
+    return `
+      <tr>
+        <td>
+          <div style="font-weight:700;color:var(--text);font-size:0.85rem;">Pos. ${p}</div>
+          <div style="font-size:0.75rem;color:var(--text-secondary);font-weight:500;">${meta.nome}</div>
+        </td>
+        <td>${typeBadge}</td>
+        <td style="font-family:var(--mono);font-weight:600;font-size:0.82rem;">${rolo.diametro} mm</td>
+        <td style="font-family:var(--mono);color:var(--text-secondary);font-size:0.82rem;">${meta.perimetro} mm</td>
+        <td style="font-family:var(--mono);font-size:0.72rem;color:var(--text-secondary);">${formattedDate}</td>
+        <td><span class="turno-badge turno-${rolo.turno}">${rolo.turno}</span></td>
+        <td><span class="age-badge age-${st}">${days}d</span></td>
+        <td style="font-size:0.75rem;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-muted);" title="${sanitize(rolo.obs_motivo)}">${sanitize(rolo.obs_motivo) || '—'}</td>
+        <td>
+          <button class="btn-edit" style="color:var(--accent);border-color:var(--accent);font-weight:600;font-size:0.7rem;padding:0.25rem 0.5rem;" onclick="window.openSubModalForDecapagem(${p})">
+            🔄 Substituir
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+  
+  body.innerHTML = rowsHtml;
+}
+
+// Expose openSubModalForDecapagem globally so inline onclick works cleanly
+(window as any).openSubModalForDecapagem = (pos: number) => {
+  openSubModal();
+  const selPos = $('inPos') as HTMLSelectElement;
+  selPos.value = String(pos);
+  // Trigger diameter sync based on selected position
+  const estSelect = $('inEstoqueRolo') as HTMLSelectElement;
+  estSelect.value = '';
+  ($('inDiam') as HTMLInputElement).value = '';
+};
 
 // Inventory
 let currentInvView: 'retifica' | 'rb1' = 'retifica';
@@ -556,6 +663,6 @@ function renderMonthly(){
 $('prevYear').addEventListener('click',()=>{selYear--;renderMonthly();});
 $('nextYear').addEventListener('click',()=>{selYear++;renderMonthly();});
 
-function renderAll(){renderStats();renderFurnace();renderDecapagem();renderInventory();renderHistory();renderMonthly();}
+function renderAll(){renderStats();renderFurnace();renderDecapagem();renderDecapagemTable();renderInventory();renderHistory();renderMonthly();}
 window.addEventListener('dataLoaded', renderAll);
 initDemo(); renderAll(); setInterval(renderAll,60000);

@@ -209,10 +209,9 @@ function renderDecapagem() {
   behind += largeCylinder(1140, 350);
   behind += largeCylinder(1320, 350);
   
-  // 7. Right Station (Left Pinch, 2x2 Unit, Flanking Double Pinch)
+  // 7. Right Station (Left Pinch, 2x2 Unit, Flanking Pinch)
   front += pinchRolls(1465, 335); // Centered at y=335 on slope up
   behind += brushStation(1520, 320);
-  front += pinchRolls(1575, 327.5); // Centered at y=327.5 on slope down
   front += pinchRolls(1605, 342.5); // Centered at y=342.5 on slope down
   
   // 8. Mathematically Rounded and Connected Process Line Path

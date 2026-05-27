@@ -1,4 +1,22 @@
-<!DOCTYPE html>
+import sys
+import os
+import re
+
+def update_html():
+    file_path = r"c:\Users\Usuario\Desktop\forno\index.html"
+    
+    with open(file_path, "r", encoding="utf-8") as f:
+        content = f.read()
+        
+    # Extract modals
+    modal_start = content.find("<!-- Modal: Substituição -->")
+    if modal_start == -1:
+        print("Could not find modals")
+        return
+        
+    modals = content[modal_start:]
+    
+    new_html = """<!DOCTYPE html>
 <html lang="pt-BR" style="">
 <head>
     <meta charset="utf-8"/>
@@ -334,114 +352,11 @@
         </div>
     </main>
 
-<!-- Modal: Substituição -->
-    <div class="modal-overlay" id="modalSub">
-        <div class="modal">
-            <div class="modal-header"><h3>Nova Substituição de Rolo</h3><button class="modal-close" id="modalSubClose">&times;</button></div>
-            <form id="formSub" class="modal-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Posição do Rolo *</label>
-                        <select id="inPos" required>
-                            <option value="">Selecione...</option>
-                            <optgroup label="🔥 Forno de Recozimento">
-                                <option value="0">Rolo 0</option>
-                                <option value="1">Rolo 1</option>
-                                <option value="2">Rolo 2</option>
-                                <option value="3">Rolo 3</option>
-                                <option value="4">Rolo 4</option>
-                            </optgroup>
-                            <optgroup label="⚡ Decapagem Eletrolítica">
-                                <option value="100">Defletor Entrada</option>
-                                <option value="101">Defletor 1</option>
-                                <option value="102">Fundo do tanque 1</option>
-                                <option value="103">Mergulhador ELE 1</option>
-                                <option value="104">Fundo do tanque 2</option>
-                                <option value="105">Defletor 2</option>
-                                <option value="106">Centragem</option>
-                                <option value="107">Defletor 3</option>
-                                <option value="108">Fundo do tanque 3</option>
-                                <option value="109">Mergulhador ELE 2</option>
-                                <option value="110">Fundo do tanque 4</option>
-                                <option value="111">Defletor 4</option>
-                                <option value="112">Espremedor 1 — Superior</option>
-                                <option value="126">Espremedor 1 — Inferior</option>
-                                <option value="113">Escovador 1 — Rolo encosto sup.</option>
-                                <option value="120">Escovador 1 — Escova superior</option>
-                                <option value="121">Escovador 1 — Rolo encosto inf.</option>
-                                <option value="122">Escovador 1 — Escova inferior</option>
-                                <option value="114">Espremedor 2 — Superior</option>
-                                <option value="127">Espremedor 2 — Inferior</option>
-                            </optgroup>
-                            <optgroup label="⚡ Decapagem Química">
-                                <option value="115">Mergulhador QUIM 1</option>
-                                <option value="116">Mergulhador QUIM 2</option>
-                                <option value="117">Espremedor 3 — Superior</option>
-                                <option value="128">Espremedor 3 — Inferior</option>
-                                <option value="118">Escovador 2 — Rolo encosto sup.</option>
-                                <option value="123">Escovador 2 — Escova superior</option>
-                                <option value="124">Escovador 2 — Rolo encosto inf.</option>
-                                <option value="125">Escovador 2 — Escova inferior</option>
-                                <option value="119">Espremedor 4 — Superior</option>
-                                <option value="129">Espremedor 4 — Inferior</option>
-                            </optgroup>
-                        </select>
-                    </div>
-                    <div class="form-group"><label>Turno *</label><select id="inTurno" required><option value="">Selecione...</option><option value="TN">TN — Noite</option><option value="TM">TM — Manhã</option><option value="TT">TT — Tarde</option></select></div>
-                </div>
-                <div class="form-group"><label>Selecionar Rolo do Estoque *</label><select id="inEstoqueRolo" required><option value="">Selecione um rolo do estoque...</option></select></div>
-                <div class="form-row">
-                    <div class="form-group"><label>Diâmetro (mm)</label><input type="number" id="inDiam" step="0.1" readonly></div>
-                    <div class="form-group"><label>Data da Troca *</label><input type="datetime-local" id="inData" required></div>
-                </div>
-                <div class="form-group">
-                    <label>Motivo da Troca *</label>
-                    <div class="motivo-chips" id="motivoChips">
-                        <button type="button" class="chip" data-m="Quebra">💥 Quebra</button>
-                        <button type="button" class="chip" data-m="Desgaste">⚙️ Desgaste</button>
-                        <button type="button" class="chip" data-m="Marca na chapa">📋 Marca na chapa</button>
-                        <button type="button" class="chip" data-m="Preventiva">🛡️ Preventiva</button>
-                        <button type="button" class="chip" data-m="Outro">📝 Outro</button>
-                    </div>
-                    <textarea id="inMotivo" rows="2" placeholder="Descreva o motivo detalhado..." required></textarea>
-                </div>
-                <div class="form-actions"><button type="button" class="btn btn-ghost" id="btnCancelSub">Cancelar</button><button type="submit" class="btn btn-primary">✓ Registrar</button></div>
-            </form>
-        </div>
-    </div>
-    <!-- Modal: Estoque -->
-    <div class="modal-overlay" id="modalEst">
-        <div class="modal">
-            <div class="modal-header"><h3>Adicionar Rolo ao Estoque</h3><button class="modal-close" id="modalEstClose">&times;</button></div>
-            <form id="formEst" class="modal-form">
-                <div class="form-row">
-                    <div class="form-group"><label>Diâmetro (mm) *</label><input type="number" id="inEstDiam" step="0.1" min="100" max="1000" placeholder="Ex: 320.5" required></div>
-                    <div class="form-group"><label>Observação</label><input type="text" id="inEstObs" placeholder="Ex: Novo, retificado..." maxlength="200"></div>
-                </div>
-                <div class="form-actions"><button type="button" class="btn btn-ghost" id="btnCancelEst">Cancelar</button><button type="submit" class="btn btn-primary">✓ Adicionar</button></div>
-            </form>
-        </div>
-    </div>
-    <!-- Modal: Editar Registro -->
-    <div class="modal-overlay" id="modalEdit">
-        <div class="modal">
-            <div class="modal-header"><h3>Editar Registro de Troca</h3><button class="modal-close" id="modalEditClose">&times;</button></div>
-            <form id="formEdit" class="modal-form">
-                <input type="hidden" id="editId">
-                <div class="form-row">
-                    <div class="form-group"><label>Posição</label><input type="text" id="editPos" readonly></div>
-                    <div class="form-group"><label>Turno</label><select id="editTurno"><option value="TN">TN — Noite</option><option value="TM">TM — Manhã</option><option value="TT">TT — Tarde</option></select></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label>Diâmetro (mm)</label><input type="number" id="editDiam" step="0.1" readonly></div>
-                    <div class="form-group"><label>Data da Troca</label><input type="datetime-local" id="editData"></div>
-                </div>
-                <div class="form-group"><label>Motivo da Troca</label><textarea id="editMotivo" rows="2" required></textarea></div>
-                <div class="form-actions"><button type="button" class="btn btn-ghost" id="btnCancelEdit">Cancelar</button><button type="submit" class="btn btn-primary">✓ Salvar Alterações</button></div>
-            </form>
-        </div>
-    </div>
-    <div class="toast-container" id="toastContainer"></div>
-    <script type="module" src="/src/main.ts"></script>
-</body>
-</html>
+""" + modals
+
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(new_html)
+    print("index.html updated successfully")
+
+if __name__ == "__main__":
+    update_html()

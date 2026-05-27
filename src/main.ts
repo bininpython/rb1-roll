@@ -56,7 +56,7 @@ function renderStats() {
     {i:'📦',v:estRb1,l:'Estoque RB1',c:'si-stock'},
     {i:'⚠️',v:alertas,l:'Em Alerta',c:'si-alert'},
     {i:'📊',v:trocas30,l:'Trocas (30d)',c:'si-swaps'}
-  ].map(s=>`<div class="stat-card"><div class="stat-icon ${s.c}">${s.i}</div><div><span class="stat-value">${s.v}</span><span class="stat-label">${s.l}</span></div></div>`).join('');
+  ].map(s=>`<div class="bg-surface-container-lowest border border-outline-variant rounded p-4 flex items-center gap-4"><div class="bg-surface-container-low p-2 rounded text-outline flex gap-1 items-center justify-center text-xl">${s.i}</div><div><div class="text-headline-lg font-headline-lg font-bold">${s.v}</div><div class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">${s.l}</div></div></div>`).join('');
 }
 
 function renderDecapagemStats() {
@@ -77,7 +77,7 @@ function renderDecapagemStats() {
       {i:'📦',v:estRb1,l:'Estoque RB1',c:'si-stock'},
       {i:'⚠️',v:alertas,l:'Em Alerta',c:'si-alert'},
       {i:'📊',v:trocas30,l:'Trocas (30d)',c:'si-swaps'}
-    ].map(s=>`<div class="stat-card"><div class="stat-icon ${s.c}">${s.i}</div><div><span class="stat-value">${s.v}</span><span class="stat-label">${s.l}</span></div></div>`).join('');
+    ].map(s=>`<div class="bg-surface-container-lowest border border-outline-variant rounded p-4 flex items-center gap-4"><div class="bg-surface-container-low p-2 rounded text-outline flex gap-1 items-center justify-center text-xl">${s.i}</div><div><div class="text-headline-lg font-headline-lg font-bold">${s.v}</div><div class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">${s.l}</div></div></div>`).join('');
   }
 }
 
@@ -486,24 +486,22 @@ function renderDecapagemTable() {
     const formattedDate = fmtDate(rolo.data_troca);
     
     const typeBadge = meta.tipo === 'Escova' 
-      ? `<span class="turno-badge" style="background-color:#78350f;color:#fef08a;border:1px solid #eab308;padding:2px 6px;">🧹 Escova</span>`
-      : `<span class="turno-badge" style="background-color:#1e293b;color:#f8fafc;border:1px solid #475569;padding:2px 6px;">⚙️ Rolo</span>`;
+      ? `<span class="bg-amber-900 text-yellow-200 border border-yellow-500 px-2 py-1 rounded text-label-sm font-label-sm flex items-center gap-1 w-max">🧹 Escova</span>`
+      : `<span class="bg-inverse-surface text-inverse-on-surface px-2 py-1 rounded text-label-sm font-label-sm flex items-center gap-1 w-max"><span class="material-symbols-outlined text-[14px]" data-icon="settings">settings</span> Rolo</span>`;
       
     return `
-      <tr>
-        <td>
-          <div style="font-weight:700;color:var(--text);font-size:0.85rem;">${meta.nome}</div>
-        </td>
-        <td>${typeBadge}</td>
-        <td style="font-family:var(--mono);font-weight:600;font-size:0.82rem;">${rolo.diametro} mm</td>
-        <td style="font-family:var(--mono);color:var(--text-secondary);font-size:0.82rem;">${meta.perimetro} mm</td>
-        <td style="font-family:var(--mono);font-size:0.72rem;color:var(--text-secondary);">${formattedDate}</td>
-        <td><span class="turno-badge turno-${rolo.turno}">${rolo.turno}</span></td>
-        <td><span class="age-badge age-${st}">${days}d</span></td>
-        <td style="font-size:0.75rem;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-muted);" title="${sanitize(rolo.obs_motivo)}">${sanitize(rolo.obs_motivo) || '—'}</td>
-        <td>
-          <button class="btn-edit" style="color:var(--accent);border-color:var(--accent);font-weight:600;font-size:0.7rem;padding:0.25rem 0.5rem;" onclick="window.openSubModalForDecapagem(${p})">
-            🔄 Substituir
+      <tr class="border-b border-outline-variant hover:bg-surface-bright transition-colors">
+        <td class="p-4 font-bold">${meta.nome}</td>
+        <td class="p-4">${typeBadge}</td>
+        <td class="p-4 text-on-surface-variant font-mono">${rolo.diametro} mm</td>
+        <td class="p-4 text-on-surface-variant font-mono">${meta.perimetro} mm</td>
+        <td class="p-4 text-on-surface-variant font-mono">${formattedDate}</td>
+        <td class="p-4"><span class="text-secondary border border-secondary-fixed rounded px-2 py-1 text-label-sm">${rolo.turno}</span></td>
+        <td class="p-4"><span class="font-bold age-${st}">${days}d</span></td>
+        <td class="p-4 text-outline-variant text-sm truncate max-w-[160px]" title="${sanitize(rolo.obs_motivo)}">${sanitize(rolo.obs_motivo) || '—'}</td>
+        <td class="p-4">
+          <button class="btn-outline-orange px-3 py-1 rounded text-label-bold font-label-bold flex items-center gap-1 hover:bg-secondary-fixed transition-colors" onclick="window.openSubModalForDecapagem(${p})">
+            <span class="material-symbols-outlined text-[14px]" data-icon="sync">sync</span> Substituir
           </button>
         </td>
       </tr>

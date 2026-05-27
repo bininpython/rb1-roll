@@ -51,12 +51,20 @@ function renderStats() {
   const estRetifica = fornoEstoque.filter(e => e.obs.toLowerCase().includes('retifica') || e.obs.toLowerCase().includes('retífica')).length;
   const estRb1 = fornoEstoque.length - estRetifica;
 
+  const icons: Record<string,string> = {
+    'si-stock': 'bg-purple-50 text-purple-600',
+    'si-alert': 'bg-red-50 text-red-600',
+    'si-swaps': 'bg-amber-50 text-amber-600'
+  };
   $('statsBar').innerHTML = [
     {i:'🛠️',v:estRetifica,l:'Estoque Retífica',c:'si-stock'},
     {i:'📦',v:estRb1,l:'Estoque RB1',c:'si-stock'},
     {i:'⚠️',v:alertas,l:'Em Alerta',c:'si-alert'},
     {i:'📊',v:trocas30,l:'Trocas (30d)',c:'si-swaps'}
-  ].map(s=>`<div class="bg-surface-container-lowest border border-outline-variant rounded p-4 flex items-center gap-4"><div class="bg-surface-container-low p-2 rounded text-outline flex gap-1 items-center justify-center text-xl">${s.i}</div><div><div class="text-headline-lg font-headline-lg font-bold">${s.v}</div><div class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">${s.l}</div></div></div>`).join('');
+  ].map(s=>`<div class="bg-white border border-outline-variant/60 rounded-lg p-4 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
+    <div class="w-10 h-10 rounded-lg ${icons[s.c]} flex items-center justify-center text-lg flex-shrink-0">${s.i}</div>
+    <div><div class="font-display text-xl font-extrabold text-on-surface">${s.v}</div>
+    <div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">${s.l}</div></div></div>`).join('');
 }
 
 function renderDecapagemStats() {
@@ -72,12 +80,20 @@ function renderDecapagemStats() {
 
   const bar = $('statsDecapagemBar');
   if (bar) {
+    const ic2: Record<string,string> = {
+      'si-stock': 'bg-purple-50 text-purple-600',
+      'si-alert': 'bg-red-50 text-red-600',
+      'si-swaps': 'bg-amber-50 text-amber-600'
+    };
     bar.innerHTML = [
       {i:'🛠️',v:estRetifica,l:'Estoque Retífica',c:'si-stock'},
       {i:'📦',v:estRb1,l:'Estoque RB1',c:'si-stock'},
       {i:'⚠️',v:alertas,l:'Em Alerta',c:'si-alert'},
       {i:'📊',v:trocas30,l:'Trocas (30d)',c:'si-swaps'}
-    ].map(s=>`<div class="bg-surface-container-lowest border border-outline-variant rounded p-4 flex items-center gap-4"><div class="bg-surface-container-low p-2 rounded text-outline flex gap-1 items-center justify-center text-xl">${s.i}</div><div><div class="text-headline-lg font-headline-lg font-bold">${s.v}</div><div class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">${s.l}</div></div></div>`).join('');
+    ].map(s=>`<div class="bg-white border border-outline-variant/60 rounded-lg p-4 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
+      <div class="w-10 h-10 rounded-lg ${ic2[s.c]} flex items-center justify-center text-lg flex-shrink-0">${s.i}</div>
+      <div><div class="font-display text-xl font-extrabold text-on-surface">${s.v}</div>
+      <div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">${s.l}</div></div></div>`).join('');
   }
 }
 
@@ -486,22 +502,22 @@ function renderDecapagemTable() {
     const formattedDate = fmtDate(rolo.data_troca);
     
     const typeBadge = meta.tipo === 'Escova' 
-      ? `<span class="bg-amber-900 text-yellow-200 border border-yellow-500 px-2 py-1 rounded text-label-sm font-label-sm flex items-center gap-1 w-max">🧹 Escova</span>`
-      : `<span class="bg-inverse-surface text-inverse-on-surface px-2 py-1 rounded text-label-sm font-label-sm flex items-center gap-1 w-max"><span class="material-symbols-outlined text-[14px]" data-icon="settings">settings</span> Rolo</span>`;
+      ? `<span class="bg-amber-100 text-amber-700 border border-amber-300 px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center gap-1">🧹 Escova</span>`
+      : `<span class="bg-gray-100 text-gray-700 border border-gray-300 px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center gap-1">⚙️ Rolo</span>`;
       
     return `
-      <tr class="border-b border-outline-variant hover:bg-surface-bright transition-colors">
-        <td class="p-4 font-bold">${meta.nome}</td>
-        <td class="p-4">${typeBadge}</td>
-        <td class="p-4 text-on-surface-variant font-mono">${rolo.diametro} mm</td>
-        <td class="p-4 text-on-surface-variant font-mono">${meta.perimetro} mm</td>
-        <td class="p-4 text-on-surface-variant font-mono">${formattedDate}</td>
-        <td class="p-4"><span class="text-secondary border border-secondary-fixed rounded px-2 py-1 text-label-sm">${rolo.turno}</span></td>
-        <td class="p-4"><span class="font-bold age-${st}">${days}d</span></td>
-        <td class="p-4 text-outline-variant text-sm truncate max-w-[160px]" title="${sanitize(rolo.obs_motivo)}">${sanitize(rolo.obs_motivo) || '—'}</td>
-        <td class="p-4">
-          <button class="btn-outline-orange px-3 py-1 rounded text-label-bold font-label-bold flex items-center gap-1 hover:bg-secondary-fixed transition-colors" onclick="window.openSubModalForDecapagem(${p})">
-            <span class="material-symbols-outlined text-[14px]" data-icon="sync">sync</span> Substituir
+      <tr class="border-b border-outline-variant/20 hover:bg-surface-bright/80 transition-colors">
+        <td class="px-4 py-3 font-semibold text-on-surface">${meta.nome}</td>
+        <td class="px-4 py-3">${typeBadge}</td>
+        <td class="px-4 py-3 text-on-surface-variant font-mono text-sm">${rolo.diametro} mm</td>
+        <td class="px-4 py-3 text-on-surface-variant font-mono text-sm">${meta.perimetro} mm</td>
+        <td class="px-4 py-3 text-on-surface-variant font-mono text-xs">${formattedDate}</td>
+        <td class="px-4 py-3"><span class="turno-badge turno-${rolo.turno} text-[10px] font-bold px-2 py-0.5 rounded inline-block">${rolo.turno}</span></td>
+        <td class="px-4 py-3"><span class="age-badge age-${st} text-xs font-bold px-2 py-0.5 rounded inline-block">${days}d</span></td>
+        <td class="px-4 py-3 text-on-surface-variant text-sm truncate max-w-[160px]" title="${sanitize(rolo.obs_motivo)}">${sanitize(rolo.obs_motivo) || '—'}</td>
+        <td class="px-4 py-3">
+          <button class="text-orange-600 hover:text-orange-800 border border-orange-300 hover:bg-orange-50 px-2.5 py-1 rounded-md text-[11px] font-bold inline-flex items-center gap-1 transition-all" onclick="window.openSubModalForDecapagem(${p})">
+            🔄 Substituir
           </button>
         </td>
       </tr>
@@ -583,7 +599,8 @@ function renderHistory() {
   if(!data.length){body.innerHTML='';empty.style.display='block';return;}
   empty.style.display='none';
   body.innerHTML=data.map(h=>{const st=getStatus(h.idade_dias);
-    return `<tr><td style="font-family:var(--mono);font-size:.7rem">${fmtDate(h.data_troca)}</td><td><strong>Rolo ${h.posicao}</strong></td><td><span class="turno-badge turno-${h.turno}">${h.turno}</span></td><td style="font-family:var(--mono)">${h.diametro} mm</td><td style="max-width:180px">${sanitize(h.obs_motivo)}</td><td><span class="age-badge age-${st}">${h.idade_dias}d</span></td><td><button class="btn-edit" data-edit="${h.id}">✏️</button></td></tr>`;
+    const posLabel = h.posicao >= 100 ? (DECAPAGEM_MAP[h.posicao]?.nome || `Pos ${h.posicao}`) : `Rolo ${h.posicao}`;
+    return `<tr class="border-b border-outline-variant/20 hover:bg-surface-bright/80 transition-colors"><td class="px-4 py-3 font-mono text-xs text-on-surface-variant">${fmtDate(h.data_troca)}</td><td class="px-4 py-3 font-semibold text-on-surface">${posLabel}</td><td class="px-4 py-3"><span class="turno-badge turno-${h.turno} text-[10px] font-bold px-2 py-0.5 rounded inline-block">${h.turno}</span></td><td class="px-4 py-3 font-mono">${h.diametro} mm</td><td class="px-4 py-3 text-on-surface-variant max-w-[180px] truncate">${sanitize(h.obs_motivo) || '—'}</td><td class="px-4 py-3"><span class="age-badge age-${st} text-xs font-bold px-2 py-0.5 rounded inline-block">${h.idade_dias}d</span></td><td class="px-4 py-3"><button class="text-purple-600 hover:text-purple-800 hover:bg-purple-50 p-1.5 rounded-md transition-all" data-edit="${h.id}">✏️</button></td></tr>`;
   }).join('');
   body.querySelectorAll<HTMLButtonElement>('[data-edit]').forEach(btn=>{
     btn.addEventListener('click',()=>openEditModal(btn.dataset.edit!));
@@ -794,7 +811,7 @@ function renderMonthly(){
   $('yearLabel').textContent=String(selYear);
   $('monthTabs').innerHTML=MN.map((m,i)=>{
     const cnt=historico.filter(h=>{const d=new Date(h.data_troca);return h.posicao < 100 && d.getFullYear()===selYear&&d.getMonth()===i;}).length;
-    return `<button class="month-tab ${i===selMonth?'active':''} ${cnt>0?'has-data':''}" data-month="${i}"><span class="month-tab-name">${m}</span>${cnt>0?`<span class="month-tab-count">${cnt}</span>`:''}</button>`;
+    return `<button class="month-tab flex flex-col items-center gap-1 px-2 py-2 border rounded-md text-[11px] font-semibold ${i===selMonth?'active border-primary-container bg-purple-50/50 text-primary-container':'border-outline-variant/40 bg-surface-container-low text-on-surface-variant'} ${cnt>0?'':''}" data-month="${i}"><span>${m}</span>${cnt>0?`<span class="month-tab-count">${cnt}</span>`:''}</button>`;
   }).join('');
   $('monthTabs').querySelectorAll<HTMLButtonElement>('.month-tab').forEach(btn=>{
     btn.addEventListener('click',()=>{selMonth=parseInt(btn.dataset.month!);renderMonthly();});
@@ -804,7 +821,7 @@ function renderMonthly(){
   const data=historico.filter(h=>{const d=new Date(h.data_troca);return h.posicao < 100 && d.getFullYear()===selYear&&d.getMonth()===selMonth;}).sort((a,b)=>new Date(b.data_troca).getTime()-new Date(a.data_troca).getTime());
   if(!data.length){body.innerHTML='';empty.style.display='block';summary.innerHTML='';return;}
   empty.style.display='none';
-  body.innerHTML=data.map(h=>{const st=getStatus(h.idade_dias);return `<tr><td style="font-family:var(--mono);font-size:.7rem">${fmtDate(h.data_troca)}</td><td><strong>Rolo ${h.posicao}</strong></td><td><span class="turno-badge turno-${h.turno}">${h.turno}</span></td><td style="font-family:var(--mono)">${h.diametro} mm</td><td>${sanitize(h.obs_motivo)}</td><td><span class="age-badge age-${st}">${h.idade_dias}d</span></td></tr>`;}).join('');
+  body.innerHTML=data.map(h=>{const st=getStatus(h.idade_dias);return `<tr class="border-b border-outline-variant/20 hover:bg-surface-bright/80 transition-colors"><td class="px-4 py-3 font-mono text-xs text-on-surface-variant">${fmtDate(h.data_troca)}</td><td class="px-4 py-3 font-semibold text-on-surface">Rolo ${h.posicao}</td><td class="px-4 py-3"><span class="turno-badge turno-${h.turno} text-[10px] font-bold px-2 py-0.5 rounded inline-block">${h.turno}</span></td><td class="px-4 py-3 font-mono">${h.diametro} mm</td><td class="px-4 py-3 text-on-surface-variant">${sanitize(h.obs_motivo) || '—'}</td><td class="px-4 py-3"><span class="age-badge age-${st} text-xs font-bold px-2 py-0.5 rounded inline-block">${h.idade_dias}d</span></td></tr>`;}).join('');
   const byPos:Record<number,number>={};data.forEach(h=>{byPos[h.posicao]=(byPos[h.posicao]||0)+1;});
   const avg=data.length?Math.round(data.reduce((s,h)=>s+h.idade_dias,0)/data.length):0;
   summary.innerHTML=`<div class="summary-row"><div class="summary-card"><span class="summary-val">${data.length}</span><span class="summary-lbl">Trocas em ${MF[selMonth]}</span></div><div class="summary-card"><span class="summary-val">${avg}d</span><span class="summary-lbl">Tempo Médio</span></div>${Object.entries(byPos).map(([p,c])=>`<div class="summary-card"><span class="summary-val">${c}</span><span class="summary-lbl">Rolo ${p}</span></div>`).join('')}</div>`;
@@ -814,7 +831,7 @@ function renderDecapagemMonthly(){
   $('yearDecapagemLabel').textContent=String(selDecapagemYear);
   $('monthDecapagemTabs').innerHTML=MN.map((m,i)=>{
     const cnt=historico.filter(h=>{const d=new Date(h.data_troca);return h.posicao >= 100 && d.getFullYear()===selDecapagemYear&&d.getMonth()===i;}).length;
-    return `<button class="month-tab ${i===selDecapagemMonth?'active':''} ${cnt>0?'has-data':''}" data-month="${i}"><span class="month-tab-name">${m}</span>${cnt>0?`<span class="month-tab-count">${cnt}</span>`:''}</button>`;
+    return `<button class="month-tab flex flex-col items-center gap-1 px-2 py-2 border rounded-md text-[11px] font-semibold ${i===selDecapagemMonth?'active border-primary-container bg-purple-50/50 text-primary-container':'border-outline-variant/40 bg-surface-container-low text-on-surface-variant'}" data-month="${i}"><span>${m}</span>${cnt>0?`<span class="month-tab-count">${cnt}</span>`:''}</button>`;
   }).join('');
   $('monthDecapagemTabs').querySelectorAll<HTMLButtonElement>('.month-tab').forEach(btn=>{
     btn.addEventListener('click',()=>{selDecapagemMonth=parseInt(btn.dataset.month!);renderDecapagemMonthly();});
@@ -828,7 +845,7 @@ function renderDecapagemMonthly(){
     const st=getStatus(h.idade_dias);
     const meta = DECAPAGEM_MAP[h.posicao];
     const name = meta ? meta.nome : `Rolo ${h.posicao}`;
-    return `<tr><td style="font-family:var(--mono);font-size:.7rem">${fmtDate(h.data_troca)}</td><td><strong>${name}</strong></td><td><span class="turno-badge turno-${h.turno}">${h.turno}</span></td><td style="font-family:var(--mono)">${h.diametro} mm</td><td>${sanitize(h.obs_motivo)}</td><td><span class="age-badge age-${st}">${h.idade_dias}d</span></td></tr>`;
+    return `<tr class="border-b border-outline-variant/20 hover:bg-surface-bright/80 transition-colors"><td class="px-4 py-3 font-mono text-xs text-on-surface-variant">${fmtDate(h.data_troca)}</td><td class="px-4 py-3 font-semibold text-on-surface">${name}</td><td class="px-4 py-3"><span class="turno-badge turno-${h.turno} text-[10px] font-bold px-2 py-0.5 rounded inline-block">${h.turno}</span></td><td class="px-4 py-3 font-mono">${h.diametro} mm</td><td class="px-4 py-3 text-on-surface-variant">${sanitize(h.obs_motivo) || '—'}</td><td class="px-4 py-3"><span class="age-badge age-${st} text-xs font-bold px-2 py-0.5 rounded inline-block">${h.idade_dias}d</span></td></tr>`;
   }).join('');
   const byPos:Record<number,number>={};data.forEach(h=>{byPos[h.posicao]=(byPos[h.posicao]||0)+1;});
   const avg=data.length?Math.round(data.reduce((s,h)=>s+h.idade_dias,0)/data.length):0;

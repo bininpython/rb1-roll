@@ -1,340 +1,462 @@
 <!DOCTYPE html>
-<html lang="pt-BR" style="">
+<html lang="pt-BR">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>RB1 System - Aperam</title>
+    <meta name="description" content="RB1 System — Controle de manutenção preditiva para rolos do forno de recozimento Aperam."/>
+    <title>RB1 System — Controle de Rolos | Aperam</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&amp;family=Open+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
-    <script id="tailwind-config">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <script>
         tailwind.config = {
-            darkMode: "class",
             theme: {
                 extend: {
                     colors: {
                         "on-surface": "#191c1d",
-                        "outline-variant": "#cec3d3",
+                        "outline-variant": "#d5ccd9",
                         "surface-bright": "#f8f9fa",
                         "surface-container-high": "#e7e8e9",
-                        "primary-fixed-dim": "#ddb7ff",
                         "on-primary": "#ffffff",
                         "primary": "#2e0052",
+                        "primary-container": "#4b0082",
                         "secondary-container": "#fd8b00",
-                        "surface-tint": "#7b41b3",
                         "on-secondary": "#ffffff",
-                        "on-error-container": "#93000a",
                         "surface-variant": "#e1e3e4",
-                        "tertiary-fixed-dim": "#fbb884",
-                        "tertiary-container": "#4f2700",
-                        "surface-container-highest": "#e1e3e4",
-                        "on-tertiary-fixed-variant": "#693c12",
-                        "on-tertiary-container": "#c98c5c",
                         "surface": "#f8f9fa",
-                        "primary-fixed": "#f0dbff",
-                        "on-primary-fixed": "#2c0050",
-                        "on-primary-fixed-variant": "#622599",
                         "surface-container-low": "#f3f4f5",
-                        "on-tertiary-fixed": "#2f1500",
                         "inverse-surface": "#2e3132",
-                        "error-container": "#ffdad6",
                         "inverse-on-surface": "#f0f1f2",
                         "surface-container-lowest": "#ffffff",
-                        "background": "#f8f9fa",
-                        "on-secondary-fixed-variant": "#6e3900",
-                        "on-tertiary": "#ffffff",
-                        "on-secondary-fixed": "#2f1500",
+                        "background": "#f4f5f8",
                         "surface-container": "#edeeef",
-                        "primary-container": "#4b0082",
-                        "tertiary-fixed": "#ffdcc3",
                         "outline": "#7d7483",
                         "on-surface-variant": "#4c4451",
-                        "secondary-fixed": "#ffdcc3",
                         "on-primary-container": "#ba7ef4",
-                        "on-error": "#ffffff",
-                        "secondary-fixed-dim": "#ffb77d",
-                        "on-background": "#191c1d",
-                        "inverse-primary": "#ddb7ff",
-                        "on-secondary-container": "#603100",
                         "secondary": "#904d00",
-                        "tertiary": "#301600",
-                        "surface-dim": "#d9dadb",
                         "error": "#ba1a1a"
                     },
-                    borderRadius: {
-                        "DEFAULT": "0.125rem",
-                        "lg": "0.25rem",
-                        "xl": "0.5rem",
-                        "full": "0.75rem"
-                    },
-                    spacing: {
-                        "xs": "4px",
-                        "lg": "24px",
-                        "unit": "4px",
-                        "md": "16px",
-                        "container-margin": "24px",
-                        "gutter": "16px",
-                        "sm": "8px",
-                        "xl": "32px"
-                    },
                     fontFamily: {
-                        "headline-lg-mobile": ["Montserrat"],
-                        "display": ["Montserrat"],
-                        "headline-md": ["Montserrat"],
-                        "body-lg": ["Open Sans"],
-                        "body-md": ["Open Sans"],
-                        "label-bold": ["Open Sans"],
-                        "headline-lg": ["Montserrat"],
-                        "label-sm": ["Open Sans"]
+                        "display": ["Montserrat", "sans-serif"],
+                        "body": ["Open Sans", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"]
                     },
-                    fontSize: {
-                        "headline-lg-mobile": ["20px", { lineHeight: "28px", fontWeight: "600" }],
-                        "display": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700" }],
-                        "headline-md": ["20px", { lineHeight: "28px", fontWeight: "600" }],
-                        "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
-                        "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }],
-                        "label-bold": ["12px", { lineHeight: "16px", fontWeight: "700" }],
-                        "headline-lg": ["24px", { lineHeight: "32px", fontWeight: "600" }],
-                        "label-sm": ["11px", { lineHeight: "14px", fontWeight: "600" }]
-                    }
                 }
             }
         }
     </script>
     <style>
-        .aperam-gradient {
-            background: linear-gradient(90deg, #4b0082 0%, #ff8c00 100%);
+        /* === Core === */
+        body { font-family: 'Open Sans', sans-serif; }
+        .aperam-gradient { background: linear-gradient(135deg, #4b0082 0%, #7b2fb5 40%, #ff8c00 100%); }
+        .view-hidden { display: none !important; }
+        .view-active { display: block; animation: fadeSlideUp .35s ease forwards; }
+        @keyframes fadeSlideUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+        /* === Tab active state === */
+        .nav-tab.active { border-bottom-color: white !important; color: white !important; }
+        .nav-tab:not(.active) { border-bottom-color: transparent !important; color: rgba(255,255,255,.65) !important; }
+
+        /* === Inv toggle === */
+        .inv-toggle-btn.active { background: #4b0082; color: white; }
+
+        /* === Age badges === */
+        .age-green { background: rgba(16,185,129,.1); color: #059669; }
+        .age-yellow { background: rgba(202,138,4,.1); color: #b45309; }
+        .age-red { background: rgba(239,68,68,.1); color: #dc2626; }
+
+        /* === Turno badges === */
+        .turno-TN { background: rgba(124,58,237,.08); color: #7c3aed; border: 1px solid rgba(124,58,237,.2); }
+        .turno-TM { background: rgba(202,138,4,.08); color: #b45309; border: 1px solid rgba(202,138,4,.2); }
+        .turno-TT { background: rgba(234,88,12,.08); color: #ea580c; border: 1px solid rgba(234,88,12,.2); }
+
+        /* === Monthly tabs === */
+        .month-tab { cursor: pointer; transition: all .15s; }
+        .month-tab:hover { border-color: #4b0082; color: #4b0082; }
+        .month-tab.active { border-color: #4b0082; background: rgba(75,0,130,.06); color: #4b0082; font-weight: 700; }
+        .month-tab-count { font-size: .6rem; background: #4b0082; color: white; padding: 1px 6px; border-radius: 999px; }
+
+        /* === Summary cards === */
+        .summary-card { background: #f3f4f5; border: 1px solid #e2e5ec; border-radius: 6px; padding: .6rem .85rem; display: flex; flex-direction: column; min-width: 90px; }
+        .summary-val { font-family: 'JetBrains Mono', monospace; font-size: 1.15rem; font-weight: 800; color: #4b0082; }
+        .summary-lbl { font-size: .6rem; color: #6b7280; text-transform: uppercase; letter-spacing: .5px; font-weight: 600; }
+        .summary-row { display: flex; gap: .5rem; flex-wrap: wrap; }
+
+        /* === Roll cards in dark diagram area === */
+        .roll-card { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 6px; padding: .6rem .75rem; transition: all .2s; min-width: 160px; }
+        .roll-card:hover { border-color: rgba(255,255,255,.25); background: rgba(255,255,255,.1); }
+        .roll-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: .35rem; }
+        .roll-card-pos { font-weight: 700; font-size: .8rem; color: #fff; }
+        .roll-card-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .dot-green { background: #10b981; box-shadow: 0 0 6px #10b981; }
+        .dot-yellow { background: #eab308; box-shadow: 0 0 6px #eab308; }
+        .dot-red { background: #ef4444; box-shadow: 0 0 6px #ef4444; animation: dotPulse 2s infinite; }
+        @keyframes dotPulse { 0%,100%{ opacity:1; } 50%{ opacity:.4; } }
+        .roll-card-row { display: flex; justify-content: space-between; font-size: .72rem; color: rgba(255,255,255,.5); margin-top: .15rem; }
+        .roll-card-row span:last-child { font-family: 'JetBrains Mono', monospace; color: rgba(255,255,255,.85); font-weight: 500; }
+
+        /* === Inv items === */
+        .inv-item { background: #f8f9fa; border: 1px solid #e2e5ec; border-radius: 6px; padding: .55rem .75rem; display: flex; align-items: center; justify-content: space-between; transition: all .15s; font-size: .8rem; }
+        .inv-item:hover { border-color: #4b0082; background: #f3f4f5; }
+        .inv-item-info { display: flex; flex-direction: column; gap: 2px; }
+        .inv-item-diam { font-weight: 700; font-family: 'JetBrains Mono', monospace; color: #1c1822; font-size: .8rem; }
+        .inv-item-obs { font-size: .68rem; color: #9ca3af; }
+        .inv-item-actions button { background: none; border: none; cursor: pointer; color: #9ca3af; padding: 4px; border-radius: 4px; transition: all .15s; font-size: .8rem; }
+        .inv-item-actions button:hover { color: #dc2626; background: rgba(239,68,68,.08); }
+
+        /* === Interactive Decapagem rollers === */
+        .decapagem-interactive-roll { cursor: pointer; transition: filter .2s, transform .2s; }
+        .decapagem-interactive-roll:hover { filter: drop-shadow(0 0 5px #e27b38) brightness(1.3); }
+
+        /* === Modals (Tailwind-compatible) === */
+        .modal-overlay { position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,.5); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: #fff; border-radius: 12px; width: 95%; max-width: 520px; padding: 1.5rem; box-shadow: 0 20px 60px rgba(0,0,0,.15); animation: modalIn .25s ease; }
+        @keyframes modalIn { from { opacity:0; transform:translateY(16px) scale(.97); } to { opacity:1; transform:translateY(0) scale(1); } }
+        .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; padding-bottom: .75rem; border-bottom: 1px solid #e2e5ec; }
+        .modal-header h3 { font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700; color: #1c1822; }
+        .modal-close { background: none; border: none; color: #9ca3af; font-size: 1.4rem; cursor: pointer; padding: 4px; transition: color .15s; line-height: 1; border-radius: 6px; }
+        .modal-close:hover { color: #dc2626; background: rgba(239,68,68,.06); }
+        .modal-form { display: flex; flex-direction: column; gap: .85rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; }
+        .form-group { display: flex; flex-direction: column; gap: .3rem; }
+        .form-group label { font-size: .72rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: .3px; }
+        .form-group select, .form-group input, .form-group textarea {
+            font-family: 'Open Sans', sans-serif; font-size: .85rem; padding: .55rem .7rem;
+            background: #f4f5f8; border: 1px solid #e2e5ec; border-radius: 6px; color: #1c1822; transition: all .15s;
         }
-        .text-gradient {
-            background: linear-gradient(90deg, #4b0082 0%, #ff8c00 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .btn-outline-purple {
-            border: 1.5px solid #4B0082;
-            color: #4B0082;
-        }
-        .btn-outline-orange {
-            border: 1.5px solid #FF8C00;
-            color: #FF8C00;
-        }
-        
-        /* Bridge active state for tabs */
-        #tabForno.active, #tabDecapagem.active {
-            border-bottom-color: white !important;
-            color: white !important;
-        }
-        #tabForno:not(.active), #tabDecapagem:not(.active) {
-            border-bottom-color: transparent !important;
-            color: rgba(255, 255, 255, 0.7) !important;
+        .form-group select:focus, .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #4b0082; box-shadow: 0 0 0 3px rgba(75,0,130,.1); }
+        .form-group textarea { resize: vertical; min-height: 52px; }
+        .form-group input[readonly] { opacity: .5; cursor: not-allowed; }
+        .motivo-chips { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .35rem; }
+        .chip { font-family: 'Open Sans', sans-serif; font-size: .7rem; font-weight: 600; padding: .3rem .6rem; border-radius: 999px; background: #f4f5f8; border: 1px solid #e2e5ec; color: #6b7280; cursor: pointer; transition: all .15s; }
+        .chip:hover { border-color: #4b0082; color: #4b0082; }
+        .chip.active { background: rgba(75,0,130,.08); border-color: #4b0082; color: #4b0082; }
+        .form-actions { display: flex; justify-content: flex-end; gap: .5rem; margin-top: .5rem; padding-top: .75rem; border-top: 1px solid #e2e5ec; }
+        .btn { display: inline-flex; align-items: center; gap: .35rem; font-family: 'Open Sans', sans-serif; font-size: .8rem; font-weight: 600; padding: .5rem 1rem; border-radius: 6px; border: none; cursor: pointer; transition: all .15s; }
+        .btn-primary { background: linear-gradient(135deg, #4b0082, #7b2fb5); color: #fff; box-shadow: 0 2px 8px rgba(75,0,130,.2); }
+        .btn-primary:hover { box-shadow: 0 4px 14px rgba(75,0,130,.3); transform: translateY(-1px); }
+        .btn-ghost { background: transparent; color: #6b7280; border: 1px solid #e2e5ec; }
+        .btn-ghost:hover { background: #f4f5f8; color: #1c1822; border-color: #c5c9d3; }
+
+        /* === Toast === */
+        .toast-container { position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 2000; display: flex; flex-direction: column; gap: .4rem; }
+        .toast { background: #fff; border: 1px solid #e2e5ec; border-radius: 8px; padding: .6rem 1rem; font-size: .8rem; font-weight: 500; color: #1c1822; box-shadow: 0 4px 16px rgba(0,0,0,.08); display: flex; align-items: center; gap: .4rem; animation: toastIn .25s ease forwards; min-width: 260px; }
+        .toast.success { border-left: 3px solid #10b981; }
+        .toast.error { border-left: 3px solid #ef4444; }
+        .toast.info { border-left: 3px solid #4b0082; }
+        @keyframes toastIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .toast.removing { animation: toastOut .25s ease forwards; }
+        @keyframes toastOut { to { transform: translateX(100%); opacity: 0; } }
+
+        /* === Scrollbar === */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d5ccd9; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4b0082; }
+
+        /* === Responsive === */
+        @media (max-width: 768px) {
+            .form-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
-<body class="bg-background text-on-surface font-body-md antialiased min-h-screen flex flex-col">
-    <header id="app-header" class="aperam-gradient border-b border-white/20 docked full-width top-0 z-50">
-        <div class="h-1 w-full bg-white/20"></div>
-        <div class="flex justify-between items-center w-full px-lg py-sm max-w-[1440px] mx-auto flex-wrap gap-4">
+<body class="bg-background text-on-surface antialiased min-h-screen flex flex-col">
+
+    <!-- ====== HEADER ====== -->
+    <header id="app-header" class="aperam-gradient sticky top-0 z-50 shadow-lg">
+        <div class="h-[3px] w-full bg-white/15"></div>
+        <div class="max-w-[1440px] mx-auto px-6 py-3 flex items-center justify-between flex-wrap gap-3">
             <div class="flex items-center gap-3">
                 <div>
-                    <h1 class="text-headline-lg font-headline-lg font-bold text-white">RB1 System</h1>
-                    <p class="text-label-sm font-label-sm text-white/80 uppercase tracking-wider">LINHA DE RECOZIMENTO · APERAM</p>
+                    <h1 class="font-display text-xl font-extrabold text-white tracking-wide">RB1 System</h1>
+                    <p class="text-[10px] text-white/70 uppercase tracking-[2px] font-semibold">Linha de Recozimento · Aperam</p>
                 </div>
             </div>
-            <div class="flex items-center gap-3 flex-wrap">
-                <div class="flex items-center gap-2 bg-black/20 px-3 py-1.5 rounded border border-white/10">
-                    <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
-                    <span class="text-label-bold font-label-bold text-white">SYS ONLINE</span>
+            <div class="flex items-center gap-2.5 flex-wrap">
+                <div class="flex items-center gap-2 bg-black/20 px-3 py-1.5 rounded-md border border-white/10">
+                    <div class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399] animate-pulse"></div>
+                    <span class="text-[11px] font-bold text-white tracking-wide">SYS ONLINE</span>
                 </div>
-                <div id="liveClock" class="bg-black/20 px-3 py-1.5 rounded border border-white/10 text-label-bold font-label-bold text-white"></div>
-                <button id="btnAddEstRetifica" class="border border-white text-white px-4 py-1.5 rounded text-label-bold font-label-bold transition-colors hover:bg-white/10">+ Estoque Retífica</button>
-                <button id="btnAddEstRb1" class="border border-white text-white px-4 py-1.5 rounded text-label-bold font-label-bold transition-colors hover:bg-white/10">+ Estoque RB1</button>
-                <button id="btnNovaSub" class="bg-white text-primary px-4 py-1.5 rounded text-label-bold font-label-bold hover:bg-white/90 transition-colors shadow-sm">+ Nova Substituição</button>
+                <div id="liveClock" class="bg-black/20 px-3 py-1.5 rounded-md border border-white/10 text-[11px] font-bold text-white font-mono tracking-wide"></div>
+                <button id="btnAddEstRetifica" class="border border-white/60 text-white px-3.5 py-1.5 rounded-md text-[11px] font-bold transition-all hover:bg-white/15 hover:border-white">+ Estoque Retífica</button>
+                <button id="btnAddEstRb1" class="border border-white/60 text-white px-3.5 py-1.5 rounded-md text-[11px] font-bold transition-all hover:bg-white/15 hover:border-white">+ Estoque RB1</button>
+                <button id="btnNovaSub" class="bg-white text-primary-container px-4 py-1.5 rounded-md text-[11px] font-bold hover:bg-white/90 transition-all shadow-md hover:shadow-lg">+ Nova Substituição</button>
             </div>
         </div>
-        <div class="max-w-[1440px] mx-auto px-lg">
-            <nav class="flex gap-6 mt-2">
-                <a id="tabForno" class="text-white/70 font-label-bold text-label-bold flex items-center gap-2 pb-2 hover:text-white transition-colors border-b-2 border-transparent cursor-pointer active">
-                    <span class="material-symbols-outlined text-sm" data-icon="local_fire_department">local_fire_department</span>
+        <div class="max-w-[1440px] mx-auto px-6">
+            <nav class="flex gap-6 -mb-px">
+                <a id="tabForno" class="nav-tab active text-[11px] font-bold flex items-center gap-1.5 pb-2.5 cursor-pointer border-b-2 transition-all">
+                    <span class="material-symbols-outlined text-[16px]">local_fire_department</span>
                     Forno de Recozimento
                 </a>
-                <a id="tabDecapagem" class="font-label-bold text-label-bold flex items-center gap-2 pb-2 border-b-2 border-white text-white cursor-pointer">
-                    <span class="material-symbols-outlined text-sm" data-icon="bolt">bolt</span>
+                <a id="tabDecapagem" class="nav-tab text-[11px] font-bold flex items-center gap-1.5 pb-2.5 cursor-pointer border-b-2 transition-all">
+                    <span class="material-symbols-outlined text-[16px]">bolt</span>
                     Decapagem
                 </a>
             </nav>
         </div>
     </header>
 
-    <main id="app-main" class="flex-1 max-w-[1440px] mx-auto w-full px-lg py-lg grid grid-cols-1 gap-lg">
-        
-        <!-- FORNO VIEW -->
-        <div id="viewForno" class="view-active w-full">
-            <section id="statsBar" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-lg"></section>
-            
-            <section class="bg-surface-container-lowest border border-outline-variant rounded overflow-hidden mb-lg">
-                <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-bright">
-                    <h2 class="text-headline-md font-headline-md text-on-surface flex items-center gap-2">
-                        <span class="material-symbols-outlined text-secondary" data-icon="local_fire_department">local_fire_department</span>
+    <!-- ====== MAIN ====== -->
+    <main id="app-main" class="flex-1 max-w-[1440px] mx-auto w-full px-6 py-6 flex flex-col gap-6">
+
+        <!-- ===== FORNO VIEW ===== -->
+        <div id="viewForno" class="view-active w-full flex flex-col gap-6">
+
+            <!-- Stats -->
+            <section id="statsBar" class="grid grid-cols-2 md:grid-cols-4 gap-3"></section>
+
+            <!-- Furnace Diagram -->
+            <section class="bg-white border border-outline-variant/60 rounded-lg overflow-hidden shadow-sm">
+                <div class="px-5 py-3.5 border-b border-outline-variant/40 flex justify-between items-center bg-surface-bright">
+                    <h2 class="font-display text-sm font-bold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[18px] text-orange-500">local_fire_department</span>
                         Forno de Recozimento — Visão em Corte
                     </h2>
-                    <div class="text-secondary font-label-bold text-label-bold flex items-center gap-1">
-                        <div class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></div>
-                        AO VIVO
+                    <div class="flex items-center gap-1.5 text-[10px] font-bold text-orange-500 uppercase tracking-wider">
+                        <div class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></div>
+                        Ao Vivo
                     </div>
                 </div>
-                <div class="bg-on-surface p-lg relative min-h-[400px] flex flex-col items-center justify-center overflow-x-auto">
-                    <div id="furnaceDiagram" class="w-full"></div>
-                    <div id="rollCards" class="roll-cards mt-4" style="display:flex;gap:1rem;color:white;overflow-x:auto;width:100%;"></div>
+                <div class="bg-[#110d14] p-4 md:p-6 overflow-x-auto">
+                    <div id="furnaceDiagram" class="w-full min-h-[280px]"></div>
+                    <div id="rollCards" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 mt-4"></div>
                 </div>
             </section>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-lg mb-lg">
-                <section class="bg-surface-container-lowest border border-outline-variant rounded overflow-hidden">
-                    <div class="p-4 border-b border-outline-variant bg-surface-bright flex justify-between items-center">
-                        <h3 class="text-body-lg font-body-lg font-bold text-on-surface">📦 Estoque de Rolos</h3>
-                        <div class="flex gap-2 text-label-sm">
-                            <button id="toggleRetifica" class="active bg-surface-container-low px-2 py-1 rounded">Retífica <span id="countRetifica">0</span></button>
-                            <button id="toggleRb1" class="px-2 py-1 rounded">RB1 <span id="countRb1">0</span></button>
+
+            <!-- Estoque + Histórico side-by-side -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                <!-- Estoque de Rolos -->
+                <section class="bg-white border border-outline-variant/60 rounded-lg overflow-hidden shadow-sm flex flex-col">
+                    <div class="px-5 py-3.5 border-b border-outline-variant/40 bg-surface-bright flex justify-between items-center">
+                        <h3 class="font-display text-sm font-bold text-on-surface flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[16px] text-purple-600">inventory_2</span>
+                            Estoque de Rolos
+                        </h3>
+                        <div class="flex gap-1 bg-surface-container rounded-md p-0.5 border border-outline-variant/40">
+                            <button id="toggleRetifica" class="inv-toggle-btn active text-[11px] font-semibold px-3 py-1 rounded transition-all">🛠️ Retífica <span id="countRetifica" class="font-mono text-[10px] ml-1 opacity-70">0</span></button>
+                            <button id="toggleRb1" class="inv-toggle-btn text-[11px] font-semibold px-3 py-1 rounded transition-all text-on-surface-variant">📦 RB1 <span id="countRb1" class="font-mono text-[10px] ml-1 opacity-70">0</span></button>
                         </div>
                     </div>
-                    <div class="p-4" style="min-height:200px;">
+                    <div class="p-4 flex-1 min-h-[180px]">
                         <div id="inventoryList" class="flex flex-col gap-2"></div>
-                        <div id="inventoryEmpty" class="text-center text-outline-variant p-4">Nenhum rolo nesta categoria</div>
+                        <div id="inventoryEmpty" class="text-center text-on-surface-variant/60 py-8 text-sm">
+                            <p class="font-semibold">Nenhum rolo nesta categoria</p>
+                            <span class="text-xs">Adicione rolos usando os botões no topo</span>
+                        </div>
                     </div>
                 </section>
-                
-                <section class="bg-surface-container-lowest border border-outline-variant rounded overflow-hidden">
-                    <div class="p-4 border-b border-outline-variant bg-surface-bright flex justify-between items-center">
-                        <h3 class="text-body-lg font-body-lg font-bold text-on-surface">📋 Histórico</h3>
+
+                <!-- Histórico de Substituições -->
+                <section class="bg-white border border-outline-variant/60 rounded-lg overflow-hidden shadow-sm flex flex-col">
+                    <div class="px-5 py-3.5 border-b border-outline-variant/40 bg-surface-bright flex justify-between items-center flex-wrap gap-2">
+                        <h3 class="font-display text-sm font-bold text-on-surface flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[16px] text-purple-600">history</span>
+                            Histórico de Substituições
+                        </h3>
                         <div class="flex gap-2">
-                            <select id="filterPos" class="border rounded p-1 text-label-sm"><option value="">Todas Posições</option></select>
-                            <select id="filterTurno" class="border rounded p-1 text-label-sm"><option value="">Todos Turnos</option></select>
+                            <select id="filterPos" class="text-[11px] font-semibold px-2.5 py-1.5 bg-surface-container border border-outline-variant/40 rounded-md text-on-surface-variant focus:outline-none focus:border-primary-container">
+                                <option value="">Todas Posições</option>
+                                <optgroup label="🔥 Forno de Recozimento">
+                                    <option value="0">Rolo 0</option><option value="1">Rolo 1</option><option value="2">Rolo 2</option><option value="3">Rolo 3</option><option value="4">Rolo 4</option>
+                                </optgroup>
+                                <optgroup label="⚡ Decapagem Eletrolítica">
+                                    <option value="100">Defletor Entrada</option><option value="101">Defletor 1</option><option value="102">Fundo Tanque 1</option>
+                                    <option value="103">Mergulhador ELE 1</option><option value="104">Fundo Tanque 2</option><option value="105">Defletor 2</option>
+                                    <option value="106">Centragem</option><option value="107">Defletor 3</option><option value="108">Fundo Tanque 3</option>
+                                    <option value="109">Mergulhador ELE 2</option><option value="110">Fundo Tanque 4</option><option value="111">Defletor 4</option>
+                                    <option value="112">Espremedor 1 — Superior</option><option value="126">Espremedor 1 — Inferior</option>
+                                    <option value="113">Escovador 1 — Rolo encosto sup.</option><option value="120">Escovador 1 — Escova superior</option>
+                                    <option value="121">Escovador 1 — Rolo encosto inf.</option><option value="122">Escovador 1 — Escova inferior</option>
+                                    <option value="114">Espremedor 2 — Superior</option><option value="127">Espremedor 2 — Inferior</option>
+                                </optgroup>
+                                <optgroup label="⚡ Decapagem Química">
+                                    <option value="115">Mergulhador QUIM 1</option><option value="116">Mergulhador QUIM 2</option>
+                                    <option value="117">Espremedor 3 — Superior</option><option value="128">Espremedor 3 — Inferior</option>
+                                    <option value="118">Escovador 2 — Rolo encosto sup.</option><option value="123">Escovador 2 — Escova superior</option>
+                                    <option value="124">Escovador 2 — Rolo encosto inf.</option><option value="125">Escovador 2 — Escova inferior</option>
+                                    <option value="119">Espremedor 4 — Superior</option><option value="129">Espremedor 4 — Inferior</option>
+                                </optgroup>
+                            </select>
+                            <select id="filterTurno" class="text-[11px] font-semibold px-2.5 py-1.5 bg-surface-container border border-outline-variant/40 rounded-md text-on-surface-variant focus:outline-none focus:border-primary-container">
+                                <option value="">Todos Turnos</option><option value="TN">TN — Noite</option><option value="TM">TM — Manhã</option><option value="TT">TT — Tarde</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="overflow-x-auto" style="min-height:200px;">
-                        <table class="w-full text-left border-collapse">
-                            <thead class="bg-surface-container-low text-label-bold font-label-bold text-on-surface-variant uppercase">
-                                <tr><th>Data</th><th>Posição</th><th>Turno</th><th>Diam</th><th>Idade</th><th>Ações</th></tr>
+                    <div class="overflow-x-auto flex-1 min-h-[180px]">
+                        <table class="w-full text-left border-collapse text-[13px]">
+                            <thead class="bg-surface-container-low/80 text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">
+                                <tr>
+                                    <th class="px-4 py-3 border-b border-outline-variant/30">Data/Hora</th>
+                                    <th class="px-4 py-3 border-b border-outline-variant/30">Posição</th>
+                                    <th class="px-4 py-3 border-b border-outline-variant/30">Turno</th>
+                                    <th class="px-4 py-3 border-b border-outline-variant/30">Diâmetro</th>
+                                    <th class="px-4 py-3 border-b border-outline-variant/30">Motivo</th>
+                                    <th class="px-4 py-3 border-b border-outline-variant/30">Idade</th>
+                                    <th class="px-4 py-3 border-b border-outline-variant/30">Ações</th>
+                                </tr>
                             </thead>
-                            <tbody id="histBody" class="text-body-md font-body-md"></tbody>
+                            <tbody id="histBody"></tbody>
                         </table>
-                        <div id="histEmpty" class="text-center text-outline-variant p-4">Nenhum registro</div>
+                        <div id="histEmpty" class="text-center text-on-surface-variant/50 py-8 text-sm">Nenhum registro encontrado</div>
                     </div>
                 </section>
             </div>
-            
-            <section class="bg-surface-container-lowest border border-outline-variant rounded overflow-hidden">
-                <div class="p-4 border-b border-outline-variant bg-surface-bright flex justify-between items-center">
-                    <h3 class="text-body-lg font-body-lg font-bold text-on-surface">📅 Trocas por Mês</h3>
+
+            <!-- Trocas por Mês -->
+            <section class="bg-white border border-outline-variant/60 rounded-lg overflow-hidden shadow-sm">
+                <div class="px-5 py-3.5 border-b border-outline-variant/40 bg-surface-bright flex justify-between items-center">
+                    <h3 class="font-display text-sm font-bold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[16px] text-purple-600">calendar_month</span>
+                        Trocas por Mês
+                    </h3>
                     <div class="flex items-center gap-2">
-                        <button id="prevYear" class="px-2">◀</button>
-                        <span id="yearLabel" class="font-bold"></span>
-                        <button id="nextYear" class="px-2">▶</button>
+                        <button id="prevYear" class="w-7 h-7 rounded-md border border-outline-variant/40 flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-all text-xs">◀</button>
+                        <span id="yearLabel" class="font-mono font-bold text-sm min-w-[48px] text-center"></span>
+                        <button id="nextYear" class="w-7 h-7 rounded-md border border-outline-variant/40 flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-all text-xs">▶</button>
                     </div>
                 </div>
-                <div class="p-4">
-                    <div id="monthTabs" class="flex gap-2 mb-4 overflow-x-auto"></div>
-                    <table class="w-full text-left border-collapse">
-                        <thead class="bg-surface-container-low text-label-bold font-label-bold text-on-surface-variant uppercase">
-                            <tr><th>Data</th><th>Posição</th><th>Turno</th><th>Diam</th><th>Motivo</th><th>Idade</th></tr>
-                        </thead>
-                        <tbody id="monthBody" class="text-body-md font-body-md"></tbody>
-                    </table>
-                    <div id="monthEmpty" class="text-center text-outline-variant p-4">Nenhuma troca neste mês</div>
+                <div class="p-5">
+                    <div id="monthTabs" class="grid grid-cols-6 md:grid-cols-12 gap-2 mb-5"></div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-[13px]">
+                            <thead class="bg-surface-container-low/80 text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">
+                                <tr>
+                                    <th class="px-4 py-3 border-b border-outline-variant/30">Data/Hora</th>
+                                    <th class="px-4 py-3 border-b border-outline-variant/30">Posição</th>
+                                    <th class="px-4 py-3 border-b border-outline-variant/30">Turno</th>
+                                    <th class="px-4 py-3 border-b border-outline-variant/30">Diâmetro</th>
+                                    <th class="px-4 py-3 border-b border-outline-variant/30">Motivo</th>
+                                    <th class="px-4 py-3 border-b border-outline-variant/30">Idade</th>
+                                </tr>
+                            </thead>
+                            <tbody id="monthBody"></tbody>
+                        </table>
+                    </div>
+                    <div id="monthEmpty" class="text-center text-on-surface-variant/50 py-6 text-sm">Nenhuma troca neste mês</div>
                     <div id="monthSummary" class="mt-4"></div>
                 </div>
             </section>
         </div>
 
-        <!-- DECAPAGEM VIEW -->
-        <div id="viewDecapagem" class="view-hidden w-full">
-            <section id="statsDecapagemBar" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-lg"></section>
-            
-            <section class="bg-surface-container-lowest border border-outline-variant rounded overflow-hidden mb-lg">
-                <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-bright">
-                    <h2 class="text-headline-md font-headline-md text-on-surface flex items-center gap-2">
-                        <span class="material-symbols-outlined text-secondary" data-icon="bolt">bolt</span>
+        <!-- ===== DECAPAGEM VIEW ===== -->
+        <div id="viewDecapagem" class="view-hidden w-full flex flex-col gap-6">
+
+            <!-- Stats -->
+            <section id="statsDecapagemBar" class="grid grid-cols-2 md:grid-cols-4 gap-3"></section>
+
+            <!-- Decapagem Diagram -->
+            <section class="bg-white border border-outline-variant/60 rounded-lg overflow-hidden shadow-sm">
+                <div class="px-5 py-3.5 border-b border-outline-variant/40 flex justify-between items-center bg-surface-bright">
+                    <h2 class="font-display text-sm font-bold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[18px] text-orange-500">bolt</span>
                         Decapagem Química e Eletrolítica
                     </h2>
-                    <div class="text-secondary font-label-bold text-label-bold flex items-center gap-1">
-                        <div class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></div>
-                        AO VIVO
+                    <div class="flex items-center gap-1.5 text-[10px] font-bold text-orange-500 uppercase tracking-wider">
+                        <div class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></div>
+                        Ao Vivo
                     </div>
                 </div>
-                <div class="bg-on-surface p-0 relative min-h-[400px] flex items-center justify-center overflow-x-auto">
-                    <div id="decapagemDiagram" class="w-full relative flex items-center justify-center"></div>
+                <div class="bg-[#110d14] overflow-x-auto">
+                    <div id="decapagemDiagram" class="w-full min-h-[380px]"></div>
                 </div>
             </section>
-            
-            <section class="bg-surface-container-lowest border border-outline-variant rounded overflow-hidden mb-lg">
-                <div class="p-4 border-b border-outline-variant bg-surface-bright">
-                    <h3 class="text-body-lg font-body-lg font-bold text-on-surface flex items-center gap-2">
-                        <span class="material-symbols-outlined text-outline" data-icon="list_alt">list_alt</span>
+
+            <!-- Decapagem Table -->
+            <section class="bg-white border border-outline-variant/60 rounded-lg overflow-hidden shadow-sm">
+                <div class="px-5 py-3.5 border-b border-outline-variant/40 bg-surface-bright">
+                    <h3 class="font-display text-sm font-bold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[16px] text-purple-600">list_alt</span>
                         Status e Identificação dos Rolos e Escovas (Decapagem)
                     </h3>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead class="bg-surface-container-low text-label-bold font-label-bold text-on-surface-variant uppercase">
+                    <table class="w-full text-left border-collapse text-[13px]">
+                        <thead class="bg-surface-container-low/80 text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">
                             <tr>
-                                <th class="p-4 border-b border-outline-variant">Posição / Nome</th>
-                                <th class="p-4 border-b border-outline-variant">Tipo</th>
-                                <th class="p-4 border-b border-outline-variant">Diâmetro</th>
-                                <th class="p-4 border-b border-outline-variant">Perímetro</th>
-                                <th class="p-4 border-b border-outline-variant">Instalação</th>
-                                <th class="p-4 border-b border-outline-variant">Turno</th>
-                                <th class="p-4 border-b border-outline-variant">Tempo Ativo</th>
-                                <th class="p-4 border-b border-outline-variant">Motivo / Obs</th>
-                                <th class="p-4 border-b border-outline-variant">Ações</th>
+                                <th class="px-4 py-3 border-b border-outline-variant/30">Posição / Nome</th>
+                                <th class="px-4 py-3 border-b border-outline-variant/30">Tipo</th>
+                                <th class="px-4 py-3 border-b border-outline-variant/30">Diâmetro</th>
+                                <th class="px-4 py-3 border-b border-outline-variant/30">Perímetro</th>
+                                <th class="px-4 py-3 border-b border-outline-variant/30">Instalação</th>
+                                <th class="px-4 py-3 border-b border-outline-variant/30">Turno</th>
+                                <th class="px-4 py-3 border-b border-outline-variant/30">Tempo Ativo</th>
+                                <th class="px-4 py-3 border-b border-outline-variant/30">Motivo / Obs</th>
+                                <th class="px-4 py-3 border-b border-outline-variant/30">Ações</th>
                             </tr>
                         </thead>
-                        <tbody id="decapagemTableBody" class="text-body-md font-body-md"></tbody>
+                        <tbody id="decapagemTableBody"></tbody>
                     </table>
                 </div>
             </section>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-lg mb-lg">
-                <section class="bg-surface-container-lowest border border-outline-variant rounded overflow-hidden">
-                    <div class="p-4 border-b border-outline-variant bg-surface-bright flex justify-between items-center">
-                        <h3 class="text-body-lg font-body-lg font-bold text-on-surface">📦 Estoque (Decapagem)</h3>
-                        <div class="flex gap-2 text-label-sm">
-                            <button id="toggleDecapagemRetifica" class="active bg-surface-container-low px-2 py-1 rounded">Retífica <span id="countDecapagemRetifica">0</span></button>
-                            <button id="toggleDecapagemRb1" class="px-2 py-1 rounded">RB1 <span id="countDecapagemRb1">0</span></button>
+
+            <!-- Decapagem: Estoque + Monthly side-by-side -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                <!-- Estoque Decapagem -->
+                <section class="bg-white border border-outline-variant/60 rounded-lg overflow-hidden shadow-sm flex flex-col">
+                    <div class="px-5 py-3.5 border-b border-outline-variant/40 bg-surface-bright flex justify-between items-center">
+                        <h3 class="font-display text-sm font-bold text-on-surface flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[16px] text-purple-600">inventory_2</span>
+                            Estoque (Decapagem)
+                        </h3>
+                        <div class="flex gap-1 bg-surface-container rounded-md p-0.5 border border-outline-variant/40">
+                            <button id="toggleDecapagemRetifica" class="inv-toggle-btn active text-[11px] font-semibold px-3 py-1 rounded transition-all">🛠️ Retífica <span id="countDecapagemRetifica" class="font-mono text-[10px] ml-1 opacity-70">0</span></button>
+                            <button id="toggleDecapagemRb1" class="inv-toggle-btn text-[11px] font-semibold px-3 py-1 rounded transition-all text-on-surface-variant">📦 RB1 <span id="countDecapagemRb1" class="font-mono text-[10px] ml-1 opacity-70">0</span></button>
                         </div>
                     </div>
-                    <div class="p-4" style="min-height:200px;">
+                    <div class="p-4 flex-1 min-h-[180px]">
                         <div id="inventoryDecapagemList" class="flex flex-col gap-2"></div>
-                        <div id="inventoryDecapagemEmpty" class="text-center text-outline-variant p-4">Nenhum rolo nesta categoria</div>
+                        <div id="inventoryDecapagemEmpty" class="text-center text-on-surface-variant/60 py-8 text-sm">
+                            <p class="font-semibold">Nenhum rolo nesta categoria</p>
+                            <span class="text-xs">Adicione rolos usando os botões no topo</span>
+                        </div>
                     </div>
                 </section>
-                
-                <section class="bg-surface-container-lowest border border-outline-variant rounded overflow-hidden">
-                    <div class="p-4 border-b border-outline-variant bg-surface-bright flex justify-between items-center">
-                        <h3 class="text-body-lg font-body-lg font-bold text-on-surface">📅 Trocas por Mês (Decapagem)</h3>
+
+                <!-- Trocas por Mês Decapagem -->
+                <section class="bg-white border border-outline-variant/60 rounded-lg overflow-hidden shadow-sm flex flex-col">
+                    <div class="px-5 py-3.5 border-b border-outline-variant/40 bg-surface-bright flex justify-between items-center">
+                        <h3 class="font-display text-sm font-bold text-on-surface flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[16px] text-purple-600">calendar_month</span>
+                            Trocas por Mês (Decapagem)
+                        </h3>
                         <div class="flex items-center gap-2">
-                            <button id="prevDecapagemYear" class="px-2">◀</button>
-                            <span id="yearDecapagemLabel" class="font-bold"></span>
-                            <button id="nextDecapagemYear" class="px-2">▶</button>
+                            <button id="prevDecapagemYear" class="w-7 h-7 rounded-md border border-outline-variant/40 flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-all text-xs">◀</button>
+                            <span id="yearDecapagemLabel" class="font-mono font-bold text-sm min-w-[48px] text-center"></span>
+                            <button id="nextDecapagemYear" class="w-7 h-7 rounded-md border border-outline-variant/40 flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-all text-xs">▶</button>
                         </div>
                     </div>
-                    <div class="p-4">
-                        <div id="monthDecapagemTabs" class="flex gap-2 mb-4 overflow-x-auto"></div>
-                        <table class="w-full text-left border-collapse">
-                            <thead class="bg-surface-container-low text-label-bold font-label-bold text-on-surface-variant uppercase">
-                                <tr><th>Data</th><th>Posição</th><th>Turno</th><th>Motivo</th><th>Idade</th></tr>
-                            </thead>
-                            <tbody id="monthDecapagemBody" class="text-body-md font-body-md"></tbody>
-                        </table>
-                        <div id="monthDecapagemEmpty" class="text-center text-outline-variant p-4">Nenhuma troca neste mês</div>
+                    <div class="p-4 flex-1">
+                        <div id="monthDecapagemTabs" class="grid grid-cols-6 md:grid-cols-12 gap-2 mb-4"></div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-[13px]">
+                                <thead class="bg-surface-container-low/80 text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">
+                                    <tr>
+                                        <th class="px-4 py-3 border-b border-outline-variant/30">Data/Hora</th>
+                                        <th class="px-4 py-3 border-b border-outline-variant/30">Posição</th>
+                                        <th class="px-4 py-3 border-b border-outline-variant/30">Turno</th>
+                                        <th class="px-4 py-3 border-b border-outline-variant/30">Diâmetro</th>
+                                        <th class="px-4 py-3 border-b border-outline-variant/30">Motivo</th>
+                                        <th class="px-4 py-3 border-b border-outline-variant/30">Idade</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="monthDecapagemBody"></tbody>
+                            </table>
+                        </div>
+                        <div id="monthDecapagemEmpty" class="text-center text-on-surface-variant/50 py-6 text-sm">Nenhuma troca neste mês</div>
                         <div id="monthDecapagemSummary" class="mt-4"></div>
                     </div>
                 </section>
             </div>
-            
         </div>
     </main>
 
-<!-- Modal: Substituição -->
+    <!-- ====== MODALS ====== -->
+
+    <!-- Modal: Substituição -->
     <div class="modal-overlay" id="modalSub">
         <div class="modal">
             <div class="modal-header"><h3>Nova Substituição de Rolo</h3><button class="modal-close" id="modalSubClose">&times;</button></div>
@@ -345,45 +467,24 @@
                         <select id="inPos" required>
                             <option value="">Selecione...</option>
                             <optgroup label="🔥 Forno de Recozimento">
-                                <option value="0">Rolo 0</option>
-                                <option value="1">Rolo 1</option>
-                                <option value="2">Rolo 2</option>
-                                <option value="3">Rolo 3</option>
-                                <option value="4">Rolo 4</option>
+                                <option value="0">Rolo 0</option><option value="1">Rolo 1</option><option value="2">Rolo 2</option><option value="3">Rolo 3</option><option value="4">Rolo 4</option>
                             </optgroup>
                             <optgroup label="⚡ Decapagem Eletrolítica">
-                                <option value="100">Defletor Entrada</option>
-                                <option value="101">Defletor 1</option>
-                                <option value="102">Fundo do tanque 1</option>
-                                <option value="103">Mergulhador ELE 1</option>
-                                <option value="104">Fundo do tanque 2</option>
-                                <option value="105">Defletor 2</option>
-                                <option value="106">Centragem</option>
-                                <option value="107">Defletor 3</option>
-                                <option value="108">Fundo do tanque 3</option>
-                                <option value="109">Mergulhador ELE 2</option>
-                                <option value="110">Fundo do tanque 4</option>
-                                <option value="111">Defletor 4</option>
-                                <option value="112">Espremedor 1 — Superior</option>
-                                <option value="126">Espremedor 1 — Inferior</option>
-                                <option value="113">Escovador 1 — Rolo encosto sup.</option>
-                                <option value="120">Escovador 1 — Escova superior</option>
-                                <option value="121">Escovador 1 — Rolo encosto inf.</option>
-                                <option value="122">Escovador 1 — Escova inferior</option>
-                                <option value="114">Espremedor 2 — Superior</option>
-                                <option value="127">Espremedor 2 — Inferior</option>
+                                <option value="100">Defletor Entrada</option><option value="101">Defletor 1</option><option value="102">Fundo do tanque 1</option>
+                                <option value="103">Mergulhador ELE 1</option><option value="104">Fundo do tanque 2</option><option value="105">Defletor 2</option>
+                                <option value="106">Centragem</option><option value="107">Defletor 3</option><option value="108">Fundo do tanque 3</option>
+                                <option value="109">Mergulhador ELE 2</option><option value="110">Fundo do tanque 4</option><option value="111">Defletor 4</option>
+                                <option value="112">Espremedor 1 — Superior</option><option value="126">Espremedor 1 — Inferior</option>
+                                <option value="113">Escovador 1 — Rolo encosto sup.</option><option value="120">Escovador 1 — Escova superior</option>
+                                <option value="121">Escovador 1 — Rolo encosto inf.</option><option value="122">Escovador 1 — Escova inferior</option>
+                                <option value="114">Espremedor 2 — Superior</option><option value="127">Espremedor 2 — Inferior</option>
                             </optgroup>
                             <optgroup label="⚡ Decapagem Química">
-                                <option value="115">Mergulhador QUIM 1</option>
-                                <option value="116">Mergulhador QUIM 2</option>
-                                <option value="117">Espremedor 3 — Superior</option>
-                                <option value="128">Espremedor 3 — Inferior</option>
-                                <option value="118">Escovador 2 — Rolo encosto sup.</option>
-                                <option value="123">Escovador 2 — Escova superior</option>
-                                <option value="124">Escovador 2 — Rolo encosto inf.</option>
-                                <option value="125">Escovador 2 — Escova inferior</option>
-                                <option value="119">Espremedor 4 — Superior</option>
-                                <option value="129">Espremedor 4 — Inferior</option>
+                                <option value="115">Mergulhador QUIM 1</option><option value="116">Mergulhador QUIM 2</option>
+                                <option value="117">Espremedor 3 — Superior</option><option value="128">Espremedor 3 — Inferior</option>
+                                <option value="118">Escovador 2 — Rolo encosto sup.</option><option value="123">Escovador 2 — Escova superior</option>
+                                <option value="124">Escovador 2 — Rolo encosto inf.</option><option value="125">Escovador 2 — Escova inferior</option>
+                                <option value="119">Espremedor 4 — Superior</option><option value="129">Espremedor 4 — Inferior</option>
                             </optgroup>
                         </select>
                     </div>
@@ -409,6 +510,7 @@
             </form>
         </div>
     </div>
+
     <!-- Modal: Estoque -->
     <div class="modal-overlay" id="modalEst">
         <div class="modal">
@@ -422,6 +524,7 @@
             </form>
         </div>
     </div>
+
     <!-- Modal: Editar Registro -->
     <div class="modal-overlay" id="modalEdit">
         <div class="modal">
@@ -441,6 +544,7 @@
             </form>
         </div>
     </div>
+
     <div class="toast-container" id="toastContainer"></div>
     <script type="module" src="/src/main.ts"></script>
 </body>

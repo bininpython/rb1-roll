@@ -4,92 +4,82 @@ fpath = r"c:\Users\Usuario\Desktop\forno\src\main.ts"
 with open(fpath, "r", encoding="utf-8") as f:
     text = f.read()
 
-# 1. We replace the ENTRADA 2 block
-old_block = """  // === ENTRADA 2 ===
-  svg += `<text x="60" y="${Y2 - 20}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#94a3b8">ENTRADA 2</text>`;
-  svg += rolerDecap(100, Y2 + 40, 40, 'Defletor Entrada', '2140 mm');
-  
-  // Merge Bridle (top roller large, bottom small as per drawing)
-  svg += rolerDecap(1350, Y2-30, 30, 'Mergulhador QUIM 1', '2140 mm');
-  svg += `<circle cx="1350" cy="${Y2+15}" r="15" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2"/>`;
+start_marker = "  // 88, 89 (Pinch)"
+end_marker = "  // Merge Bridle  // Merge Bridle (Restored Mergulhador)"
 
-  // Path 1 (Entrada 1)
-  stripPath = `M 100 ${Y1} `;
-  lineTo(pX, Y1); 
-  // Wrap around 74 to tangent point T1
-  stripPath += `A 30 30 0 0 1 1113.11 180.87 `; 
-  // Slant down over rollers 75-83 to tangent point T2
-  lineTo(1326.89, 439.13); 
-  // Wrap around bottom of merge roller C2 to horizontal Y2
-  stripPath += `A 30 30 0 0 0 1350 450 `;
+if start_marker in text and end_marker in text:
+    part1 = text.split(start_marker)[0]
+    part2 = text.split(end_marker)[1]
+    
+    new_block = """  // 104, 105 (Pinch)
+  let pX2 = 350;
+  svg += rNrForno(pX2, Y2 - 12, 12, '', pX2, Y2 - 28);
+  svg += rNrForno(pX2, Y2 + 12, 12, '', pX2, Y2 + 34);
 
-  // Path 2 (Entrada 2)
-  let p2 = `M 100 ${Y2} `;
-  p2 += `L 1350 ${Y2} `; 
-  svg += `<path d="${p2}" fill="none" stroke="${BK}" stroke-width="2"/>`;"""
+  // TESOURA 2
+  let tes2X = 450;
+  svg += `<text x="${tes2X+20}" y="${Y2-35}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">TESOURA 2</text>`;
+  svg += `<rect x="${tes2X}" y="${Y2-25}" width="15" height="25" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2"/>`; 
+  svg += `<rect x="${tes2X+15}" y="${Y2}" width="15" height="25" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2"/>`; 
+  svg += `<polygon points="${tes2X+15},${Y2+25} ${tes2X+30},${Y2+25} ${tes2X+60},${Y2+40} ${tes2X+45},${Y2+40}" fill="#334155" stroke="#0f172a" stroke-width="1.2"/>`; 
+  svg += `<rect x="${tes2X+35}" y="${Y2+45}" width="35" height="50" fill="#1e293b" stroke="#0f172a" stroke-width="1.2"/>`; 
+  svg += `<path d="M ${tes2X+40} ${Y2+55} Q ${tes2X+52} ${Y2+50} ${tes2X+65} ${Y2+55} M ${tes2X+40} ${Y2+65} Q ${tes2X+52} ${Y2+60} ${tes2X+65} ${Y2+65} M ${tes2X+40} ${Y2+75} Q ${tes2X+52} ${Y2+70} ${tes2X+65} ${Y2+75} M ${tes2X+40} ${Y2+85} Q ${tes2X+52} ${Y2+80} ${tes2X+65} ${Y2+85}" fill="none" stroke="#64748b" stroke-width="1"/>`; 
+  svg += `<polygon points="${tes2X+55},${Y2+70} ${tes2X+85},${Y2+35} ${tes2X+89},${Y2+39} ${tes2X+59},${Y2+74}" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2"/>`;
+  svg += `<line x1="${tes2X+50}" y1="${Y2+75}" x2="${tes2X+60}" y2="${Y2+65}" stroke="${BK}" stroke-width="1.5"/>`; // Rod
+  svg += `<line x1="${tes2X+50}" y1="${Y2+60}" x2="${tes2X+50}" y2="${Y2+85}" stroke="${BK}" stroke-width="1.5"/>`; // Plate
 
-# Let's write the new block.
-new_block = """  // === ENTRADA 2 ===
-  svg += `<text x="60" y="${Y2 - 50}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#94a3b8">ENTRADA 2</text>`;
-  
-  // Helper for small numbered rollers
-  function rNrForno(cx: number, cy: number, r: number, num: string, nx: number, ny: number) {
-    let s = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#052e16" stroke="#22c55e" stroke-width="1.5" filter="url(#greenGlow)"/>`;
-    s += `<circle cx="${cx}" cy="${cy}" r="${r*0.6}" fill="none" stroke="#22c55e" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.5" class="spin-fast" style="transform-origin: ${cx}px ${cy}px"/>`;
-    s += `<text x="${nx}" y="${ny}" font-family="JetBrains Mono, monospace" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">${num}</text>`;
-    return s;
+  // 106-109 Hydraulic Table
+  let tb2X = 600;
+  // Hydraulic Cylinder
+  svg += `<line x1="${tb2X + 45}" y1="${Y2 + 25}" x2="${tb2X - 5}" y2="${Y2 + 100}" stroke="#475569" stroke-width="12"/>`;
+  svg += `<line x1="${tb2X + 55}" y1="${Y2 + 5}" x2="${tb2X + 45}" y2="${Y2 + 25}" stroke="#94a3b8" stroke-width="4"/>`;
+  // Floor mount
+  svg += `<line x1="${tb2X - 25}" y1="${Y2 + 100}" x2="${tb2X + 15}" y2="${Y2 + 100}" stroke="#475569" stroke-width="2"/>`;
+  for(let i=0; i<6; i++) {
+    let hx = (tb2X - 20) + i*6;
+    svg += `<line x1="${hx}" y1="${Y2 + 100}" x2="${hx - 8}" y2="${Y2 + 110}" stroke="#475569" stroke-width="1.5"/>`;
+  }
+  // Table Box
+  svg += `<rect x="${tb2X - 10}" y="${Y2 + 2}" width="120" height="15" fill="none" stroke="#22c55e" stroke-width="2"/>`;
+  // Rollers (106 to 109)
+  svg += rNrForno(tb2X + 10, Y2 + 6, 6, '', 0, 0);
+  svg += rNrForno(tb2X + 40, Y2 + 6, 6, '', 0, 0);
+  svg += rNrForno(tb2X + 70, Y2 + 6, 6, '', 0, 0);
+  svg += rNrForno(tb2X + 100, Y2 + 6, 6, '', 0, 0);
+
+  // 110-116 Inline bottom rollers
+  let in2X = 780;
+  for(let i=0; i<7; i++) {
+    svg += rNrForno(in2X + i*25, Y2 + 6, 6, '', 0, 0);
   }
 
-  // Bobina Principal (Defletor)
-  svg += rolerDecap(100, Y2 + 40, 40, 'Defletor Entrada 2', '2140 mm');
+  // ENROLADOR DE TIRAS
+  let enr2X = 1020;
+  svg += `<text x="${enr2X+60}" y="${Y2-45}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">ENROLADOR DE TIRAS</text>`;
+  // Curved Top Guide (Crescent shape)
+  svg += `<path d="M ${enr2X+20} ${Y2-25} Q ${enr2X+60} ${Y2-5} ${enr2X+100} ${Y2-25} Q ${enr2X+60} ${Y2-15} ${enr2X+20} ${Y2-25}" fill="#1e293b" stroke="#94a3b8" stroke-width="2"/>`;
   
-  // 86, 87
-  svg += rNrForno(45, Y2 + 10, 8, '86', 45, Y2 - 2);
-  svg += rNrForno(80, Y2 - 12, 8, '87', 80, Y2 - 24);
+  // Top rollers (117, 122)
+  svg += rNrForno(enr2X, Y2 - 6, 6, '', 0, 0);
+  svg += rNrForno(enr2X + 120, Y2 - 6, 6, '', 0, 0);
+  
+  // Bottom rollers (119, 118, 121, 120)
+  svg += rNrForno(enr2X + 24, Y2 + 6, 6, '', 0, 0);
+  svg += rNrForno(enr2X + 48, Y2 + 6, 6, '', 0, 0);
+  svg += rNrForno(enr2X + 72, Y2 + 6, 6, '', 0, 0);
+  svg += rNrForno(enr2X + 96, Y2 + 6, 6, '', 0, 0);
 
-  // 88, 89 (Pinch)
-  svg += rNrForno(400, Y2 - 12, 12, '88', 400, Y2 - 28);
-  svg += rNrForno(400, Y2 + 12, 12, '89', 400, Y2 + 34);
+  // 123-125 Bottom rollers
+  let trX = 1200;
+  svg += rNrForno(trX, Y2 + 6, 6, '', 0, 0);
+  svg += rNrForno(trX + 30, Y2 + 6, 6, '', 0, 0);
+  svg += rNrForno(trX + 60, Y2 + 6, 6, '', 0, 0);
 
-  // 90
-  svg += rNrForno(450, Y2 + 10, 10, '90', 450, Y2 - 4);
-
-  // 91-95 (Straightener)
-  let stX = 700;
-  svg += rNrForno(stX, Y2 + 6, 6, '91', stX, Y2 + 20);
-  svg += rNrForno(stX+12, Y2 - 6, 6, '92', stX+12, Y2 - 15);
-  svg += rNrForno(stX+24, Y2 + 6, 6, '95', stX+24, Y2 + 20);
-  svg += rNrForno(stX+36, Y2 - 6, 6, '93', stX+36, Y2 - 15);
-  svg += rNrForno(stX+48, Y2 + 6, 6, '94', stX+48, Y2 + 20);
-
-  // 96-100 (Inline)
-  let inX = 850;
-  svg += rNrForno(inX, Y2 + 5, 5, '96', inX, Y2 - 5);
-  svg += rNrForno(inX+25, Y2 + 5, 5, '97', inX+25, Y2 - 5);
-  svg += rNrForno(inX+50, Y2 + 5, 5, '98', inX+50, Y2 - 5);
-  svg += rNrForno(inX+75, Y2 + 5, 5, '99', inX+75, Y2 - 5);
-  svg += rNrForno(inX+100, Y2 + 5, 5, '100', inX+100, Y2 - 5);
-
-  // Merge Bridle
-  svg += rolerDecap(1350, Y2-30, 30, 'Mergulhador QUIM 1', '2140 mm');
-  svg += dot(1350, Y2+15, 15); // Replaced with new dot function (green style)
-
-  // Path 1 (Entrada 1)
-  stripPath = `M 100 ${Y1} `;
-  lineTo(pX, Y1); 
-  stripPath += `A 30 30 0 0 1 1113.11 180.87 `; 
-  lineTo(1326.89, 439.13); 
-  stripPath += `A 30 30 0 0 0 1350 450 `;
-
-  // Path 2 (Entrada 2)
-  let p2 = `M 100 ${Y2} `;
-  p2 += `L 1350 ${Y2} `; 
-  svg += `<path d="${p2}" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="4" filter="url(#whiteGlow)"/>`;
-  svg += `<path d="${p2}" fill="none" stroke="#ffffff" stroke-width="1.5"/>`;"""
-
-text = text.replace(old_block, new_block)
-
-with open(fpath, "w", encoding="utf-8") as f:
-    f.write(text)
-
-print("Entrada 2 updated perfectly!")
+"""
+    
+    text = part1 + new_block + "  // Merge Bridle  // Merge Bridle (Restored Mergulhador)" + part2
+    with open(fpath, "w", encoding="utf-8") as f:
+        f.write(text)
+    print("Entrada 2 updated successfully!")
+else:
+    print("Markers not found")

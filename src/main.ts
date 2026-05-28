@@ -1227,28 +1227,69 @@ function renderRb1Completa() {
   svg += rNrForno(45, Y2 + 10, 8, '86', 45, Y2 - 2);
   svg += rNrForno(80, Y2 - 12, 8, '87', 80, Y2 - 24);
 
-  // 88, 89 (Pinch)
-  svg += rNrForno(400, Y2 - 12, 12, '88', 400, Y2 - 28);
-  svg += rNrForno(400, Y2 + 12, 12, '89', 400, Y2 + 34);
+  // 104, 105 (Pinch)
+  let pX2 = 350;
+  svg += rNrForno(pX2, Y2 - 12, 12, '', pX2, Y2 - 28);
+  svg += rNrForno(pX2, Y2 + 12, 12, '', pX2, Y2 + 34);
 
-  // 90
-  svg += rNrForno(450, Y2 + 10, 10, '90', 450, Y2 - 4);
+  // TESOURA 2
+  let tes2X = 450;
+  svg += `<text x="${tes2X+20}" y="${Y2-35}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">TESOURA 2</text>`;
+  svg += `<rect x="${tes2X}" y="${Y2-25}" width="15" height="25" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2"/>`; 
+  svg += `<rect x="${tes2X+15}" y="${Y2}" width="15" height="25" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2"/>`; 
+  svg += `<polygon points="${tes2X+15},${Y2+25} ${tes2X+30},${Y2+25} ${tes2X+60},${Y2+40} ${tes2X+45},${Y2+40}" fill="#334155" stroke="#0f172a" stroke-width="1.2"/>`; 
+  svg += `<rect x="${tes2X+35}" y="${Y2+45}" width="35" height="50" fill="#1e293b" stroke="#0f172a" stroke-width="1.2"/>`; 
+  svg += `<path d="M ${tes2X+40} ${Y2+55} Q ${tes2X+52} ${Y2+50} ${tes2X+65} ${Y2+55} M ${tes2X+40} ${Y2+65} Q ${tes2X+52} ${Y2+60} ${tes2X+65} ${Y2+65} M ${tes2X+40} ${Y2+75} Q ${tes2X+52} ${Y2+70} ${tes2X+65} ${Y2+75} M ${tes2X+40} ${Y2+85} Q ${tes2X+52} ${Y2+80} ${tes2X+65} ${Y2+85}" fill="none" stroke="#64748b" stroke-width="1"/>`; 
+  svg += `<polygon points="${tes2X+55},${Y2+70} ${tes2X+85},${Y2+35} ${tes2X+89},${Y2+39} ${tes2X+59},${Y2+74}" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2"/>`;
+  svg += `<line x1="${tes2X+50}" y1="${Y2+75}" x2="${tes2X+60}" y2="${Y2+65}" stroke="${BK}" stroke-width="1.5"/>`; // Rod
+  svg += `<line x1="${tes2X+50}" y1="${Y2+60}" x2="${tes2X+50}" y2="${Y2+85}" stroke="${BK}" stroke-width="1.5"/>`; // Plate
 
-  // 91-95 (Straightener)
-  let stX = 700;
-  svg += rNrForno(stX, Y2 + 6, 6, '91', stX, Y2 + 20);
-  svg += rNrForno(stX+12, Y2 - 6, 6, '92', stX+12, Y2 - 15);
-  svg += rNrForno(stX+24, Y2 + 6, 6, '95', stX+24, Y2 + 20);
-  svg += rNrForno(stX+36, Y2 - 6, 6, '93', stX+36, Y2 - 15);
-  svg += rNrForno(stX+48, Y2 + 6, 6, '94', stX+48, Y2 + 20);
+  // 106-109 Hydraulic Table
+  let tbE2X = 600;
+  // Hydraulic Cylinder
+  svg += `<line x1="${tbE2X + 45}" y1="${Y2 + 25}" x2="${tbE2X - 5}" y2="${Y2 + 100}" stroke="#475569" stroke-width="12"/>`;
+  svg += `<line x1="${tbE2X + 55}" y1="${Y2 + 5}" x2="${tbE2X + 45}" y2="${Y2 + 25}" stroke="#94a3b8" stroke-width="4"/>`;
+  // Floor mount
+  svg += `<line x1="${tbE2X - 25}" y1="${Y2 + 100}" x2="${tbE2X + 15}" y2="${Y2 + 100}" stroke="#475569" stroke-width="2"/>`;
+  for(let i=0; i<6; i++) {
+    let hx = (tbE2X - 20) + i*6;
+    svg += `<line x1="${hx}" y1="${Y2 + 100}" x2="${hx - 8}" y2="${Y2 + 110}" stroke="#475569" stroke-width="1.5"/>`;
+  }
+  // Table Box
+  svg += `<rect x="${tbE2X - 10}" y="${Y2 + 2}" width="120" height="15" fill="none" stroke="#22c55e" stroke-width="2"/>`;
+  // Rollers (106 to 109)
+  svg += rNrForno(tbE2X + 10, Y2 + 6, 6, '', 0, 0);
+  svg += rNrForno(tbE2X + 40, Y2 + 6, 6, '', 0, 0);
+  svg += rNrForno(tbE2X + 70, Y2 + 6, 6, '', 0, 0);
+  svg += rNrForno(tbE2X + 100, Y2 + 6, 6, '', 0, 0);
 
-  // 96-100 (Inline)
-  let inX = 850;
-  svg += rNrForno(inX, Y2 + 5, 5, '96', inX, Y2 - 5);
-  svg += rNrForno(inX+25, Y2 + 5, 5, '97', inX+25, Y2 - 5);
-  svg += rNrForno(inX+50, Y2 + 5, 5, '98', inX+50, Y2 - 5);
-  svg += rNrForno(inX+75, Y2 + 5, 5, '99', inX+75, Y2 - 5);
-  svg += rNrForno(inX+100, Y2 + 5, 5, '100', inX+100, Y2 - 5);
+  // 110-116 Inline bottom rollers
+  let inE2X = 780;
+  for(let i=0; i<7; i++) {
+    svg += rNrForno(inE2X + i*25, Y2 + 6, 6, '', 0, 0);
+  }
+
+  // ENROLADOR DE TIRAS
+  let enrE2X = 1020;
+  svg += `<text x="${enrE2X+60}" y="${Y2-45}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">ENROLADOR DE TIRAS</text>`;
+  // Curved Top Guide (Crescent shape)
+  svg += `<path d="M ${enrE2X+20} ${Y2-25} Q ${enrE2X+60} ${Y2-5} ${enrE2X+100} ${Y2-25} Q ${enrE2X+60} ${Y2-15} ${enrE2X+20} ${Y2-25}" fill="#1e293b" stroke="#94a3b8" stroke-width="2"/>`;
+  
+  // Top rollers (117, 122)
+  svg += rNrForno(enrE2X, Y2 - 6, 6, '', 0, 0);
+  svg += rNrForno(enrE2X + 120, Y2 - 6, 6, '', 0, 0);
+  
+  // Bottom rollers (119, 118, 121, 120)
+  svg += rNrForno(enrE2X + 24, Y2 + 6, 6, '', 0, 0);
+  svg += rNrForno(enrE2X + 48, Y2 + 6, 6, '', 0, 0);
+  svg += rNrForno(enrE2X + 72, Y2 + 6, 6, '', 0, 0);
+  svg += rNrForno(enrE2X + 96, Y2 + 6, 6, '', 0, 0);
+
+  // 123-125 Bottom rollers
+  let trE2X = 1200;
+  svg += rNrForno(trE2X, Y2 + 6, 6, '', 0, 0);
+  svg += rNrForno(trE2X + 30, Y2 + 6, 6, '', 0, 0);
+  svg += rNrForno(trE2X + 60, Y2 + 6, 6, '', 0, 0);
 
   // Merge Bridle  // Merge Bridle (Restored Mergulhador)
   svg += rolerDecap(1350, Y2-30, 30, 'Mergulhador QUIM 1', '2140 mm');

@@ -891,8 +891,19 @@ function renderRb1Completa() {
   const FS = 'font-family="JetBrains Mono, monospace"';
   const FSL = 'font-family="Montserrat, sans-serif"';
   
-  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:${W}px;height:auto;display:block;background:#11141c;">
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:${W}px;height:auto;display:block;background:#050816;">
   <defs>
+    <style>
+      .spin-slow { animation: spin 4s linear infinite; }
+      .spin-fast { animation: spin 1.5s linear infinite; }
+      .strip-anim { animation: dashMove 0.8s linear infinite; }
+      @keyframes spin { 100% { transform: rotate(360deg); } }
+      @keyframes dashMove { to { stroke-dashoffset: -20; } }
+    </style>
+    <filter id="blueGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
     <linearGradient id="metalOuter" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#f8fafc"/>
       <stop offset="25%" stop-color="#94a3b8"/>
@@ -921,8 +932,10 @@ function renderRb1Completa() {
       s += `<rect x="${cx - sw/2}" y="${cy + r - 5}" width="${sw}" height="${sh}" fill="#222733" rx="4"/>`;
       s += `<rect x="${cx - sw/2 - 5}" y="${cy + r - 5}" width="${sw + 10}" height="8" fill="#3b4151" rx="2"/>`;
     }
+    // Animated Core
+    s += `<g class="spin-slow" style="transform-origin: ${cx}px ${cy}px">`;
     // Rim
-    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#metalOuter)" stroke="#111" stroke-width="1"/>`;
+    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#metalOuter)" stroke="#050816" stroke-width="1"/>`;
     // Core
     s += `<circle cx="${cx}" cy="${cy}" r="${r * 0.82}" fill="url(#metalInner)"/>`;
     // Ticks
@@ -934,6 +947,7 @@ function renderRb1Completa() {
       let y2 = cy + (r * 0.95) * Math.sin(a);
       s += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#f97316" stroke-width="2"/>`;
     }
+    s += `</g>`;
     // Pin
     s += `<circle cx="${cx}" cy="${cy}" r="${r * 0.15}" fill="#e2e8f0"/>`;
     s += `<circle cx="${cx}" cy="${cy}" r="${r * 0.08}" fill="#111"/>`;
@@ -948,26 +962,69 @@ function renderRb1Completa() {
   // HELPER FUNCTIONS (Absolutely Empty)
   // ====================================================================
   
-  function dot(cx: number, cy: number, r: number = 4.5): string { return ''; }
-  function solidCoilE1(cx: number, cy: number, r: number): string { return ''; }
-  function solidCoilE2(cx: number, cy: number, r: number, label: string): string { return ''; }
-  function oVertBars(x: number, cy: number, count: number, h: number = 24, spacing: number = 14, w: number = 6): string { return ''; }
-  function vertBars(x: number, cy: number, count: number, h: number = 30, spacing: number = 16, w: number = 8): string { return ''; }
-  function tesoura1(cx: number, cy: number, label: string): string { return ''; }
-  function tesoura2(cx: number, cy: number, label: string): string { return ''; }
-  function enroladorTrapezoid(cx: number, cy: number, label: string): string { return ''; }
-  function tesouraTable(x: number, y: number, length: number): string { return ''; }
-  function solidCoil(cx: number, cy: number, r: number, label: string): string { return ''; }
-  function donutCoil(cx: number, cy: number, r: number, label: string): string { return ''; }
-  function enroladorCrescent(cx: number, cy: number, label: string): string { return ''; }
-  function startPlatform(x: number, y: number, w: number, h: number): string { return ''; }
-  function maqSolda(cx: number, cy: number): string { return ''; }
-  function secadorLosango(cx: number, cy: number, w: number = 80, h: number = 80, label: string): string { return ''; }
-  function corretorCruz(cx: number, cy: number, r: number = 25, label: string): string { return ''; }
-  function tanque(x: number, y: number, w: number, h: number, label: string, rollers: number[] = []): string { return ''; }
-  function blocoQuad(cx: number, cy: number, size: number, label: string): string { return ''; }
-  function mesaInspecao(x: number, y: number, w: number): string { return ''; }
-  function tesoura3(cx: number, cy: number, label: string): string { return ''; }
+  function dot(cx: number, cy: number, r: number = 4.5): string { 
+    return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#smallMetal)" stroke="#050816" stroke-width="1" class="spin-fast" style="transform-origin: ${cx}px ${cy}px"/>`; 
+  }
+  
+  function vertBars(x: number, cy: number, count: number, h: number = 30, spacing: number = 16, w: number = 8): string { 
+    let s=''; for(let i=0; i<count; i++) s += `<rect x="${x + i*spacing}" y="${cy - h/2}" width="${w}" height="${h}" fill="#1e293b" rx="2"/>`; return s;
+  }
+  function solidCoil(cx: number, cy: number, r: number, label: string): string { 
+    return rolerDecap(cx, cy, r, label, '1334 mm');
+  }
+  
+  function maqSolda(cx: number, cy: number): string { 
+    return `<rect x="${cx-20}" y="${cy-30}" width="40" height="60" fill="#1e293b" stroke="#050816" stroke-width="2" rx="4"/>
+            <text x="${cx}" y="${cy-40}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">MÁQUINA SOLDA</text>
+            <circle cx="${cx}" cy="${cy}" r="10" fill="#f97316" filter="url(#blueGlow)"/>`; 
+  }
+  
+  function secadorLosango(cx: number, cy: number, w: number = 80, h: number = 80, label: string): string { 
+    let s = `<polygon points="${cx},${cy - h/2} ${cx + w/2},${cy} ${cx},${cy + h/2} ${cx - w/2},${cy}" fill="#1e293b" stroke="#334155" stroke-width="2"/>`;
+    s += dot(cx - w/2, cy, 6) + dot(cx + w/2, cy, 6);
+    s += `<text x="${cx}" y="${cy - h/2 - 10}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">${label}</text>`;
+    return s;
+  }
+  
+  function corretorCruz(cx: number, cy: number, r: number = 25, label: string): string { 
+    let s = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#0f172a" stroke="#3b4151" stroke-width="2"/>`;
+    s += `<path d="M ${cx} ${cy - r} A ${r} ${r} 0 0 1 ${cx + r} ${cy} L ${cx} ${cy} Z" fill="#f97316" filter="url(#blueGlow)"/>`;
+    s += `<path d="M ${cx} ${cy + r} A ${r} ${r} 0 0 1 ${cx - r} ${cy} L ${cx} ${cy} Z" fill="#f97316" filter="url(#blueGlow)"/>`;
+    s += `<text x="${cx}" y="${cy - r - 10}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">${label}</text>`;
+    return s;
+  }
+  
+  function tanque(x: number, y: number, w: number, h: number, label: string, rollers: number[] = []): string { 
+    let s = `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="4"/>`;
+    // Liquid
+    s += `<rect x="${x+2}" y="${y+h/2}" width="${w-4}" height="${h/2-2}" fill="#0ea5e9" opacity="0.2"/>`;
+    s += `<text x="${x + w/2}" y="${y - 15}" font-family="Montserrat, sans-serif" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">${label}</text>`;
+    rollers.forEach(rx => {
+      s += rolerDecap(x + rx, y + h - 25, 20, '', '', false);
+    });
+    return s;
+  }
+  
+  function blocoQuad(cx: number, cy: number, size: number, label: string): string { 
+    // Espremedor Style
+    let s = `<rect x="${cx - size/2}" y="${cy - size/2}" width="${size}" height="${size}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="4"/>`;
+    s += `<circle cx="${cx - 15}" cy="${cy - 15}" r="10" fill="#fbbf24" stroke="#050816" stroke-width="1" class="spin-fast" style="transform-origin: ${cx-15}px ${cy-15}px"/>`;
+    s += `<circle cx="${cx + 15}" cy="${cy - 15}" r="10" fill="url(#metalOuter)" stroke="#050816" stroke-width="1" class="spin-fast" style="transform-origin: ${cx+15}px ${cy-15}px"/>`;
+    s += `<text x="${cx}" y="${cy - size/2 - 10}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">${label}</text>`;
+    s += `<text x="${cx}" y="${cy - size/2 + 2}" font-family="Montserrat, sans-serif" font-size="9" font-weight="800" fill="#fbbf24" text-anchor="middle">800 mm</text>`;
+    return s;
+  }
+  
+  function tesoura3(cx: number, cy: number, label: string): string { 
+    let s = `<rect x="${cx - 10}" y="${cy - 20}" width="20" height="40" fill="#1e293b" stroke="#334155" stroke-width="2"/>`;
+    s += `<polygon points="${cx+10},${cy} ${cx+30},${cy-10} ${cx+30},${cy+10}" fill="#334155"/>`;
+    s += `<text x="${cx}" y="${cy - 30}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">${label}</text>`;
+    return s;
+  }
+  function mesaInspecao(x: number, y: number, w: number): string { 
+    return `<rect x="${x}" y="${y+5}" width="${w}" height="10" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+            <text x="${x + w/2}" y="${y - 15}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">MESA DE INSPEÇÃO</text>`;
+  }
 
   // ====================================================================
   // PASS-LINE PATH TRACKING
@@ -987,7 +1044,7 @@ function renderRb1Completa() {
   // ====================================================================
   
   function rNr(cx: number, cy: number, r: number, n: string, tx: number, ty: number, lx: number, ly: number, ltx: number, lty: number, fs: number = 9) {
-    return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2"/>`;
+    return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2" class="spin-fast" style="transform-origin: ${cx}px ${cy}px"/>`;
   }
 
   function rectSens(cx: number, num: string) {
@@ -1449,7 +1506,7 @@ function renderRb1Completa() {
 
   // Apply the path
   svg += `<path d="${stripPath}" fill="none" stroke="#f97316" stroke-width="3"/>`;
-  svg += `<path d="${stripPath}" fill="none" stroke="#fff" stroke-dasharray="8 12" stroke-width="1.5"/>`;
+  svg += `<path d="${stripPath}" fill="none" stroke="#ffffff" stroke-dasharray="4 16" stroke-width="2" class="strip-anim"/>`;
 
   // Draw background frame again to be on top if needed, or close svg
   svg += '</svg>';

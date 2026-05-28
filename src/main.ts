@@ -884,13 +884,22 @@ function renderRb1CompletaStats() {
 // ===== RB1 COMPLETA — Technical Industrial Diagram =====
 function renderRb1Completa() {
   const W = 12000, H = 700;
-  const BK = '#1a1a1a'; // solid black fill
+  const BK = '#cbd5e1'; // light slate for lines
+  const BG = '#161925'; // dark background
   const LK = '#1a1a1a'; // line color
   const SW = '1.2';      // stroke-width
   const FS = 'font-family="JetBrains Mono, monospace"';
   const FSL = 'font-family="Montserrat, sans-serif"';
   
-  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:${W}px;height:auto;display:block;background:#fff;">`;
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:${W}px;height:auto;display:block;background:${BG};">
+  <defs>
+    <radialGradient id="metalRoll" cx="50%" cy="50%" r="50%" fx="35%" fy="35%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="30%" stop-color="#94a3b8"/>
+      <stop offset="70%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </radialGradient>
+  </defs>`;
   
   // ====================================================================
   // HELPER FUNCTIONS (Absolutely Empty)
@@ -935,16 +944,12 @@ function renderRb1Completa() {
   // ====================================================================
   
   function rNr(cx: number, cy: number, r: number, n: string, tx: number, ty: number, lx: number, ly: number, ltx: number, lty: number, fs: number = 9) {
-    let out = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#fff" stroke="${BK}" stroke-width="1.2"/>`;
-    out += `<text x="${tx}" y="${ty}" font-family="sans-serif" font-size="${fs}" font-weight="700" fill="${BK}" text-anchor="middle">${n}</text>`;
-    out += `<line x1="${lx}" y1="${ly}" x2="${ltx}" y2="${lty}" stroke="${BK}" stroke-width="0.8"/>`;
-    return out;
+    return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#metalRoll)" stroke="${BK}" stroke-width="0.8"/>`;
   }
 
   function rectSens(cx: number, num: string) {
-    let out = `<rect x="${cx-5}" y="${Y1-20}" width="10" height="20" fill="#fff" stroke="${BK}" stroke-width="1.2"/>`;
+    let out = `<rect x="${cx-5}" y="${Y1-20}" width="10" height="20" fill="url(#metalRoll)" stroke="${BK}" stroke-width="1.2"/>`;
     out += `<line x1="${cx}" y1="${Y1}" x2="${cx}" y2="${Y1+6}" stroke="${BK}" stroke-width="1.5"/>`;
-    out += `<text x="${cx}" y="${Y1-24}" font-family="sans-serif" font-size="9" font-weight="700" fill="${BK}" text-anchor="middle">${num}</text>`;
     return out;
   }
 
@@ -952,7 +957,7 @@ function renderRb1Completa() {
   svg += `<text x="90" y="${Y1 - 50}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="${BK}">ENTRADA 1</text>`;
   
   // Bobina Principal (Outer 40, Inner 15)
-  svg += `<circle cx="100" cy="${Y1 + 40}" r="40" fill="#fff" stroke="${BK}" stroke-width="1.5"/>`;
+  svg += `<circle cx="100" cy="${Y1 + 40}" r="40" fill="url(#metalRoll)" stroke="${BK}" stroke-width="1.5"/>`;
   svg += `<circle cx="100" cy="${Y1 + 40}" r="15" fill="none" stroke="${BK}" stroke-width="1.5"/>`;
   
   // 1 e 2 na Bobina
@@ -1076,29 +1081,17 @@ function renderRb1Completa() {
     // Normal down-left is (-0.770, 0.638)
     let cx = px - 5.5 * 0.770;
     let cy = py + 5.5 * 0.638;
-    svg += `<circle cx="${cx}" cy="${cy}" r="5.5" fill="#fff" stroke="${BK}" stroke-width="1.2"/>`;
-    
-    // Normal up-right for text is (0.770, -0.638)
-    let tx = px + 14 * 0.770;
-    let ty = py - 14 * 0.638;
-    svg += `<text x="${tx}" y="${ty}" font-family="sans-serif" font-size="8" font-weight="700" fill="${BK}" text-anchor="middle">${i}</text>`;
-    
-    // Leader line from line to text
-    let lx1 = px + 2 * 0.770;
-    let ly1 = py - 2 * 0.638;
-    let lx2 = px + 10 * 0.770;
-    let ly2 = py - 10 * 0.638;
-    svg += `<line x1="${lx1}" y1="${ly1}" x2="${lx2}" y2="${ly2}" stroke="${BK}" stroke-width="0.8"/>`;
+    svg += `<circle cx="${cx}" cy="${cy}" r="5.5" fill="url(#metalRoll)" stroke="${BK}" stroke-width="0.8"/>`;
     ds += 31.5; // spacing to fit exactly 9 rollers over ~335 length
   }
 
   // === ENTRADA 2 ===
   svg += `<text x="60" y="${Y2 - 20}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="${BK}">ENTRADA 2</text>`;
-  svg += `<circle cx="100" cy="${Y2 + 40}" r="40" fill="#fff" stroke="${BK}" stroke-width="1.5"/>`;
+  svg += `<circle cx="100" cy="${Y2 + 40}" r="40" fill="url(#metalRoll)" stroke="${BK}" stroke-width="1.5"/>`;
   svg += `<circle cx="100" cy="${Y2 + 40}" r="15" fill="none" stroke="${BK}" stroke-width="1.5"/>`;
   // Merge Bridle (top roller large, bottom small as per drawing)
-  svg += `<circle cx="1350" cy="${Y2-30}" r="30" fill="#fff" stroke="${BK}" stroke-width="1.5"/>`;
-  svg += `<circle cx="1350" cy="${Y2+15}" r="15" fill="#fff" stroke="${BK}" stroke-width="1.5"/>`;
+  svg += `<circle cx="1350" cy="${Y2-30}" r="30" fill="url(#metalRoll)" stroke="${BK}" stroke-width="1.5"/>`;
+  svg += `<circle cx="1350" cy="${Y2+15}" r="15" fill="url(#metalRoll)" stroke="${BK}" stroke-width="1.5"/>`;
 
   // Path 1 (Entrada 1)
   stripPath = `M 100 ${Y1} `;
@@ -1415,7 +1408,8 @@ function renderRb1Completa() {
   lineTo(10700, YM + 20);
 
   // Apply the path
-  svg += `<path d="${stripPath}" fill="none" stroke="${BK}" stroke-width="1.8"/>`;
+  svg += `<path d="${stripPath}" fill="none" stroke="#f97316" stroke-width="3"/>`;
+  svg += `<path d="${stripPath}" fill="none" stroke="#fff" stroke-dasharray="8 12" stroke-width="1.5"/>`;
 
   // Draw background frame again to be on top if needed, or close svg
   svg += '</svg>';
@@ -1433,7 +1427,7 @@ function renderRb1Completa() {
         <span>Rolo guia mecânico</span>
       </div>
       <div class="legend-item">
-        <div class="legend-icon"><svg width="28" height="16"><circle cx="14" cy="8" r="7" fill="#000"/><circle cx="14" cy="8" r="3.5" fill="#fff"/><circle cx="14" cy="8" r="1.5" fill="#000"/></svg></div>
+        <div class="legend-icon"><svg width="28" height="16"><circle cx="14" cy="8" r="7" fill="#000"/><circle cx="14" cy="8" r="3.5" fill="url(#metalRoll)"/><circle cx="14" cy="8" r="1.5" fill="#000"/></svg></div>
         <span>Bobina / Mandril</span>
       </div>
       <div class="legend-item">

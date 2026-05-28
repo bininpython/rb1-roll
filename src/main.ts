@@ -1578,21 +1578,23 @@ function renderRb1Completa() {
   // BS2 (Bridle de Saída do Loop) e Rolos de Apoio
   // ====================================================================
   
-  // 186 to 189
-  // 186 to 188 (Staggered as requested)
-  // 186 to 188 (Perfectly tangent to the white strip, NO overlap)
+  // 186 to 189 (Restored to perfectly match the Blueprint)
   // Strip is at Y = 220. Thickness is 2. 
   // Under rollers center = 220 + 1 (strip half) + 1 (gap) + 8 (radius) = 230
   // Over rollers center = 220 - 1 - 1 - 8 = 210
 
-  let x186 = 3485;
+  // The vertical pit line is at X = 3510, so we leave a gap around it
+  let x186 = 3490;
   svg += rNrForno(x186, 230, 8, '', x186, 230 - 15); // 186 (Under strip)
   
-  let x187 = 3515;
+  let x187 = 3530;
   svg += rNrForno(x187, 210, 8, '', x187, 210 - 15); // 187 (Over strip)
   
-  let x188 = 3545;
+  let x188 = 3535;
   svg += rNrForno(x188, 230, 8, '', x188, 230 - 15); // 188 (Under strip)
+  
+  let x189 = 3570;
+  svg += rNrForno(x189, 230, 8, '', x189, 230 - 15); // 189 (Under strip)
 
   // BS2 Text
   svg += `<text x="3655" y="190" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">BS2</text>`;

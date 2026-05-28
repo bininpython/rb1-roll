@@ -1580,14 +1580,19 @@ function renderRb1Completa() {
   
   // 186 to 189
   // 186 to 188 (Staggered as requested)
-  let x186 = 3490;
-  svg += rNrForno(x186, TY - 22, 8, '', x186, TY - 10); // 186 (Under strip)
+  // 186 to 188 (Perfectly tangent to the white strip, NO overlap)
+  // Strip is at Y = 220. Thickness is 2. 
+  // Under rollers center = 220 + 1 (strip half) + 1 (gap) + 8 (radius) = 230
+  // Over rollers center = 220 - 1 - 1 - 8 = 210
+
+  let x186 = 3485;
+  svg += rNrForno(x186, 230, 8, '', x186, 230 - 15); // 186 (Under strip)
   
-  let x187 = 3525;
-  svg += rNrForno(x187, TY - 38, 8, '', x187, TY - 50); // 187 (Over strip)
+  let x187 = 3515;
+  svg += rNrForno(x187, 210, 8, '', x187, 210 - 15); // 187 (Over strip)
   
-  let x188 = 3560;
-  svg += rNrForno(x188, TY - 22, 8, '', x188, TY - 10); // 188 (Under strip)
+  let x188 = 3545;
+  svg += rNrForno(x188, 230, 8, '', x188, 230 - 15); // 188 (Under strip)
 
   // BS2 Text
   svg += `<text x="3655" y="190" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">BS2</text>`;
@@ -1600,9 +1605,11 @@ function renderRb1Completa() {
   let r191x = 3700, r191y = 250;
   svg += rNrForno(r191x, r191y, 30, '', r191x, r191y);
 
-  // Pinches 190, 193
-  svg += rNrForno(r191x + 25, r191y - 25, 10, '', 0, 0); // 190 (Top-Right of 191)
-  svg += rNrForno(r192x - 25, r192y + 25, 10, '', 0, 0); // 193 (Bottom-Left of 192)
+  // Pinches 190, 193 (Perfectly tangent to the outer edge of the strip wrap)
+  // Distance from large roller center to pinch center = 30 (roller) + 1 (strip) + 1 (gap) + 8 (pinch) = 40
+  // 40 * cos(45) = 28.3
+  svg += rNrForno(r191x + 28.3, r191y - 28.3, 8, '', 0, 0); // 190 (Top-Right of 191)
+  svg += rNrForno(r192x - 28.3, r192y + 28.3, 8, '', 0, 0); // 193 (Bottom-Left of 192)
 
   // Roller 194 (Sag curve bottom point)
   let r194x = 3800;

@@ -920,7 +920,7 @@ function renderRb1Completa() {
     return c;
   }
   
-  // Vertical bars group (comb/fence pattern seen in image)
+  // Solid vertical bars group
   function vertBars(x: number, y: number, count: number, h: number = 30, spacing: number = 5, w: number = 3): string {
     let b = '';
     for (let i = 0; i < count; i++) {
@@ -928,51 +928,60 @@ function renderRb1Completa() {
     }
     return b;
   }
-  
-  // Thin vertical bars (narrower, like fence posts)
-  function thinBars(x: number, y: number, count: number, h: number = 20, spacing: number = 4): string {
+
+  // Unfilled vertical bars group (for Tesoura 1)
+  function oVertBars(x: number, y: number, count: number, h: number = 25, spacing: number = 10, w: number = 5): string {
     let b = '';
     for (let i = 0; i < count; i++) {
-      b += `<line x1="${x + i * spacing}" y1="${y}" x2="${x + i * spacing}" y2="${y + h}" stroke="${BK}" stroke-width="1.5"/>`;
+      b += `<rect x="${x + i * spacing}" y="${y}" width="${w}" height="${h}" fill="none" stroke="${BK}" stroke-width="1.8"/>`;
     }
     return b;
   }
   
-  // Tesoura (scissors/cutter) — rectangular frame
-  function tesoura(cx: number, cy: number, label: string): string {
+  // Tesoura 1
+  function tesoura1(cx: number, cy: number, label: string): string {
     let s = '';
-    // Main vertical frame
     s += `<rect x="${cx - 10}" y="${cy - 30}" width="20" height="55" fill="none" stroke="${BK}" stroke-width="2"/>`;
-    // Upper blade line
     s += `<line x1="${cx - 10}" y1="${cy - 10}" x2="${cx + 10}" y2="${cy - 10}" stroke="${BK}" stroke-width="2.5"/>`;
-    // Lower blade line  
     s += `<line x1="${cx - 10}" y1="${cy + 10}" x2="${cx + 10}" y2="${cy + 10}" stroke="${BK}" stroke-width="2.5"/>`;
-    // Hydraulic rod above
     s += `<rect x="${cx - 3}" y="${cy - 42}" width="6" height="14" fill="${BK}"/>`;
-    // Scrap chute below
     s += `<line x1="${cx - 6}" y1="${cy + 25}" x2="${cx - 12}" y2="${cy + 42}" stroke="${BK}" stroke-width="1.5"/>`;
     s += `<line x1="${cx + 6}" y1="${cy + 25}" x2="${cx + 12}" y2="${cy + 42}" stroke="${BK}" stroke-width="1.5"/>`;
     s += `<line x1="${cx - 12}" y1="${cy + 42}" x2="${cx + 12}" y2="${cy + 42}" stroke="${BK}" stroke-width="1.5"/>`;
-    // Label
+    s += `<rect x="${cx - 15}" y="${cy + 42}" width="30" height="35" fill="none" stroke="${BK}" stroke-width="2"/>`;
     s += `<text x="${cx}" y="${cy - 48}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">${label}</text>`;
     return s;
   }
+
+  // Tesoura 2
+  function tesoura2(cx: number, cy: number, label: string): string {
+    let s = '';
+    s += `<rect x="${cx - 6}" y="${cy - 20}" width="12" height="20" fill="${BK}"/>`;
+    s += `<rect x="${cx}" y="${cy + 5}" width="10" height="15" fill="${BK}"/>`;
+    s += `<line x1="${cx + 5}" y1="${cy + 20}" x2="${cx + 30}" y2="${cy + 40}" stroke="${BK}" stroke-width="1.5"/>`;
+    s += `<line x1="${cx + 10}" y1="${cy + 20}" x2="${cx + 35}" y2="${cy + 40}" stroke="${BK}" stroke-width="1.5"/>`;
+    s += `<rect x="${cx + 25}" y="${cy + 40}" width="20" height="25" fill="none" stroke="${BK}" stroke-width="2"/>`;
+    s += `<text x="${cx}" y="${cy - 30}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">${label}</text>`;
+    return s;
+  }
   
-  // Enrolador de Tiras (strip winder) — rectangular frame with small rollers
+  // Enrolador de Tiras (Crescent shape)
   function enrolador(cx: number, cy: number, label: string): string {
     let e = '';
-    // Main frame
-    e += `<rect x="${cx - 14}" y="${cy - 25}" width="28" height="45" fill="none" stroke="${BK}" stroke-width="1.8"/>`;
-    // Inner horizontal bars
-    e += `<line x1="${cx - 14}" y1="${cy - 8}" x2="${cx + 14}" y2="${cy - 8}" stroke="${BK}" stroke-width="1"/>`;
-    e += `<line x1="${cx - 14}" y1="${cy + 8}" x2="${cx + 14}" y2="${cy + 8}" stroke="${BK}" stroke-width="1"/>`;
-    // Small feed rollers to the left
-    e += dot(cx - 25, cy - 3, 4);
-    e += dot(cx - 35, cy, 4);
-    e += dot(cx - 44, cy + 3, 3);
-    // Label
-    e += `<text x="${cx}" y="${cy - 32}" text-anchor="middle" ${FSL} font-size="9" font-weight="700" fill="${BK}">${label}</text>`;
+    e += `<path d="M ${cx - 20} ${cy - 15} Q ${cx} ${cy+5} ${cx + 20} ${cy - 15}" fill="none" stroke="${BK}" stroke-width="2"/>`;
+    e += dot(cx - 6, cy - 2, 4);
+    e += dot(cx + 6, cy - 2, 4);
+    e += `<text x="${cx}" y="${cy - 25}" text-anchor="middle" ${FSL} font-size="9" font-weight="700" fill="${BK}">${label}</text>`;
     return e;
+  }
+
+  // Platform structure for the start of the roller table
+  function startPlatform(x: number, y: number, w: number, h: number): string {
+    let p = '';
+    p += `<rect x="${x}" y="${y}" width="${w}" height="5" fill="none" stroke="${BK}" stroke-width="1.5"/>`;
+    p += `<line x1="${x + w/2}" y1="${y+5}" x2="${x + w/2}" y2="${y + h}" stroke="${BK}" stroke-width="1.5"/>`;
+    p += `<line x1="${x + w/2}" y1="${y + h}" x2="${x + w}" y2="${y + 5}" stroke="${BK}" stroke-width="1.5"/>`;
+    return p;
   }
 
   // Máquina de Solda
@@ -1050,47 +1059,28 @@ function renderRb1Completa() {
   svg += dot(272, Y1, 4);
   svg += dot(289, Y1, 5);
   
-  // 6) Vertical thin bars group (comb structure)
-  svg += thinBars(310, Y1 - 12, 6, 24, 5);
+  // 6) Unfilled vertical bars (Tesousa 1 prep)
+  svg += oVertBars(400, Y1 - 25, 3, 25, 12, 6);
   
-  // 7) Medium rollers
-  svg += dot(360, Y1, 5);
-  svg += dot(380, Y1, 6);
-  
-  // 8) Vertical bars — thicker (like fence posts)
-  svg += vertBars(405, Y1 - 18, 4, 36, 8, 4);
-  
-  // 9) Rollers before tesoura
+  // 7) Roller before tesoura
   svg += dot(455, Y1, 5);
-  svg += dot(475, Y1, 6);
-  svg += dot(495, Y1, 4);
   
-  // 10) TESOURA 1
-  svg += tesoura(540, Y1, 'Tesoura 1');
+  // 8) TESOURA 1
+  svg += tesoura1(510, Y1, 'Tesousa 1');
   
-  // 11) Post-tesoura rollers
-  svg += dot(575, Y1, 5);
-  svg += dot(595, Y1, 5);
+  // 9) Platform for roller table
+  svg += startPlatform(530, Y1, 50, 40);
   
-  // 12) ENROLADOR DE TIRAS 1
+  // 10) ENROLADOR DE TIRAS 1
   svg += enrolador(660, Y1, 'Enrolador de Tiras 1');
   
-  // 13) Post-enrolador: Small tightly spaced rollers
-  svg += dot(700, Y1, 4);
-  svg += dot(715, Y1, 4);
-  svg += dot(730, Y1, 4);
-  
-  // 14) More pairs  
-  svg += dot(755, Y1 - 4, 3.5);
-  svg += dot(755, Y1 + 4, 3.5);
-  svg += dot(770, Y1, 4);
-  
-  // 15) Long stretch of evenly-spaced small rollers (roller table)
-  for (let i = 0; i < 40; i++) {
-    svg += dot(800 + i * 16, Y1, 3);
+  // 11) Long stretch of evenly-spaced small rollers (roller table)
+  for (let i = 0; i < 60; i++) {
+    svg += dot(540 + i * 16, Y1, 4);
   }
   
-  // 16) Medium rollers
+  // 12) Medium rollers
+
   svg += dot(1460, Y1, 5);
   svg += dot(1480, Y1, 5);
   svg += dot(1500, Y1, 6);
@@ -1210,46 +1200,41 @@ function renderRb1Completa() {
   svg += dot(705, Y2, 4);
   svg += dot(725, Y2, 5);
   
-  // 10) Large thick vertical bars (tall pillars visible in image)
-  svg += vertBars(760, Y2 - 30, 3, 60, 14, 8);
+  // 10) Large thick vertical bars
+  svg += vertBars(660, Y2 - 30, 3, 60, 14, 10);
   
-  // 11) More vertical bars (thinner)
-  svg += vertBars(820, Y2 - 20, 4, 40, 8, 4);
+  // 11) Small roller
+  svg += dot(730, Y2, 5);
   
-  // 12) Small roller
-  svg += dot(870, Y2, 5);
+  // 12) TESOURA 2
+  svg += tesoura2(810, Y2, 'Tesoura 2');
   
-  // 13) Small square element
-  svg += `<rect x="${885}" y="${Y2 - 8}" width="16" height="16" fill="none" stroke="${BK}" stroke-width="2"/>`;
-  
-  // 14) Rollers before tesoura
-  svg += dot(920, Y2, 5);
-  svg += dot(940, Y2, 5);
-  svg += dot(960, Y2, 4);
-  
-  // 15) TESOURA 2
-  svg += tesoura(1010, Y2, 'Tesoura 2');
-  
-  // 16) Post-tesoura rollers
-  svg += dot(1045, Y2, 5);
-  svg += dot(1065, Y2, 4);
-  svg += dot(1085, Y2, 5);
-  
-  // 17) Long roller table
-  for (let i = 0; i < 20; i++) {
-    svg += dot(1110 + i * 16, Y2, 3);
+  // 13) Short roller table 1
+  for (let i = 0; i < 4; i++) {
+    svg += dot(860 + i * 14, Y2, 4);
   }
   
-  // 18) Medium rollers
-  svg += dot(1440, Y2, 6);
-  svg += dot(1465, Y2, 6);
+  // 14) Short roller table 2
+  for (let i = 0; i < 7; i++) {
+    svg += dot(950 + i * 14, Y2, 4);
+  }
   
-  // 19) ENROLADOR DE TIRAS 2
-  svg += enrolador(1530, Y2, 'Enrolador de Tiras 2');
+  // 15) ENROLADOR DE TIRAS 2
+  svg += enrolador(1120, Y2, 'Enrolador de Tiras 2');
   
-  // 20) Tightly packed rollers after enrolador
-  for (let i = 0; i < 12; i++) {
-    svg += dot(1570 + i * 10, Y2, 3.5);
+  // 16) Pairs after enrolador
+  svg += dot(1100, Y2 + 6, 4);
+  svg += dot(1100, Y2 - 6, 4);
+  svg += dot(1115, Y2 + 6, 4);
+  svg += dot(1115, Y2 - 6, 4);
+  
+  // 17) Small spaced pairs
+  svg += dot(1170, Y2, 4);
+  svg += dot(1190, Y2, 4);
+  
+  // 18) Long roller tables
+  for (let i = 0; i < 30; i++) {
+    svg += dot(1300 + i * 16, Y2, 3);
   }
   
   // 21) Medium rollers

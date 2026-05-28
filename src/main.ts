@@ -1194,10 +1194,18 @@ function renderRb1Completa() {
   for (let i=75; i<=83; i++) {
     let px = 1113.11 + ds * 0.6376; 
     let py = 180.87 + ds * 0.7703; 
+    
     // Normal down-left is (-0.770, 0.638)
-    let cx = px - 5.5 * 0.770;
-    let cy = py + 5.5 * 0.638;
-    svg += `<circle cx="${cx}" cy="${cy}" r="5.5" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2"/>`;
+    // Distance from center of line to center of roller:
+    // Line thickness is 1.5 (half is 0.75) + 1px gap + 6 (roller radius) = 7.75
+    let dist = 7.75;
+    let cx = px - dist * 0.770;
+    let cy = py + dist * 0.638;
+    let r = 6;
+    
+    svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#052e16" stroke="#22c55e" stroke-width="1.5" filter="url(#greenGlow)"/>`;
+    svg += `<circle cx="${cx}" cy="${cy}" r="${r*0.6}" fill="none" stroke="#22c55e" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.5" class="spin-fast" style="transform-origin: ${cx}px ${cy}px"/>`;
+    
     ds += 31.5; // spacing to fit exactly 9 rollers over ~335 length
   }
 

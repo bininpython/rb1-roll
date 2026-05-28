@@ -1341,10 +1341,11 @@ function renderRb1Completa() {
   lineTo(sn2 + 60, YM);
 
   // ====================================================================
-  // CONTINUAÇÃO: ROLOS 152 A 165
+  // CONTINUAÇÃO: ROLOS 152 A 165  // ====================================================================
+  // CONTINUAÇÃO: ROLOS 152 A 172 (COMPRESSED TO FIT BEFORE LOOP)
   // ====================================================================
   
-  let nx = sn2 + 80;
+  let nx = sn2 + 40;
 
   // 4 Bottom Rollers (152-155)
   let rx1 = nx;
@@ -1359,7 +1360,7 @@ function renderRb1Completa() {
   svg += rNrForno(px2, YM + 8, 8, '', px2, YM); // Bottom
 
   // Hydraulic Table (158, 159)
-  let tb2X = px2 + 30;
+  let tb2X = px2 + 20;
   
   // Cylinder Support & Floor
   let cylX1 = tb2X + 25;
@@ -1384,30 +1385,27 @@ function renderRb1Completa() {
   svg += rNrForno(tb2X + 45, YM + 6, 6, '', tb2X + 45, YM); // 159
 
   // 4 Bottom Rollers (160-163)
-  let rx2 = tb2X + 75;
+  let rx2 = tb2X + 70;
   for(let i=0; i<4; i++) {
     svg += rNrForno(rx2, YM + 6, 6, '', rx2, YM);
     rx2 += 14;
   }
 
   // Top Block (Thickness gauge / Wiper)
-  let wblockX = rx2 + 20;
+  let wblockX = rx2 + 15;
   svg += `<rect x="${wblockX}" y="${YM - 12}" width="35" height="12" fill="none" stroke="#22c55e" stroke-width="2"/>`;
 
   // Large Deflector Pinch (164, 165)
-  let dfX = wblockX + 65;
+  let dfX = wblockX + 50;
   svg += rNrForno(dfX, YM - 10, 10, '', dfX, YM); // 164 (Top)
   svg += rNrForno(dfX, YM + 25, 25, '', dfX, YM); // 165 (Bottom, very large)
-
-  // Extend strip path to the entrance of the loop
-  lineTo(dfX + 80, YM);
 
   // ====================================================================
   // CONTINUAÇÃO: ROLOS 166 A 172 (Tanque, Secador, Corretor)
   // ====================================================================
   
-  let tankStart = dfX + 110;
-  let tankW = 160;
+  let tankStart = dfX + 50;
+  let tankW = 140;
   let tankH = 60; // 30 up, 30 down from YM
 
   // Tank brackets `[` and `]`
@@ -1421,17 +1419,17 @@ function renderRb1Completa() {
   svg += rNrForno(r166X, YM + 15, 15, '', r166X, YM);
 
   // SECADOR
-  let secX = tankStart + tankW + 50;
+  let secX = tankStart + tankW + 30;
   
   // Text "SECADOR"
-  svg += `<text x="${secX + 30}" y="${YM - 60}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">SECADOR</text>`;
+  svg += `<text x="${secX + 25}" y="${YM - 60}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">SECADOR</text>`;
   
   // Pinch left (167, 169)
   svg += rNrForno(secX, YM - 8, 8, '', secX, YM); // 167 Top
   svg += rNrForno(secX, YM + 8, 8, '', secX, YM); // 169 Bottom
   
   // V-Shapes (Chevrons) - Air Nozzles
-  let chevronCenter = secX + 30;
+  let chevronCenter = secX + 25;
   
   // Top Nozzles (pointing DOWN)
   svg += `<polyline points="${chevronCenter - 15},${YM - 35} ${chevronCenter},${YM - 15} ${chevronCenter + 15},${YM - 35}" fill="none" stroke="#22c55e" stroke-width="2"/>`;
@@ -1445,16 +1443,16 @@ function renderRb1Completa() {
   svg += `<line x1="${chevronCenter}" y1="${YM - 65}" x2="${chevronCenter}" y2="${YM + 65}" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="4 4"/>`;
   
   // Pinch right (168, 170)
-  let secRx = secX + 60;
+  let secRx = secX + 50;
   svg += rNrForno(secRx, YM - 8, 8, '', secRx, YM); // 168 Top
   svg += rNrForno(secRx, YM + 8, 8, '', secRx, YM); // 170 Bottom
 
   // Roller 171
-  let r171X = secRx + 60;
+  let r171X = secRx + 40;
   svg += rNrForno(r171X, YM + 8, 8, '', r171X, YM);
 
   // CORRETOR 1 (172)
-  let corrX = r171X + 70;
+  let corrX = r171X + 50;
   let corrY = YM - 25; // Top roller
   
   // Quadrant Pattern
@@ -1470,9 +1468,10 @@ function renderRb1Completa() {
   // Text CORRETOR 1 below
   svg += `<text x="${corrX}" y="${YM + 35}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">CORRETOR 1</text>`;
 
-  // Extend strip path to touch CORRETOR 1 and slant upwards
+  // Extend strip path to touch CORRETOR 1 and slant upwards towards Loop
   lineTo(corrX, YM);
-  lineTo(corrX + 80, YM - 15);
+  // Slant upwards to touch the entrance bridle of the next section cleanly
+  lineTo(corrX + 80, YM - 25);
 
   // ====================================================================
   // SEÇÃO 3: ACUMULADOR DE ENTRADA (LOOP)

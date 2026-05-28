@@ -1279,12 +1279,17 @@ function renderRb1Completa() {
   // Hydraulic Table (133, 134, 135)
   let tbX = ax + 20;
   // Hydraulic Cylinder Support
-  svg += `<line x1="${tbX + 20}" y1="${YM + 25}" x2="${tbX - 40}" y2="${YM + 140}" stroke="#475569" stroke-width="6"/>`;
-  svg += `<rect x="${tbX - 45}" y="${YM + 140}" width="40" height="10" fill="#334155"/>`; // Floor mount
+  svg += `<line x1="${tbX + 30}" y1="${YM + 25}" x2="${tbX - 20}" y2="${YM + 140}" stroke="#475569" stroke-width="6"/>`;
+  // Floor mount with hatching
+  svg += `<line x1="${tbX - 35}" y1="${YM + 140}" x2="${tbX + 15}" y2="${YM + 140}" stroke="#475569" stroke-width="2"/>`;
+  for(let i=0; i<6; i++) {
+    let hx = (tbX - 30) + i*8;
+    svg += `<line x1="${hx}" y1="${YM + 140}" x2="${hx - 8}" y2="${YM + 150}" stroke="#475569" stroke-width="1.5"/>`;
+  }
   // Table Box
-  svg += `<rect x="${tbX - 10}" y="${YM - 10}" width="100" height="30" fill="none" stroke="#22c55e" stroke-width="2"/>`;
+  svg += `<rect x="${tbX - 5}" y="${YM}" width="90" height="25" fill="none" stroke="#22c55e" stroke-width="2"/>`;
   // Rollers on table
-  svg += rNrForno(tbX + 10, YM + 4, 10, '133', tbX + 10, YM - 18);
+  svg += rNrForno(tbX + 15, YM + 10, 10, '133', tbX + 15, YM - 15);
   svg += rNrForno(tbX + 45, YM + 6, 6, '134', tbX + 45, YM - 15);
   svg += rNrForno(tbX + 70, YM + 6, 6, '135', tbX + 70, YM - 15);
 
@@ -1301,14 +1306,14 @@ function renderRb1Completa() {
 
   // 146 Sensor (Top)
   let sn1 = bx + 30;
-  svg += `<rect x="${sn1 - 10}" y="${YM - 40}" width="20" height="35" fill="#0f172a" stroke="#22c55e" stroke-width="2"/>`;
-  svg += `<line x1="${sn1}" y1="${YM - 5}" x2="${sn1}" y2="${YM + 20}" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="2 2"/>`;
-  svg += `<text x="${sn1}" y="${YM - 48}" font-family="JetBrains Mono, monospace" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">146</text>`;
+  svg += `<rect x="${sn1 - 10}" y="${YM - 25}" width="20" height="40" fill="#0f172a" stroke="#22c55e" stroke-width="2"/>`;
+  svg += `<line x1="${sn1}" y1="${YM - 25}" x2="${sn1}" y2="${YM - 40}" stroke="#22c55e" stroke-width="1.5"/>`;
+  svg += `<text x="${sn1}" y="${YM - 45}" font-family="JetBrains Mono, monospace" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">146</text>`;
 
   // Cross Mark / Centering
   let cx = sn1 + 60;
-  svg += `<line x1="${cx - 15}" y1="${YM - 20}" x2="${cx + 15}" y2="${YM - 20}" stroke="#22c55e" stroke-width="2"/>`;
-  svg += `<line x1="${cx}" y1="${YM - 40}" x2="${cx}" y2="${YM + 20}" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="4 4"/>`;
+  svg += `<line x1="${cx - 15}" y1="${YM - 25}" x2="${cx + 15}" y2="${YM - 25}" stroke="#22c55e" stroke-width="2"/>`;
+  svg += `<line x1="${cx}" y1="${YM - 40}" x2="${cx}" y2="${YM - 10}" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="4 4"/>`;
 
   // 147, 148 (Bottom)
   let rx = cx + 40;
@@ -1322,20 +1327,20 @@ function renderRb1Completa() {
 
   // 151 Sensor & Scrap Bucket
   let sn2 = px + 40;
-  svg += `<rect x="${sn2 - 10}" y="${YM - 40}" width="20" height="35" fill="#0f172a" stroke="#22c55e" stroke-width="2"/>`;
-  svg += `<line x1="${sn2}" y1="${YM - 5}" x2="${sn2}" y2="${YM + 70}" stroke="#f97316" stroke-width="1.5" stroke-dasharray="2 2"/>`; // dotted drop line
-  svg += `<text x="${sn2}" y="${YM - 48}" font-family="JetBrains Mono, monospace" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">151</text>`;
+  svg += `<rect x="${sn2 - 10}" y="${YM - 25}" width="20" height="40" fill="#0f172a" stroke="#22c55e" stroke-width="2"/>`;
+  svg += `<line x1="${sn2}" y1="${YM - 25}" x2="${sn2}" y2="${YM - 40}" stroke="#22c55e" stroke-width="1.5"/>`;
+  svg += `<text x="${sn2}" y="${YM - 45}" font-family="JetBrains Mono, monospace" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">151</text>`;
+  
+  // Dotted drop line
+  svg += `<line x1="${sn2}" y1="${YM + 15}" x2="${sn2}" y2="${YM + 60}" stroke="#f97316" stroke-width="1.5" stroke-dasharray="2 2"/>`; 
 
   // Bucket (Trapezoid)
-  let bkY = YM + 80;
-  svg += `<polygon points="${sn2 - 40},${bkY} ${sn2 + 40},${bkY} ${sn2 + 25},${bkY + 40} ${sn2 - 25},${bkY + 40}" fill="none" stroke="#22c55e" stroke-width="2"/>`;
-  svg += `<text x="${sn2}" y="${bkY + 25}" font-family="Montserrat, sans-serif" font-size="9" fill="#9ca3af" text-anchor="middle">SUCATA</text>`;
-  
-  // Overwrite stripPath connecting line from 1350 to this section
-  // Actually, stripPath already draws M 100 Y2 L 1350 Y2. We don't have to change that.
-  // We just need to make sure the main stripPath connects through here.
-  // The strip is straight at YM=450! So it naturally passes exactly through all these.
-  
+  let bkY = YM + 60;
+  svg += `<polygon points="${sn2 - 30},${bkY} ${sn2 + 30},${bkY} ${sn2 + 20},${bkY + 30} ${sn2 - 20},${bkY + 30}" fill="#0f172a" stroke="#22c55e" stroke-width="2"/>`;
+
+  // MÁQUINA DE SOLDA Text
+  svg += `<text x="${sn2 - 60}" y="${YM - 70}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">MÁQUINA DE SOLDA</text>`;
+
   // Re-sync lineTo position
   lineTo(sn2 + 60, YM);
   // Grande estrutura processamento

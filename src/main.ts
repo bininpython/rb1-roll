@@ -1301,7 +1301,7 @@ function renderRb1Completa() {
 
   // 4. Sensor 1: Box, line passing through, NO LABELS
   svg += `<rect x="${sn1 - 10}" y="${YM - 25}" width="20" height="40" fill="none" stroke="#22c55e" stroke-width="2"/>`;
-  svg += `<line x1="${sn1}" y1="${YM - 25}" x2="${sn1}" y2="${YM - 40}" stroke="#22c55e" stroke-width="1.5"/>`;
+  // TOP LINE REMOVED per user request
 
   // 5. Cross Mark
   let cx = sn1 + 45;
@@ -1321,7 +1321,7 @@ function renderRb1Completa() {
   // 8. Sensor 2 & Scrap Bucket: Box, line passing through, NO LABELS
   let sn2 = px + 45;
   svg += `<rect x="${sn2 - 10}" y="${YM - 25}" width="20" height="40" fill="none" stroke="#22c55e" stroke-width="2"/>`;
-  svg += `<line x1="${sn2}" y1="${YM - 25}" x2="${sn2}" y2="${YM - 40}" stroke="#22c55e" stroke-width="1.5"/>`;
+  // TOP LINE REMOVED per user request
   
   // Dotted drop line
   svg += `<line x1="${sn2}" y1="${YM + 15}" x2="${sn2}" y2="${YM + 80}" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="2 2"/>`; 

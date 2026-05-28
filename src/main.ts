@@ -1468,8 +1468,12 @@ function renderRb1Completa() {
   // Text CORRETOR 1 below
   svg += `<text x="${corrX}" y="${YM + 35}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">CORRETOR 1</text>`;
 
-  // Extend strip path to touch CORRETOR 1 and slant upwards towards Loop  // Extend strip path to touch CORRETOR 1
-  lineTo(corrX, YM);
+  // Extend strip path to touch CORRETOR 1  // Extend strip path to touch CORRETOR 1
+  lineTo(corrX, YM); // Hits exact bottom (2646, 450)
+  
+  // Arc slightly around Corretor 1 to reach the exact tangent point towards BS1
+  // Tangent point calculated: (2653.7, 448.8)
+  stripPath += `A 25 25 0 0 0 2653.7 448.8 `;
 
   // ====================================================================
   // SEÇÃO 3: ACUMULADOR DE ENTRADA (LOOP)
@@ -1488,17 +1492,18 @@ function renderRb1Completa() {
   svg += rNrForno(r173x + 25, r173y + 25, 10, '', 0, 0); // 174
   svg += rNrForno(r176x - 25, r176y - 25, 10, '', 0, 0); // 175
 
-  // S-Wrap Path for BS1
-  // Connect from Corretor 1 directly to the bottom of 173
-  lineTo(r173x, r173y + rL); 
-  // Wrap right side of 173 (Bottom -> Right -> Top)
-  stripPath += `A ${rL} ${rL} 0 0 0 ${r173x + rL} ${r173y} `; 
-  stripPath += `A ${rL} ${rL} 0 0 0 ${r173x} ${r173y - rL} `; 
+  // S-Wrap Path for BS1 (MATHEMATICALLY PERFECT TANGENTS)
+  // Tangent line from Corretor 1 to bottom-left of 173
+  lineTo(2869.3, 378.5); 
   
-  // Diagonal line up to the right side of 176
-  lineTo(r176x + rL, r176y); 
-  // Wrap top of 176 (Right -> Top)
-  stripPath += `A ${rL} ${rL} 0 0 0 ${r176x} ${r176y - rL} `; 
+  // Arc right side of 173 (Bottom-Left -> Right-Top tangent)
+  stripPath += `A 30 30 0 0 0 2882.35 330.0 `; 
+  
+  // Tangent diagonal line to the right side of 176
+  lineTo(2792.35, 230.0); 
+  
+  // Arc top of 176 (Right-Bottom tangent -> Top)
+  stripPath += `A 30 30 0 0 0 2770 220 `; 
   
   // 177, 178
   let r177x = 2860;

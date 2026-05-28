@@ -1091,32 +1091,59 @@ function renderRb1Completa() {
   svg += `<line x1="40" y1="${Y2 - 85}" x2="160" y2="${Y2 - 85}" stroke="${BK}" stroke-width="1.5"/>`;
 
   // === ENTRADA 1 COMPONENTS ===
-  svg += solidCoil(100, Y1, 40, 'BOBINA 1');
-  svg += dot(170, Y1 - 5, 4); svg += dot(170, Y1 + 5, 4); // Par guia
-  svg += dot(230, Y1 - 6, 6); svg += dot(230, Y1 + 6, 6); // Par tensor
-  // Nivelador
-  svg += dot(300, Y1 - 4, 3); svg += dot(320, Y1 - 4, 3); svg += dot(340, Y1 - 4, 3);
-  svg += dot(310, Y1 + 4, 3); svg += dot(330, Y1 + 4, 3); svg += dot(350, Y1 + 4, 3);
-  // Mesa
-  for (let i=0; i<5; i++) svg += dot(420 + i*18, Y1, 4);
-  // Guias vert
-  svg += oVertBars(540, Y1, 3, 25, 12, 6);
-  svg += dot(600, Y1, 5); svg += dot(600, Y1-10, 5);
-  // Tesoura 1
-  svg += tesoura1(660, Y1, 'TESOURA 1');
-  svg += startPlatform(680, Y1, 60, 40);
-  // Mesa após tesoura
-  for (let i=0; i<8; i++) svg += dot(700 + i*14, Y1, 4);
-  // Esteira contínua
-  for (let i=0; i<19; i++) svg += dot(850 + i*14, Y1, 3.5);
-  // Calandra 1 (Enrolador 1)
-  svg += enroladorCrescent(1150, Y1, 'CALANDRA 1');
-  // Final da Entrada 1 e Descida diagonal
-  svg += dot(1250, Y1, 8); svg += dot(1250, Y1 - 18, 8);
-  lineTo(1250, Y1);
-  lineTo(1400, YM); // Descida
-  // Rampa de rolos
-  for (let i=0; i<9; i++) svg += dot(1265 + i*16, Y1 + 10 + i*12.2, 4);
+  svg += solidCoil(100, Y1, 40, '');
+  svg += `<text x="100" y="${Y1 + 60}" text-anchor="middle" ${FSL} font-size="9" font-weight="700" fill="${BK}"></text>`;
+  // Small rollers around the coil
+  svg += dot(65, Y1 - 5, 4); 
+  svg += dot(100, Y1 - 45, 4); 
+  
+  // Par de guias pequenos
+  svg += dot(150, Y1 - 5, 4); svg += dot(150, Y1 + 5, 4); 
+  
+  // Par tensor GIGANTE
+  svg += dot(190, Y1 - 12, 12); svg += dot(190, Y1 + 12, 12); 
+  
+  // Par de guias pequenos 2
+  svg += dot(230, Y1 - 5, 4); svg += dot(230, Y1 + 5, 4); 
+  
+  // Nivelador (2 em cima, 3 embaixo)
+  svg += dot(265, Y1 - 4, 3.5); svg += dot(285, Y1 - 4, 3.5); 
+  svg += dot(255, Y1 + 4, 3.5); svg += dot(275, Y1 + 4, 3.5); svg += dot(295, Y1 + 4, 3.5);
+  
+  // Mesa 5 rolos
+  for (let i=0; i<5; i++) svg += dot(340 + i*16, Y1, 4);
+  
+  // Guias verticais (3 retângulos ocos)
+  svg += oVertBars(450, Y1, 3, 25, 12, 6);
+  
+  // 1 rolo guia pequeno
+  svg += dot(500, Y1, 4); 
+  
+  // Tesoura 1 (com o typo da imagem)
+  svg += tesoura1(550, Y1, 'Tesouara 1');
+  
+  // Mesa da tesoura (8 rolos)
+  svg += startPlatform(565, Y1, 105, 40);
+  for (let i=0; i<8; i++) svg += dot(575 + i*12, Y1, 3.5);
+  
+  // Esteira contínua de 19 rolos
+  for (let i=0; i<19; i++) svg += dot(690 + i*14, Y1, 3.5);
+  
+  // Enrolador de tiras repousando sobre os rolos 13 e 14 da esteira
+  // 13th rolo: 690 + 12*14 = 858, 14th: 690 + 13*14 = 872. Center = 865
+  svg += enroladorCrescent(865, Y1 - 8, 'Enrolador de tiras');
+
+  // Final pull rollers (grandes)
+  svg += dot(990, Y1 - 10, 10); svg += dot(990, Y1 + 10, 10);
+  
+  // Atualizando Path connection
+  lineTo(990, Y1);
+  lineTo(1150, YM); // Diagonal drop
+  
+  // Rampa de rolos descida
+  for (let i=0; i<10; i++) {
+     svg += dot(1005 + i*15, Y1 + 15 + i*(YM-Y1-30)/10, 4);
+  }
 
   // === ENTRADA 2 COMPONENTS ===
   let p2 = `M 100 ${Y2} `; // Strip for line 2

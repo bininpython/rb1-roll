@@ -883,622 +883,489 @@ function renderRb1CompletaStats() {
 
 // ===== RB1 COMPLETA — Technical Industrial Diagram =====
 function renderRb1Completa() {
-  const W = 5200, H = 650;
-  const LK = '#1a1a1a'; // line color
-  const SW = '1.2';      // stroke-width
+  const W = 4800, H = 520;
+  const BK = '#000000';
   const FS = 'font-family="JetBrains Mono, monospace"';
   const FSL = 'font-family="Montserrat, sans-serif"';
   
   let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:${W}px;height:auto;display:block;background:#fff;">`;
   
-  // Title block border
-  svg += `<rect x="4" y="4" width="${W-8}" height="${H-8}" fill="none" stroke="${LK}" stroke-width="1.5"/>`;
-  svg += `<rect x="8" y="8" width="${W-16}" height="${H-16}" fill="none" stroke="${LK}" stroke-width="0.5"/>`;
-  
-  // Title block at bottom-right
-  svg += `<rect x="${W-520}" y="${H-55}" width="510" height="45" fill="none" stroke="${LK}" stroke-width="1"/>`;
-  svg += `<text x="${W-510}" y="${H-35}" ${FSL} font-size="11" font-weight="700" fill="${LK}">APERAM — LINHA DE RECOZIMENTO E DECAPAGEM</text>`;
-  svg += `<text x="${W-510}" y="${H-20}" ${FS} font-size="8" fill="#666">RB1 SYSTEM v3.0 — DIAGRAMA TÉCNICO INDUSTRIAL — VISÃO COMPLETA DA PLANTA</text>`;
-  svg += `<line x1="${W-520}" y1="${H-42}" x2="${W-10}" y2="${H-42}" stroke="${LK}" stroke-width="0.5"/>`;
-  
   // ===== HELPER FUNCTIONS =====
   
-  // Coil (large input spool)
-  function coil(cx: number, cy: number, r: number, label: string): string {
+  // Solid filled roller (main element in the diagram)
+  function dot(cx: number, cy: number, r: number = 5): string {
+    return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${BK}"/>`;
+  }
+  
+  // Open roller (outline only, used for some special positions)
+  function oDot(cx: number, cy: number, r: number = 5): string {
+    return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#fff" stroke="${BK}" stroke-width="1.8"/>`;
+  }
+  
+  // Large input coil — solid style (ENTRADA 1)
+  function solidCoil(cx: number, cy: number, r: number): string {
     let c = '';
-    // Outer circle
-    c += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${LK}" stroke-width="${SW}"/>`;
-    // Inner core
-    c += `<circle cx="${cx}" cy="${cy}" r="${r*0.35}" fill="none" stroke="${LK}" stroke-width="${SW}"/>`;
-    // Center axis
-    c += `<circle cx="${cx}" cy="${cy}" r="2" fill="${LK}"/>`;
-    // Spiral lines
-    c += `<circle cx="${cx}" cy="${cy}" r="${r*0.55}" fill="none" stroke="${LK}" stroke-width="0.4" stroke-dasharray="3 4"/>`;
-    c += `<circle cx="${cx}" cy="${cy}" r="${r*0.75}" fill="none" stroke="${LK}" stroke-width="0.4" stroke-dasharray="4 5"/>`;
-    // Label
-    c += `<text x="${cx}" y="${cy+r+16}" text-anchor="middle" ${FSL} font-size="9" font-weight="700" fill="${LK}">${label}</text>`;
+    c += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${BK}"/>`;
+    // Small white center dot
+    c += `<circle cx="${cx}" cy="${cy}" r="${r * 0.15}" fill="#fff"/>`;
     return c;
   }
   
-  // Small guide roller
-  function smallRoll(cx: number, cy: number, num?: number): string {
+  // Large input coil — donut style (ENTRADA 2)
+  function donutCoil(cx: number, cy: number, r: number): string {
+    let c = '';
+    c += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${BK}"/>`;
+    c += `<circle cx="${cx}" cy="${cy}" r="${r * 0.5}" fill="#fff"/>`;
+    c += `<circle cx="${cx}" cy="${cy}" r="${r * 0.2}" fill="${BK}"/>`;
+    return c;
+  }
+  
+  // Vertical bars group (comb/fence pattern seen in image)
+  function vertBars(x: number, y: number, count: number, h: number = 30, spacing: number = 5, w: number = 3): string {
+    let b = '';
+    for (let i = 0; i < count; i++) {
+      b += `<rect x="${x + i * spacing}" y="${y}" width="${w}" height="${h}" fill="${BK}"/>`;
+    }
+    return b;
+  }
+  
+  // Thin vertical bars (narrower, like fence posts)
+  function thinBars(x: number, y: number, count: number, h: number = 20, spacing: number = 4): string {
+    let b = '';
+    for (let i = 0; i < count; i++) {
+      b += `<line x1="${x + i * spacing}" y1="${y}" x2="${x + i * spacing}" y2="${y + h}" stroke="${BK}" stroke-width="1.5"/>`;
+    }
+    return b;
+  }
+  
+  // Tesoura (scissors/cutter) — rectangular frame
+  function tesoura(cx: number, cy: number, label: string): string {
+    let s = '';
+    // Main vertical frame
+    s += `<rect x="${cx - 10}" y="${cy - 30}" width="20" height="55" fill="none" stroke="${BK}" stroke-width="2"/>`;
+    // Upper blade line
+    s += `<line x1="${cx - 10}" y1="${cy - 10}" x2="${cx + 10}" y2="${cy - 10}" stroke="${BK}" stroke-width="2.5"/>`;
+    // Lower blade line  
+    s += `<line x1="${cx - 10}" y1="${cy + 10}" x2="${cx + 10}" y2="${cy + 10}" stroke="${BK}" stroke-width="2.5"/>`;
+    // Hydraulic rod above
+    s += `<rect x="${cx - 3}" y="${cy - 42}" width="6" height="14" fill="${BK}"/>`;
+    // Scrap chute below
+    s += `<line x1="${cx - 6}" y1="${cy + 25}" x2="${cx - 12}" y2="${cy + 42}" stroke="${BK}" stroke-width="1.5"/>`;
+    s += `<line x1="${cx + 6}" y1="${cy + 25}" x2="${cx + 12}" y2="${cy + 42}" stroke="${BK}" stroke-width="1.5"/>`;
+    s += `<line x1="${cx - 12}" y1="${cy + 42}" x2="${cx + 12}" y2="${cy + 42}" stroke="${BK}" stroke-width="1.5"/>`;
+    // Label
+    s += `<text x="${cx}" y="${cy - 48}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">${label}</text>`;
+    return s;
+  }
+  
+  // Enrolador de Tiras (strip winder) — rectangular frame with small rollers
+  function enrolador(cx: number, cy: number, label: string): string {
+    let e = '';
+    // Main frame
+    e += `<rect x="${cx - 14}" y="${cy - 25}" width="28" height="45" fill="none" stroke="${BK}" stroke-width="1.8"/>`;
+    // Inner horizontal bars
+    e += `<line x1="${cx - 14}" y1="${cy - 8}" x2="${cx + 14}" y2="${cy - 8}" stroke="${BK}" stroke-width="1"/>`;
+    e += `<line x1="${cx - 14}" y1="${cy + 8}" x2="${cx + 14}" y2="${cy + 8}" stroke="${BK}" stroke-width="1"/>`;
+    // Small feed rollers to the left
+    e += dot(cx - 25, cy - 3, 4);
+    e += dot(cx - 35, cy, 4);
+    e += dot(cx - 44, cy + 3, 3);
+    // Label
+    e += `<text x="${cx}" y="${cy - 32}" text-anchor="middle" ${FSL} font-size="9" font-weight="700" fill="${BK}">${label}</text>`;
+    return e;
+  }
+
+  // Máquina de Solda
+  function maqSolda(cx: number, cy: number): string {
+    let m = '';
+    m += `<rect x="${cx - 16}" y="${cy - 25}" width="32" height="50" fill="none" stroke="${BK}" stroke-width="2"/>`;
+    // Electrode
+    m += `<rect x="${cx - 6}" y="${cy - 38}" width="12" height="15" fill="${BK}"/>`;
+    // Internal details
+    m += `<rect x="${cx - 10}" y="${cy - 18}" width="20" height="10" fill="none" stroke="${BK}" stroke-width="0.8"/>`;
+    m += dot(cx - 5, cy - 13, 2);
+    m += dot(cx + 5, cy - 13, 2);
+    // Lower reservoir
+    m += `<line x1="${cx - 12}" y1="${cy + 25}" x2="${cx - 18}" y2="${cy + 42}" stroke="${BK}" stroke-width="1.5"/>`;
+    m += `<line x1="${cx + 12}" y1="${cy + 25}" x2="${cx + 18}" y2="${cy + 42}" stroke="${BK}" stroke-width="1.5"/>`;
+    m += `<line x1="${cx - 18}" y1="${cy + 42}" x2="${cx + 18}" y2="${cy + 42}" stroke="${BK}" stroke-width="1.5"/>`;
+    m += `<text x="${cx}" y="${cy - 44}" text-anchor="middle" ${FSL} font-size="9" font-weight="700" fill="${BK}">MÁQUINA DE SOLDA 1</text>`;
+    return m;
+  }
+  
+  // Support fork (vertical lines with crossbar at bottom, seen under ENTRADA 2 start)
+  function supportFork(cx: number, cy: number, h: number = 25): string {
+    let f = '';
+    f += `<line x1="${cx - 4}" y1="${cy}" x2="${cx - 4}" y2="${cy + h}" stroke="${BK}" stroke-width="1.5"/>`;
+    f += `<line x1="${cx + 4}" y1="${cy}" x2="${cx + 4}" y2="${cy + h}" stroke="${BK}" stroke-width="1.5"/>`;
+    f += `<line x1="${cx - 8}" y1="${cy + h}" x2="${cx + 8}" y2="${cy + h}" stroke="${BK}" stroke-width="2"/>`;
+    return f;
+  }
+
+  // Diagonal ramp with rollers (descending conveyor at end of ENTRADA 1)
+  function diagonalRamp(x1: number, y1: number, x2: number, y2: number, rollerCount: number): string {
     let r = '';
-    r += `<circle cx="${cx}" cy="${cy}" r="5" fill="none" stroke="${LK}" stroke-width="0.8"/>`;
-    r += `<circle cx="${cx}" cy="${cy}" r="1.2" fill="${LK}"/>`;
-    if (num !== undefined) {
-      r += `<text x="${cx}" y="${cy - 10}" text-anchor="middle" ${FS} font-size="6" fill="#555">${num}</text>`;
+    // Main diagonal line
+    r += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${BK}" stroke-width="2"/>`;
+    // Rollers distributed along the diagonal
+    for (let i = 0; i < rollerCount; i++) {
+      const t = i / (rollerCount - 1);
+      const rx = x1 + (x2 - x1) * t;
+      const ry = y1 + (y2 - y1) * t;
+      r += dot(rx, ry - 4, 3.5);
     }
     return r;
   }
   
-  // Medium roller
-  function medRoll(cx: number, cy: number, r: number = 8, num?: number): string {
-    let s = '';
-    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${LK}" stroke-width="${SW}"/>`;
-    s += `<circle cx="${cx}" cy="${cy}" r="2" fill="${LK}"/>`;
-    // Crosshair
-    s += `<line x1="${cx-r+2}" y1="${cy}" x2="${cx+r-2}" y2="${cy}" stroke="${LK}" stroke-width="0.3"/>`;
-    s += `<line x1="${cx}" y1="${cy-r+2}" x2="${cx}" y2="${cy+r-2}" stroke="${LK}" stroke-width="0.3"/>`;
-    if (num !== undefined) {
-      s += `<text x="${cx}" y="${cy - r - 5}" text-anchor="middle" ${FS} font-size="6" fill="#555">${num}</text>`;
-    }
-    return s;
-  }
-  
-  // Pinch pair (vertical: top + bottom roller)
-  function pinchPair(cx: number, cy: number, gap: number = 14, r: number = 6, num?: number): string {
-    let p = '';
-    p += `<circle cx="${cx}" cy="${cy - gap/2}" r="${r}" fill="none" stroke="${LK}" stroke-width="${SW}"/>`;
-    p += `<circle cx="${cx}" cy="${cy - gap/2}" r="1.5" fill="${LK}"/>`;
-    p += `<circle cx="${cx}" cy="${cy + gap/2}" r="${r}" fill="none" stroke="${LK}" stroke-width="${SW}"/>`;
-    p += `<circle cx="${cx}" cy="${cy + gap/2}" r="1.5" fill="${LK}"/>`;
-    if (num !== undefined) {
-      p += `<text x="${cx}" y="${cy - gap/2 - r - 4}" text-anchor="middle" ${FS} font-size="6" fill="#555">${num}</text>`;
-    }
-    return p;
-  }
-
-  // Triple roller station
-  function tripleStation(cx: number, cy: number, num?: number): string {
-    let s = '';
-    s += `<circle cx="${cx - 12}" cy="${cy - 8}" r="6" fill="none" stroke="${LK}" stroke-width="${SW}"/>`;
-    s += `<circle cx="${cx - 12}" cy="${cy - 8}" r="1.5" fill="${LK}"/>`;
-    s += `<circle cx="${cx}" cy="${cy + 6}" r="6" fill="none" stroke="${LK}" stroke-width="${SW}"/>`;
-    s += `<circle cx="${cx}" cy="${cy + 6}" r="1.5" fill="${LK}"/>`;
-    s += `<circle cx="${cx + 12}" cy="${cy - 8}" r="6" fill="none" stroke="${LK}" stroke-width="${SW}"/>`;
-    s += `<circle cx="${cx + 12}" cy="${cy - 8}" r="1.5" fill="${LK}"/>`;
-    // Housing
-    s += `<rect x="${cx - 20}" y="${cy - 18}" width="40" height="30" fill="none" stroke="${LK}" stroke-width="0.5" stroke-dasharray="3 2"/>`;
-    if (num !== undefined) {
-      s += `<text x="${cx}" y="${cy - 22}" text-anchor="middle" ${FS} font-size="6" fill="#555">${num}</text>`;
-    }
-    return s;
-  }
-
-  // Scissors (industrial cutter)
-  function scissors(cx: number, cy: number, label: string): string {
-    let s = '';
-    // Main vertical frame
-    s += `<rect x="${cx - 12}" y="${cy - 40}" width="24" height="80" fill="none" stroke="${LK}" stroke-width="${SW}"/>`;
-    // Upper blade
-    s += `<rect x="${cx - 10}" y="${cy - 35}" width="20" height="8" fill="none" stroke="${LK}" stroke-width="0.8"/>`;
-    s += `<line x1="${cx - 10}" y1="${cy - 27}" x2="${cx + 10}" y2="${cy - 27}" stroke="${LK}" stroke-width="1.5"/>`;
-    // Lower blade
-    s += `<rect x="${cx - 10}" y="${cy + 27}" width="20" height="8" fill="none" stroke="${LK}" stroke-width="0.8"/>`;
-    s += `<line x1="${cx - 10}" y1="${cy + 27}" x2="${cx + 10}" y2="${cy + 27}" stroke="${LK}" stroke-width="1.5"/>`;
-    // Hydraulic cylinder
-    s += `<rect x="${cx - 4}" y="${cy - 55}" width="8" height="18" fill="none" stroke="${LK}" stroke-width="0.8"/>`;
-    s += `<line x1="${cx}" y1="${cy - 55}" x2="${cx}" y2="${cy - 40}" stroke="${LK}" stroke-width="0.8"/>`;
-    // Scrap chute below
-    s += `<line x1="${cx - 8}" y1="${cy + 40}" x2="${cx - 14}" y2="${cy + 58}" stroke="${LK}" stroke-width="0.8"/>`;
-    s += `<line x1="${cx + 8}" y1="${cy + 40}" x2="${cx + 14}" y2="${cy + 58}" stroke="${LK}" stroke-width="0.8"/>`;
-    s += `<line x1="${cx - 14}" y1="${cy + 58}" x2="${cx + 14}" y2="${cy + 58}" stroke="${LK}" stroke-width="0.8"/>`;
-    // Pass-line arrows
-    s += `<line x1="${cx - 25}" y1="${cy}" x2="${cx - 12}" y2="${cy}" stroke="${LK}" stroke-width="0.5" stroke-dasharray="2 2"/>`;
-    s += `<line x1="${cx + 12}" y1="${cy}" x2="${cx + 25}" y2="${cy}" stroke="${LK}" stroke-width="0.5" stroke-dasharray="2 2"/>`;
-    // Label
-    s += `<text x="${cx}" y="${cy - 62}" text-anchor="middle" ${FSL} font-size="8" font-weight="700" fill="${LK}">${label}</text>`;
-    return s;
-  }
-
-  // Strip winder / Enrolador
-  function winder(cx: number, cy: number, label: string): string {
-    let w = '';
-    // Main drum
-    w += `<circle cx="${cx}" cy="${cy}" r="22" fill="none" stroke="${LK}" stroke-width="${SW}"/>`;
-    w += `<circle cx="${cx}" cy="${cy}" r="8" fill="none" stroke="${LK}" stroke-width="0.8"/>`;
-    w += `<circle cx="${cx}" cy="${cy}" r="2.5" fill="${LK}"/>`;
-    // Spiral wraps
-    w += `<circle cx="${cx}" cy="${cy}" r="14" fill="none" stroke="${LK}" stroke-width="0.3" stroke-dasharray="4 3"/>`;
-    w += `<circle cx="${cx}" cy="${cy}" r="18" fill="none" stroke="${LK}" stroke-width="0.3" stroke-dasharray="5 4"/>`;
-    // Arm / guide approaching from left
-    w += `<line x1="${cx - 35}" y1="${cy + 5}" x2="${cx - 22}" y2="${cy}" stroke="${LK}" stroke-width="0.8"/>`;
-    // Small feed rollers
-    w += `<circle cx="${cx - 38}" cy="${cy + 6}" r="4" fill="none" stroke="${LK}" stroke-width="0.8"/>`;
-    w += `<circle cx="${cx - 38}" cy="${cy + 6}" r="1" fill="${LK}"/>`;
-    w += `<circle cx="${cx - 48}" cy="${cy + 3}" r="4" fill="none" stroke="${LK}" stroke-width="0.8"/>`;
-    w += `<circle cx="${cx - 48}" cy="${cy + 3}" r="1" fill="${LK}"/>`;
-    // Frame/stand
-    w += `<line x1="${cx - 6}" y1="${cy + 22}" x2="${cx - 10}" y2="${cy + 40}" stroke="${LK}" stroke-width="0.8"/>`;
-    w += `<line x1="${cx + 6}" y1="${cy + 22}" x2="${cx + 10}" y2="${cy + 40}" stroke="${LK}" stroke-width="0.8"/>`;
-    w += `<line x1="${cx - 14}" y1="${cy + 40}" x2="${cx + 14}" y2="${cy + 40}" stroke="${LK}" stroke-width="${SW}"/>`;
-    // Label
-    w += `<text x="${cx}" y="${cy - 30}" text-anchor="middle" ${FSL} font-size="7" font-weight="700" fill="${LK}">${label}</text>`;
-    return w;
-  }
-
-  // Welding machine
-  function weldingMachine(cx: number, cy: number): string {
-    let m = '';
-    // Main body
-    m += `<rect x="${cx - 20}" y="${cy - 30}" width="40" height="60" rx="2" fill="none" stroke="${LK}" stroke-width="${SW}"/>`;
-    // Upper electrode
-    m += `<rect x="${cx - 8}" y="${cy - 45}" width="16" height="18" fill="none" stroke="${LK}" stroke-width="0.8"/>`;
-    m += `<line x1="${cx}" y1="${cy - 45}" x2="${cx}" y2="${cy - 30}" stroke="${LK}" stroke-width="0.6"/>`;
-    // Control panel
-    m += `<rect x="${cx - 14}" y="${cy - 24}" width="28" height="14" fill="none" stroke="${LK}" stroke-width="0.5"/>`;
-    m += `<circle cx="${cx - 8}" cy="${cy - 17}" r="2" fill="none" stroke="${LK}" stroke-width="0.5"/>`;
-    m += `<circle cx="${cx}" cy="${cy - 17}" r="2" fill="none" stroke="${LK}" stroke-width="0.5"/>`;
-    m += `<circle cx="${cx + 8}" cy="${cy - 17}" r="2" fill="none" stroke="${LK}" stroke-width="0.5"/>`;
-    // Lower reservoir
-    m += `<line x1="${cx - 16}" y1="${cy + 30}" x2="${cx - 22}" y2="${cy + 50}" stroke="${LK}" stroke-width="0.8"/>`;
-    m += `<line x1="${cx + 16}" y1="${cy + 30}" x2="${cx + 22}" y2="${cy + 50}" stroke="${LK}" stroke-width="0.8"/>`;
-    m += `<line x1="${cx - 22}" y1="${cy + 50}" x2="${cx + 22}" y2="${cy + 50}" stroke="${LK}" stroke-width="${SW}"/>`;
-    // Pass-line
-    m += `<line x1="${cx - 35}" y1="${cy}" x2="${cx - 20}" y2="${cy}" stroke="${LK}" stroke-width="0.5" stroke-dasharray="2 2"/>`;
-    m += `<line x1="${cx + 20}" y1="${cy}" x2="${cx + 35}" y2="${cy}" stroke="${LK}" stroke-width="0.5" stroke-dasharray="2 2"/>`;
-    // Label
-    m += `<text x="${cx}" y="${cy - 52}" text-anchor="middle" ${FSL} font-size="7" font-weight="700" fill="${LK}">MÁQUINA DE SOLDA 1</text>`;
-    return m;
-  }
-  
-  // Tension roller (S-wrap)
-  function sWrap(cx: number, cy: number, num?: number): string {
-    let s = '';
-    s += `<circle cx="${cx - 8}" cy="${cy - 6}" r="7" fill="none" stroke="${LK}" stroke-width="${SW}"/>`;
-    s += `<circle cx="${cx - 8}" cy="${cy - 6}" r="1.5" fill="${LK}"/>`;
-    s += `<circle cx="${cx + 8}" cy="${cy + 6}" r="7" fill="none" stroke="${LK}" stroke-width="${SW}"/>`;
-    s += `<circle cx="${cx + 8}" cy="${cy + 6}" r="1.5" fill="${LK}"/>`;
-    if (num !== undefined) {
-      s += `<text x="${cx}" y="${cy - 18}" text-anchor="middle" ${FS} font-size="6" fill="#555">${num}</text>`;
-    }
-    return s;
-  }
-
-  // Deflector roller (angled guide)
-  function deflector(cx: number, cy: number, angle: number = 0, num?: number): string {
-    let d = `<g transform="rotate(${angle},${cx},${cy})">`;
-    d += `<circle cx="${cx}" cy="${cy}" r="6" fill="none" stroke="${LK}" stroke-width="${SW}"/>`;
-    d += `<circle cx="${cx}" cy="${cy}" r="1.5" fill="${LK}"/>`;
-    // Support arm
-    d += `<line x1="${cx}" y1="${cy + 6}" x2="${cx}" y2="${cy + 18}" stroke="${LK}" stroke-width="0.8"/>`;
-    d += `<line x1="${cx - 5}" y1="${cy + 18}" x2="${cx + 5}" y2="${cy + 18}" stroke="${LK}" stroke-width="0.8"/>`;
-    d += `</g>`;
-    if (num !== undefined) {
-      d += `<text x="${cx}" y="${cy - 12}" text-anchor="middle" ${FS} font-size="6" fill="#555">${num}</text>`;
-    }
-    return d;
-  }
-
-  // Accumulator (looping pit)
-  function accumulator(cx: number, cy: number, w: number = 80, h: number = 50, label: string = ''): string {
-    let a = '';
-    // Pit
-    a += `<rect x="${cx - w/2}" y="${cy}" width="${w}" height="${h}" fill="none" stroke="${LK}" stroke-width="${SW}"/>`;
-    // Looping strands inside
-    for (let i = 0; i < 4; i++) {
-      const lx = cx - w/2 + 12 + i * 16;
-      a += `<line x1="${lx}" y1="${cy}" x2="${lx}" y2="${cy + h - 5}" stroke="${LK}" stroke-width="0.4"/>`;
-      a += `<circle cx="${lx}" cy="${cy + h - 5}" r="3" fill="none" stroke="${LK}" stroke-width="0.4"/>`;
-    }
-    // Top rollers
-    a += `<circle cx="${cx - w/2 + 5}" cy="${cy - 4}" r="4" fill="none" stroke="${LK}" stroke-width="0.6"/>`;
-    a += `<circle cx="${cx + w/2 - 5}" cy="${cy - 4}" r="4" fill="none" stroke="${LK}" stroke-width="0.6"/>`;
-    if (label) {
-      a += `<text x="${cx}" y="${cy - 12}" text-anchor="middle" ${FSL} font-size="7" font-weight="600" fill="${LK}">${label}</text>`;
-    }
-    return a;
-  }
-
-  // Support structure / pedestal
-  function pedestal(cx: number, cy: number, h: number = 25): string {
-    let p = '';
-    p += `<line x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy + h}" stroke="${LK}" stroke-width="0.8"/>`;
-    p += `<line x1="${cx - 8}" y1="${cy + h}" x2="${cx + 8}" y2="${cy + h}" stroke="${LK}" stroke-width="${SW}"/>`;
-    return p;
-  }
-
   // ====================================================================
-  // ENTRADA 1 — UPPER LINE (Y baseline = 170)
+  // ENTRADA 1 — UPPER LINE (Y baseline = 130)
   // ====================================================================
-  const Y1 = 170;
+  const Y1 = 130;
   
   // Section label
-  svg += `<text x="40" y="${Y1 - 90}" ${FSL} font-size="12" font-weight="800" fill="${LK}" letter-spacing="3">ENTRADA 1</text>`;
-  svg += `<line x1="40" y1="${Y1 - 85}" x2="140" y2="${Y1 - 85}" stroke="${LK}" stroke-width="1.2"/>`;
+  svg += `<text x="28" y="${Y1 - 80}" ${FSL} font-size="13" font-weight="800" fill="${BK}" letter-spacing="2">ENTRADA 1</text>`;
   
-  // Main horizontal pass-line
-  svg += `<line x1="120" y1="${Y1}" x2="4950" y2="${Y1}" stroke="${LK}" stroke-width="0.4" stroke-dasharray="6 3"/>`;
+  // Main horizontal pass-line (solid black)
+  svg += `<line x1="90" y1="${Y1}" x2="4100" y2="${Y1}" stroke="${BK}" stroke-width="2"/>`;
   
-  // 1) Input coil
-  svg += coil(80, Y1, 40, 'BOBINA 1');
+  // 1) Large solid coil (bobina)
+  svg += solidCoil(55, Y1, 35);
   
-  // 2) Uncoiler exit rollers
-  let n = 1;
-  svg += smallRoll(140, Y1, n++);
-  svg += smallRoll(165, Y1, n++);
-  svg += pedestal(140, Y1 + 5, 20);
-  svg += pedestal(165, Y1 + 5, 20);
+  // 2) First small rollers right after coil
+  svg += dot(105, Y1, 5);
+  svg += dot(125, Y1, 6);
   
-  // 3) Straightener / flattener station
-  svg += pinchPair(200, Y1, 16, 7, n++);
-  svg += pedestal(200, Y1 + 15, 15);
+  // 3) Pair of medium rollers
+  svg += dot(155, Y1, 7);
+  svg += dot(178, Y1, 7);
   
-  // 4) Guide rollers
-  for (let i = 0; i < 6; i++) {
-    svg += smallRoll(240 + i * 28, Y1, n++);
-    svg += pedestal(240 + i * 28, Y1 + 5, 12);
+  // 4) Double-dot pairs (closely spaced)
+  svg += dot(210, Y1 - 5, 4);
+  svg += dot(210, Y1 + 5, 4);
+  svg += dot(225, Y1 - 5, 4);
+  svg += dot(225, Y1 + 5, 4);
+  
+  // 5) Small guide rollers
+  svg += dot(255, Y1, 4);
+  svg += dot(272, Y1, 4);
+  svg += dot(289, Y1, 5);
+  
+  // 6) Vertical thin bars group (comb structure)
+  svg += thinBars(310, Y1 - 12, 6, 24, 5);
+  
+  // 7) Medium rollers
+  svg += dot(360, Y1, 5);
+  svg += dot(380, Y1, 6);
+  
+  // 8) Vertical bars — thicker (like fence posts)
+  svg += vertBars(405, Y1 - 18, 4, 36, 8, 4);
+  
+  // 9) Rollers before tesoura
+  svg += dot(455, Y1, 5);
+  svg += dot(475, Y1, 6);
+  svg += dot(495, Y1, 4);
+  
+  // 10) TESOURA 1
+  svg += tesoura(540, Y1, 'Tesoura 1');
+  
+  // 11) Post-tesoura rollers
+  svg += dot(575, Y1, 5);
+  svg += dot(595, Y1, 5);
+  
+  // 12) ENROLADOR DE TIRAS 1
+  svg += enrolador(660, Y1, 'Enrolador de Tiras 1');
+  
+  // 13) Post-enrolador: Small tightly spaced rollers
+  svg += dot(700, Y1, 4);
+  svg += dot(715, Y1, 4);
+  svg += dot(730, Y1, 4);
+  
+  // 14) More pairs  
+  svg += dot(755, Y1 - 4, 3.5);
+  svg += dot(755, Y1 + 4, 3.5);
+  svg += dot(770, Y1, 4);
+  
+  // 15) Long stretch of evenly-spaced small rollers (roller table)
+  for (let i = 0; i < 40; i++) {
+    svg += dot(800 + i * 16, Y1, 3);
   }
   
-  // 5) S-Wrap tension
-  svg += sWrap(430, Y1, n++);
-
-  // 6) More guide rollers
-  for (let i = 0; i < 4; i++) {
-    svg += smallRoll(470 + i * 25, Y1, n++);
-  }
-
-  // 7) TESOURA 1
-  svg += scissors(600, Y1, 'TESOURA 1');
+  // 16) Medium rollers
+  svg += dot(1460, Y1, 5);
+  svg += dot(1480, Y1, 5);
+  svg += dot(1500, Y1, 6);
   
-  // 8) Post-scissors rollers
-  for (let i = 0; i < 5; i++) {
-    svg += smallRoll(650 + i * 22, Y1, n++);
-    if (i % 2 === 0) svg += pedestal(650 + i * 22, Y1 + 5, 10);
+  // 17) Another long roller table stretch
+  for (let i = 0; i < 35; i++) {
+    svg += dot(1530 + i * 16, Y1, 3);
   }
   
-  // 9) Deflector rollers
-  svg += deflector(770, Y1 - 15, 15, n++);
-  svg += deflector(800, Y1 + 10, -15, n++);
+  // 18) Slightly larger rollers
+  svg += dot(2100, Y1, 5);
+  svg += dot(2120, Y1, 5);
+  svg += dot(2145, Y1, 6);
+  svg += dot(2170, Y1, 5);
   
-  // 10) Triple roller station
-  svg += tripleStation(840, Y1, n++);
-
-  // 11) Medium rollers — tension section
-  svg += medRoll(880, Y1, 10, n++);
-  svg += medRoll(910, Y1, 10, n++);
-  
-  // 12) Long guide roller array
-  for (let i = 0; i < 8; i++) {
-    svg += smallRoll(950 + i * 22, Y1, n++);
-  }
-
-  // 13) Pinch pair
-  svg += pinchPair(1140, Y1, 14, 6, n++);
-  
-  // 14) ENROLADOR DE TIRAS (line 1)
-  svg += winder(1230, Y1 - 10, 'ENROLADOR DE TIRAS');
-  
-  // 15) More guide rollers after winder
-  for (let i = 0; i < 5; i++) {
-    svg += smallRoll(1300 + i * 24, Y1, n++);
+  // 19) Another roller stretch
+  for (let i = 0; i < 30; i++) {
+    svg += dot(2200 + i * 16, Y1, 3);
   }
   
-  // 16) S-Wrap
-  svg += sWrap(1440, Y1, n++);
+  // 20) Medium rollers before diagonal section
+  svg += dot(2690, Y1, 5);
+  svg += dot(2715, Y1, 6);
+  svg += dot(2740, Y1, 6);
+  svg += dot(2765, Y1, 5);
   
-  // 17) Roller stations
-  svg += tripleStation(1500, Y1, n++);
-  svg += pinchPair(1550, Y1, 14, 6, n++);
+  // 21) More long roller table
+  for (let i = 0; i < 40; i++) {
+    svg += dot(2800 + i * 16, Y1, 3);
+  }
   
-  // 18) Extended guide roller array
+  // 22) Pre-diagonal section — larger rollers cluster
+  svg += dot(3460, Y1, 7);
+  svg += dot(3485, Y1, 6);
+  svg += dot(3510, Y1, 7);
+  svg += dot(3535, Y1, 5);
+  svg += dot(3555, Y1, 5);
+  svg += dot(3575, Y1, 6);
+  svg += dot(3600, Y1, 7);
+  
+  // 23) Tightly packed rollers before descent
+  for (let i = 0; i < 20; i++) {
+    svg += dot(3630 + i * 10, Y1, 3.5);
+  }
+  
+  // 24) Large rollers at top of descent
+  svg += dot(3840, Y1, 8);
+  svg += dot(3868, Y1, 7);
+  
+  // 25) DIAGONAL DESCENDING RAMP with rollers
+  svg += diagonalRamp(3890, Y1, 4100, Y1 + 120, 18);
+  
+  // 26) End large roller
+  svg += dot(4110, Y1 + 120, 8);
+  
+  // ====================================================================
+  // ENTRADA 2 — LOWER LINE (Y baseline = 370)
+  // ====================================================================
+  const Y2 = 370;
+  
+  // Section label
+  svg += `<text x="28" y="${Y2 - 85}" ${FSL} font-size="13" font-weight="800" fill="${BK}" letter-spacing="2">ENTRADA 2</text>`;
+  
+  // Main horizontal pass-line (solid black)
+  svg += `<line x1="180" y1="${Y2}" x2="4700" y2="${Y2}" stroke="${BK}" stroke-width="2"/>`;
+  
+  // 1) Support forks at the start (visible in image left side)
+  svg += supportFork(40, Y2 + 5, 20);
+  svg += supportFork(60, Y2 + 5, 20);
+  svg += supportFork(80, Y2 + 5, 25);
+  svg += supportFork(100, Y2 + 5, 20);
+  svg += supportFork(120, Y2 + 5, 25);
+  
+  // 2) Small rollers on forks
+  svg += dot(40, Y2, 3);
+  svg += dot(60, Y2, 3);
+  svg += dot(80, Y2, 4);
+  svg += dot(100, Y2, 3);
+  svg += dot(120, Y2, 4);
+  
+  // 3) Large donut coil (bobina 2)
+  svg += donutCoil(190, Y2, 38);
+  
+  // 4) First rollers after coil
+  svg += dot(245, Y2, 6);
+  svg += dot(268, Y2, 5);
+  
+  // 5) Medium rollers spaced  
+  svg += dot(300, Y2, 7);
+  svg += dot(330, Y2, 6);
+  
+  // 6) Pair groups
+  svg += dot(365, Y2 - 5, 4);
+  svg += dot(365, Y2 + 5, 4);
+  svg += dot(385, Y2 - 5, 4);
+  svg += dot(385, Y2 + 5, 4);
+  svg += dot(405, Y2, 5);
+  
+  // 7) Small rollers
+  svg += dot(430, Y2, 4);
+  svg += dot(448, Y2, 4);
+  svg += dot(466, Y2, 5);
+  svg += dot(484, Y2, 5);
+  
+  // 8) Cluster of medium rollers
+  svg += dot(510, Y2, 6);
+  svg += dot(530, Y2, 6);
+  svg += dot(550, Y2, 7);
+  svg += dot(572, Y2, 6);
+  svg += dot(594, Y2, 5);
+  
+  // 9) More small rollers  
+  svg += dot(625, Y2, 4);
+  svg += dot(645, Y2, 5);
+  svg += dot(665, Y2, 4);
+  svg += dot(685, Y2, 5);
+  svg += dot(705, Y2, 4);
+  svg += dot(725, Y2, 5);
+  
+  // 10) Large thick vertical bars (tall pillars visible in image)
+  svg += vertBars(760, Y2 - 30, 3, 60, 14, 8);
+  
+  // 11) More vertical bars (thinner)
+  svg += vertBars(820, Y2 - 20, 4, 40, 8, 4);
+  
+  // 12) Small roller
+  svg += dot(870, Y2, 5);
+  
+  // 13) Small square element
+  svg += `<rect x="${885}" y="${Y2 - 8}" width="16" height="16" fill="none" stroke="${BK}" stroke-width="2"/>`;
+  
+  // 14) Rollers before tesoura
+  svg += dot(920, Y2, 5);
+  svg += dot(940, Y2, 5);
+  svg += dot(960, Y2, 4);
+  
+  // 15) TESOURA 2
+  svg += tesoura(1010, Y2, 'Tesoura 2');
+  
+  // 16) Post-tesoura rollers
+  svg += dot(1045, Y2, 5);
+  svg += dot(1065, Y2, 4);
+  svg += dot(1085, Y2, 5);
+  
+  // 17) Long roller table
+  for (let i = 0; i < 20; i++) {
+    svg += dot(1110 + i * 16, Y2, 3);
+  }
+  
+  // 18) Medium rollers
+  svg += dot(1440, Y2, 6);
+  svg += dot(1465, Y2, 6);
+  
+  // 19) ENROLADOR DE TIRAS 2
+  svg += enrolador(1530, Y2, 'Enrolador de Tiras 2');
+  
+  // 20) Tightly packed rollers after enrolador
   for (let i = 0; i < 12; i++) {
-    svg += smallRoll(1600 + i * 24, Y1, n++);
-    if (i % 3 === 0) svg += pedestal(1600 + i * 24, Y1 + 5, 10);
-  }
-  
-  // 19) Accumulator 1
-  svg += accumulator(1930, Y1 + 15, 90, 55, 'ACUMULADOR 1');
-  
-  // 20) Post-accumulator rollers
-  for (let i = 0; i < 6; i++) {
-    svg += smallRoll(2000 + i * 25, Y1, n++);
+    svg += dot(1570 + i * 10, Y2, 3.5);
   }
   
   // 21) Medium rollers
-  svg += medRoll(2170, Y1, 10, n++);
-  svg += medRoll(2200, Y1, 10, n++);
+  svg += dot(1700, Y2, 6);
+  svg += dot(1725, Y2, 5);
+  svg += dot(1750, Y2, 6);
   
-  // 22) S-Wrap
-  svg += sWrap(2240, Y1, n++);
-  
-  // 23) Extended guide roller array toward furnace
-  for (let i = 0; i < 10; i++) {
-    svg += smallRoll(2290 + i * 22, Y1, n++);
+  // 22) More long roller table
+  for (let i = 0; i < 30; i++) {
+    svg += dot(1790 + i * 16, Y2, 3);
   }
   
-  // 24) Pinch pairs
-  svg += pinchPair(2530, Y1, 14, 6, n++);
-  svg += pinchPair(2570, Y1, 14, 6, n++);
+  // 23) Cluster of medium rollers
+  svg += dot(2280, Y2, 5);
+  svg += dot(2305, Y2, 6);
+  svg += dot(2330, Y2, 5);
+  svg += dot(2355, Y2, 6);
   
-  // 25) Furnace entry section
-  svg += `<rect x="2610" y="${Y1 - 35}" width="220" height="70" fill="none" stroke="${LK}" stroke-width="${SW}" stroke-dasharray="8 4"/>`;
-  svg += `<text x="2720" y="${Y1 - 40}" text-anchor="middle" ${FSL} font-size="8" font-weight="700" fill="${LK}">FORNO DE RECOZIMENTO</text>`;
-  // Internal rollers
-  for (let i = 0; i < 7; i++) {
-    svg += smallRoll(2630 + i * 28, Y1, n++);
+  // 24) Another roller table
+  for (let i = 0; i < 25; i++) {
+    svg += dot(2390 + i * 16, Y2, 3);
   }
   
-  // 26) Post-furnace cooling section
-  svg += `<rect x="2850" y="${Y1 - 30}" width="160" height="60" fill="none" stroke="${LK}" stroke-width="0.8" stroke-dasharray="4 3"/>`;
-  svg += `<text x="2930" y="${Y1 - 34}" text-anchor="middle" ${FS} font-size="7" fill="#777">RESFRIAMENTO</text>`;
-  for (let i = 0; i < 5; i++) {
-    svg += smallRoll(2870 + i * 28, Y1, n++);
+  // 25) Medium rollers
+  svg += dot(2800, Y2, 6);
+  svg += dot(2825, Y2, 6);
+  
+  // 26) Long final roller table
+  for (let i = 0; i < 35; i++) {
+    svg += dot(2860 + i * 16, Y2, 3);
   }
   
-  // 27) Post-cooling guide rollers
-  for (let i = 0; i < 6; i++) {
-    svg += smallRoll(3040 + i * 24, Y1, n++);
+  // 27) Vertical bars section
+  svg += vertBars(3430, Y2 - 15, 5, 30, 7, 3);
+  
+  // 28) Rollers
+  svg += dot(3480, Y2, 5);
+  svg += dot(3500, Y2, 6);
+  svg += dot(3525, Y2, 5);
+  
+  // 29) Another roller table
+  for (let i = 0; i < 20; i++) {
+    svg += dot(3560 + i * 16, Y2, 3);
   }
   
-  // 28) Decapagem zone
-  svg += `<rect x="3210" y="${Y1 - 35}" width="360" height="70" fill="none" stroke="${LK}" stroke-width="${SW}" stroke-dasharray="8 4"/>`;
-  svg += `<text x="3390" y="${Y1 - 40}" text-anchor="middle" ${FSL} font-size="8" font-weight="700" fill="${LK}">DECAPAGEM ELETROLÍTICA / QUÍMICA</text>`;
-  for (let i = 0; i < 12; i++) {
-    svg += smallRoll(3230 + i * 28, Y1, n++);
+  // 30) Pre-end cluster
+  svg += dot(3890, Y2, 7);
+  svg += dot(3920, Y2, 6);
+  svg += dot(3945, Y2, 7);
+  
+  // 31) Tightly packed rollers
+  for (let i = 0; i < 15; i++) {
+    svg += dot(3980 + i * 10, Y2, 3.5);
   }
   
-  // 29) Post-decapagem rollers
-  svg += medRoll(3600, Y1, 10, n++);
-  svg += medRoll(3640, Y1, 10, n++);
-  for (let i = 0; i < 8; i++) {
-    svg += smallRoll(3690 + i * 24, Y1, n++);
-  }
+  // 32) MÁQUINA DE SOLDA 1
+  svg += maqSolda(4220, Y2);
   
-  // 30) S-wrap
-  svg += sWrap(3900, Y1, n++);
+  // 33) Post-weld rollers
+  svg += dot(4260, Y2, 5);
+  svg += dot(4280, Y2, 5);
+  svg += dot(4305, Y2, 6);
+  svg += dot(4330, Y2, 5);
   
-  // 31) Accumulator 2
-  svg += accumulator(3970, Y1 + 15, 90, 55, 'ACUMULADOR 2');
+  // 34) Final rollers cluster
+  svg += dot(4370, Y2, 7);
+  svg += dot(4400, Y2, 6);
+  svg += dot(4430, Y2, 7);
   
-  // 32) Post-accumulator rollers
-  for (let i = 0; i < 6; i++) {
-    svg += smallRoll(4040 + i * 25, Y1, n++);
-  }
+  // 35) End pair
+  svg += dot(4480, Y2, 8);
+  svg += dot(4520, Y2, 8);
   
-  // 33) Pinch pairs
-  svg += pinchPair(4210, Y1, 14, 6, n++);
-  
-  // 34) Tension section
-  svg += tripleStation(4260, Y1, n++);
-  
-  // 35) Final guide rollers
-  for (let i = 0; i < 8; i++) {
-    svg += smallRoll(4310 + i * 22, Y1, n++);
-  }
-  
-  // 36) Deflectors
-  svg += deflector(4510, Y1 - 12, 20, n++);
-  svg += deflector(4540, Y1 + 8, -20, n++);
-  
-  // 37) S-Wrap
-  svg += sWrap(4580, Y1, n++);
-  
-  // 38) Pre-coiler pinch
-  svg += pinchPair(4630, Y1, 14, 7, n++);
-  
-  // 39) Guide rollers to output coil
-  for (let i = 0; i < 4; i++) {
-    svg += smallRoll(4670 + i * 22, Y1, n++);
-  }
-  
-  // 40) Output coil
-  svg += coil(4800, Y1, 40, 'BOBINA SAÍDA 1');
-  
-  // Direction arrows on line 1
-  const arrows1 = [300, 700, 1100, 1600, 2100, 2600, 3100, 3500, 4000, 4400];
-  arrows1.forEach(ax => {
-    svg += `<polygon points="${ax},${Y1 - 3} ${ax + 8},${Y1} ${ax},${Y1 + 3}" fill="${LK}" opacity="0.3"/>`;
-  });
-
   // ====================================================================
-  // ENTRADA 2 — LOWER LINE (Y baseline = 450)
+  // NUMBERING — Add sequential technical numbers above key components
   // ====================================================================
-  const Y2 = 450;
-  
-  // Section label
-  svg += `<text x="40" y="${Y2 - 90}" ${FSL} font-size="12" font-weight="800" fill="${LK}" letter-spacing="3">ENTRADA 2</text>`;
-  svg += `<line x1="40" y1="${Y2 - 85}" x2="140" y2="${Y2 - 85}" stroke="${LK}" stroke-width="1.2"/>`;
-  
-  // Main horizontal pass-line
-  svg += `<line x1="120" y1="${Y2}" x2="4950" y2="${Y2}" stroke="${LK}" stroke-width="0.4" stroke-dasharray="6 3"/>`;
-  
-  // 1) Input coil
-  svg += coil(80, Y2, 40, 'BOBINA 2');
-  
-  // 2) Uncoiler rollers
-  let n2 = 1;
-  svg += smallRoll(140, Y2, n2++);
-  svg += smallRoll(165, Y2, n2++);
-  svg += pedestal(140, Y2 + 5, 20);
-  svg += pedestal(165, Y2 + 5, 20);
-  
-  // 3) Straightener
-  svg += pinchPair(200, Y2, 16, 7, n2++);
-  svg += pedestal(200, Y2 + 15, 15);
-  
-  // 4) Guide rollers
-  for (let i = 0; i < 4; i++) {
-    svg += smallRoll(240 + i * 30, Y2, n2++);
-    svg += pedestal(240 + i * 30, Y2 + 5, 12);
-  }
-  
-  // 5) S-Wrap
-  svg += sWrap(380, Y2, n2++);
-
-  // 6) Roller array
-  for (let i = 0; i < 5; i++) {
-    svg += smallRoll(420 + i * 25, Y2, n2++);
-  }
-  
-  // 7) Pinch pair
-  svg += pinchPair(560, Y2, 14, 6, n2++);
-  
-  // 8) Guide rollers
-  for (let i = 0; i < 6; i++) {
-    svg += smallRoll(600 + i * 24, Y2, n2++);
-  }
-  
-  // 9) Medium rollers
-  svg += medRoll(760, Y2, 10, n2++);
-  svg += medRoll(795, Y2, 10, n2++);
-  
-  // 10) Extended roller array
-  for (let i = 0; i < 8; i++) {
-    svg += smallRoll(840 + i * 24, Y2, n2++);
-    if (i % 2 === 0) svg += pedestal(840 + i * 24, Y2 + 5, 10);
-  }
-  
-  // 11) Triple station
-  svg += tripleStation(1050, Y2, n2++);
-  
-  // 12) More rollers
-  for (let i = 0; i < 5; i++) {
-    svg += smallRoll(1100 + i * 22, Y2, n2++);
-  }
-  
-  // 13) TESOURA 2
-  svg += scissors(1250, Y2, 'TESOURA 2');
-  
-  // 14) Post-scissors rollers
-  for (let i = 0; i < 6; i++) {
-    svg += smallRoll(1300 + i * 24, Y2, n2++);
-    if (i % 2 === 0) svg += pedestal(1300 + i * 24, Y2 + 5, 10);
-  }
-  
-  // 15) Deflectors
-  svg += deflector(1460, Y2 - 15, 12, n2++);
-  svg += deflector(1490, Y2 + 10, -12, n2++);
-  
-  // 16) S-Wrap
-  svg += sWrap(1530, Y2, n2++);
-  
-  // 17) Rollers
-  for (let i = 0; i < 6; i++) {
-    svg += smallRoll(1580 + i * 24, Y2, n2++);
-  }
-  
-  // 18) Pinch pairs
-  svg += pinchPair(1740, Y2, 14, 6, n2++);
-  svg += pinchPair(1780, Y2, 14, 6, n2++);
-  
-  // 19) Extended roller array
-  for (let i = 0; i < 10; i++) {
-    svg += smallRoll(1830 + i * 22, Y2, n2++);
-  }
-  
-  // 20) ENROLADOR DE TIRAS (line 2)
-  svg += winder(2100, Y2 - 10, 'ENROLADOR DE TIRAS');
-  
-  // 21) Post-winder rollers
-  for (let i = 0; i < 6; i++) {
-    svg += smallRoll(2170 + i * 24, Y2, n2++);
-  }
-  
-  // 22) S-Wrap
-  svg += sWrap(2320, Y2, n2++);
-  
-  // 23) Triple station
-  svg += tripleStation(2380, Y2, n2++);
-  
-  // 24) Guide rollers
-  for (let i = 0; i < 8; i++) {
-    svg += smallRoll(2430 + i * 24, Y2, n2++);
-  }
-  
-  // 25) Accumulator
-  svg += accumulator(2660, Y2 + 15, 90, 55, 'ACUMULADOR 3');
-  
-  // 26) Post-accumulator rollers
-  for (let i = 0; i < 6; i++) {
-    svg += smallRoll(2740 + i * 25, Y2, n2++);
-  }
-  
-  // 27) Pinch pairs
-  svg += pinchPair(2910, Y2, 14, 6, n2++);
-  
-  // 28) Extended roller array
-  for (let i = 0; i < 12; i++) {
-    svg += smallRoll(2960 + i * 22, Y2, n2++);
-    if (i % 4 === 0) svg += pedestal(2960 + i * 22, Y2 + 5, 10);
-  }
-  
-  // 29) Furnace entry section
-  svg += `<rect x="3240" y="${Y2 - 35}" width="220" height="70" fill="none" stroke="${LK}" stroke-width="${SW}" stroke-dasharray="8 4"/>`;
-  svg += `<text x="3350" y="${Y2 - 40}" text-anchor="middle" ${FSL} font-size="8" font-weight="700" fill="${LK}">FORNO DE RECOZIMENTO</text>`;
-  for (let i = 0; i < 7; i++) {
-    svg += smallRoll(3260 + i * 28, Y2, n2++);
-  }
-  
-  // 30) Post-furnace cooling
-  svg += `<rect x="3480" y="${Y2 - 30}" width="160" height="60" fill="none" stroke="${LK}" stroke-width="0.8" stroke-dasharray="4 3"/>`;
-  svg += `<text x="3560" y="${Y2 - 34}" text-anchor="middle" ${FS} font-size="7" fill="#777">RESFRIAMENTO</text>`;
-  for (let i = 0; i < 5; i++) {
-    svg += smallRoll(3500 + i * 28, Y2, n2++);
-  }
-  
-  // 31) Decapagem zone
-  svg += `<rect x="3670" y="${Y2 - 35}" width="360" height="70" fill="none" stroke="${LK}" stroke-width="${SW}" stroke-dasharray="8 4"/>`;
-  svg += `<text x="3850" y="${Y2 - 40}" text-anchor="middle" ${FSL} font-size="8" font-weight="700" fill="${LK}">DECAPAGEM ELETROLÍTICA / QUÍMICA</text>`;
-  for (let i = 0; i < 12; i++) {
-    svg += smallRoll(3690 + i * 28, Y2, n2++);
-  }
-  
-  // 32) Post-decapagem rollers
-  svg += medRoll(4060, Y2, 10, n2++);
-  svg += medRoll(4100, Y2, 10, n2++);
-  for (let i = 0; i < 6; i++) {
-    svg += smallRoll(4140 + i * 24, Y2, n2++);
-  }
-  
-  // 33) S-Wrap
-  svg += sWrap(4310, Y2, n2++);
-  
-  // 34) Accumulator 4
-  svg += accumulator(4380, Y2 + 15, 90, 55, 'ACUMULADOR 4');
-  
-  // 35) Post-accumulator rollers
-  for (let i = 0; i < 5; i++) {
-    svg += smallRoll(4450 + i * 25, Y2, n2++);
-  }
-  
-  // 36) Deflectors
-  svg += deflector(4590, Y2 - 12, 18, n2++);
-  svg += deflector(4620, Y2 + 8, -18, n2++);
-  
-  // 37) Pre-weld pinch
-  svg += pinchPair(4660, Y2, 14, 7, n2++);
-  
-  // 38) Welding machine
-  svg += weldingMachine(4750, Y2);
-  
-  // 39) Post-weld rollers
-  for (let i = 0; i < 4; i++) {
-    svg += smallRoll(4810 + i * 22, Y2, n2++);
-  }
-  
-  // 40) Output coil
-  svg += coil(4950, Y2, 40, 'BOBINA SAÍDA 2');
-  
-  // Direction arrows on line 2
-  const arrows2 = [300, 700, 1100, 1500, 2000, 2500, 3000, 3500, 4000, 4500];
-  arrows2.forEach(ax => {
-    svg += `<polygon points="${ax},${Y2 - 3} ${ax + 8},${Y2} ${ax},${Y2 + 3}" fill="${LK}" opacity="0.3"/>`;
+  const nums1 = [
+    [105, Y1-18, '1'], [155, Y1-18, '2'], [210, Y1-18, '3'], [310, Y1-22, '4'],
+    [405, Y1-28, '5'], [540, Y1-60, '6'], [660, Y1-42, '7'],
+    [800, Y1-14, '8'], [1460, Y1-16, '9'], [1530, Y1-14, '10'],
+    [2100, Y1-16, '11'], [2690, Y1-16, '12'], [2800, Y1-14, '13'],
+    [3460, Y1-18, '14'], [3630, Y1-14, '15'], [3840, Y1-18, '16'],
+    [3990, Y1+50, '17']
+  ];
+  nums1.forEach(([x, y, n]) => {
+    svg += `<text x="${x}" y="${y}" text-anchor="middle" ${FS} font-size="7" fill="#555">${n}</text>`;
   });
   
-  // Divider between lines
-  svg += `<line x1="30" y1="310" x2="${W - 30}" y2="310" stroke="${LK}" stroke-width="0.3" stroke-dasharray="12 6"/>`;
-
+  const nums2 = [
+    [190, Y2-50, '1'], [300, Y2-18, '2'], [365, Y2-18, '3'],
+    [510, Y2-18, '4'], [760, Y2-40, '5'], [1010, Y2-60, '6'],
+    [1110, Y2-14, '7'], [1530, Y2-42, '8'], [1700, Y2-16, '9'],
+    [1790, Y2-14, '10'], [2280, Y2-16, '11'], [2390, Y2-14, '12'],
+    [2860, Y2-14, '13'], [3430, Y2-24, '14'], [3560, Y2-14, '15'],
+    [3890, Y2-18, '16'], [4220, Y2-56, '17'], [4480, Y2-18, '18']
+  ];
+  nums2.forEach(([x, y, n]) => {
+    svg += `<text x="${x}" y="${y}" text-anchor="middle" ${FS} font-size="7" fill="#555">${n}</text>`;
+  });
+  
+  // ====================================================================
+  // DIVIDER LINE between the two entries
+  // ====================================================================
+  svg += `<line x1="20" y1="255" x2="${W - 20}" y2="255" stroke="${BK}" stroke-width="0.4" stroke-dasharray="10 5"/>`;
+  
+  // ====================================================================
+  // TITLE BLOCK (bottom-right corner)
+  // ====================================================================
+  svg += `<rect x="${W - 460}" y="${H - 50}" width="450" height="42" fill="none" stroke="${BK}" stroke-width="1.5"/>`;
+  svg += `<line x1="${W - 460}" y1="${H - 35}" x2="${W - 10}" y2="${H - 35}" stroke="${BK}" stroke-width="0.5"/>`;
+  svg += `<text x="${W - 450}" y="${H - 38}" ${FSL} font-size="10" font-weight="700" fill="${BK}">APERAM — LINHA DE RECOZIMENTO E DECAPAGEM RB1</text>`;
+  svg += `<text x="${W - 450}" y="${H - 18}" ${FS} font-size="7.5" fill="#444">RB1 SYSTEM v3.0 — DIAGRAMA TÉCNICO INDUSTRIAL — VISÃO COMPLETA DA PLANTA</text>`;
+  
+  // Border frame
+  svg += `<rect x="3" y="3" width="${W - 6}" height="${H - 6}" fill="none" stroke="${BK}" stroke-width="1.5"/>`;
+  
   svg += '</svg>';
   
   $('rb1CompletaDiagram').innerHTML = svg;
@@ -1508,32 +1375,32 @@ function renderRb1Completa() {
   if (legend) {
     legend.innerHTML = `
       <div class="legend-item">
-        <div class="legend-icon"><svg width="24" height="14"><circle cx="7" cy="7" r="5" fill="none" stroke="#1a1a1a" stroke-width="1"/><circle cx="7" cy="7" r="1.5" fill="#1a1a1a"/></svg></div>
+        <div class="legend-icon"><svg width="24" height="14"><circle cx="7" cy="7" r="5" fill="#000"/></svg></div>
         <span>Rolo guia / transportador</span>
       </div>
       <div class="legend-item">
-        <div class="legend-icon"><svg width="24" height="14"><circle cx="7" cy="7" r="6" fill="none" stroke="#1a1a1a" stroke-width="1.2"/><circle cx="7" cy="7" r="2" fill="#1a1a1a"/><line x1="2" y1="7" x2="12" y2="7" stroke="#1a1a1a" stroke-width="0.4"/></svg></div>
+        <div class="legend-icon"><svg width="24" height="14"><circle cx="7" cy="7" r="6" fill="#000"/><circle cx="7" cy="7" r="2" fill="#fff"/></svg></div>
         <span>Rolo tensor / médio</span>
       </div>
       <div class="legend-item">
-        <div class="legend-icon"><svg width="28" height="14"><circle cx="10" cy="3" r="4" fill="none" stroke="#1a1a1a" stroke-width="1"/><circle cx="10" cy="11" r="4" fill="none" stroke="#1a1a1a" stroke-width="1"/></svg></div>
-        <span>Par de rolos (pinch)</span>
+        <div class="legend-icon"><svg width="28" height="16"><circle cx="14" cy="8" r="7" fill="#000"/><circle cx="14" cy="8" r="3.5" fill="#fff"/><circle cx="14" cy="8" r="1.5" fill="#000"/></svg></div>
+        <span>Bobina (desenrolador)</span>
       </div>
       <div class="legend-item">
-        <div class="legend-icon"><svg width="28" height="16"><circle cx="14" cy="8" r="7" fill="none" stroke="#1a1a1a" stroke-width="1"/><circle cx="14" cy="8" r="2.5" fill="none" stroke="#1a1a1a" stroke-width="0.5"/><circle cx="14" cy="8" r="1" fill="#1a1a1a"/></svg></div>
-        <span>Bobina (enrolador/desenrolador)</span>
+        <div class="legend-icon"><svg width="28" height="14"><rect x="4" y="1" width="12" height="12" fill="none" stroke="#000" stroke-width="1.5"/></svg></div>
+        <span>Tesoura / Enrolador</span>
       </div>
       <div class="legend-item">
-        <div class="legend-icon"><svg width="28" height="14"><rect x="4" y="1" width="12" height="12" fill="none" stroke="#1a1a1a" stroke-width="1"/></svg></div>
-        <span>Tesoura / máquina de corte</span>
+        <div class="legend-icon"><svg width="28" height="14"><rect x="4" y="2" width="3" height="10" fill="#000"/><rect x="10" y="2" width="3" height="10" fill="#000"/><rect x="16" y="2" width="3" height="10" fill="#000"/></svg></div>
+        <span>Estação de barras / Processamento</span>
       </div>
       <div class="legend-item">
-        <div class="legend-icon"><svg width="28" height="14"><rect x="2" y="2" width="20" height="10" fill="none" stroke="#1a1a1a" stroke-width="0.8" stroke-dasharray="3 2"/></svg></div>
-        <span>Zona de processo (forno / decapagem)</span>
+        <div class="legend-icon"><svg width="28" height="14"><line x1="4" y1="12" x2="22" y2="2" stroke="#000" stroke-width="1.5"/><circle cx="9" cy="8.5" r="2.5" fill="#000"/><circle cx="17" cy="4.5" r="2.5" fill="#000"/></svg></div>
+        <span>Rampa diagonal (descida)</span>
       </div>
       <div class="legend-item">
-        <div class="legend-icon"><svg width="24" height="14"><polygon points="4,4 12,7 4,10" fill="#1a1a1a" opacity="0.4"/></svg></div>
-        <span>Direção do fluxo</span>
+        <div class="legend-icon"><svg width="28" height="14"><line x1="10" y1="2" x2="10" y2="10" stroke="#000" stroke-width="1.5"/><line x1="18" y1="2" x2="18" y2="10" stroke="#000" stroke-width="1.5"/><line x1="6" y1="10" x2="22" y2="10" stroke="#000" stroke-width="2"/></svg></div>
+        <span>Suporte / pedestal</span>
       </div>
     `;
   }

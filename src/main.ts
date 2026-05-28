@@ -1061,38 +1061,35 @@ function renderRb1Completa() {
   svg += rNr(pX, Y1+30, 30, '74', pX, Y1+70, pX, Y1+68, pX, Y1+60);
 
   // Slant geometry
-  // C1 = 1090, 200, R=30. Dest = 1350, 450.
-  // Tangent point on C1 right side:
-  // dx = 1350 - 1090 = 260
-  // dy = 450 - 200 = 250
-  // L = sqrt(260^2 + 250^2) = sqrt(67600 + 62500) = sqrt(130100) = 360.7
-  // Angle = atan2(250, 260) = 43.88 degrees! (PERFECT 40-45 degree natural slant!)
-  // Tangent offset: 
-  // R^2*dx = 900*260 = 234000
-  // R*dy*sqrt(L^2-R^2) = 30 * 250 * sqrt(130100-900) = 7500 * 359.4 = 2695829
-  // R^2*dy = 900*250 = 225000
-  // R*dx*sqrt = 30 * 260 * 359.4 = 2803664
-  // tx = 1090 + (234000 + 2695829)/130100 = 1090 + 22.5 = 1112.5
-  // ty = 200 + (225000 - 2803664)/130100 = 200 - 19.8 = 180.2
-  // Let's use 1112.5, 180.2
+  // C1 = 1090, 200, R=30. Dest C2 = 1350, 420, R=30.
+  // Internal tangent from right side of C1 to bottom side of C2.
+  // Tangent point T1 on C1: (1113.11, 180.87)
+  // Tangent point T2 on C2: (1326.89, 439.13)
+  // Normal of line pointing down-left is (-0.770, 0.638)
+  // Normal of line pointing up-right is (0.770, -0.638)
   
   // 75-83 (Rollers on slant)
-  let ds = 25;
+  let ds = 35; // start offset along line
   for (let i=75; i<=83; i++) {
-    // ux = 260/360.7 = 0.720, uy = 250/360.7 = 0.693
-    // px = 1112.5 + ds * 0.720
-    // py = 180.2 + ds * 0.693
-    let px = 1112.5 + ds * 0.720; 
-    let py = 180.2 + ds * 0.693; 
-    // Normal down-left is (-0.693, 0.720)
-    let cx = px - 5.5 * 0.693;
-    let cy = py + 5.5 * 0.720;
+    let px = 1113.11 + ds * 0.6376; 
+    let py = 180.87 + ds * 0.7703; 
+    // Normal down-left is (-0.770, 0.638)
+    let cx = px - 5.5 * 0.770;
+    let cy = py + 5.5 * 0.638;
     svg += `<circle cx="${cx}" cy="${cy}" r="5.5" fill="#fff" stroke="${BK}" stroke-width="1.2"/>`;
-    let tx = px + 12;
-    let ty = py - 12;
+    
+    // Normal up-right for text is (0.770, -0.638)
+    let tx = px + 14 * 0.770;
+    let ty = py - 14 * 0.638;
     svg += `<text x="${tx}" y="${ty}" font-family="sans-serif" font-size="8" font-weight="700" fill="${BK}" text-anchor="middle">${i}</text>`;
-    svg += `<line x1="${px+8}" y1="${py-8}" x2="${px+2}" y2="${py-2}" stroke="${BK}" stroke-width="0.8"/>`;
-    ds += 35; // increased spacing because slant is longer
+    
+    // Leader line from line to text
+    let lx1 = px + 2 * 0.770;
+    let ly1 = py - 2 * 0.638;
+    let lx2 = px + 10 * 0.770;
+    let ly2 = py - 10 * 0.638;
+    svg += `<line x1="${lx1}" y1="${ly1}" x2="${lx2}" y2="${ly2}" stroke="${BK}" stroke-width="0.8"/>`;
+    ds += 31.5; // spacing to fit exactly 9 rollers over ~335 length
   }
 
   // === ENTRADA 2 ===
@@ -1106,10 +1103,12 @@ function renderRb1Completa() {
   // Path 1 (Entrada 1)
   stripPath = `M 100 ${Y1} `;
   lineTo(pX, Y1); 
-  // Wrap around 74 to tangent point
-  stripPath += `A 30 30 0 0 1 1112.5 180.2 `; 
-  // Slant down over rollers 75-83
-  lineTo(1350, Y2); 
+  // Wrap around 74 to tangent point T1
+  stripPath += `A 30 30 0 0 1 1113.11 180.87 `; 
+  // Slant down over rollers 75-83 to tangent point T2
+  lineTo(1326.89, 439.13); 
+  // Wrap around bottom of merge roller C2 to horizontal Y2
+  stripPath += `A 30 30 0 0 0 1350 450 `;
 
   // Path 2 (Entrada 2)
   let p2 = `M 100 ${Y2} `;

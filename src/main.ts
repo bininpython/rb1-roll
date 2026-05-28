@@ -1471,46 +1471,51 @@ function renderRb1Completa() {
   // Extend strip path to touch CORRETOR 1  // Extend strip path to touch CORRETOR 1
   lineTo(corrX, YM); // Hits exact bottom (2646, 450)
   
-  // Arc slightly around Corretor 1 to reach the exact tangent point towards BS1
-  // Tangent point calculated: (2653.7, 448.8)
-  stripPath += `A 25 25 0 0 0 2653.7 448.8 `;
+  // Arc slightly around Corretor 1 to reach the exact outer tangent point towards 173
+  stripPath += `A 25 25 0 0 0 2654 448 `;
 
   // ====================================================================
   // SEÇÃO 3: ACUMULADOR DE ENTRADA (LOOP)
   // ====================================================================
 
-  // Grupo BS1 (Bridle de Entrada do Loop)
-  let r173x = 2860, r173y = 350, rL = 30;
-  let r176x = 2770, r176y = 250;
+  // Grupo BS1 (Bridle de Entrada do Loop - Figure-8 S-Wrap)
+  let r173x = 2860, r173y = 350, rL = 30; // Right large roller
+  let r176x = 2770, r176y = 250; // Left large roller
   
-  svg += `<text x="2770" y="190" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">BS1</text>`;
+  // Text BS1
+  svg += `<text x="2815" y="190" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">BS1</text>`;
 
-  svg += rNrForno(r173x, r173y, rL, '', r173x, r173y); // 173
   svg += rNrForno(r176x, r176y, rL, '', r176x, r176y); // 176
+  svg += rNrForno(r173x, r173y, rL, '', r173x, r173y); // 173
   
   // Pinches 174, 175
-  svg += rNrForno(r173x + 25, r173y + 25, 10, '', 0, 0); // 174
-  svg += rNrForno(r176x - 25, r176y - 25, 10, '', 0, 0); // 175
+  // 174: Bottom-Right of 173
+  svg += rNrForno(r173x + 28, r173y + 28, 10, '', 0, 0); 
+  // 175: Top-Left of 176
+  svg += rNrForno(r176x - 25, r176y - 25, 10, '', 0, 0); 
 
-  // S-Wrap Path for BS1 (MATHEMATICALLY PERFECT TANGENTS)
-  // Tangent line from Corretor 1 to bottom-left of 173
-  lineTo(2869.3, 378.5); 
+  // S-Wrap Path for BS1 (THE PERFECT FIGURE-8 BRIDLE)
+  // 1. Tangent line from Corretor 1 to bottom-right of 173
+  lineTo(2870, 378); 
   
-  // Arc right side of 173 (Bottom-Left -> Right-Top tangent)
-  stripPath += `A 30 30 0 0 0 2882.35 330.0 `; 
+  // 2. Arc around 173 (Bottom-Right -> Right -> Top -> Top-Left)
+  // Counter-Clockwise (sweep=0), Large Arc (large=1)
+  stripPath += `A 30 30 0 1 0 2839 329 `; 
   
-  // Tangent diagonal line to the right side of 176
-  lineTo(2792.35, 230.0); 
+  // 3. Inner tangent diagonal line from 173 (Top-Left) to 176 (Bottom-Right)
+  lineTo(2791, 271); 
   
-  // Arc top of 176 (Right-Bottom tangent -> Top)
-  stripPath += `A 30 30 0 0 0 2770 220 `; 
+  // 4. Arc around 176 (Bottom-Right -> Bottom -> Left -> Top)
+  // Clockwise (sweep=1), Large Arc (large=1)
+  stripPath += `A 30 30 0 1 1 2770 220 `; 
   
-  // 177, 178
-  let r177x = 2860;
-  svg += rNrForno(r177x, r176y - rL - 10, 10, '', 0, 0); // 177 (Top)
+  // 177, 178 (Support rollers on the horizontal exit line)
+  // Horizontal line is at Y = 220.
+  // 177 is on TOP of the line, between 176 and 173. Let's place at X = 2815
+  svg += rNrForno(2815, 210, 10, '', 0, 0); // 177 (Top)
   
-  let r178x = 2960;
-  svg += rNrForno(r178x, r176y - rL + 10, 10, '', 0, 0); // 178 (Bottom)
+  // 178 is BELOW the line, right after 173. Let's place at X = 2930
+  svg += rNrForno(2930, 230, 10, '', 0, 0); // 178 (Bottom)
 
   // LOOP ENTRADA
   let txs = [3100, 3220, 3340]; // 179, 181, 183

@@ -893,69 +893,29 @@ function renderRb1Completa() {
   let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:${W}px;height:auto;display:block;background:#fff;">`;
   
   // ====================================================================
-  // HELPER FUNCTIONS (Text Only)
+  // HELPER FUNCTIONS (Absolutely Empty)
   // ====================================================================
   
-  function dot(cx: number, cy: number, r: number = 4.5): string {
-    return '';
-  }
-  function solidCoilE1(cx: number, cy: number, r: number): string {
-    return '';
-  }
-  function solidCoilE2(cx: number, cy: number, r: number, label: string): string {
-    return `<text x="${cx}" y="${cy + r + 25}" text-anchor="middle" ${FSL} font-size="9" font-weight="800" fill="${BK}">${label}</text>`;
-  }
-  function oVertBars(x: number, cy: number, count: number, h: number = 24, spacing: number = 14, w: number = 6): string {
-    return '';
-  }
-  function vertBars(x: number, cy: number, count: number, h: number = 30, spacing: number = 16, w: number = 8): string {
-    return '';
-  }
-  function tesoura1(cx: number, cy: number, label: string): string {
-    return `<text x="${cx}" y="${cy - 52}" text-anchor="middle" ${FSL} font-size="9" font-weight="800" fill="${BK}">${label}</text>`;
-  }
-  function tesoura2(cx: number, cy: number, label: string): string {
-    return `<text x="${cx}" y="${cy - 25}" text-anchor="middle" ${FSL} font-size="9" font-weight="800" fill="${BK}">${label}</text>`;
-  }
-  function enroladorTrapezoid(cx: number, cy: number, label: string): string {
-    return `<text x="${cx}" y="${cy - 22}" text-anchor="middle" ${FSL} font-size="9" font-weight="800" fill="${BK}">${label}</text>`;
-  }
-  function tesouraTable(x: number, y: number, length: number): string {
-    return '';
-  }
-  function solidCoil(cx: number, cy: number, r: number, label: string): string {
-    return `<text x="${cx}" y="${cy + r + 20}" text-anchor="middle" ${FSL} font-size="9" font-weight="700" fill="${BK}">${label}</text>`;
-  }
-  function donutCoil(cx: number, cy: number, r: number, label: string): string {
-    return solidCoilE2(cx, cy, r, label);
-  }
-  function enroladorCrescent(cx: number, cy: number, label: string): string {
-    return enroladorTrapezoid(cx, cy, label);
-  }
-  function startPlatform(x: number, y: number, w: number, h: number): string {
-    return '';
-  }
-  function maqSolda(cx: number, cy: number): string {
-    return `<text x="${cx}" y="${cy - 48}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">MÁQUINA DE SOLDA</text>`;
-  }
-  function secadorLosango(cx: number, cy: number, w: number = 80, h: number = 80, label: string): string {
-    return `<text x="${cx}" y="${cy - h/2 - 10}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">${label}</text>`;
-  }
-  function corretorCruz(cx: number, cy: number, r: number = 25, label: string): string {
-    return `<text x="${cx}" y="${cy - r - 10}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">${label}</text>`;
-  }
-  function tanque(x: number, y: number, w: number, h: number, label: string, rollers: number[] = []): string {
-    return `<text x="${x + w/2}" y="${y - 10}" text-anchor="middle" ${FSL} font-size="12" font-weight="800" fill="${BK}">${label}</text>`;
-  }
-  function blocoQuad(cx: number, cy: number, size: number, label: string): string {
-    return `<text x="${cx}" y="${cy - size/2 - 10}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">${label}</text>`;
-  }
-  function mesaInspecao(x: number, y: number, w: number): string {
-    return `<text x="${x + w/2}" y="${y - 15}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">MESA DE INSPEÇÃO</text>`;
-  }
-  function tesoura3(cx: number, cy: number, label: string): string {
-    return `<text x="${cx}" y="${cy - 58}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">${label}</text>`;
-  }
+  function dot(cx: number, cy: number, r: number = 4.5): string { return ''; }
+  function solidCoilE1(cx: number, cy: number, r: number): string { return ''; }
+  function solidCoilE2(cx: number, cy: number, r: number, label: string): string { return ''; }
+  function oVertBars(x: number, cy: number, count: number, h: number = 24, spacing: number = 14, w: number = 6): string { return ''; }
+  function vertBars(x: number, cy: number, count: number, h: number = 30, spacing: number = 16, w: number = 8): string { return ''; }
+  function tesoura1(cx: number, cy: number, label: string): string { return ''; }
+  function tesoura2(cx: number, cy: number, label: string): string { return ''; }
+  function enroladorTrapezoid(cx: number, cy: number, label: string): string { return ''; }
+  function tesouraTable(x: number, y: number, length: number): string { return ''; }
+  function solidCoil(cx: number, cy: number, r: number, label: string): string { return ''; }
+  function donutCoil(cx: number, cy: number, r: number, label: string): string { return ''; }
+  function enroladorCrescent(cx: number, cy: number, label: string): string { return ''; }
+  function startPlatform(x: number, y: number, w: number, h: number): string { return ''; }
+  function maqSolda(cx: number, cy: number): string { return ''; }
+  function secadorLosango(cx: number, cy: number, w: number = 80, h: number = 80, label: string): string { return ''; }
+  function corretorCruz(cx: number, cy: number, r: number = 25, label: string): string { return ''; }
+  function tanque(x: number, y: number, w: number, h: number, label: string, rollers: number[] = []): string { return ''; }
+  function blocoQuad(cx: number, cy: number, size: number, label: string): string { return ''; }
+  function mesaInspecao(x: number, y: number, w: number): string { return ''; }
+  function tesoura3(cx: number, cy: number, label: string): string { return ''; }
 
   // ====================================================================
   // PASS-LINE PATH TRACKING

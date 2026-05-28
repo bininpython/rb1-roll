@@ -1006,65 +1006,62 @@ function renderRb1Completa() {
     svg += `<circle cx="${cx}" cy="${cy}" r="${LR}" fill="none" stroke="${BK}" stroke-width="1.8"/>`;
   }
 
-  // Fosso (Pit) lines
-  svg += `<line x1="3000" y1="${LYT}" x2="3000" y2="${LYB+20}" stroke="${BK}" stroke-width="2"/>`;
-  svg += `<line x1="3000" y1="${LYB+20}" x2="3750" y2="${LYB+20}" stroke="${BK}" stroke-width="2"/>`;
-  svg += `<line x1="3750" y1="${LYB+20}" x2="3750" y2="${LYT}" stroke="${BK}" stroke-width="2"/>`;
+  // Title
   svg += `<text x="3300" y="${LYT - 40}" text-anchor="middle" ${FSL} font-size="20" font-weight="800" fill="${BK}">Loop Entrada</text>`;
 
-  // Bridle Entrance
-  // Line comes from X=2750 at YM=450.
-  let b1x = 2800, b1y = YM - LR; // 2800, 420
-  let b2x = 2950, b2y = LYT + LR; // 2950, 150
-
-  drawHollowRoller(b1x, b1y);
-  drawHollowRoller(b2x, b2y);
-
-  // Line wraps under b1
-  lineTo(b1x, YM); // 2800, 450
-  stripPath += `A ${LR} ${LR} 0 0 0 ${b1x + LR} ${b1y} `; // Arcs to 2830, 420
+  // 1. Entrance Roller (E1)
+  let e1x = 2800, e1y = YM - LR; // 2800, 420
+  drawHollowRoller(e1x, e1y);
   
-  // Line goes to left of b2
-  lineTo(b2x - LR, b2y); // 2920, 150
+  // Line comes from left, meets bottom of E1
+  lineTo(e1x, YM);
+  // Wraps bottom-right quadrant of E1
+  stripPath += `A ${LR} ${LR} 0 0 0 ${e1x + LR} ${e1y} `;
   
-  // Wraps over b2 to its top
-  stripPath += `A ${LR} ${LR} 0 0 1 ${b2x} ${b2y - LR} `; // Arcs to 2950, 120
+  // 2. Top Roller 1 (T1)
+  let t1x = 2950, t1y = LYT + LR; // 2950, 150
+  drawHollowRoller(t1x, t1y);
+  
+  // Line goes up to left side of T1
+  lineTo(t1x - LR, t1y);
+  // Wraps top-left quadrant of T1
+  stripPath += `A ${LR} ${LR} 0 0 1 ${t1x} ${LYT} `;
+  
+  // 3. Top Roller 2 (T2)
+  let t2x = 3050, t2y = LYT + LR;
+  drawHollowRoller(t2x, t2y);
+  
+  // Horizontal line connecting T1 and T2 top
+  lineTo(t2x, LYT);
+  // Wraps top-right quadrant of T2
+  stripPath += `A ${LR} ${LR} 0 0 1 ${t2x + LR} ${t2y} `;
 
-  // 7 Loop Rollers (4 Top, 3 Bottom)
-  const txs = [3050, 3250, 3450, 3650];
+  // Remaining rollers: 3 Bottom (B1,B2,B3), 3 Top (T3,T4,T5)
   const bxs = [3150, 3350, 3550];
+  const txs = [3250, 3450, 3650];
 
-  for (let x of txs) drawHollowRoller(x, LYT + LR);
-  for (let x of bxs) drawHollowRoller(x, LYB - LR);
-
-  // Trace S-wraps between them
-  lineTo(txs[0], LYT);
-  
   for (let i = 0; i < 3; i++) {
-    // Top to Bottom
-    // We are at the top of txs[i]. Wrap over to right side.
-    stripPath += `A ${LR} ${LR} 0 0 1 ${txs[i] + LR} ${LYT + LR} `;
+    // Bottom roller Bi
+    let bx = bxs[i], by = LYB - LR;
+    drawHollowRoller(bx, by);
     
-    // Line to left side of bxs[i]
-    lineTo(bxs[i] - LR, LYB - LR);
+    // Line down diagonally to left side of Bi
+    lineTo(bx - LR, by);
+    // Wrap under Bi (full bottom half)
+    stripPath += `A ${LR} ${LR} 0 0 0 ${bx + LR} ${by} `;
     
-    // Wrap under bottom to its right side
-    stripPath += `A ${LR} ${LR} 0 0 0 ${bxs[i] + LR} ${LYB - LR} `;
+    // Top roller Ti+2
+    let tx = txs[i], ty = LYT + LR;
+    drawHollowRoller(tx, ty);
     
-    // Line to left side of txs[i+1]
-    lineTo(txs[i+1] - LR, LYT + LR);
-    
-    // Wrap over top to its top center
-    stripPath += `A ${LR} ${LR} 0 0 1 ${txs[i+1]} ${LYT} `;
+    // Line up diagonally to left side of Ti+2
+    lineTo(tx - LR, ty);
+    // Wrap over Ti+2 (full top half)
+    stripPath += `A ${LR} ${LR} 0 0 1 ${tx + LR} ${ty} `;
   }
 
-  // Exit Loop from Top 4
-  // We are at top of Top 4 (txs[3], LYT).
-  // Wrap over Top 4 right side
-  stripPath += `A ${LR} ${LR} 0 0 1 ${txs[3] + LR} ${LYT + LR} `;
-  
-  // Go back to YM (450)
-  lineTo(3800, YM);
+  // Exit: drop down diagonally to YM and continue horizontal
+  lineTo(3750, YM);
   lineTo(3860, YM);
 
   // ====================================================================

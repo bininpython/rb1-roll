@@ -893,96 +893,38 @@ function renderRb1Completa() {
   let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:${W}px;height:auto;display:block;background:#fff;">`;
   
   // ====================================================================
-  // HELPER FUNCTIONS (Minimalist Solid Black Style)
+  // HELPER FUNCTIONS (Text Only)
   // ====================================================================
   
   function dot(cx: number, cy: number, r: number = 4.5): string {
-    return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${BK}"/>`;
+    return '';
   }
-  
-  // Entrada 1 Coil: Solid black with white center dot
   function solidCoilE1(cx: number, cy: number, r: number): string {
-    let c = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${BK}"/>`;
-    c += `<circle cx="${cx}" cy="${cy}" r="${r * 0.15}" fill="#fff"/>`;
-    return c;
+    return '';
   }
-  
-  // Entrada 2 Coil: Solid black, large white ring, black center dot
   function solidCoilE2(cx: number, cy: number, r: number, label: string): string {
-    let c = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${BK}"/>`;
-    c += `<circle cx="${cx}" cy="${cy}" r="${r * 0.4}" fill="#fff"/>`;
-    c += `<circle cx="${cx}" cy="${cy}" r="${r * 0.15}" fill="${BK}"/>`;
-    c += `<text x="${cx}" y="${cy + r + 25}" text-anchor="middle" ${FSL} font-size="9" font-weight="800" fill="${BK}">${label}</text>`;
-    return c;
+    return `<text x="${cx}" y="${cy + r + 25}" text-anchor="middle" ${FSL} font-size="9" font-weight="800" fill="${BK}">${label}</text>`;
   }
-  
-  // Vertical bars (hollow for E1)
   function oVertBars(x: number, cy: number, count: number, h: number = 24, spacing: number = 14, w: number = 6): string {
-    let b = '';
-    for (let i = 0; i < count; i++) {
-      b += `<rect x="${x + i * spacing}" y="${cy - h/2}" width="${w}" height="${h}" fill="#fff" stroke="${BK}" stroke-width="1.8"/>`;
-    }
-    return b;
+    return '';
   }
-
-  // Vertical bars (solid for E2)
   function vertBars(x: number, cy: number, count: number, h: number = 30, spacing: number = 16, w: number = 8): string {
-    let b = '';
-    for (let i = 0; i < count; i++) {
-      b += `<rect x="${x + i * spacing}" y="${cy - h/2}" width="${w}" height="${h}" fill="${BK}"/>`;
-    }
-    return b;
+    return '';
   }
-  
-  // Tesoura 1 (Tower style)
   function tesoura1(cx: number, cy: number, label: string): string {
-    let s = '';
-    s += `<rect x="${cx - 12}" y="${cy - 35}" width="24" height="25" fill="#fff" stroke="${BK}" stroke-width="1.5"/>`; // Top block
-    s += `<rect x="${cx - 12}" y="${cy - 10}" width="24" height="20" fill="#fff" stroke="${BK}" stroke-width="1.5"/>`; // Middle block
-    s += `<rect x="${cx - 12}" y="${cy + 10}" width="24" height="20" fill="#fff" stroke="${BK}" stroke-width="1.5"/>`; // Lower block
-    s += `<rect x="${cx - 18}" y="${cy + 30}" width="36" height="30" fill="#fff" stroke="${BK}" stroke-width="1.5"/>`; // Base block
-    s += `<rect x="${cx - 4}" y="${cy - 45}" width="8" height="10" fill="${BK}"/>`; // Top pin
-    s += `<text x="${cx}" y="${cy - 52}" text-anchor="middle" ${FSL} font-size="9" font-weight="800" fill="${BK}">${label}</text>`;
-    return s;
+    return `<text x="${cx}" y="${cy - 52}" text-anchor="middle" ${FSL} font-size="9" font-weight="800" fill="${BK}">${label}</text>`;
   }
-
-  // Tesoura 2 (Minimalist)
   function tesoura2(cx: number, cy: number, label: string): string {
-    let s = '';
-    s += `<rect x="${cx - 4}" y="${cy - 15}" width="8" height="15" fill="${BK}"/>`; // Top blade
-    s += `<rect x="${cx}" y="${cy + 5}" width="6" height="15" fill="${BK}"/>`; // Bottom blade
-    s += `<line x1="${cx + 3}" y1="${cy + 20}" x2="${cx + 25}" y2="${cy + 40}" stroke="${BK}" stroke-width="2"/>`; // Arm
-    s += `<line x1="${cx + 9}" y1="${cy + 20}" x2="${cx + 31}" y2="${cy + 40}" stroke="${BK}" stroke-width="2"/>`; // Arm
-    s += `<rect x="${cx + 20}" y="${cy + 40}" width="20" height="25" fill="#fff" stroke="${BK}" stroke-width="1.5"/>`; // Base
-    s += `<text x="${cx}" y="${cy - 25}" text-anchor="middle" ${FSL} font-size="9" font-weight="800" fill="${BK}">${label}</text>`;
-    return s;
+    return `<text x="${cx}" y="${cy - 25}" text-anchor="middle" ${FSL} font-size="9" font-weight="800" fill="${BK}">${label}</text>`;
   }
-  
-  // Calandra Trapezoid Base
   function enroladorTrapezoid(cx: number, cy: number, label: string): string {
-    let e = '';
-    e += `<path d="M ${cx - 20} ${cy - 12} Q ${cx} ${cy+8} ${cx + 20} ${cy - 12}" fill="none" stroke="${BK}" stroke-width="2"/>`; // Crescent
-    e += dot(cx - 8, cy - 2, 4); // left internal roller
-    e += dot(cx + 8, cy - 2, 4); // right internal roller
-    e += `<polygon points="${cx - 10},${cy + 10} ${cx + 10},${cy + 10} ${cx + 25},${cy + 35} ${cx - 25},${cy + 35}" fill="#fff" stroke="${BK}" stroke-width="1.5"/>`; // Trapezoid base
-    e += `<text x="${cx}" y="${cy - 22}" text-anchor="middle" ${FSL} font-size="9" font-weight="800" fill="${BK}">${label}</text>`;
-    return e;
+    return `<text x="${cx}" y="${cy - 22}" text-anchor="middle" ${FSL} font-size="9" font-weight="800" fill="${BK}">${label}</text>`;
   }
-
-  // Tesoura Table Triangle Base
   function tesouraTable(x: number, y: number, length: number): string {
-    let t = '';
-    t += `<rect x="${x}" y="${y}" width="${length}" height="6" fill="#fff" stroke="${BK}" stroke-width="1.5"/>`;
-    t += `<polygon points="${x + length/2},${y + 6} ${x + length},${y + 6} ${x + length/2},${y + 35}" fill="#fff" stroke="${BK}" stroke-width="1.5"/>`;
-    return t;
+    return '';
   }
-
-  // Other components rest of the line:
   function solidCoil(cx: number, cy: number, r: number, label: string): string {
-    let c = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${BK}"/>`;
-    c += `<circle cx="${cx}" cy="${cy}" r="${r * 0.15}" fill="#fff"/>`;
-    c += `<text x="${cx}" y="${cy + r + 20}" text-anchor="middle" ${FSL} font-size="9" font-weight="700" fill="${BK}">${label}</text>`;
-    return c;
+    return `<text x="${cx}" y="${cy + r + 20}" text-anchor="middle" ${FSL} font-size="9" font-weight="700" fill="${BK}">${label}</text>`;
   }
   function donutCoil(cx: number, cy: number, r: number, label: string): string {
     return solidCoilE2(cx, cy, r, label);
@@ -991,80 +933,28 @@ function renderRb1Completa() {
     return enroladorTrapezoid(cx, cy, label);
   }
   function startPlatform(x: number, y: number, w: number, h: number): string {
-    return tesouraTable(x, y, w);
+    return '';
   }
-
-  // Máquina de Solda
   function maqSolda(cx: number, cy: number): string {
-    let m = '';
-    m += `<rect x="${cx - 16}" y="${cy - 25}" width="32" height="50" fill="#fff" stroke="${BK}" stroke-width="2"/>`;
-    m += `<rect x="${cx - 6}" y="${cy - 38}" width="12" height="15" fill="${BK}"/>`;
-    m += `<rect x="${cx - 10}" y="${cy - 18}" width="20" height="10" fill="none" stroke="${BK}" stroke-width="0.8"/>`;
-    m += dot(cx - 5, cy - 13, 2);
-    m += dot(cx + 5, cy - 13, 2);
-    m += `<line x1="${cx - 12}" y1="${cy + 25}" x2="${cx - 18}" y2="${cy + 42}" stroke="${BK}" stroke-width="1.5"/>`;
-    m += `<line x1="${cx + 12}" y1="${cy + 25}" x2="${cx + 18}" y2="${cy + 42}" stroke="${BK}" stroke-width="1.5"/>`;
-    m += `<line x1="${cx - 18}" y1="${cy + 42}" x2="${cx + 18}" y2="${cy + 42}" stroke="${BK}" stroke-width="1.5"/>`;
-    m += `<rect x="${cx - 30}" y="${cy + 42}" width="60" height="35" rx="5" fill="#fff" stroke="${BK}" stroke-width="2"/>`;
-    m += `<text x="${cx}" y="${cy - 48}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">MÁQUINA DE SOLDA</text>`;
-    return m;
+    return `<text x="${cx}" y="${cy - 48}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">MÁQUINA DE SOLDA</text>`;
   }
-
-  // Secador Losango
   function secadorLosango(cx: number, cy: number, w: number = 80, h: number = 80, label: string): string {
-    let s = '';
-    s += `<polygon points="${cx},${cy - h/2} ${cx + w/2},${cy} ${cx},${cy + h/2} ${cx - w/2},${cy}" fill="#fff" stroke="${BK}" stroke-width="2"/>`;
-    s += `<circle cx="${cx - w/2}" cy="${cy}" r="4" fill="${BK}"/>`;
-    s += `<circle cx="${cx + w/2}" cy="${cy}" r="4" fill="${BK}"/>`;
-    s += `<text x="${cx}" y="${cy - h/2 - 10}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">${label}</text>`;
-    return s;
+    return `<text x="${cx}" y="${cy - h/2 - 10}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">${label}</text>`;
   }
-
-  // Corretor Cruz
   function corretorCruz(cx: number, cy: number, r: number = 25, label: string): string {
-    let s = '';
-    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#fff" stroke="${BK}" stroke-width="2"/>`;
-    s += `<path d="M ${cx} ${cy - r} A ${r} ${r} 0 0 1 ${cx + r} ${cy} L ${cx} ${cy} Z" fill="${BK}"/>`;
-    s += `<path d="M ${cx} ${cy + r} A ${r} ${r} 0 0 1 ${cx - r} ${cy} L ${cx} ${cy} Z" fill="${BK}"/>`;
-    s += `<text x="${cx}" y="${cy - r - 10}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">${label}</text>`;
-    return s;
+    return `<text x="${cx}" y="${cy - r - 10}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">${label}</text>`;
   }
-
-  // Tanque Retangular
   function tanque(x: number, y: number, w: number, h: number, label: string, rollers: number[] = []): string {
-    let t = '';
-    t += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#fff" stroke="${BK}" stroke-width="2"/>`;
-    rollers.forEach(rx => {
-      t += dot(x + rx, y + h/2, 8);
-    });
-    t += `<text x="${x + w/2}" y="${y - 10}" text-anchor="middle" ${FSL} font-size="12" font-weight="800" fill="${BK}">${label}</text>`;
-    return t;
+    return `<text x="${x + w/2}" y="${y - 10}" text-anchor="middle" ${FSL} font-size="12" font-weight="800" fill="${BK}">${label}</text>`;
   }
-
   function blocoQuad(cx: number, cy: number, size: number, label: string): string {
-    let b = '';
-    b += `<rect x="${cx - size/2}" y="${cy - size/2}" width="${size}" height="${size}" fill="#fff" stroke="${BK}" stroke-width="2"/>`;
-    b += dot(cx, cy, size/4);
-    b += `<text x="${cx}" y="${cy - size/2 - 10}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">${label}</text>`;
-    return b;
+    return `<text x="${cx}" y="${cy - size/2 - 10}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">${label}</text>`;
   }
-
   function mesaInspecao(x: number, y: number, w: number): string {
-    let m = '';
-    m += `<rect x="${x}" y="${y}" width="${w}" height="10" fill="#fff" stroke="${BK}" stroke-width="1.5"/>`;
-    m += `<line x1="${x+10}" y1="${y+10}" x2="${x+10}" y2="${y+30}" stroke="${BK}" stroke-width="1.5"/>`;
-    m += `<line x1="${x+w-10}" y1="${y+10}" x2="${x+w-10}" y2="${y+30}" stroke="${BK}" stroke-width="1.5"/>`;
-    m += `<text x="${x + w/2}" y="${y - 15}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">MESA DE INSPEÇÃO</text>`;
-    return m;
+    return `<text x="${x + w/2}" y="${y - 15}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">MESA DE INSPEÇÃO</text>`;
   }
-  
   function tesoura3(cx: number, cy: number, label: string): string {
-    let s = '';
-    s += `<rect x="${cx - 15}" y="${cy - 50}" width="30" height="90" fill="#fff" stroke="${BK}" stroke-width="2"/>`;
-    s += `<rect x="${cx - 15}" y="${cy - 5}" width="30" height="10" fill="${BK}"/>`;
-    s += `<rect x="${cx - 4}" y="${cy - 50}" width="8" height="45" fill="${BK}"/>`;
-    s += `<text x="${cx}" y="${cy - 58}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">${label}</text>`;
-    return s;
+    return `<text x="${cx}" y="${cy - 58}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">${label}</text>`;
   }
 
   // ====================================================================

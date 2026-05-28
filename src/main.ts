@@ -998,39 +998,75 @@ function renderRb1Completa() {
   // ====================================================================
   // SEÇÃO 3: ACUMULADOR DE ENTRADA (LOOP)
   // ====================================================================
-  const LYT = 120; // Loop Y Top
-  const LYB = 580; // Loop Y Bottom
+  const LYT = 120; // Top level
+  const LYB = 580; // Bottom level
+  const LR = 30;   // Loop roller radius
 
-  svg += dot(2830, YM, 5);
-  svg += dot(2880, LYT+10, 15); // Defletor
-  svg += dot(2920, LYT, 6);
-  svg += dot(2980, LYT, 6);
-  
-  lineTo(2830, YM); lineTo(2880, LYT+10); lineTo(2920, LYT); lineTo(2980, LYT);
-  
+  function drawHollowRoller(cx: number, cy: number) {
+    svg += `<circle cx="${cx}" cy="${cy}" r="${LR}" fill="none" stroke="${BK}" stroke-width="1.8"/>`;
+  }
+
   // Fosso (Pit) lines
   svg += `<line x1="3000" y1="${LYT}" x2="3000" y2="${LYB+20}" stroke="${BK}" stroke-width="2"/>`;
-  svg += `<line x1="3000" y1="${LYB+20}" x2="3600" y2="${LYB+20}" stroke="${BK}" stroke-width="2"/>`;
-  svg += `<line x1="3600" y1="${LYB+20}" x2="3600" y2="${LYT}" stroke="${BK}" stroke-width="2"/>`;
-  svg += `<text x="3300" y="${LYT - 40}" text-anchor="middle" ${FSL} font-size="12" font-weight="800" fill="${BK}">LOOP DE ENTRADA</text>`;
+  svg += `<line x1="3000" y1="${LYB+20}" x2="3750" y2="${LYB+20}" stroke="${BK}" stroke-width="2"/>`;
+  svg += `<line x1="3750" y1="${LYB+20}" x2="3750" y2="${LYT}" stroke="${BK}" stroke-width="2"/>`;
+  svg += `<text x="3300" y="${LYT - 40}" text-anchor="middle" ${FSL} font-size="20" font-weight="800" fill="${BK}">Loop Entrada</text>`;
+
+  // Bridle Entrance
+  // Line comes from X=2750 at YM=450.
+  let b1x = 2800, b1y = YM - LR; // 2800, 420
+  let b2x = 2950, b2y = LYT + LR; // 2950, 150
+
+  drawHollowRoller(b1x, b1y);
+  drawHollowRoller(b2x, b2y);
+
+  // Line wraps under b1
+  lineTo(b1x, YM); // 2800, 450
+  stripPath += `A ${LR} ${LR} 0 0 0 ${b1x + LR} ${b1y} `; // Arcs to 2830, 420
   
-  // 7 grandes rolos (4 bottom, 3 top)
-  const lxs = [3050, 3130, 3210, 3290, 3370, 3450, 3530];
-  const lys = [LYB, LYT, LYB, LYT, LYB, LYT, LYB];
-  for (let i=0; i<7; i++) {
-    svg += dot(lxs[i], lys[i], 25);
-    lineTo(lxs[i], lys[i]);
+  // Line goes to left of b2
+  lineTo(b2x - LR, b2y); // 2920, 150
+  
+  // Wraps over b2 to its top
+  stripPath += `A ${LR} ${LR} 0 0 1 ${b2x} ${b2y - LR} `; // Arcs to 2950, 120
+
+  // 7 Loop Rollers (4 Top, 3 Bottom)
+  const txs = [3050, 3250, 3450, 3650];
+  const bxs = [3150, 3350, 3550];
+
+  for (let x of txs) drawHollowRoller(x, LYT + LR);
+  for (let x of bxs) drawHollowRoller(x, LYB - LR);
+
+  // Trace S-wraps between them
+  lineTo(txs[0], LYT);
+  
+  for (let i = 0; i < 3; i++) {
+    // Top to Bottom
+    // We are at the top of txs[i]. Wrap over to right side.
+    stripPath += `A ${LR} ${LR} 0 0 1 ${txs[i] + LR} ${LYT + LR} `;
+    
+    // Line to left side of bxs[i]
+    lineTo(bxs[i] - LR, LYB - LR);
+    
+    // Wrap under bottom to its right side
+    stripPath += `A ${LR} ${LR} 0 0 0 ${bxs[i] + LR} ${LYB - LR} `;
+    
+    // Line to left side of txs[i+1]
+    lineTo(txs[i+1] - LR, LYT + LR);
+    
+    // Wrap over top to its top center
+    stripPath += `A ${LR} ${LR} 0 0 1 ${txs[i+1]} ${LYT} `;
   }
+
+  // Exit Loop from Top 4
+  // We are at top of Top 4 (txs[3], LYT).
+  // Wrap over Top 4 right side
+  stripPath += `A ${LR} ${LR} 0 0 1 ${txs[3] + LR} ${LYT + LR} `;
   
-  // Saída loop
-  svg += dot(3650, LYT, 6);
-  svg += dot(3700, LYT-10, 6); svg += dot(3700, LYT+10, 6);
-  svg += dot(3750, LYT-15, 8);
-  svg += dot(3800, LYT, 18); // defletor
-  svg += dot(3860, YM, 8);
-  
-  lineTo(3650, LYT); lineTo(3700, LYT); lineTo(3750, LYT-15); lineTo(3800, LYT); lineTo(3860, YM);
-  
+  // Go back to YM (450)
+  lineTo(3800, YM);
+  lineTo(3860, YM);
+
   // ====================================================================
   // SEÇÃO 4: FORNO E RESFRIAMENTO
   // ====================================================================

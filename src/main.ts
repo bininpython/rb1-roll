@@ -928,126 +928,34 @@ function renderRb1Completa() {
 
   const Y1 = 170;
   const Y2 = 450;
-  const YM = 280;
-
-  svg += `<text x="40" y="${Y1 - 90}" ${FSL} font-size="14" font-weight="800" fill="${BK}">ENTRADA 1</text>`;
-  svg += `<line x1="40" y1="${Y1 - 85}" x2="160" y2="${Y1 - 85}" stroke="${BK}" stroke-width="2"/>`;
-
-  svg += `<text x="40" y="${Y2 - 90}" ${FSL} font-size="14" font-weight="800" fill="${BK}">ENTRADA 2</text>`;
-  svg += `<line x1="40" y1="${Y2 - 85}" x2="160" y2="${Y2 - 85}" stroke="${BK}" stroke-width="2"/>`;
+  const YM = 450; // Main line continues at Y2 level
 
   // ====================================================================
-  // SEÇÃO 1: ENTRADAS DUPLAS (Minimalist Positioning from Image)
+  // SEÇÃO 1: ENTRADAS DUPLAS (Ultra Minimalist)
   // ====================================================================
   
-  // === ENTRADA 1 ===
-  svg += solidCoilE1(100, Y1, 40);
-  svg += dot(100, Y1 - 45, 4); // Top roller
-  
-  // 1 small roller
-  svg += dot(150, Y1, 4);
-  
-  // 2 large pinch rollers
-  svg += dot(180, Y1 - 10, 10); svg += dot(180, Y1 + 10, 10);
-  
-  // 2 small rollers
-  svg += dot(220, Y1 - 6, 4); svg += dot(220, Y1 + 6, 4);
-  
-  // Leveler (2 top, 3 bottom)
-  svg += dot(255, Y1 - 5, 4); svg += dot(275, Y1 - 5, 4);
-  svg += dot(245, Y1 + 5, 4); svg += dot(265, Y1 + 5, 4); svg += dot(285, Y1 + 5, 4);
-  
-  // Table (5 bottom)
-  for(let i=0; i<5; i++) svg += dot(330 + i*18, Y1 + 5, 4);
-  
-  // 3 hollow vertical bars
-  svg += oVertBars(440, Y1, 3);
-  
-  // 1 small bottom roller
-  svg += dot(490, Y1 + 5, 4);
-  
-  // Tesoura 1 Tower
-  svg += tesoura1(530, Y1, 'Tesouara 1');
-  
-  // Table attached to tesoura (6 rollers) with triangle base
-  svg += tesouraTable(545, Y1 + 2, 75);
-  for(let i=0; i<6; i++) svg += dot(552 + i*12, Y1, 4);
-  
-  // Table of 10 bottom rollers
-  for(let i=0; i<10; i++) svg += dot(640 + i*16, Y1 + 5, 4);
-  
-  // Enrolador de tiras (trapezoid base)
-  svg += enroladorTrapezoid(820, Y1 - 5, 'Enrolador de tiras');
-  
-  // 2 small bottom rollers
-  svg += dot(870, Y1 + 5, 4); svg += dot(890, Y1 + 5, 4);
-  
-  // 2 large pull rollers
-  svg += dot(930, Y1 - 12, 12); svg += dot(930, Y1 + 12, 12);
-  lineTo(930, Y1);
-  lineTo(1050, YM); // descend
-  
-  // 8 diagonal rollers down
-  for(let i=0; i<8; i++) {
-    svg += dot(945 + i*13.5, Y1 + 15 + i*(YM-Y1-30)/8, 4);
-  }
+  // Title ENTRADA 1
+  svg += `<text x="60" y="${Y1 - 20}" ${FSL} font-size="14" font-weight="800" fill="${BK}">Entrada 1</text>`;
+  // Coil 1 (Hollow circle)
+  svg += `<circle cx="100" cy="${Y1 + 40}" r="40" fill="none" stroke="${BK}" stroke-width="1.5"/>`;
 
-  // === ENTRADA 2 ===
+  // Title ENTRADA 2
+  svg += `<text x="60" y="${Y2 - 20}" ${FSL} font-size="14" font-weight="800" fill="${BK}">Entrada 2</text>`;
+  // Coil 2 (Hollow circle)
+  svg += `<circle cx="100" cy="${Y2 + 40}" r="40" fill="none" stroke="${BK}" stroke-width="1.5"/>`;
+
+  // Path 1 (Entrada 1)
+  stripPath = `M 100 ${Y1} `;
+  lineTo(600, Y1);
+  lineTo(800, Y2); // Slant down to Entrada 2
+
+  // Path 2 (Entrada 2)
   let p2 = `M 100 ${Y2} `;
-  svg += solidCoilE2(100, Y2, 40, 'BOBINA 2');
-  // 3 rollers around coil
-  svg += dot(70, Y2 - 35, 6); svg += dot(110, Y2 - 45, 6); svg += dot(145, Y2 + 30, 8);
+  p2 += `L 800 ${Y2} `; // Meet Entrada 1
+  svg += `<path d="${p2}" fill="none" stroke="${BK}" stroke-width="2"/>`;
   
-  // 2 small rollers
-  svg += dot(200, Y2 - 6, 4); svg += dot(200, Y2 + 6, 4);
-  // 2 small rollers
-  svg += dot(240, Y2 - 6, 4); svg += dot(240, Y2 + 6, 4);
-  
-  // Leveler (2 top, 3 bottom)
-  svg += dot(285, Y2 - 5, 4); svg += dot(305, Y2 - 5, 4);
-  svg += dot(275, Y2 + 5, 4); svg += dot(295, Y2 + 5, 4); svg += dot(315, Y2 + 5, 4);
-  
-  // Table (5 bottom)
-  for(let i=0; i<5; i++) svg += dot(360 + i*18, Y2 + 5, 4);
-  
-  // 3 solid vertical bars
-  svg += vertBars(470, Y2, 3);
-  
-  // 2 small rollers
-  svg += dot(530, Y2 - 6, 4); svg += dot(530, Y2 + 6, 4);
-  
-  // Tesoura 2
-  svg += tesoura2(570, Y2, 'TESOURA 2');
-  
-  // 4 bottom rollers
-  for(let i=0; i<4; i++) svg += dot(610 + i*15, Y2 + 5, 4);
-  
-  // 7 hollow rollers (in the image they are hollow! wait, some are hollow, some are solid)
-  // Image shows 7 solid rollers!
-  for(let i=0; i<7; i++) {
-    svg += dot(690 + i*15, Y2 + 5, 4);
-  }
-  
-  // Calandra 2
-  svg += enroladorTrapezoid(820, Y2 - 5, 'CALANDRA 2');
-  // 3 solid rollers
-  for(let i=0; i<3; i++) {
-    svg += dot(870 + i*15, Y2 + 5, 4);
-  }
-  
-  // 2 HUGE solid pull rollers
-  svg += dot(950, Y2 - 16, 16); svg += dot(950, Y2 + 16, 16);
-  
-  // 8 small solid rollers
-  for(let i=0; i<8; i++) svg += dot(1000 + i*15, Y2 + 5, 4);
-  
-  // 2 small pinch corner rollers
-  svg += dot(1140, Y2 - 6, 4); svg += dot(1140, Y2 + 6, 4);
-  
-  p2 += `L 1140 ${Y2} L 1220 ${YM} `;
-  svg += `<path d="${p2}" fill="none" stroke="${BK}" stroke-width="1.5"/>`;
-  stripPath += `L 1220 ${YM} `;
-
+  // After merging at 800, Y2, stripPath continues along Y2 (which is YM)
+  lineTo(1400, YM);
 
   // ====================================================================
   // SEÇÃO 2: SOLDA E PREPARAÇÃO

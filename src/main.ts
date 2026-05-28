@@ -1474,94 +1474,100 @@ function renderRb1Completa() {
   lineTo(corrX + 80, YM - 25);
 
   // ====================================================================
+  // SEÇÃO 3: ACUMULADOR DE ENTRADA (LOOP)  // ====================================================================
   // SEÇÃO 3: ACUMULADOR DE ENTRADA (LOOP)
   // ====================================================================
-  const LYT = 120; // Top level
-  const LYB = 580; // Bottom level
-  const LR = 30;   // Loop roller radius
 
-  function drawHollowRoller(cx: number, cy: number) {
-    svg += `<circle cx="${cx}" cy="${cy}" r="${LR}" fill="none" stroke="${BK}" stroke-width="1.8"/>`;
+  // Grupo BS1 (Bridle de Entrada do Loop)
+  let r173x = 2860, r173y = 350, rL = 30;
+  let r176x = 2770, r176y = 250;
+  
+  svg += `<text x="2770" y="200" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">BS1</text>`;
+
+  svg += rNrForno(r173x, r173y, rL, '', r173x, r173y); // 173
+  svg += rNrForno(r176x, r176y, rL, '', r176x, r176y); // 176
+  
+  // Pinches 174, 175
+  svg += rNrForno(r173x + 25, r173y + 25, 10, '', 0, 0); // 174
+  svg += rNrForno(r176x - 25, r176y - 25, 10, '', 0, 0); // 175
+
+  // S-Wrap Path for BS1
+  lineTo(r173x, r173y + rL); // Bottom of 173
+  stripPath += `A ${rL} ${rL} 0 0 0 ${r173x + rL} ${r173y} `; // Right of 173
+  stripPath += `A ${rL} ${rL} 0 0 0 ${r173x} ${r173y - rL} `; // Top of 173
+  
+  lineTo(r176x + rL, r176y); // Right of 176
+  stripPath += `A ${rL} ${rL} 0 0 0 ${r176x} ${r176y - rL} `; // Top of 176
+  
+  // 177, 178
+  let r177x = 2860;
+  svg += rNrForno(r177x, r176y - rL - 10, 10, '', 0, 0); // 177 (Top)
+  
+  let r178x = 2960;
+  svg += rNrForno(r178x, r176y - rL + 10, 10, '', 0, 0); // 178 (Bottom)
+
+  // Extend strip to Loop Entrada
+  lineTo(3000, r176y - rL);
+
+  // LOOP ENTRADA
+  let txs = [3100, 3220, 3340]; // 179, 181, 183
+  let bxs = [3160, 3280, 3400]; // 180, 182, 184
+  let r185x = 3460;
+  let TY = 250;
+  let BY = 650;
+  
+  svg += `<text x="3280" y="150" font-family="Montserrat, sans-serif" font-size="20" font-weight="900" fill="#ffffff" text-anchor="middle">LOOP ENTRADA</text>`;
+
+  // Draw Pit lines
+  svg += `<line x1="3050" y1="180" x2="3050" y2="720" stroke="#475569" stroke-width="4"/>`;
+  svg += `<line x1="3050" y1="720" x2="3510" y2="720" stroke="#475569" stroke-width="4"/>`;
+  svg += `<line x1="3510" y1="720" x2="3510" y2="180" stroke="#475569" stroke-width="4"/>`;
+
+  for (let x of txs) {
+    svg += rNrForno(x, TY, 30, '', x, TY);
   }
-
-  // Fosso (Pit) lines
-  svg += `<line x1="3100" y1="${LYT}" x2="3100" y2="${LYB+20}" stroke="${BK}" stroke-width="2"/>`;
-  svg += `<line x1="3100" y1="${LYB+20}" x2="3700" y2="${LYB+20}" stroke="${BK}" stroke-width="2"/>`;
-  svg += `<line x1="3700" y1="${LYB+20}" x2="3700" y2="${LYT}" stroke="${BK}" stroke-width="2"/>`;
-  svg += `<text x="3400" y="${LYT - 40}" text-anchor="middle" ${FSL} font-size="20" font-weight="800" fill="${BK}">Loop Entrada</text>`;
-
-  // 1. Entrance Bridle (E1, E2, E3)
-  let e1x = 2800, e1y = 450;
-  let e2x = 2900, e2y = 300;
-  let e3x = 3000, e3y = 150;
+  for (let x of bxs) {
+    svg += rNrForno(x, BY, 30, '', x, BY);
+  }
   
-  drawHollowRoller(e1x, e1y);
-  drawHollowRoller(e2x, e2y);
-  drawHollowRoller(e3x, e3y);
+  // Draw Corretor (185) at r185x, TY
+  let corr2X = r185x, corr2Y = TY;
+  svg += `<circle cx="${corr2X}" cy="${corr2Y}" r="30" fill="#052e16" stroke="#22c55e" stroke-width="2" filter="url(#greenGlow)"/>`;
+  svg += `<path d="M ${corr2X} ${corr2Y} L ${corr2X} ${corr2Y - 30} A 30 30 0 0 1 ${corr2X + 30} ${corr2Y} Z" fill="#4ade80"/>`;
+  svg += `<path d="M ${corr2X} ${corr2Y} L ${corr2X} ${corr2Y + 30} A 30 30 0 0 1 ${corr2X - 30} ${corr2Y} Z" fill="#4ade80"/>`;
+  svg += `<circle cx="${corr2X}" cy="${corr2Y}" r="2" fill="#ffffff"/>`;
+  svg += `<text x="${corr2X + 50}" y="${TY + 50}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">CORRETOR 2</text>`;
   
-  // Path for Entrance
-  lineTo(e1x - LR, e1y); // Hit left of E1
-  stripPath += `A ${LR} ${LR} 0 0 1 ${e1x + LR} ${e1y} `; // Over E1
+  // Trace Loop Path
+  // Incoming strip is at Y = TY - 30 = 220.
+  lineTo(txs[0] - 30, TY - 30); // Reach 179
   
-  lineTo(e2x - LR, e2y); // Hit left of E2
-  stripPath += `A ${LR} ${LR} 0 0 0 ${e2x + LR} ${e2y} `; // Under E2
-  
-  lineTo(e3x - LR, e3y); // Hit left of E3
-  stripPath += `A ${LR} ${LR} 0 0 1 ${e3x} ${e3y - LR} `; // Top-left quarter over E3
-  
-  // 2. Top connection to Pit
-  let t1x = 3150;
-  lineTo(t1x, LYT); // Flat line to T1
-  
-  // 3. Pit Loops (T1..T3, B1..B3)
-  const txs = [3150, 3350, 3550]; // T1, T2, T3
-  const bxs = [3250, 3450, 3650]; // B1, B2, B3
-  
-  for (let x of txs) drawHollowRoller(x, LYT + LR); // cy = 150
-  for (let x of bxs) drawHollowRoller(x, LYB - LR); // cy = 550
-  
-  // Trace Pit
   for (let i = 0; i < 3; i++) {
-    let tx = txs[i], ty = LYT + LR;
-    // Wrap right half of Tx
-    stripPath += `A ${LR} ${LR} 0 0 1 ${tx + LR} ${ty} `;
+    let topX = txs[i];
+    let botX = bxs[i];
     
-    let bx = bxs[i], by = LYB - LR;
-    // Line to left side of Bx
-    lineTo(bx - LR, by);
-    // Wrap bottom half of Bx
-    stripPath += `A ${LR} ${LR} 0 0 0 ${bx + LR} ${by} `;
+    // Strip wraps right side of Top roller
+    stripPath += `A 30 30 0 0 1 ${topX + 30} ${TY} `;
     
+    // Down to left side of Bottom roller
+    lineTo(botX - 30, BY);
+    
+    // Strip wraps bottom side of Bottom roller
+    stripPath += `A 30 30 0 0 0 ${botX + 30} ${BY} `;
+    
+    // Up to left side of next Top roller
     if (i < 2) {
-      let next_tx = txs[i+1], next_ty = LYT + LR;
-      // Line to left side of next Tx
-      lineTo(next_tx - LR, next_ty);
-      // Wrap top-left quadrant of next Tx
-      stripPath += `A ${LR} ${LR} 0 0 1 ${next_tx} ${LYT} `;
+      lineTo(txs[i+1] - 30, TY);
+      stripPath += `A 30 30 0 0 1 ${txs[i+1]} ${TY - 30} `; // Top of next
+    } else {
+      lineTo(r185x - 30, TY);
+      stripPath += `A 30 30 0 0 1 ${r185x} ${TY - 30} `; // Top of 185
     }
   }
   
-  // 4. Exit Bridle (T_out, B_out)
-  let tox = 3750, toy = 150;
-  let box = 3750, boy = 420;
-  
-  drawHollowRoller(tox, toy);
-  drawHollowRoller(box, boy);
-  
-  // Line from B3 to right side of T_out
-  lineTo(tox + LR, toy); 
-  
-  // Wrap OVER T_out (right to left)
-  stripPath += `A ${LR} ${LR} 0 0 0 ${tox - LR} ${toy} `; 
-  
-  // Line DOWN to left side of B_out
-  lineTo(box - LR, boy); 
-  
-  // Wrap UNDER B_out (left to bottom)
-  stripPath += `A ${LR} ${LR} 0 0 0 ${box} ${boy + LR} `; 
-  
-  // Continue horizontal
-  lineTo(3860, YM); 
+  // After 185, strip exits horizontally and slants back to main level YM
+  lineTo(r185x + 100, TY - 30);
+  lineTo(3860, YM);
 
   // ====================================================================
   // SEÇÃO 4: FORNO E RESFRIAMENTO
@@ -1681,6 +1687,8 @@ function renderRb1Completa() {
   lineTo(8850, YM-20); lineTo(8900, YM+20); lineTo(8960, YM-20); lineTo(9020, YM+30); lineTo(9080, YM-30);
   
   // Fosso Saída
+  const LYT = 120;
+  const LYB = 580;
   svg += `<line x1="9150" y1="${LYT}" x2="9150" y2="${LYB+20}" stroke="${BK}" stroke-width="2"/>`;
   svg += `<line x1="9150" y1="${LYB+20}" x2="9550" y2="${LYB+20}" stroke="${BK}" stroke-width="2"/>`;
   svg += `<line x1="9550" y1="${LYB+20}" x2="9550" y2="${LYT}" stroke="${BK}" stroke-width="2"/>`;

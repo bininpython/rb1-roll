@@ -1447,18 +1447,13 @@ function renderRb1Completa() {
   svg += rNrForno(secRx, YM - 8, 8, '', secRx, YM); // 168 Top
   svg += rNrForno(secRx, YM + 8, 8, '', secRx, YM); // 170 Bottom
 
-  // Roller 171  // Roller 171 (Tangent to diagonal line)
+  // Roller 171  // Roller 171 (Strip passes UNDER it)
   let r171X = secRx + 40; // 2596
-  // Diagonal line starts at (2556, 450) and goes to (2866.6, 379.2)
-  // Slope = -0.2279
-  let r171YLine = 450 - 0.2279 * (r171X - secRx); // 440.89
-  let r171YCenter = r171YLine - (8 / 0.975); // 432.69
-  svg += rNrForno(r171X, r171YCenter, 8, '', r171X, r171YCenter - 15);
+  svg += rNrForno(r171X, YM - 8, 8, '', r171X, YM - 15);
 
-  // CORRETOR 1 (172) (Tangent to diagonal line)
+  // CORRETOR 1 (172) (Strip passes UNDER it)
   let corrX = r171X + 50; // 2646
-  let corrYLine = 450 - 0.2279 * (corrX - secRx); // 429.49
-  let corrY = corrYLine - (25 / 0.975); // 403.85
+  let corrY = YM - 25; // 425
   
   // Quadrant Pattern
   svg += `<circle cx="${corrX}" cy="${corrY}" r="25" fill="#052e16" stroke="#22c55e" stroke-width="2" filter="url(#greenGlow)"/>`;
@@ -1467,9 +1462,12 @@ function renderRb1Completa() {
   svg += `<circle cx="${corrX}" cy="${corrY}" r="2" fill="#ffffff"/>`;
   svg += `<text x="${corrX}" y="${YM + 35}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">CORRETOR 1</text>`;
 
-  // Extend strip path horizontally through Secador until its exit (secRx)
-  lineTo(secRx, YM); 
+  // Extend strip path horizontally through Secador and 171, hitting EXACT bottom of Corretor 1
+  lineTo(corrX, YM); 
   
+  // Arc slightly around Corretor 1 to reach the exact outer tangent point towards 173
+  stripPath += `A 25 25 0 0 0 2654 448 `;
+
   // ====================================================================
   // SEÇÃO 3: ACUMULADOR DE ENTRADA (LOOP)
   // ====================================================================
@@ -1489,7 +1487,7 @@ function renderRb1Completa() {
   svg += rNrForno(r176x - 25, r176y - 25, 10, '', 0, 0); // 175: Top-Left of 176
 
   // S-Wrap Path for BS1 (THE PERFECT FIGURE-8 BRIDLE)
-  // 1. Tangent diagonal line from Secador exit to bottom tangent of 173
+  // 1. Tangent diagonal line from Corretor 1 exit to bottom tangent of 173
   lineTo(2866.6, 379.2); 
   
   // 2. Arc around 173 (Bottom-Right -> Right -> Top -> Top-Left)

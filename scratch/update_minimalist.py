@@ -1,27 +1,23 @@
-// ===== RB1 COMPLETA — Technical Industrial Diagram =====
-function renderRb1Completa() {
-  const W = 12000, H = 700;
-  const BK = '#1a1a1a'; // solid black fill
-  const LK = '#1a1a1a'; // line color
-  const SW = '1.2';      // stroke-width
-  const FS = 'font-family="JetBrains Mono, monospace"';
-  const FSL = 'font-family="Montserrat, sans-serif"';
-  
-  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:${W}px;height:auto;display:block;background:#fff;">`;
-  
-  // Border frame
-  svg += `<rect x="3" y="3" width="${W - 6}" height="${H - 6}" fill="none" stroke="${BK}" stroke-width="1.5"/>`;
-  
-  // Title block
-  svg += `<rect x="${W - 460}" y="${H - 50}" width="450" height="42" fill="none" stroke="${BK}" stroke-width="1.5"/>`;
-  svg += `<text x="${W - 450}" y="${H - 38}" ${FSL} font-size="10" font-weight="700" fill="${BK}">APERAM — LINHA DE RECOZIMENTO E DECAPAGEM RB1</text>`;
-  svg += `<text x="${W - 450}" y="${H - 18}" ${FS} font-size="7.5" fill="#444">RB1 SYSTEM v3.0 — DIAGRAMA TÉCNICO INDUSTRIAL</text>`;
-  
-  // ====================================================================
+import os
+
+fpath = r"c:\Users\Usuario\Desktop\forno\src\main.ts"
+with open(fpath, "r", encoding="utf-8") as f:
+    main_content = f.read()
+
+start_marker = "  // ====================================================================\n  // HELPER FUNCTIONS (Heavy Engineering Style)\n  // ===================================================================="
+end_marker = "  // ====================================================================\n  // SEÇÃO 2: SOLDA E PREPARAÇÃO\n  // ===================================================================="
+
+start_idx = main_content.find(start_marker)
+end_idx = main_content.find(end_marker)
+
+if start_idx == -1 or end_idx == -1:
+    print("Could not find markers.")
+else:
+    new_content = """  // ====================================================================
   // HELPER FUNCTIONS (Minimalist Solid Black Style)
   // ====================================================================
   
-  function dot(cx: number, cy: number, r: number = 4): string {
+  function dot(cx: number, cy: number, r: number = 4.5): string {
     return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${BK}"/>`;
   }
   
@@ -45,7 +41,7 @@ function renderRb1Completa() {
   function oVertBars(x: number, cy: number, count: number): string {
     let b = '';
     for (let i = 0; i < count; i++) {
-      b += `<rect x="${x + i * 12}" y="${cy - 12}" width="6" height="24" fill="#fff" stroke="${BK}" stroke-width="1.8"/>`;
+      b += `<rect x="${x + i * 14}" y="${cy - 12}" width="6" height="24" fill="#fff" stroke="${BK}" stroke-width="1.8"/>`;
     }
     return b;
   }
@@ -54,7 +50,7 @@ function renderRb1Completa() {
   function vertBars(x: number, cy: number, count: number): string {
     let b = '';
     for (let i = 0; i < count; i++) {
-      b += `<rect x="${x + i * 14}" y="${cy - 15}" width="8" height="30" fill="${BK}"/>`;
+      b += `<rect x="${x + i * 16}" y="${cy - 15}" width="8" height="30" fill="${BK}"/>`;
     }
     return b;
   }
@@ -102,22 +98,40 @@ function renderRb1Completa() {
     return t;
   }
 
-  // Helper for other sections...
-  function corretorCruz(cx: number, cy: number, r: number, label: string): string {
-    let s = '';
-    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#fff" stroke="${BK}" stroke-width="2"/>`;
-    s += `<path d="M ${cx} ${cy - r} A ${r} ${r} 0 0 1 ${cx + r} ${cy} L ${cx} ${cy} Z" fill="${BK}"/>`;
-    s += `<path d="M ${cx} ${cy + r} A ${r} ${r} 0 0 1 ${cx - r} ${cy} L ${cx} ${cy} Z" fill="${BK}"/>`;
-    return s;
+  // Other components rest of the line:
+  function solidCoil(cx: number, cy: number, r: number, label: string): string {
+    let c = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${BK}"/>`;
+    c += `<circle cx="${cx}" cy="${cy}" r="${r * 0.15}" fill="#fff"/>`;
+    c += `<text x="${cx}" y="${cy + r + 20}" text-anchor="middle" ${FSL} font-size="9" font-weight="700" fill="${BK}">${label}</text>`;
+    return c;
   }
-  function tanque(x: number, y: number, w: number, h: number, label: string): string {
-    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#fff" stroke="${BK}" stroke-width="2"/>
-            <text x="${x + w/2}" y="${y - 10}" text-anchor="middle" ${FSL} font-size="12" font-weight="800" fill="${BK}">${label}</text>`;
+  function donutCoil(cx: number, cy: number, r: number, label: string): string {
+    return solidCoilE2(cx, cy, r, label);
   }
-  function blocoQuad(cx: number, cy: number, size: number, label: string): string {
-    return `<rect x="${cx - size/2}" y="${cy - size/2}" width="${size}" height="${size}" fill="#fff" stroke="${BK}" stroke-width="2"/>
-            <text x="${cx}" y="${cy - size/2 - 10}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">${label}</text>`;
+  function enroladorCrescent(cx: number, cy: number, label: string): string {
+    return enroladorTrapezoid(cx, cy, label);
   }
+  function startPlatform(x: number, y: number, w: number, h: number): string {
+    return tesouraTable(x, y, w);
+  }
+
+  // Máquina de Solda
+  function maqSolda(cx: number, cy: number): string {
+    let m = '';
+    m += `<rect x="${cx - 16}" y="${cy - 25}" width="32" height="50" fill="#fff" stroke="${BK}" stroke-width="2"/>`;
+    m += `<rect x="${cx - 6}" y="${cy - 38}" width="12" height="15" fill="${BK}"/>`;
+    m += `<rect x="${cx - 10}" y="${cy - 18}" width="20" height="10" fill="none" stroke="${BK}" stroke-width="0.8"/>`;
+    m += dot(cx - 5, cy - 13, 2);
+    m += dot(cx + 5, cy - 13, 2);
+    m += `<line x1="${cx - 12}" y1="${cy + 25}" x2="${cx - 18}" y2="${cy + 42}" stroke="${BK}" stroke-width="1.5"/>`;
+    m += `<line x1="${cx + 12}" y1="${cy + 25}" x2="${cx + 18}" y2="${cy + 42}" stroke="${BK}" stroke-width="1.5"/>`;
+    m += `<line x1="${cx - 18}" y1="${cy + 42}" x2="${cx + 18}" y2="${cy + 42}" stroke="${BK}" stroke-width="1.5"/>`;
+    m += `<rect x="${cx - 30}" y="${cy + 42}" width="60" height="35" rx="5" fill="#fff" stroke="${BK}" stroke-width="2"/>`;
+    m += `<text x="${cx}" y="${cy - 48}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">MÁQUINA DE SOLDA</text>`;
+    return m;
+  }
+
+  // Secador Losango
   function secadorLosango(cx: number, cy: number, w: number = 80, h: number = 80, label: string): string {
     let s = '';
     s += `<polygon points="${cx},${cy - h/2} ${cx + w/2},${cy} ${cx},${cy + h/2} ${cx - w/2},${cy}" fill="#fff" stroke="${BK}" stroke-width="2"/>`;
@@ -127,27 +141,77 @@ function renderRb1Completa() {
     return s;
   }
 
+  // Corretor Cruz
+  function corretorCruz(cx: number, cy: number, r: number = 25, label: string): string {
+    let s = '';
+    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#fff" stroke="${BK}" stroke-width="2"/>`;
+    s += `<path d="M ${cx} ${cy - r} A ${r} ${r} 0 0 1 ${cx + r} ${cy} L ${cx} ${cy} Z" fill="${BK}"/>`;
+    s += `<path d="M ${cx} ${cy + r} A ${r} ${r} 0 0 1 ${cx - r} ${cy} L ${cx} ${cy} Z" fill="${BK}"/>`;
+    s += `<text x="${cx}" y="${cy - r - 10}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">${label}</text>`;
+    return s;
+  }
+
+  // Tanque Retangular
+  function tanque(x: number, y: number, w: number, h: number, label: string, rollers: number[] = []): string {
+    let t = '';
+    t += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#fff" stroke="${BK}" stroke-width="2"/>`;
+    rollers.forEach(rx => {
+      t += dot(x + rx, y + h/2, 8);
+    });
+    t += `<text x="${x + w/2}" y="${y - 10}" text-anchor="middle" ${FSL} font-size="12" font-weight="800" fill="${BK}">${label}</text>`;
+    return t;
+  }
+
+  function blocoQuad(cx: number, cy: number, size: number, label: string): string {
+    let b = '';
+    b += `<rect x="${cx - size/2}" y="${cy - size/2}" width="${size}" height="${size}" fill="#fff" stroke="${BK}" stroke-width="2"/>`;
+    b += dot(cx, cy, size/4);
+    b += `<text x="${cx}" y="${cy - size/2 - 10}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">${label}</text>`;
+    return b;
+  }
+
+  function mesaInspecao(x: number, y: number, w: number): string {
+    let m = '';
+    m += `<rect x="${x}" y="${y}" width="${w}" height="10" fill="#fff" stroke="${BK}" stroke-width="1.5"/>`;
+    m += `<line x1="${x+10}" y1="${y+10}" x2="${x+10}" y2="${y+30}" stroke="${BK}" stroke-width="1.5"/>`;
+    m += `<line x1="${x+w-10}" y1="${y+10}" x2="${x+w-10}" y2="${y+30}" stroke="${BK}" stroke-width="1.5"/>`;
+    m += `<text x="${x + w/2}" y="${y - 15}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">MESA DE INSPEÇÃO</text>`;
+    return m;
+  }
+  
+  function tesoura3(cx: number, cy: number, label: string): string {
+    let s = '';
+    s += `<rect x="${cx - 15}" y="${cy - 50}" width="30" height="90" fill="#fff" stroke="${BK}" stroke-width="2"/>`;
+    s += `<rect x="${cx - 15}" y="${cy - 5}" width="30" height="10" fill="${BK}"/>`;
+    s += `<rect x="${cx - 4}" y="${cy - 50}" width="8" height="45" fill="${BK}"/>`;
+    s += `<text x="${cx}" y="${cy - 58}" text-anchor="middle" ${FSL} font-size="10" font-weight="700" fill="${BK}">${label}</text>`;
+    return s;
+  }
+
   // ====================================================================
   // PASS-LINE PATH TRACKING
   // ====================================================================
   let stripPath = "M 100 170 ";
-  function lineTo(x: number, y: number) { stripPath += \`L \${x} \${y} \`; }
+  function lineTo(x: number, y: number) { stripPath += `L ${x} ${y} `; }
+  function curveTo(x1: number, y1: number, x2: number, y2: number, x: number, y: number) {
+    stripPath += `C ${x1} ${y1}, ${x2} ${y2}, ${x} ${y} `;
+  }
 
   const Y1 = 170;
   const Y2 = 450;
   const YM = 280;
 
-  // Title ENTRADA 1
-  svg += \`<text x="40" y="\${Y1 - 90}" \${FSL} font-size="14" font-weight="800" fill="\${BK}">ENTRADA 1</text>\`;
-  svg += \`<line x1="40" y1="\${Y1 - 85}" x2="160" y2="\${Y1 - 85}" stroke="\${BK}" stroke-width="2"/>\`;
+  svg += `<text x="40" y="${Y1 - 90}" ${FSL} font-size="14" font-weight="800" fill="${BK}">ENTRADA 1</text>`;
+  svg += `<line x1="40" y1="${Y1 - 85}" x2="160" y2="${Y1 - 85}" stroke="${BK}" stroke-width="2"/>`;
 
-  // Title ENTRADA 2
-  svg += \`<text x="40" y="\${Y2 - 90}" \${FSL} font-size="14" font-weight="800" fill="\${BK}">ENTRADA 2</text>\`;
-  svg += \`<line x1="40" y1="\${Y2 - 85}" x2="160" y2="\${Y2 - 85}" stroke="\${BK}" stroke-width="2"/>\`;
+  svg += `<text x="40" y="${Y2 - 90}" ${FSL} font-size="14" font-weight="800" fill="${BK}">ENTRADA 2</text>`;
+  svg += `<line x1="40" y1="${Y2 - 85}" x2="160" y2="${Y2 - 85}" stroke="${BK}" stroke-width="2"/>`;
 
   // ====================================================================
-  // SEÇÃO 1: ENTRADA 1 (Based on Image 1 Top)
+  // SEÇÃO 1: ENTRADAS DUPLAS (Minimalist Positioning from Image)
   // ====================================================================
+  
+  // === ENTRADA 1 ===
   svg += solidCoilE1(100, Y1, 40);
   svg += dot(100, Y1 - 45, 4); // Top roller
   
@@ -199,10 +263,8 @@ function renderRb1Completa() {
     svg += dot(945 + i*13.5, Y1 + 15 + i*(YM-Y1-30)/8, 4);
   }
 
-  // ====================================================================
-  // SEÇÃO 1: ENTRADA 2 (Based on Image 1 Bottom)
-  // ====================================================================
-  let p2 = \`M 100 \${Y2} \`;
+  // === ENTRADA 2 ===
+  let p2 = `M 100 ${Y2} `;
   svg += solidCoilE2(100, Y2, 40, 'BOBINA 2');
   // 3 rollers around coil
   svg += dot(70, Y2 - 35, 6); svg += dot(110, Y2 - 45, 6); svg += dot(145, Y2 + 30, 8);
@@ -232,16 +294,16 @@ function renderRb1Completa() {
   for(let i=0; i<4; i++) svg += dot(610 + i*15, Y2 + 5, 4);
   
   // 7 hollow rollers (in the image they are hollow! wait, some are hollow, some are solid)
-  // Image shows 7 hollow rollers here
+  // Image shows 7 solid rollers!
   for(let i=0; i<7; i++) {
-    svg += \`<circle cx="\${690 + i*15}" cy="\${Y2 + 5}" r="4" fill="#fff" stroke="\${BK}" stroke-width="1.5"/>\`;
+    svg += dot(690 + i*15, Y2 + 5, 4);
   }
   
   // Calandra 2
   svg += enroladorTrapezoid(820, Y2 - 5, 'CALANDRA 2');
-  // 3 hollow rollers
+  // 3 solid rollers
   for(let i=0; i<3; i++) {
-    svg += \`<circle cx="\${870 + i*15}" cy="\${Y2 + 5}" r="4" fill="#fff" stroke="\${BK}" stroke-width="1.5"/>\`;
+    svg += dot(870 + i*15, Y2 + 5, 4);
   }
   
   // 2 HUGE solid pull rollers
@@ -253,21 +315,12 @@ function renderRb1Completa() {
   // 2 small pinch corner rollers
   svg += dot(1140, Y2 - 6, 4); svg += dot(1140, Y2 + 6, 4);
   
-  p2 += \`L 1140 \${Y2} L 1220 \${YM} \`;
-  svg += \`<path d="\${p2}" fill="none" stroke="\${BK}" stroke-width="1.5"/>\`;
-  stripPath += \`L 1220 \${YM} \`;
+  p2 += `L 1140 ${Y2} L 1220 ${YM} `;
+  svg += `<path d="${p2}" fill="none" stroke="${BK}" stroke-width="1.5"/>`;
+  stripPath += `L 1220 ${YM} `;
 
-  // ====================================================================
-  // CONTINUE REST OF LINE (Merging point at YM)
-  // ====================================================================
-  svg += \`<line x1="20" y1="310" x2="1200" y2="310" stroke="\${BK}" stroke-width="0.5" stroke-dasharray="10 5"/>\`;
-  
-  // Rest of line...
-  // Just placing the path end so it doesn't break
-  svg += \`<path d="\${stripPath}" fill="none" stroke="\${BK}" stroke-width="1.5"/>\`;
-
-  svg += '</svg>';
-  
-  const el = document.getElementById('rb1CompletaDiagram');
-  if (el) el.innerHTML = svg;
-}
+"""
+    final_content = main_content[:start_idx] + new_content + "\n" + main_content[end_idx:]
+    with open(fpath, "w", encoding="utf-8") as f:
+        f.write(final_content)
+    print("Replaced section successfully.")

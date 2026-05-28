@@ -1057,7 +1057,13 @@ function renderRb1Completa() {
   // ====================================================================
   
   function rNr(cx: number, cy: number, r: number, n: string, tx: number, ty: number, lx: number, ly: number, ltx: number, lty: number, fs: number = 9) {
-    return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2" class="spin-fast" style="transform-origin: ${cx}px ${cy}px"/>`;
+    let g = '';
+    g += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#052e16" stroke="#22c55e" stroke-width="1.5" filter="url(#greenGlow)"/>`;
+    if (r >= 3) {
+      g += `<circle cx="${cx}" cy="${cy}" r="${r - 1.5}" fill="none" stroke="#22c55e" stroke-width="0.8" stroke-dasharray="2 2" class="spin-slow" style="transform-origin: ${cx}px ${cy}px"/>`;
+    }
+    g += `<circle cx="${cx}" cy="${cy}" r="1" fill="#4ade80"/>`;
+    return g;
   }
 
   function rectSens(cx: number, num: string) {

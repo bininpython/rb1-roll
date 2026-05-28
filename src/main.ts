@@ -1051,27 +1051,49 @@ function renderRb1Completa() {
     srx += 12;
   }
 
-  // 73 (Large Pinch & Small Follower)
+  // 73 and 74 (Large Pinch)
   svg += rNr(1150, Y1-18, 18, '73', 1150, Y1-45, 1150, Y1-43, 1150, Y1-36);
-  svg += `<circle cx="1150" cy="${Y1+30}" r="30" fill="#fff" stroke="${BK}" stroke-width="1.5"/>`;
-  // Small Follower
-  svg += `<circle cx="1185" cy="${Y1+50}" r="6" fill="#fff" stroke="${BK}" stroke-width="1.2"/>`;
-  svg += `<line x1="1178" y1="${Y1+55}" x2="1170" y2="${Y1+65}" stroke="${BK}" stroke-width="1"/>`; // Spring/mount
+  svg += rNr(1150, Y1+30, 30, '74', 1150, Y1+70, 1150, Y1+68, 1150, Y1+60);
+
+  // Slant geometry
+  // C1 = 1150, 200, R=30. Dest = 1350, 450.
+  // Tangent point on C1 right side is (1175.1, 183.5)
+  
+  // 75-83 (Rollers on slant)
+  let ds = 25;
+  for (let i=75; i<=83; i++) {
+    let px = 1175.1 + ds * 0.549; // unit x
+    let py = 183.5 + ds * 0.836; // unit y
+    // Normal down-left is (-0.836, 0.549)
+    let cx = px - 5.5 * 0.836;
+    let cy = py + 5.5 * 0.549;
+    svg += `<circle cx="${cx}" cy="${cy}" r="5.5" fill="#fff" stroke="${BK}" stroke-width="1.2"/>`;
+    let tx = px + 12;
+    let ty = py - 12;
+    svg += `<text x="${tx}" y="${ty}" font-family="sans-serif" font-size="8" font-weight="700" fill="${BK}" text-anchor="middle">${i}</text>`;
+    svg += `<line x1="${px+8}" y1="${py-8}" x2="${px+2}" y2="${py-2}" stroke="${BK}" stroke-width="0.8"/>`;
+    ds += 30;
+  }
 
   // === ENTRADA 2 ===
   svg += `<text x="60" y="${Y2 - 20}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="${BK}">ENTRADA 2</text>`;
   svg += `<circle cx="100" cy="${Y2 + 40}" r="40" fill="#fff" stroke="${BK}" stroke-width="1.5"/>`;
   svg += `<circle cx="100" cy="${Y2 + 40}" r="15" fill="none" stroke="${BK}" stroke-width="1.5"/>`;
+  // Merge Bridle
+  svg += `<circle cx="1350" cy="${Y2+30}" r="30" fill="#fff" stroke="${BK}" stroke-width="1.5"/>`;
+  svg += `<circle cx="1350" cy="${Y2-15}" r="15" fill="#fff" stroke="${BK}" stroke-width="1.5"/>`;
 
   // Path 1 (Entrada 1)
   stripPath = `M 100 ${Y1} `;
-  lineTo(1150, Y1); // Go horizontally through all 73 rollers
-  // Wraps between 73 rollers and slants down
+  lineTo(1150, Y1); 
+  // Wrap around 74 to tangent point
+  stripPath += `A 30 30 0 0 1 1175.1 183.5 `; 
+  // Slant down over rollers 75-83
   lineTo(1350, Y2); 
 
   // Path 2 (Entrada 2)
   let p2 = `M 100 ${Y2} `;
-  p2 += `L 1350 ${Y2} `; // Meet Entrada 1
+  p2 += `L 1350 ${Y2} `; 
   svg += `<path d="${p2}" fill="none" stroke="${BK}" stroke-width="2"/>`;
   
   // After merging at 1350, Y2, stripPath continues along Y2 (which is YM)

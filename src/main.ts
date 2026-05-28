@@ -1301,27 +1301,28 @@ function renderRb1Completa() {
 
   // 4. Sensor 1: Box, line passing through, NO LABELS
   svg += `<rect x="${sn1 - 10}" y="${YM - 25}" width="20" height="40" fill="none" stroke="#22c55e" stroke-width="2"/>`;
-  // TOP LINE REMOVED per user request
+  // Downward line
+  svg += `<line x1="${sn1}" y1="${YM + 15}" x2="${sn1}" y2="${YM + 25}" stroke="#22c55e" stroke-width="1.5"/>`;
 
   // 5. Cross Mark
-  let cx = sn1 + 45;
-  svg += `<line x1="${cx - 10}" y1="${YM - 20}" x2="${cx + 10}" y2="${YM - 20}" stroke="#22c55e" stroke-width="2"/>`; 
-  svg += `<line x1="${cx}" y1="${YM - 30}" x2="${cx}" y2="${YM - 10}" stroke="#22c55e" stroke-width="1.5"/>`;
+  let cx = sn1 + 35; // D1
+  svg += `<line x1="${cx - 10}" y1="${YM - 20}" x2="${cx + 10}" y2="${YM - 20}" stroke="#22c55e" stroke-width="2"/>`; // Horizontal
+  svg += `<line x1="${cx}" y1="${YM - 35}" x2="${cx}" y2="${YM + 5}" stroke="#22c55e" stroke-width="1.5"/>`; // Vertical (taller)
 
   // 6. Group 3: 2 Rollers ALL BOTTOM, NO LABELS
-  let rx = cx + 35;
-  svg += rNrForno(rx, YM + 8, 8, '', rx, YM + 30);
-  svg += rNrForno(rx + 25, YM + 8, 8, '', rx + 25, YM + 30);
+  let r147 = cx + 45; // D2
+  let r148 = r147 + 35; // D3
+  svg += rNrForno(r147, YM + 8, 8, '', r147, YM + 30);
+  svg += rNrForno(r148, YM + 8, 8, '', r148, YM + 30);
 
-  // 7. Pinch Rollers: Top small, Bottom large, NO LABELS
-  let px = rx + 45;
-  svg += rNrForno(px, YM - 8, 8, '', px, YM - 25);
-  svg += rNrForno(px, YM + 12, 12, '', px, YM + 40);
+  // 7. Pinch Rollers (149/150): BOTH EXACTLY SAME SIZE (r=8), NO LABELS
+  let px = r148 + 55; // D4 (wider gap)
+  svg += rNrForno(px, YM - 8, 8, '', px, YM - 25); // Top
+  svg += rNrForno(px, YM + 8, 8, '', px, YM + 25); // Bottom
 
   // 8. Sensor 2 & Scrap Bucket: Box, line passing through, NO LABELS
-  let sn2 = px + 45;
+  let sn2 = px + 40; // D5
   svg += `<rect x="${sn2 - 10}" y="${YM - 25}" width="20" height="40" fill="none" stroke="#22c55e" stroke-width="2"/>`;
-  // TOP LINE REMOVED per user request
   
   // Dotted drop line
   svg += `<line x1="${sn2}" y1="${YM + 15}" x2="${sn2}" y2="${YM + 80}" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="2 2"/>`; 

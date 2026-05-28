@@ -159,6 +159,17 @@
         @media (max-width: 768px) {
             .form-row { grid-template-columns: 1fr; }
         }
+
+        /* === RB1 Completa Technical Diagram === */
+        .blueprint-container { overflow-x: auto; overflow-y: hidden; background: #ffffff; border: 2px solid #1a1a1a; border-radius: 2px; position: relative; }
+        .blueprint-container::-webkit-scrollbar { height: 8px; }
+        .blueprint-container::-webkit-scrollbar-track { background: #f0f0f0; }
+        .blueprint-container::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        .blueprint-container::-webkit-scrollbar-thumb:hover { background: #555; }
+        .blueprint-corner { position: absolute; font-family: 'JetBrains Mono', monospace; font-size: 8px; color: #999; letter-spacing: 1px; }
+        .blueprint-legend { display: flex; flex-wrap: wrap; gap: 1.5rem; padding: 1rem 1.5rem; background: #fafafa; border: 1px solid #e0e0e0; border-radius: 4px; }
+        .legend-item { display: flex; align-items: center; gap: .5rem; font-size: .75rem; color: #444; font-family: 'Open Sans', sans-serif; }
+        .legend-icon { width: 28px; height: 16px; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body class="bg-background text-on-surface antialiased min-h-screen flex flex-col">
@@ -193,6 +204,10 @@
                 <a id="tabDecapagem" class="nav-tab text-[11px] font-bold flex items-center gap-1.5 pb-2.5 cursor-pointer border-b-2 transition-all">
                     <span class="material-symbols-outlined text-[16px]">bolt</span>
                     Decapagem
+                </a>
+                <a id="tabRb1Completa" class="nav-tab text-[11px] font-bold flex items-center gap-1.5 pb-2.5 cursor-pointer border-b-2 transition-all">
+                    <span class="material-symbols-outlined text-[16px]">factory</span>
+                    RB1 Completa
                 </a>
             </nav>
         </div>
@@ -451,6 +466,40 @@
                     </div>
                 </section>
             </div>
+        </div>
+
+        <!-- ===== RB1 COMPLETA VIEW ===== -->
+        <div id="viewRb1Completa" class="view-hidden w-full flex flex-col gap-6">
+
+            <!-- Stats -->
+            <section id="statsRb1CompletaBar" class="grid grid-cols-2 md:grid-cols-4 gap-3"></section>
+
+            <!-- Technical Diagram -->
+            <section class="bg-white border border-outline-variant/60 rounded-lg overflow-hidden shadow-sm">
+                <div class="px-5 py-3.5 border-b border-outline-variant/40 flex justify-between items-center bg-surface-bright">
+                    <h2 class="font-display text-sm font-bold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[18px] text-gray-700">factory</span>
+                        RB1 Completa — Diagrama Técnico Industrial
+                    </h2>
+                    <div class="flex items-center gap-3">
+                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Planta Técnica</span>
+                    </div>
+                </div>
+                <div class="blueprint-container">
+                    <div id="rb1CompletaDiagram" style="min-height:550px;"></div>
+                </div>
+            </section>
+
+            <!-- Legend -->
+            <section class="bg-white border border-outline-variant/60 rounded-lg overflow-hidden shadow-sm">
+                <div class="px-5 py-3.5 border-b border-outline-variant/40 bg-surface-bright">
+                    <h3 class="font-display text-sm font-bold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[16px] text-gray-600">info</span>
+                        Legenda Técnica
+                    </h3>
+                </div>
+                <div class="blueprint-legend" id="rb1CompletaLegend"></div>
+            </section>
         </div>
     </main>
 

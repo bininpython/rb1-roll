@@ -1468,13 +1468,10 @@ function renderRb1Completa() {
   // Text CORRETOR 1 below
   svg += `<text x="${corrX}" y="${YM + 35}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">CORRETOR 1</text>`;
 
-  // Extend strip path to touch CORRETOR 1 and slant upwards towards Loop
+  // Extend strip path to touch CORRETOR 1 and slant upwards towards Loop  // Extend strip path to touch CORRETOR 1
   lineTo(corrX, YM);
-  // Slant upwards to touch the entrance bridle of the next section cleanly
-  lineTo(corrX + 80, YM - 25);
 
   // ====================================================================
-  // SEÇÃO 3: ACUMULADOR DE ENTRADA (LOOP)  // ====================================================================
   // SEÇÃO 3: ACUMULADOR DE ENTRADA (LOOP)
   // ====================================================================
 
@@ -1482,7 +1479,7 @@ function renderRb1Completa() {
   let r173x = 2860, r173y = 350, rL = 30;
   let r176x = 2770, r176y = 250;
   
-  svg += `<text x="2770" y="200" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">BS1</text>`;
+  svg += `<text x="2770" y="190" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">BS1</text>`;
 
   svg += rNrForno(r173x, r173y, rL, '', r173x, r173y); // 173
   svg += rNrForno(r176x, r176y, rL, '', r176x, r176y); // 176
@@ -1492,12 +1489,16 @@ function renderRb1Completa() {
   svg += rNrForno(r176x - 25, r176y - 25, 10, '', 0, 0); // 175
 
   // S-Wrap Path for BS1
-  lineTo(r173x, r173y + rL); // Bottom of 173
-  stripPath += `A ${rL} ${rL} 0 0 0 ${r173x + rL} ${r173y} `; // Right of 173
-  stripPath += `A ${rL} ${rL} 0 0 0 ${r173x} ${r173y - rL} `; // Top of 173
+  // Connect from Corretor 1 directly to the bottom of 173
+  lineTo(r173x, r173y + rL); 
+  // Wrap right side of 173 (Bottom -> Right -> Top)
+  stripPath += `A ${rL} ${rL} 0 0 0 ${r173x + rL} ${r173y} `; 
+  stripPath += `A ${rL} ${rL} 0 0 0 ${r173x} ${r173y - rL} `; 
   
-  lineTo(r176x + rL, r176y); // Right of 176
-  stripPath += `A ${rL} ${rL} 0 0 0 ${r176x} ${r176y - rL} `; // Top of 176
+  // Diagonal line up to the right side of 176
+  lineTo(r176x + rL, r176y); 
+  // Wrap top of 176 (Right -> Top)
+  stripPath += `A ${rL} ${rL} 0 0 0 ${r176x} ${r176y - rL} `; 
   
   // 177, 178
   let r177x = 2860;
@@ -1506,9 +1507,6 @@ function renderRb1Completa() {
   let r178x = 2960;
   svg += rNrForno(r178x, r176y - rL + 10, 10, '', 0, 0); // 178 (Bottom)
 
-  // Extend strip to Loop Entrada
-  lineTo(3000, r176y - rL);
-
   // LOOP ENTRADA
   let txs = [3100, 3220, 3340]; // 179, 181, 183
   let bxs = [3160, 3280, 3400]; // 180, 182, 184
@@ -1516,6 +1514,9 @@ function renderRb1Completa() {
   let TY = 250;
   let BY = 650;
   
+  // Strip enters horizontally at TY - 30
+  lineTo(txs[0], TY - 30); // Connect from BS1 horizontally to the first loop roller
+
   svg += `<text x="3280" y="150" font-family="Montserrat, sans-serif" font-size="20" font-weight="900" fill="#ffffff" text-anchor="middle">LOOP ENTRADA</text>`;
 
   // Draw Pit lines
@@ -1539,29 +1540,35 @@ function renderRb1Completa() {
   svg += `<text x="${corr2X + 50}" y="${TY + 50}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">CORRETOR 2</text>`;
   
   // Trace Loop Path
-  // Incoming strip is at Y = TY - 30 = 220.
-  lineTo(txs[0] - 30, TY - 30); // Reach 179
-  
+  // We are at top of 179 (txs[0], TY - 30)
   for (let i = 0; i < 3; i++) {
     let topX = txs[i];
     let botX = bxs[i];
     
-    // Strip wraps right side of Top roller
+    // Line to Top Roller (in case of gaps, but they are exactly vertical)
+    lineTo(topX, TY - 30);
+    
+    // Arc Top to Right (Clockwise = 1)
     stripPath += `A 30 30 0 0 1 ${topX + 30} ${TY} `;
     
-    // Down to left side of Bottom roller
+    // Down to Left of Bottom roller
     lineTo(botX - 30, BY);
     
-    // Strip wraps bottom side of Bottom roller
+    // Arc Left to Bottom (Counter-Clockwise = 0)
+    stripPath += `A 30 30 0 0 0 ${botX} ${BY + 30} `;
+    
+    // Arc Bottom to Right (Counter-Clockwise = 0)
     stripPath += `A 30 30 0 0 0 ${botX + 30} ${BY} `;
     
-    // Up to left side of next Top roller
+    // Up to Left of Next Top roller
     if (i < 2) {
       lineTo(txs[i+1] - 30, TY);
-      stripPath += `A 30 30 0 0 1 ${txs[i+1]} ${TY - 30} `; // Top of next
+      // Arc Left to Top (Clockwise = 1)
+      stripPath += `A 30 30 0 0 1 ${txs[i+1]} ${TY - 30} `;
     } else {
       lineTo(r185x - 30, TY);
-      stripPath += `A 30 30 0 0 1 ${r185x} ${TY - 30} `; // Top of 185
+      // Arc Left to Top for Corretor 2
+      stripPath += `A 30 30 0 0 1 ${r185x} ${TY - 30} `;
     }
   }
   

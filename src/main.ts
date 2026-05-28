@@ -1579,15 +1579,15 @@ function renderRb1Completa() {
   // ====================================================================
   
   // 186 to 189
+  // 186 to 188 (Staggered as requested)
   let x186 = 3490;
   svg += rNrForno(x186, TY - 22, 8, '', x186, TY - 10); // 186 (Under strip)
   
-  let x187 = 3520;
+  let x187 = 3525;
   svg += rNrForno(x187, TY - 38, 8, '', x187, TY - 50); // 187 (Over strip)
-  svg += rNrForno(x187, TY - 22, 8, '', x187, TY - 10); // 188 (Under strip)
   
-  let x189 = 3550;
-  svg += rNrForno(x189, TY - 22, 8, '', x189, TY - 10); // 189 (Under strip)
+  let x188 = 3560;
+  svg += rNrForno(x188, TY - 22, 8, '', x188, TY - 10); // 188 (Under strip)
 
   // BS2 Text
   svg += `<text x="3655" y="190" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">BS2</text>`;

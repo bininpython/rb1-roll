@@ -1553,9 +1553,6 @@ function renderRb1Completa() {
 
   // Extend strip path horizontally through Secador and 171, hitting EXACT bottom of Corretor 1
   lineTo(corrX, YM); 
-  
-  // Arc slightly around Corretor 1 to reach the exact outer tangent point towards 173
-  stripPath += `A 25 25 0 0 0 2654 448 `;
 
   // ====================================================================
   // SEÇÃO 3: ACUMULADOR DE ENTRADA (LOOP)
@@ -1576,19 +1573,19 @@ function renderRb1Completa() {
   svg += rNrForno(r176x - 25, r176y - 25, 10, '', 0, 0); // 175: Top-Left of 176
 
   // S-Wrap Path for BS1 (THE PERFECT FIGURE-8 BRIDLE)
-  // 1. Tangent diagonal line from Corretor 1 exit to bottom tangent of 173
-  lineTo(2866.6, 379.2); 
+  // 1. Smooth Bezier curve from bottom of Corretor 1 to the right side of 173
+  stripPath += `C ${corrX + 100} ${YM}, ${r173x + 30} ${YM}, ${r173x + 30} ${r173y} `;
   
-  // 2. Arc around 173 (Bottom-Right -> Right -> Top -> Top-Left)
-  // Counter-Clockwise (sweep=0), Large Arc (large=1)
-  stripPath += `A 30 30 0 1 0 2839 329 `; 
+  // 2. Arc around 173 (Right -> Top -> Top-Left)
+  // Counter-Clockwise (sweep=0), Large Arc (large=0 since it's just a quarter turn)
+  stripPath += `A 30 30 0 0 0 2839 329 `; 
   
   // 3. Inner tangent diagonal line from 173 (Top-Left) to 176 (Bottom-Right)
   lineTo(2791, 271); 
   
   // 4. Arc around 176 (Bottom-Right -> Bottom -> Left -> Top)
   // Clockwise (sweep=1), Large Arc (large=1)
-  stripPath += `A 30 30 0 1 1 2770 220 `; 
+  stripPath += `A 30 30 0 1 1 2770 220 `;  
   
   // 177, 178 (Support rollers on the horizontal exit line)
   // Horizontal line is at Y = 220.

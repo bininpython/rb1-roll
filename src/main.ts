@@ -1844,59 +1844,64 @@ function renderRb1Completa() {
   // Title
   svg += `<text x="${sec2X + sec2W/2 + 15}" y="${sec2CY - sec2H/2 - 15}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">SECADOR</text>`;
   
-  // Exit roll at the right tip (strip passes OVER it)
+  // Exit roll r1 (small green at secador exit)
   let sec2Rx = sec2X + sec2W + 20;
-  svg += rNrForno(sec2Rx, YM + 8, 8, '', 0, 0);
+  svg += `<circle cx="${sec2Rx}" cy="${YM + 8}" r="8" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
 
   lineTo(sec2Rx + 8, YM);
   
-  // Corretor 3 (Exact Black/White Quadrant Style)
-  let c3x = 5800, c3y = YM + 35, c3r = 35;
-  svg += `<circle cx="${c3x}" cy="${c3y}" r="${c3r}" fill="#ffffff" stroke="#000000" stroke-width="2"/>`;
-  // Top-left quadrant (Black)
-  svg += `<path d="M ${c3x} ${c3y - c3r} A ${c3r} ${c3r} 0 0 0 ${c3x - c3r} ${c3y} L ${c3x} ${c3y} Z" fill="#000000"/>`;
-  // Bottom-right quadrant (Black)
-  svg += `<path d="M ${c3x} ${c3y + c3r} A ${c3r} ${c3r} 0 0 0 ${c3x + c3r} ${c3y} L ${c3x} ${c3y} Z" fill="#000000"/>`;
-  // Text left-aligned under the roll
-  svg += `<text x="${c3x - c3r}" y="${c3y + c3r + 20}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="start">CORRETOR 3</text>`;
+  // r2 = CORRETOR 3 (large green with cross pattern)
+  svg += corretorCruz(5800, YM + 35, 35, '');
+  svg += `<text x="5800" y="${YM + 90}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">CORRETOR 3</text>`;
   
-  lineTo(c3x, YM); // Arrive at top of Corretor 3
-  stripPath += `A 35 35 0 0 1 ${c3x + 25} ${c3y - 24} `; // Leave Corretor 3
+  lineTo(5800, YM); // Arrive at top of Corretor 3
+  stripPath += `A 35 35 0 0 1 5825 ${YM + 11} `; // Leave Corretor 3 heading right
 
-  // BS 3 (Single large roll, pure white with black outline)
-  let bs3X = 6080, bs3Y = YM + 50, bs3r = 35;  
+  // BS 3 (TWO large rolls in diagonal arrangement)
+  // r3 = first large roll (lower-left position)
+  let r3x = 5950, r3y = YM + 120;
+  // r5 = second large roll (upper-right position)  
+  let r5x = 6100, r5y = YM + 60;
   
-  // Large roll
-  svg += `<circle cx="${bs3X}" cy="${bs3Y}" r="${bs3r}" fill="#ffffff" stroke="#000000" stroke-width="2"/>`;
+  // r3 large green roll
+  svg += `<circle cx="${r3x}" cy="${r3y}" r="35" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+  // r5 large green roll
+  svg += `<circle cx="${r5x}" cy="${r5y}" r="35" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
   
-  // Pinch roll (top-right)
-  svg += `<circle cx="${bs3X + 35}" cy="${bs3Y - 28}" r="10" fill="#ffffff" stroke="#000000" stroke-width="2"/>`;
+  // r4 = pinch roll (small green, bottom-left of r3)
+  svg += `<circle cx="${r3x - 30}" cy="${r3y + 30}" r="10" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+  // r6 = pinch roll (small green, top-right of r5)
+  svg += `<circle cx="${r5x + 30}" cy="${r5y - 30}" r="10" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
 
-  // Text BS 3 right next to pinch roll
-  svg += `<text x="${bs3X + 55}" y="${bs3Y - 23}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 3</text>`;
+  // Text BS 3 to the right of r5/r6
+  svg += `<text x="${r5x + 50}" y="${r5y - 15}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 3</text>`;
 
-  // Strip path through BS3
-  lineTo(bs3X - 25, bs3Y + 24); // arriving to bottom-left of BS3 from Corretor 3
-  stripPath += `A 35 35 0 0 0 ${bs3X + 25} ${bs3Y - 24} `; // wrapping UNDER BS3 (bottom-left to top-right)
-
-  // Medium roll after BS3
-  let mRx = 6200, mRy = YM + 80; 
-  svg += `<circle cx="${mRx}" cy="${mRy}" r="20" fill="#ffffff" stroke="#000000" stroke-width="2"/>`;
+  // Strip path: from Corretor 3 diagonal DOWN to r3, wrap under r3
+  lineTo(r3x - 25, r3y + 24);
+  stripPath += `A 35 35 0 0 0 ${r3x + 25} ${r3y + 24} `; // wrap UNDER r3 (bottom arc)
   
-  // Path to medium roll
-  lineTo(mRx - 17, mRy + 10); // diagonal slopes DOWN to bottom-left of medium roll
-  stripPath += `A 20 20 0 0 0 ${mRx} ${mRy + 20} `; // wrapping UNDER medium roll
+  // From r3 diagonal UP to r5, wrap over r5
+  lineTo(r5x - 25, r5y - 24);
+  stripPath += `A 35 35 0 0 1 ${r5x + 25} ${r5y - 24} `; // wrap OVER r5 (top arc)
 
-  // 3 small horizontal rolls with stands
-  const YD = YM + 100; // 550
-  for (let i=0; i<3; i++) {
-    let rx = 6250 + i*40;
-    svg += `<circle cx="${rx}" cy="${YD + 8}" r="8" fill="#ffffff" stroke="#000000" stroke-width="2"/>`;
-    // Little stand legs for the rollers as shown in sketch
-    svg += `<line x1="${rx}" y1="${YD + 16}" x2="${rx}" y2="${YD + 30}" stroke="#475569" stroke-width="2"/>`;
-    svg += `<line x1="${rx - 5}" y1="${YD + 30}" x2="${rx + 5}" y2="${YD + 30}" stroke="#475569" stroke-width="2"/>`;
+  // r7 = medium green roll after BS3
+  let r7x = 6250, r7y = YM + 140;
+  svg += `<circle cx="${r7x}" cy="${r7y}" r="20" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+  
+  // Path from r5 diagonal DOWN to r7
+  lineTo(r7x - 17, r7y + 10);
+  stripPath += `A 20 20 0 0 0 ${r7x + 17} ${r7y + 10} `; // wrap UNDER r7
+
+  // r8, r9, r10 = three small green rolls at bottom with stands
+  const YD = YM + 170;
+  for (let i = 0; i < 3; i++) {
+    let rx = 6300 + i * 35;
+    svg += `<circle cx="${rx}" cy="${YD}" r="8" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+    // Stand legs
+    svg += `<line x1="${rx}" y1="${YD + 8}" x2="${rx}" y2="${YD + 22}" stroke="#475569" stroke-width="2"/>`;
+    svg += `<line x1="${rx - 5}" y1="${YD + 22}" x2="${rx + 5}" y2="${YD + 22}" stroke="#475569" stroke-width="2"/>`;
   }
-  lineTo(6250 + 2*40 + 20, YD);
+  lineTo(6300 + 2 * 35 + 10, YD);
   
   // Long gap, then 11 rollers
   lineTo(6550, YD);

@@ -1906,17 +1906,40 @@ function renderRb1Completa() {
   // Horizontal line over the rollers
   lineTo(6220 + 2 * 40 + 20, medY + medR);
   
-  // Long gap, then 11 rollers
-  lineTo(6550, medY + medR);
-  for (let i=0; i<11; i++) {
-    svg += dot(6550 + i*20, YD, 6);
+  // Long gap, then 11 small rollers with stands
+  for (let i = 0; i < 11; i++) {
+    let rx = 6380 + i * 35;
+    svg += dot(rx, YD, 8);
+    svg += `<line x1="${rx}" y1="${YD + 8}" x2="${rx}" y2="${YD + 22}" stroke="#475569" stroke-width="2"/>`;
+    svg += `<line x1="${rx - 5}" y1="${YD + 22}" x2="${rx + 5}" y2="${YD + 22}" stroke="#475569" stroke-width="2"/>`;
   }
-  lineTo(6550 + 10*20, YD);
   
-  // Subida
-  svg += dot(6850, YD-30, 25);
-  svg += dot(6950, YM, 25);
-  lineTo(6850, YD-30); lineTo(6950, YM);
+  // Line extending over the 11 small rollers to the bottom of the medium climb roller
+  let climbMedX = 6840, climbMedY = YM + 245, climbMedR = 25; // 450 + 245 = 695
+  lineTo(climbMedX, YM + 270); // YM + 270 = 720
+  
+  // Medium roll (bottom of the climb)
+  svg += dot(climbMedX, climbMedY, climbMedR);
+  // Wrap UNDER and up the right side (Counter-Clockwise)
+  stripPath += `A ${climbMedR} ${climbMedR} 0 0 0 ${climbMedX + climbMedR} ${climbMedY} `;
+  
+  // Left pinch roll (touching vertical strip)
+  svg += dot(climbMedX + climbMedR - 10, YM + 140, 10);
+  
+  // Large roll (top of the climb)
+  let climbTopX = climbMedX + climbMedR + 40; // 6865 + 40 = 6905
+  let climbTopY = YM + 40; // 450 + 40 = 490
+  let climbTopR = 40;
+  svg += dot(climbTopX, climbTopY, climbTopR);
+  
+  // Top pinch roll (touching top of large roll)
+  svg += dot(climbTopX, YM - 12, 12);
+  
+  // Vertical line up to large roll left edge
+  lineTo(climbTopX - climbTopR, climbTopY);
+  
+  // Wrap OVER the large roll (Clockwise)
+  stripPath += `A ${climbTopR} ${climbTopR} 0 0 1 ${climbTopX} ${YM} `;
   
   // ====================================================================
   // SEÇÃO 6: ELETROLÍTICO E DECAPAGEM

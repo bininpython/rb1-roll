@@ -1671,16 +1671,16 @@ function renderRb1Completa() {
   // Over rollers center = 220 - 1 - 1 - 8 = 210
 
   // The vertical pit line is at X = 3510, so we leave a gap around it
-  let x186 = 3490;
+  let x186 = 3505;
   svg += rNrForno(x186, 230, 8, '', x186, 230 - 15); // 186 (Under strip)
   
-  let x187 = 3530;
+  let x187 = 3535;
   svg += rNrForno(x187, 210, 8, '', x187, 210 - 15); // 187 (Over strip)
   
   let x188 = 3535;
   svg += rNrForno(x188, 230, 8, '', x188, 230 - 15); // 188 (Under strip)
   
-  let x189 = 3570;
+  let x189 = 3575;
   svg += rNrForno(x189, 230, 8, '', x189, 230 - 15); // 189 (Under strip)
 
   // BS2 Text
@@ -1694,10 +1694,8 @@ function renderRb1Completa() {
   let r191x = 3700, r191y = 250;
   svg += rNrForno(r191x, r191y, 30, '', r191x, r191y);
 
-  // Pinches 190, 193 (Perfectly tangent to the outer edge of the strip wrap)
-  // Distance from large roller center to pinch center = 30 (roller) + 1 (strip) + 1 (gap) + 8 (pinch) = 40
-  // 40 * cos(45) = 28.3
-  svg += rNrForno(r191x + 28.3, r191y - 28.3, 8, '', 0, 0); // 190 (Top-Right of 191)
+  // Pinches 190, 193 (Perfectly positioned as per blueprint)
+  svg += rNrForno(r191x - 17, 210, 8, '', 0, 0); // 190 (Top-Left of 191, pinching horizontal strip)
   svg += rNrForno(r192x - 28.3, r192y + 28.3, 8, '', 0, 0); // 193 (Bottom-Left of 192)
 
   // Roller 194 (Sag curve bottom point)

@@ -1573,8 +1573,9 @@ function renderRb1Completa() {
   svg += rNrForno(r176x - 25, r176y - 25, 10, '', 0, 0); // 175: Top-Left of 176
 
   // S-Wrap Path for BS1 (THE PERFECT FIGURE-8 BRIDLE)
-  // 1. Smooth bezier curve wrapping right out of Corretor 1 straight to BS1 tangent
-  stripPath += `Q ${corrX + 40} ${YM} 2866.6 379.2 `;
+  // 1. Arc right out of Corretor 1, then straight line to BS1 outer tangent
+  stripPath += `A 25 25 0 0 0 ${corrX + 13} ${YM - 3.6} `;
+  stripPath += `L 2875.6 375.6 `;
   
   // 2. Arc around 173 (Right -> Top -> Top-Left)
   // Counter-Clockwise (sweep=0), Large Arc (large=1)

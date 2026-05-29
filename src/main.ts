@@ -1966,14 +1966,14 @@ function renderRb1Completa() {
   svg += dot(7180, YM - 15, 15);
   // 4. Bottom 2
   svg += dot(7240, YM + 15, 15);
+  // 5. Top 3
+  svg += dot(7300, YM - 15, 15);
   
-  // 5. Large 2 (Centragem)
-  svg += `<rect x="7280" y="${YM + 45}" width="40" height="25" fill="#1e293b" rx="2"/>`;
-  svg += `<rect x="7275" y="${YM + 40}" width="50" height="10" fill="#334155" rx="2"/>`;
-  svg += dot(7300, YM + 30, 30);
+  // 6. Large 2 (Centragem)
+  svg += `<rect x="7340" y="${YM + 45}" width="40" height="25" fill="#1e293b" rx="2"/>`;
+  svg += `<rect x="7335" y="${YM + 40}" width="50" height="10" fill="#334155" rx="2"/>`;
+  svg += dot(7360, YM + 30, 30);
   
-  // 6. Top 3
-  svg += dot(7360, YM - 15, 15);
   // 7. Bottom 3
   svg += dot(7420, YM + 15, 15);
   // 8. Top 4

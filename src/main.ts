@@ -1862,16 +1862,16 @@ function renderRb1Completa() {
   let bs3X = 6060, bs3Y = YM + 95, bs3R = 38;
   svg += `<circle cx="${bs3X}" cy="${bs3Y}" r="${bs3R}" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
   
-  // Pinch roll at ~1 o'clock on BS3
-  svg += `<circle cx="${bs3X + 32}" cy="${bs3Y - 28}" r="10" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+  // Pinch roll at ~1:30 o'clock on BS3
+  svg += `<circle cx="${bs3X + 34}" cy="${bs3Y - 34}" r="10" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
 
   // BS 3 text to the right
   svg += `<text x="${bs3X + 55}" y="${bs3Y - 25}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 3</text>`;
 
   // Straight diagonal line from Corretor 3 exit to BS3 left side (~10 o'clock)
   lineTo(bs3X - 29, bs3Y - 25);
-  // Wrap under BS3 (counter-clockwise via bottom, ~10 o'clock to ~4:30)
-  stripPath += `A ${bs3R} ${bs3R} 0 0 0 ${bs3X + 27} ${bs3Y + 27} `;
+  // Wrap OVER BS3 (clockwise via top, passing between large roll and pinch roll, exiting at ~4:30)
+  stripPath += `A ${bs3R} ${bs3R} 0 1 1 ${bs3X + 27} ${bs3Y + 27} `;
 
   // r7 = medium green roll (further down-right)
   let r7x = 6250, r7y = YM + 175, r7r = 20;

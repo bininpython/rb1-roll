@@ -1745,31 +1745,58 @@ function renderRb1Completa() {
   // ====================================================================
   let an1X = 4580, an1W = 140, an1H = 45;
   // Top box (above strip)
-  svg += `<rect x="${an1X}" y="${YM - an1H - 2}" width="${an1W}" height="${an1H}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="2"/>`;
+  svg += `<rect x="${an1X}" y="${YM - an1H - 5}" width="${an1W}" height="${an1H}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="2"/>`;
   // Bottom box (below strip)
-  svg += `<rect x="${an1X}" y="${YM + 2}" width="${an1W}" height="${an1H}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="2"/>`;
+  svg += `<rect x="${an1X}" y="${YM + 5}" width="${an1W}" height="${an1H}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="2"/>`;
   // Title
   svg += `<text x="${an1X + an1W/2}" y="${YM - an1H - 15}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">AR NEBLINA 1</text>`;
-  // Exit roll (202)
-  svg += rNrForno(an1X + an1W + 25, YM, 8, '', 0, 0);
+  // Exit roll (202) - Strip goes OVER it
+  svg += rNrForno(an1X + an1W + 25, YM + 8, 8, '', 0, 0);
   lineTo(an1X + an1W + 25 + 8, YM);
 
   // ====================================================================
   // AR NEBLINA 2 (UNID. RESF. ARNEBLINA 2)
-  // Wider split boxes, 3 green rolls below strip (2 inside, 1 outside right)
+  // Wider split boxes with large gap. Strip dips down inside.
+  // Rolls 203, 204 support the dip. Roll 205 at exit.
+  // Nozzle dots above and below the strip.
   // ====================================================================
   let an2X = 4790, an2W = 280, an2H = 50;
-  // Top box (above strip)
-  svg += `<rect x="${an2X}" y="${YM - an2H - 2}" width="${an2W}" height="${an2H}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="2"/>`;
-  // Bottom box (below strip)
-  svg += `<rect x="${an2X}" y="${YM + 2}" width="${an2W}" height="${an2H}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="2"/>`;
+  // Top box
+  svg += `<rect x="${an2X}" y="${YM - an2H - 10}" width="${an2W}" height="${an2H}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="2"/>`;
+  // Bottom box
+  svg += `<rect x="${an2X}" y="${YM + 25}" width="${an2W}" height="${an2H}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="2"/>`;
   // Title
   svg += `<text x="${an2X + an2W/2}" y="${YM - an2H - 15}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">AR NEBLINA 2</text>`;
-  // 3 support rolls below the strip
-  svg += rNrForno(an2X + 70, YM + 10, 10, '', 0, 0);
-  svg += rNrForno(an2X + 190, YM + 10, 10, '', 0, 0);
-  svg += rNrForno(an2X + an2W + 25, YM + 10, 10, '', 0, 0);
-  lineTo(an2X + an2W + 25 + 10, YM);
+  
+  // Nozzles (Top row, following the dip curve)
+  for (let i = 0; i < 7; i++) {
+    let nx = an2X + 20 + i * 40;
+    let ny = (i === 0 || i === 6) ? YM - 15 : YM - 5; 
+    svg += `<circle cx="${nx}" cy="${ny}" r="2.5" fill="#94a3b8" />`;
+  }
+  // Nozzles (Bottom row)
+  for (let i = 0; i < 7; i++) {
+    let nx = an2X + 20 + i * 40;
+    let ny = (i === 0 || i === 6) ? YM + 40 : YM + 50; 
+    // Skip where rolls are (roughly i=1,2 and i=4,5)
+    if (i !== 1 && i !== 5) {
+      svg += `<circle cx="${nx}" cy="${ny}" r="2.5" fill="#94a3b8" />`;
+    }
+  }
+
+  // 3 support rolls (203, 204 inside supporting the dip; 205 outside)
+  let r203x = an2X + 70, r203y = YM + 25; // Strip at YM+15, so center is YM+15+10=25
+  let r204x = an2X + 190, r204y = YM + 25;
+  let r205x = an2X + an2W + 35, r205y = YM + 10; // Strip back at YM, center YM+10
+  
+  svg += rNrForno(r203x, r203y, 10, '203', r203x, r203y + 25);
+  svg += rNrForno(r204x, r204y, 10, '204', r204x, r204y + 25);
+  svg += rNrForno(r205x, r205y, 10, '205', r205x, r205y + 25);
+  
+  // Tracing the dipped strip path
+  lineTo(r203x, YM + 15);
+  lineTo(r204x, YM + 15);
+  lineTo(r205x, YM);
 
   // ====================================================================
   // DIP TANQUE

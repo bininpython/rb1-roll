@@ -1577,15 +1577,15 @@ function renderRb1Completa() {
   stripPath += `Q ${corrX + 40} ${YM} 2866.6 379.2 `;
   
   // 2. Arc around 173 (Right -> Top -> Top-Left)
-  // Counter-Clockwise (sweep=0), Large Arc (large=0 since it's just a quarter turn)
-  stripPath += `A 30 30 0 0 0 2839 329 `; 
+  // Counter-Clockwise (sweep=0), Large Arc (large=1)
+  stripPath += `A 30 30 0 1 0 2832.1 339.0 `; 
   
   // 3. Inner tangent diagonal line from 173 (Top-Left) to 176 (Bottom-Right)
-  lineTo(2791, 271); 
+  lineTo(2797.9, 261.0); 
   
   // 4. Arc around 176 (Bottom-Right -> Bottom -> Left -> Top)
   // Clockwise (sweep=1), Large Arc (large=1)
-  stripPath += `A 30 30 0 1 1 2770 220 `;  
+  stripPath += `A 30 30 0 1 1 2770 220 `;   
   
   // 177, 178 (Support rollers on the horizontal exit line)
   // Horizontal line is at Y = 220.

@@ -1493,7 +1493,7 @@ function renderRb1Completa() {
   // CONTINUAÇÃO: ROLOS 166 A 172 (Tanque, Secador, Corretor)
   // ====================================================================
   
-  let dt1X = dfX + 50, dt1W = 200, dt1TopY = YM - 10, dt1BotY = YM + 100;
+  let dt1X = dfX + 50, dt1W = 200, dt1TopY = YM - 20, dt1BotY = YM + 100;
   // Trapezoidal body
   svg += `<path d="M ${dt1X} ${dt1TopY} L ${dt1X + dt1W} ${dt1TopY} L ${dt1X + dt1W} ${dt1BotY} L ${dt1X + 40} ${dt1BotY} Z" fill="#1e293b" stroke="#334155" stroke-width="2"/>`;
   // Title
@@ -1798,7 +1798,7 @@ function renderRb1Completa() {
   // Trapezoidal tank where strip dips down, large roll submerged,
   // two small rolls stacked at exit
   // ====================================================================
-  let dtX = 5120, dtW = 300, dtTopY = YM - 10, dtBotY = YM + 120;
+  let dtX = 5120, dtW = 300, dtTopY = YM - 20, dtBotY = YM + 120;
   // Trapezoidal body (wider at top, narrower at bottom-left)
   svg += `<path d="M ${dtX} ${dtTopY} L ${dtX + dtW} ${dtTopY} L ${dtX + dtW} ${dtBotY} L ${dtX + 60} ${dtBotY} Z" fill="#1e293b" stroke="#334155" stroke-width="2"/>`;
   // Title

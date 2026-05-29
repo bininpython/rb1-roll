@@ -1223,9 +1223,12 @@ function renderRb1Completa() {
   // Bobina Principal (Defletor)
   svg += rolerDecap(100, Y2 + 40, 40, 'Defletor Entrada 2', '2140 mm');
   
-  // 86, 87
-  svg += rNrForno(45, Y2 + 10, 8, '86', 45, Y2 - 2);
-  svg += rNrForno(80, Y2 - 12, 8, '87', 80, Y2 - 24);
+  // 86, 87 (Snubber rolls resting on the coil)
+  // Coil center is (100, Y2+40=490). Radius=40. Roller radius=8. Gap=1. Dist=49.
+  // 86 at ~140 degrees: cx = 100 - 49*cos(40) = 62.5, cy = 490 - 49*sin(40) = 458.5
+  // 87 at ~110 degrees: cx = 100 - 49*cos(70) = 83.2, cy = 490 - 49*sin(70) = 444.0
+  svg += rNrForno(62.5, 458.5, 8, '', 0, 0);
+  svg += rNrForno(83.2, 444.0, 8, '', 0, 0);
 
   // 104, 105 (Pinch)
   let pX2 = 350;

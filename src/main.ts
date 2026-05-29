@@ -1493,47 +1493,52 @@ function renderRb1Completa() {
   // CONTINUAÇÃO: ROLOS 166 A 172 (Tanque, Secador, Corretor)
   // ====================================================================
   
-  let dt1X = dfX + 50, dt1W = 200, dt1TopY = YM - 20, dt1BotY = YM + 100;
-  // Trapezoidal body
-  svg += `<path d="M ${dt1X} ${dt1TopY} L ${dt1X + dt1W} ${dt1TopY} L ${dt1X + dt1W} ${dt1BotY} L ${dt1X + 40} ${dt1BotY} Z" fill="#1e293b" stroke="#334155" stroke-width="2"/>`;
-  // Title
-  svg += `<text x="${dt1X + dt1W/2}" y="${dt1TopY - 15}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">DIP. TANQUE</text>`;
-  
-  // Large submerged roll (166)
-  let dt1RollX = dt1X + dt1W - 70, dt1RollY = dt1BotY - 35;
-  svg += rNrForno(dt1RollX, dt1RollY, 20, '', 0, 0); // 166
+  let tankStart = dfX + 50;
+  let tankW = 140;
+  let tankH = 60; // 30 up, 30 down from YM
 
-  // Two small exit rolls (stacked vertically at exit) - 167, 169
-  let dt1ExitX = dt1X + dt1W - 20;
-  svg += rNrForno(dt1ExitX, YM - 8, 8, '', 0, 0); // 167
-  svg += rNrForno(dt1ExitX, YM + 8, 8, '', 0, 0); // 169
+  // Tank brackets `[` and `]`
+  // Left bracket
+  svg += `<polyline points="${tankStart+15},${YM-tankH/2} ${tankStart},${YM-tankH/2} ${tankStart},${YM+tankH/2} ${tankStart+15},${YM+tankH/2}" fill="none" stroke="#22c55e" stroke-width="2"/>`;
+  // Right bracket
+  svg += `<polyline points="${tankStart+tankW-15},${YM-tankH/2} ${tankStart+tankW},${YM-tankH/2} ${tankStart+tankW},${YM+tankH/2} ${tankStart+tankW-15},${YM+tankH/2}" fill="none" stroke="#22c55e" stroke-width="2"/>`;
   
-  // Strip path for Dip Tanque 1
-  lineTo(dt1X + 15, YM);
-  lineTo(dt1RollX - 20, dt1RollY);
-  stripPath += `A 20 20 0 0 0 ${dt1RollX + 20} ${dt1RollY} `;
-  lineTo(dt1ExitX, YM);
-  lineTo(dt1X + dt1W + 10, YM);
+  // Roller 166 (bottom) inside tank
+  let r166X = tankStart + 40;
+  svg += rNrForno(r166X, YM + 15, 15, '', r166X, YM);
 
-  // ====================================================================
-  // SECADOR 1 (Chevron arrow shape pointing left)
-  // ====================================================================
-  let sec1X = dt1X + dt1W + 30, sec1W = 120, sec1H = 60;
-  let sec1CY = YM;
-  // Chevron body
-  svg += `<path d="M ${sec1X} ${sec1CY} L ${sec1X + 25} ${sec1CY - sec1H/2} L ${sec1X + sec1W} ${sec1CY - sec1H/2} L ${sec1X + sec1W} ${sec1CY + sec1H/2} L ${sec1X + 25} ${sec1CY + sec1H/2} Z" fill="#1e293b" stroke="#334155" stroke-width="2"/>`;
-  // Internal chevron V-lines
-  for (let v = 0; v < 3; v++) {
-    let vx = sec1X + 45 + v * 22;
-    svg += `<path d="M ${vx} ${sec1CY - sec1H/2 + 8} L ${vx - 12} ${sec1CY} L ${vx} ${sec1CY + sec1H/2 - 8}" fill="none" stroke="#475569" stroke-width="1.5"/>`;
-  }
-  // Title
-  svg += `<text x="${sec1X + sec1W/2 + 15}" y="${sec1CY - sec1H/2 - 12}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">SECADOR</text>`;
+  // SECADOR
+  let secX = tankStart + tankW + 30;
   
-  // Exit roll (168/170/171)
-  let r171X = sec1X + sec1W + 15;
+  // Text "SECADOR"
+  svg += `<text x="${secX + 25}" y="${YM - 60}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">SECADOR</text>`;
+  
+  // Pinch left (167, 169)
+  svg += rNrForno(secX, YM - 8, 8, '', secX, YM); // 167 Top
+  svg += rNrForno(secX, YM + 8, 8, '', secX, YM); // 169 Bottom
+  
+  // V-Shapes (Chevrons) - Air Nozzles
+  let chevronCenter = secX + 25;
+  
+  // Top Nozzles (pointing DOWN)
+  svg += `<polyline points="${chevronCenter - 15},${YM - 35} ${chevronCenter},${YM - 15} ${chevronCenter + 15},${YM - 35}" fill="none" stroke="#22c55e" stroke-width="2"/>`;
+  svg += `<polyline points="${chevronCenter - 15},${YM - 50} ${chevronCenter},${YM - 30} ${chevronCenter + 15},${YM - 50}" fill="none" stroke="#22c55e" stroke-width="2"/>`;
+  
+  // Bottom Nozzles (pointing UP)
+  svg += `<polyline points="${chevronCenter - 15},${YM + 35} ${chevronCenter},${YM + 15} ${chevronCenter + 15},${YM + 35}" fill="none" stroke="#22c55e" stroke-width="2"/>`;
+  svg += `<polyline points="${chevronCenter - 15},${YM + 50} ${chevronCenter},${YM + 30} ${chevronCenter + 15},${YM + 50}" fill="none" stroke="#22c55e" stroke-width="2"/>`;
+
+  // Vertical center line (dashed)
+  svg += `<line x1="${chevronCenter}" y1="${YM - 65}" x2="${chevronCenter}" y2="${YM + 65}" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="4 4"/>`;
+  
+  // Pinch right (168, 170)
+  let secRx = secX + 50;
+  svg += rNrForno(secRx, YM - 8, 8, '', secRx, YM); // 168 Top
+  svg += rNrForno(secRx, YM + 8, 8, '', secRx, YM); // 170 Bottom
+
+  // Roller 171  // Roller 171 (Strip passes UNDER it)
+  let r171X = secRx + 40; // 2596
   svg += rNrForno(r171X, YM - 8, 8, '', r171X, YM - 15);
-  lineTo(r171X + 8, YM);
 
   // CORRETOR 1 (172) (Strip passes UNDER it)
   let corrX = r171X + 150; // Shifted right by 100px

@@ -1723,7 +1723,20 @@ function renderRb1Completa() {
   // SEÇÃO 4: FORNO E RESFRIAMENTO
   // ====================================================================
   // Forno
-  svg += tanque(3950, YM - 50, 600, 100, 'FORNO DE RECOZIMENTO', []);
+  let fX = 3950, fY = YM - 40, fW = 600, fH = 140;
+  svg += `<rect x="${fX}" y="${fY}" width="${fW}" height="${fH}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="4"/>`;
+  svg += `<text x="${fX + fW/2}" y="${fY - 15}" font-family="Montserrat, sans-serif" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">FORNO DE RECOZIMENTO</text>`;
+  
+  // 5 Support Rolls (Rolo 0 outside, Rolo 1-4 inside)
+  let rx0 = 3875;
+  for (let i = 0; i < 5; i++) {
+    let cx = rx0 + i * 150;
+    let r = 26; 
+    let cy = YM + r; 
+    svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#22c55e" />`;
+    svg += `<text x="${cx}" y="${cy + r + 20}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#ffffff" text-anchor="middle">Rolo ${i}</text>`;
+  }
+
   lineTo(4550, YM);
   
   // Ar Neblina 1

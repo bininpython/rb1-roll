@@ -1858,34 +1858,34 @@ function renderRb1Completa() {
   stripPath += `A 35 35 0 0 1 5825 ${YM + 11} `; // Leave Corretor 3
 
   // BS 3 (Bridle Section 3 / S-Roll)
-  let bs3X1 = 5950, bs3Y1 = YM + 110; // First large roll (lower)
-  let bs3X2 = 6080, bs3Y2 = YM + 50;  // Second large roll (higher)
+  let bs3X1 = 5950, bs3Y1 = YM + 110; // First large roll (r3)
+  let bs3X2 = 6080, bs3Y2 = YM + 50;  // Second large roll (r5)
   
   // Large rolls (Solid Green)
   svg += greenRoll(bs3X1, bs3Y1, 35);
   svg += greenRoll(bs3X2, bs3Y2, 35);
   
   // Pinch rolls (Solid Green)
-  svg += greenRoll(bs3X1 - 35, bs3Y1 + 28, 10); // bottom-left of C1
-  svg += greenRoll(bs3X2 + 35, bs3Y2 - 28, 10); // top-right of C2
+  svg += greenRoll(bs3X1 - 35, bs3Y1 + 28, 10); // r4: bottom-left of r3
+  svg += greenRoll(bs3X2 + 35, bs3Y2 - 28, 10); // r6: top-right of r5
 
   // Text BS 3
   svg += `<text x="${bs3X2 + 50}" y="${bs3Y2 - 10}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 3</text>`;
 
   // Strip path through BS3
-  lineTo(bs3X1 - 25, bs3Y1 + 24); // arriving under C1
-  stripPath += `A 35 35 0 0 0 ${bs3X1 + 18} ${bs3Y1 - 30} `; // wrapping under C1
+  lineTo(bs3X1 - 25, bs3Y1 + 24); // arriving to bottom-left of r3
+  stripPath += `A 35 35 0 0 0 ${bs3X1 + 25} ${bs3Y1 + 24} `; // wrapping UNDER r3
   
-  lineTo(bs3X2 - 25, bs3Y2 + 24); // arriving to C2
-  stripPath += `A 35 35 0 0 1 ${bs3X2 + 30} ${bs3Y2 - 18} `; // wrapping over C2
+  lineTo(bs3X2 - 25, bs3Y2 - 24); // arriving to top-left of r5 (diagonal slopes UP)
+  stripPath += `A 35 35 0 0 1 ${bs3X2 + 25} ${bs3Y2 - 24} `; // wrapping OVER r5
 
   // Medium roll after BS3 (Solid Green)
   let mRx = 6200, mRy = YM + 80; // 530
   svg += greenRoll(mRx, mRy, 20);
   
   // Path to medium roll
-  lineTo(mRx - 17, mRy - 10);
-  stripPath += `A 20 20 0 0 0 ${mRx} ${mRy + 20} `; // wrapping under medium roll
+  lineTo(mRx - 17, mRy + 10); // diagonal slopes DOWN to bottom-left of medium roll
+  stripPath += `A 20 20 0 0 0 ${mRx} ${mRy + 20} `; // wrapping UNDER medium roll
 
   // 3 small horizontal rolls with stands (Solid Green)
   const YD = YM + 100; // 550

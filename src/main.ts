@@ -1536,9 +1536,9 @@ function renderRb1Completa() {
   svg += rNrForno(secRx, YM - 8, 8, '', secRx, YM); // 168 Top
   svg += rNrForno(secRx, YM + 8, 8, '', secRx, YM); // 170 Bottom
 
-  // Roller 171  // Roller 171 (Strip passes UNDER it)
+  // Roller 171 (Strip passes OVER it)
   let r171X = secRx + 40; // 2596
-  svg += rNrForno(r171X, YM - 8, 8, '', r171X, YM - 15);
+  svg += rNrForno(r171X, YM + 8, 8, '', r171X, YM + 22);
 
   // CORRETOR 1 (172) (Strip passes UNDER it)
   let corrX = r171X + 150; // Shifted right by 100px

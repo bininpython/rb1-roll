@@ -1086,17 +1086,17 @@ function renderRb1Completa() {
   svg += rNr(91.5, 161.7, 8, '', 0,0,0,0,0,0);
   
   // 3, 4 (Pinch)
-  let pX1 = 140;
+  let pX1 = 158;
   svg += rNr(pX1, Y1 - 13.75, 12, '', 0,0,0,0,0,0);
   svg += rNr(pX1, Y1 + 13.75, 12, '', 0,0,0,0,0,0);
   
   // 5 (Lower)
-  svg += rNr(170, Y1 + 11.75, 10, '', 0,0,0,0,0,0);
+  svg += rNr(185, Y1 + 11.75, 10, '', 0,0,0,0,0,0);
   
   // 6-10 (Leveler / Straightener)
   // Upper rollers: 7, 9 (center Y1 - 6.75)
   // Lower rollers: 6, 8, 10 (center Y1 + 6.75)
-  let stX1 = 210;
+  let stX1 = 215;
   svg += rNr(stX1,      Y1 + 6.75, 5, '', 0,0,0,0,0,0); // 6
   svg += rNr(stX1 + 10, Y1 - 6.75, 5, '', 0,0,0,0,0,0); // 7
   svg += rNr(stX1 + 20, Y1 + 6.75, 5, '', 0,0,0,0,0,0); // 8
@@ -1105,7 +1105,7 @@ function renderRb1Completa() {
 
   // 11-15 (Inline)
   // All lower rollers
-  let inX1 = 280;
+  let inX1 = 275;
   for(let i=0; i<5; i++) {
     svg += rNr(inX1 + i*15, Y1 + 6.75, 5, '', 0,0,0,0,0,0);
   }

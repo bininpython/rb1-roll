@@ -1000,9 +1000,9 @@ function renderRb1Completa() {
   }
   
   function corretorCruz(cx: number, cy: number, r: number = 25, label: string): string { 
-    let s = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#0f172a" stroke="#3b4151" stroke-width="2"/>`;
-    s += `<path d="M ${cx} ${cy - r} A ${r} ${r} 0 0 1 ${cx + r} ${cy} L ${cx} ${cy} Z" fill="#f97316" filter="url(#blueGlow)"/>`;
-    s += `<path d="M ${cx} ${cy + r} A ${r} ${r} 0 0 1 ${cx - r} ${cy} L ${cx} ${cy} Z" fill="#f97316" filter="url(#blueGlow)"/>`;
+    let s = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#052e16" stroke="#22c55e" stroke-width="2" filter="url(#greenGlow)"/>`;
+    s += `<path d="M ${cx} ${cy - r} A ${r} ${r} 0 0 1 ${cx + r} ${cy} L ${cx} ${cy} Z" fill="#4ade80"/>`;
+    s += `<path d="M ${cx} ${cy + r} A ${r} ${r} 0 0 1 ${cx - r} ${cy} L ${cx} ${cy} Z" fill="#4ade80"/>`;
     s += `<text x="${cx}" y="${cy - r - 10}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">${label}</text>`;
     return s;
   }
@@ -1862,17 +1862,17 @@ function renderRb1Completa() {
   
   // 1. bs3Top (Upper-Right Large Roll)
   let bs3TopX = 6060, bs3TopY = YM + 95, bs3R = 38;
-  svg += `<circle cx="${bs3TopX}" cy="${bs3TopY}" r="${bs3R}" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+  svg += dot(bs3TopX, bs3TopY, bs3R);
   // Pinch roll at ~2 o'clock
-  svg += `<circle cx="${bs3TopX + 32}" cy="${bs3TopY - 32}" r="10" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+  svg += dot(bs3TopX + 32, bs3TopY - 32, 10);
   // Text to the right
   svg += `<text x="${bs3TopX + 55}" y="${bs3TopY - 25}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 3</text>`;
 
   // 2. bs3Bot (Lower-Left Large Roll)
   let bs3BotX = 5900, bs3BotY = YM + 180;
-  svg += `<circle cx="${bs3BotX}" cy="${bs3BotY}" r="${bs3R}" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+  svg += dot(bs3BotX, bs3BotY, bs3R);
   // Pinch roll at ~8 o'clock
-  svg += `<circle cx="${bs3BotX - 32}" cy="${bs3BotY + 32}" r="10" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+  svg += dot(bs3BotX - 32, bs3BotY + 32, 10);
 
   // ---- Strip Path through BS 3 ----
   // Line to bs3Top top-left (~11:30)
@@ -1887,7 +1887,7 @@ function renderRb1Completa() {
 
   // ---- Medium Roll and Exit ----
   let medX = 6140, medY = YM + 250, medR = 20;
-  svg += `<circle cx="${medX}" cy="${medY}" r="${medR}" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+  svg += dot(medX, medY, medR);
   
   // Line from bs3Bot to med top-left (~10 o'clock) -> DOWN-RIGHT diagonal
   lineTo(medX - 15, medY - 13);
@@ -1898,7 +1898,7 @@ function renderRb1Completa() {
   const YD = medY + medR + 8; // YM + 278
   for (let i = 0; i < 3; i++) {
     let rx = 6220 + i * 40;
-    svg += `<circle cx="${rx}" cy="${YD}" r="8" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+    svg += dot(rx, YD, 8);
     svg += `<line x1="${rx}" y1="${YD + 8}" x2="${rx}" y2="${YD + 22}" stroke="#475569" stroke-width="2"/>`;
     svg += `<line x1="${rx - 5}" y1="${YD + 22}" x2="${rx + 5}" y2="${YD + 22}" stroke="#475569" stroke-width="2"/>`;
   }

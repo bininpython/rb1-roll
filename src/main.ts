@@ -1983,22 +1983,67 @@ function renderRb1Completa() {
   svg += dot(7630, YM - 10, 10);
   svg += dot(7630, YM + 10, 10);
   
-  // Escovadeira 1
-  svg += blocoQuad(7720, YM, 60, 'ESCOV. 1');
-  lineTo(7720, YM);
+  // Helper for Escovador
+  const drawEscovador = (cx: number, cy: number, label: string) => {
+    let s = `<rect x="${cx - 50}" y="${cy - 40}" width="100" height="80" fill="#1e293b" stroke="#475569" stroke-width="2" rx="6"/>`;
+    s += `<rect x="${cx - 20}" y="${cy + 40}" width="40" height="40" fill="#0f172a" rx="2"/>`;
+    s += `<text x="${cx}" y="${cy - 55}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#f97316" text-anchor="middle">${label}</text>`;
+    s += dot(cx - 20, cy - 15, 12);
+    s += dot(cx - 20, cy + 15, 12);
+    s += dot(cx + 20, cy - 15, 12);
+    s += dot(cx + 20, cy + 15, 12);
+    return s;
+  };
+
+  const Y_quim = YM + 40; // 490
+
+  // Escovador 1
+  svg += drawEscovador(7750, YM, 'Escovador 1');
+  lineTo(7800, YM);
   
-  // Tanque Químico
-  svg += tanque(7800, YM-30, 400, 60, 'TANQUE QUÍMICO', [150, 250]);
-  lineTo(8200, YM);
+  // Drop to Espremedor 2
+  lineTo(7840, Y_quim);
+  svg += dot(7860, Y_quim - 10, 10);
+  svg += dot(7860, Y_quim + 10, 10);
+  svg += `<text x="7860" y="${Y_quim + 35}" font-family="Montserrat, sans-serif" font-size="10" font-weight="900" fill="#ffffff" text-anchor="middle">Espremedor 2</text>`;
+  lineTo(7860, Y_quim);
   
-  // Escovadeira 2
-  svg += blocoQuad(8270, YM, 60, 'ESCOV. 2');
-  lineTo(8270, YM);
+  // Tanque Químico (Mergulhadores)
+  svg += `<rect x="7930" y="${Y_quim + 45}" width="40" height="25" fill="#1e293b" rx="2"/>`;
+  svg += `<rect x="7925" y="${Y_quim + 40}" width="50" height="10" fill="#334155" rx="2"/>`;
+  svg += dot(7950, Y_quim + 30, 30);
+  svg += `<text x="7950" y="${Y_quim - 15}" font-family="Montserrat, sans-serif" font-size="12" font-weight="900" fill="#ffffff" text-anchor="middle">Mergulhador QUIM 1</text>`;
   
-  // Espremedor 4
-  svg += dot(8350, YM-15, 15); svg += dot(8350, YM+15, 15);
-  svg += `<text x="8350" y="${YM-40}" text-anchor="middle" ${FSL} font-size="8" font-weight="700" fill="${BK}">ESPREMEDOR 4</text>`;
+  svg += `<rect x="8070" y="${Y_quim + 45}" width="40" height="25" fill="#1e293b" rx="2"/>`;
+  svg += `<rect x="8065" y="${Y_quim + 40}" width="50" height="10" fill="#334155" rx="2"/>`;
+  svg += dot(8090, Y_quim + 30, 30);
+  svg += `<text x="8090" y="${Y_quim - 15}" font-family="Montserrat, sans-serif" font-size="12" font-weight="900" fill="#ffffff" text-anchor="middle">Mergulhador QUIM 2</text>`;
+  
+  // Espremedor 3
+  lineTo(8180, Y_quim);
+  svg += dot(8200, Y_quim - 10, 10);
+  svg += dot(8200, Y_quim + 10, 10);
+  svg += `<text x="8200" y="${Y_quim + 35}" font-family="Montserrat, sans-serif" font-size="10" font-weight="900" fill="#ffffff" text-anchor="middle">Espremedor 3</text>`;
+  lineTo(8200, Y_quim);
+  
+  // Climb to Escovador 2
+  lineTo(8220, Y_quim);
+  lineTo(8250, YM); // left edge of Escovador 2 is 8250
+  
+  // Escovador 2
+  svg += drawEscovador(8300, YM, 'Escovador 2');
   lineTo(8350, YM);
+  
+  // Drop to Espremedor 4
+  lineTo(8380, Y_quim);
+  svg += dot(8400, Y_quim - 10, 10);
+  svg += dot(8400, Y_quim + 10, 10);
+  svg += `<text x="8400" y="${Y_quim + 35}" font-family="Montserrat, sans-serif" font-size="10" font-weight="900" fill="#ffffff" text-anchor="middle">Espremedor 4</text>`;
+  lineTo(8400, Y_quim);
+  
+  // Climb back to YM for Secador 3
+  lineTo(8415, Y_quim);
+  lineTo(8430, YM); // left tip of Secador 3 is at 8430
   
   // Secador 3
   svg += secadorLosango(8480, YM, 100, 100, 'SECADOR 3');

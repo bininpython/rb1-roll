@@ -1854,45 +1854,60 @@ function renderRb1Completa() {
   svg += corretorCruz(5800, YM + 35, 35, '');
   svg += `<text x="5800" y="${YM + 90}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">CORRETOR 3</text>`;
   
-  // Strip arrives at top of r2, small clockwise wrap exiting at ~1:30 o'clock
+  // Strip arrives at top of r2, small clockwise wrap
   lineTo(5800, YM);
-  stripPath += `A 35 35 0 0 1 5830 ${YM + 18} `;
+  stripPath += `A 35 35 0 0 1 5820 ${YM + 6} `;
 
-  // BS 3 = ONE large roll + ONE small pinch roll (exactly as in sketch)
-  let bs3X = 6060, bs3Y = YM + 95, bs3R = 38;
-  svg += `<circle cx="${bs3X}" cy="${bs3Y}" r="${bs3R}" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+  // ---- BS 3 SECTION (Upper-right and Lower-left large rolls) ----
   
-  // Pinch roll at ~1:30 o'clock on BS3
-  svg += `<circle cx="${bs3X + 34}" cy="${bs3Y - 34}" r="10" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+  // 1. bs3Top (Upper-Right Large Roll)
+  let bs3TopX = 6060, bs3TopY = YM + 95, bs3R = 38;
+  svg += `<circle cx="${bs3TopX}" cy="${bs3TopY}" r="${bs3R}" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+  // Pinch roll at ~2 o'clock
+  svg += `<circle cx="${bs3TopX + 32}" cy="${bs3TopY - 32}" r="10" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+  // Text to the right
+  svg += `<text x="${bs3TopX + 55}" y="${bs3TopY - 25}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 3</text>`;
 
-  // BS 3 text to the right
-  svg += `<text x="${bs3X + 55}" y="${bs3Y - 25}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 3</text>`;
+  // 2. bs3Bot (Lower-Left Large Roll)
+  let bs3BotX = 5900, bs3BotY = YM + 180;
+  svg += `<circle cx="${bs3BotX}" cy="${bs3BotY}" r="${bs3R}" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+  // Pinch roll at ~8 o'clock
+  svg += `<circle cx="${bs3BotX - 32}" cy="${bs3BotY + 32}" r="10" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
 
-  // Straight diagonal line from Corretor 3 exit to BS3 left side (~10 o'clock)
-  lineTo(bs3X - 29, bs3Y - 25);
-  // Wrap OVER BS3 (clockwise via top, passing between large roll and pinch roll, exiting at ~4:30)
-  stripPath += `A ${bs3R} ${bs3R} 0 1 1 ${bs3X + 27} ${bs3Y + 27} `;
-
-  // r7 = medium green roll (further down-right)
-  let r7x = 6250, r7y = YM + 175, r7r = 20;
-  svg += `<circle cx="${r7x}" cy="${r7y}" r="${r7r}" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+  // ---- Strip Path through BS 3 ----
+  // Line to bs3Top top-left (~11:30)
+  lineTo(bs3TopX - 15, bs3TopY - 35);
+  // Wrap CLOCKWISE over bs3Top, around right, to bottom-left (~7:30)
+  stripPath += `A ${bs3R} ${bs3R} 0 1 1 ${bs3TopX - 25} ${bs3TopY + 28} `;
   
-  // Strip: diagonal DOWN-RIGHT from r5 to r7, tight wrap UNDER r7
-  lineTo(r7x - 12, r7y + 16);
-  stripPath += `A ${r7r} ${r7r} 0 0 0 ${r7x + 12} ${r7y + 16} `;
+  // Line to bs3Bot top-right (~1:30) -> DOWN-LEFT diagonal backwards
+  lineTo(bs3BotX + 25, bs3BotY - 28);
+  // Wrap COUNTER-CLOCKWISE over bs3Bot, around left, to bottom-right (~4:30)
+  stripPath += `A ${bs3R} ${bs3R} 0 1 0 ${bs3BotX + 25} ${bs3BotY + 28} `;
 
-  // r8, r9, r10 = three small green rolls at bottom with stands
-  const YD = YM + 210;
+  // ---- Medium Roll and Exit ----
+  let medX = 6140, medY = YM + 250, medR = 20;
+  svg += `<circle cx="${medX}" cy="${medY}" r="${medR}" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+  
+  // Line from bs3Bot to med top-left (~10 o'clock) -> DOWN-RIGHT diagonal
+  lineTo(medX - 15, medY - 13);
+  // Wrap COUNTER-CLOCKWISE under med to bottom (6 o'clock)
+  stripPath += `A ${medR} ${medR} 0 0 0 ${medX} ${medY + medR} `;
+
+  // Three small green rolls at bottom with stands
+  const YD = medY + medR + 8; // YM + 278
   for (let i = 0; i < 3; i++) {
-    let rx = 6300 + i * 35;
+    let rx = 6220 + i * 40;
     svg += `<circle cx="${rx}" cy="${YD}" r="8" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
     svg += `<line x1="${rx}" y1="${YD + 8}" x2="${rx}" y2="${YD + 22}" stroke="#475569" stroke-width="2"/>`;
     svg += `<line x1="${rx - 5}" y1="${YD + 22}" x2="${rx + 5}" y2="${YD + 22}" stroke="#475569" stroke-width="2"/>`;
   }
-  lineTo(6300 + 2 * 35 + 10, YD);
+  
+  // Horizontal line over the rollers
+  lineTo(6220 + 2 * 40 + 20, medY + medR);
   
   // Long gap, then 11 rollers
-  lineTo(6550, YD);
+  lineTo(6550, medY + medR);
   for (let i=0; i<11; i++) {
     svg += dot(6550 + i*20, YD, 6);
   }

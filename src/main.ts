@@ -1823,35 +1823,26 @@ function renderRb1Completa() {
   lineTo(dtX + dtW + 10, YM);
 
   // ====================================================================
-  // SECADOR 2 (Criss-cross chevron design)
+  // SECADOR 2 (Chevron arrow shape pointing left)
   // ====================================================================
-  let sec2X = dtX + dtW + 30;
+  let sec2X = dtX + dtW + 30, sec2W = 140, sec2H = 70;
+  let sec2CY = YM;
   
-  // Text "SECADOR"
-  svg += `<text x="${sec2X + 25}" y="${YM - 60}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">SECADOR</text>`;
+  // Chevron body
+  svg += `<path d="M ${sec2X} ${sec2CY} L ${sec2X + 30} ${sec2CY - sec2H/2} L ${sec2X + sec2W} ${sec2CY - sec2H/2} L ${sec2X + sec2W} ${sec2CY + sec2H/2} L ${sec2X + 30} ${sec2CY + sec2H/2} Z" fill="#1e293b" stroke="#334155" stroke-width="2"/>`;
   
-  // Pinch left
-  svg += rNrForno(sec2X, YM - 8, 8, '', sec2X, YM); // Top
-  svg += rNrForno(sec2X, YM + 8, 8, '', sec2X, YM); // Bottom
+  // Internal chevron V-lines
+  for (let v = 0; v < 4; v++) {
+    let vx = sec2X + 50 + v * 22;
+    svg += `<path d="M ${vx} ${sec2CY - sec2H/2 + 8} L ${vx - 12} ${sec2CY} L ${vx} ${sec2CY + sec2H/2 - 8}" fill="none" stroke="#475569" stroke-width="1.5"/>`;
+  }
   
-  // V-Shapes (Chevrons) - Criss-cross pattern
-  let c = sec2X + 25;
+  // Title
+  svg += `<text x="${sec2X + sec2W/2 + 15}" y="${sec2CY - sec2H/2 - 15}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">SECADOR</text>`;
   
-  // Top Nozzles (pointing DOWN)
-  svg += `<polyline points="${c - 20},${YM - 50} ${c},${YM - 10} ${c + 20},${YM - 50}" fill="none" stroke="#22c55e" stroke-width="2"/>`;
-  svg += `<polyline points="${c - 20},${YM - 30} ${c},${YM + 10} ${c + 20},${YM - 30}" fill="none" stroke="#22c55e" stroke-width="2"/>`;
-  
-  // Bottom Nozzles (pointing UP)
-  svg += `<polyline points="${c - 20},${YM + 50} ${c},${YM + 10} ${c + 20},${YM + 50}" fill="none" stroke="#22c55e" stroke-width="2"/>`;
-  svg += `<polyline points="${c - 20},${YM + 30} ${c},${YM - 10} ${c + 20},${YM + 30}" fill="none" stroke="#22c55e" stroke-width="2"/>`;
-
-  // Vertical center line (dashed)
-  svg += `<line x1="${c}" y1="${YM - 65}" x2="${c}" y2="${YM + 65}" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="4 4"/>`;
-  
-  // Pinch right
-  let sec2Rx = sec2X + 50;
-  svg += rNrForno(sec2Rx, YM - 8, 8, '', sec2Rx, YM); // Top
-  svg += rNrForno(sec2Rx, YM + 8, 8, '', sec2Rx, YM); // Bottom
+  // Exit roll at the right tip (strip passes OVER it)
+  let sec2Rx = sec2X + sec2W + 20;
+  svg += rNrForno(sec2Rx, YM + 8, 8, '', sec2Rx, YM + 22);
 
   lineTo(sec2Rx + 8, YM);
   

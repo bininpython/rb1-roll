@@ -1856,25 +1856,52 @@ function renderRb1Completa() {
   lineTo(sec2Rx + 8, YM);
   
   // Corretor 3
-  svg += corretorCruz(5800, YM, 35, 'CORRETOR 3');
-  lineTo(5800, YM);
+  svg += corretorCruz(5800, YM + 35, 35, '');
+  svg += `<text x="5800" y="${YM + 90}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">CORRETOR 3</text>`;
   
-  // S-Roll
-  svg += dot(5920, YM-30, 8);
-  svg += dot(5980, YM+20, 35);
-  svg += dot(6060, YM-40, 35);
-  svg += dot(6140, YM, 8);
-  lineTo(5920, YM-30); lineTo(5980, YM+20); lineTo(6060, YM-40); lineTo(6140, YM);
+  lineTo(5800, YM); // Arrive at top of Corretor 3
+  stripPath += `A 35 35 0 0 1 5825 ${YM + 11} `; // Leave Corretor 3
+
+  // BS 3 (Bridle Section 3 / S-Roll)
+  let bs3X1 = 5950, bs3Y1 = YM + 110; // First large roll (lower)
+  let bs3X2 = 6080, bs3Y2 = YM + 50;  // Second large roll (higher)
   
-  // Descida para mesa
-  const YD = 550; // Deep horizontal
-  svg += dot(6250, YD-20, 25); // deflector
-  lineTo(6250, YD-20);
+  // Large rolls
+  svg += rNrForno(bs3X1, bs3Y1, 35, '', 0, 0);
+  svg += rNrForno(bs3X2, bs3Y2, 35, '', 0, 0);
   
+  // Pinch rolls
+  svg += rNrForno(bs3X1 - 35, bs3Y1 + 28, 10, '', 0, 0); // bottom-left of C1
+  svg += rNrForno(bs3X2 + 35, bs3Y2 - 28, 10, '', 0, 0); // top-right of C2
+
+  // Text BS 3
+  svg += `<text x="${bs3X2 + 50}" y="${bs3Y2 - 10}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 3</text>`;
+
+  // Strip path through BS3
+  lineTo(bs3X1 - 25, bs3Y1 + 24); // arriving under C1
+  stripPath += `A 35 35 0 0 0 ${bs3X1 + 18} ${bs3Y1 - 30} `; // wrapping under C1
+  
+  lineTo(bs3X2 - 25, bs3Y2 + 24); // arriving to C2
+  stripPath += `A 35 35 0 0 1 ${bs3X2 + 30} ${bs3Y2 - 18} `; // wrapping over C2
+
+  // Medium roll after BS3
+  let mRx = 6200, mRy = YM + 80; // 530
+  svg += rNrForno(mRx, mRy, 20, '', 0, 0);
+  
+  // Path to medium roll
+  lineTo(mRx - 17, mRy - 10);
+  stripPath += `A 20 20 0 0 0 ${mRx} ${mRy + 20} `; // wrapping under medium roll
+
+  // 3 small horizontal rolls with stands
+  const YD = YM + 100; // 550
   for (let i=0; i<3; i++) {
-    svg += dot(6330 + i*30, YD, 8);
-    lineTo(6330 + i*30, YD);
+    let rx = 6250 + i*40;
+    svg += rNrForno(rx, YD + 8, 8, '', 0, 0);
+    // Little stand legs for the rollers as shown in sketch
+    svg += `<line x1="${rx}" y1="${YD + 16}" x2="${rx}" y2="${YD + 30}" stroke="#475569" stroke-width="2"/>`;
+    svg += `<line x1="${rx - 5}" y1="${YD + 30}" x2="${rx + 5}" y2="${YD + 30}" stroke="#475569" stroke-width="2"/>`;
   }
+  lineTo(6250 + 2*40 + 20, YD);
   
   // Long gap, then 11 rollers
   lineTo(6550, YD);

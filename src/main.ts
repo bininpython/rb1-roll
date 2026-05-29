@@ -1751,8 +1751,8 @@ function renderRb1Completa() {
   // Title
   svg += `<text x="${an1X + an1W/2}" y="${YM - an1H - 15}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">AR NEBLINA 1</text>`;
   // Exit roll (202) - Strip goes OVER it
-  svg += rNrForno(an1X + an1W + 25, YM + 8, 8, '', 0, 0);
-  lineTo(an1X + an1W + 25 + 8, YM);
+  svg += rNrForno(an1X + an1W + 10, YM + 8, 8, '', 0, 0);
+  lineTo(an1X + an1W + 10 + 8, YM);
 
   // ====================================================================
   // AR NEBLINA 2 (UNID. RESF. ARNEBLINA 2)

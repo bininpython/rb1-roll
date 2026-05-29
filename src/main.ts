@@ -1569,13 +1569,13 @@ function renderRb1Completa() {
   svg += rNrForno(r173x, r173y, rL, '', r173x, r173y); // 173
   
   // Pinches 174, 175
-  svg += rNrForno(r173x + 28, r173y + 28, 10, '', 0, 0); // 174: Bottom-Right of 173
-  svg += rNrForno(r176x - 25, r176y - 25, 10, '', 0, 0); // 175: Top-Left of 176
+  svg += rNrForno(r173x + 17, r173y + 36.2, 10, '', 0, 0); // 174: Perfectly pinching Bottom-Right of 173
+  svg += rNrForno(r176x - 28.3, r176y - 28.3, 10, '', 0, 0); // 175: Perfectly pinching Top-Left of 176
 
   // S-Wrap Path for BS1 (THE PERFECT FIGURE-8 BRIDLE)
   // 1. Arc perfectly around the bottom-right quadrant of Corretor 1, then smooth line to BS1
   stripPath += `A 25 25 0 0 0 ${corrX + 25} ${corrY} `;
-  stripPath += `Q ${corrX + 25} ${corrY - 20} 2875.6 375.6 `;
+  stripPath += `Q ${corrX + 25} ${corrY - 20} 2872.8 377.1 `;
   
   // 2. Arc around 173 (Right -> Top -> Top-Left)
   // Counter-Clockwise (sweep=0), Large Arc (large=1)
@@ -1590,8 +1590,8 @@ function renderRb1Completa() {
   
   // 177, 178 (Support rollers on the horizontal exit line)
   // Horizontal line is at Y = 220.
-  // 177 is on TOP of the line, between 176 and 173. Let's place at X = 2815
-  svg += rNrForno(2815, 210, 10, '', 0, 0); // 177 (Top)
+  // 177 was removed. Adding a new support roller BELOW the line per user drawing
+  svg += rNrForno(2850, 230, 10, '', 0, 0); // New roll (Bottom)
   
   // 178 is BELOW the line, right after 173. Let's place at X = 2930
   svg += rNrForno(2930, 230, 10, '', 0, 0); // 178 (Bottom)

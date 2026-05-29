@@ -1846,52 +1846,46 @@ function renderRb1Completa() {
   
   // Exit roll at the right tip (strip passes OVER it)
   let sec2Rx = sec2X + sec2W + 20;
-  svg += greenRoll(sec2Rx, YM + 8, 8);
+  svg += rNrForno(sec2Rx, YM + 8, 8, '', 0, 0);
 
   lineTo(sec2Rx + 8, YM);
   
-  // Corretor 3 (Solid Green)
-  svg += greenRoll(5800, YM + 35, 35);
+  // Corretor 3 (Original Black/White style)
+  svg += corretorCruz(5800, YM + 35, 35, '');
   svg += `<text x="5800" y="${YM + 90}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">CORRETOR 3</text>`;
   
   lineTo(5800, YM); // Arrive at top of Corretor 3
   stripPath += `A 35 35 0 0 1 5825 ${YM + 11} `; // Leave Corretor 3
 
-  // BS 3 (Bridle Section 3 / S-Roll)
-  let bs3X1 = 5950, bs3Y1 = YM + 110; // First large roll (r3)
-  let bs3X2 = 6080, bs3Y2 = YM + 50;  // Second large roll (r5)
+  // BS 3 (Single large roll)
+  let bs3X = 6080, bs3Y = YM + 50;  
   
-  // Large rolls (Solid Green)
-  svg += greenRoll(bs3X1, bs3Y1, 35);
-  svg += greenRoll(bs3X2, bs3Y2, 35);
+  // Large roll
+  svg += rNrForno(bs3X, bs3Y, 35, '', 0, 0);
   
-  // Pinch rolls (Solid Green)
-  svg += greenRoll(bs3X1 - 35, bs3Y1 + 28, 10); // r4: bottom-left of r3
-  svg += greenRoll(bs3X2 + 35, bs3Y2 - 28, 10); // r6: top-right of r5
+  // Pinch roll (top-right)
+  svg += rNrForno(bs3X + 35, bs3Y - 28, 10, '', 0, 0); 
 
   // Text BS 3
-  svg += `<text x="${bs3X2 + 50}" y="${bs3Y2 - 10}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 3</text>`;
+  svg += `<text x="${bs3X + 50}" y="${bs3Y - 10}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 3</text>`;
 
   // Strip path through BS3
-  lineTo(bs3X1 - 25, bs3Y1 + 24); // arriving to bottom-left of r3
-  stripPath += `A 35 35 0 0 0 ${bs3X1 + 25} ${bs3Y1 + 24} `; // wrapping UNDER r3
-  
-  lineTo(bs3X2 - 25, bs3Y2 - 24); // arriving to top-left of r5 (diagonal slopes UP)
-  stripPath += `A 35 35 0 0 1 ${bs3X2 + 25} ${bs3Y2 - 24} `; // wrapping OVER r5
+  lineTo(bs3X - 25, bs3Y - 24); // arriving to top-left of BS3 from Corretor 3
+  stripPath += `A 35 35 0 0 1 ${bs3X + 25} ${bs3Y - 24} `; // wrapping OVER BS3
 
-  // Medium roll after BS3 (Solid Green)
-  let mRx = 6200, mRy = YM + 80; // 530
-  svg += greenRoll(mRx, mRy, 20);
+  // Medium roll after BS3
+  let mRx = 6200, mRy = YM + 80; 
+  svg += rNrForno(mRx, mRy, 20, '', 0, 0);
   
   // Path to medium roll
   lineTo(mRx - 17, mRy + 10); // diagonal slopes DOWN to bottom-left of medium roll
   stripPath += `A 20 20 0 0 0 ${mRx} ${mRy + 20} `; // wrapping UNDER medium roll
 
-  // 3 small horizontal rolls with stands (Solid Green)
+  // 3 small horizontal rolls with stands
   const YD = YM + 100; // 550
   for (let i=0; i<3; i++) {
     let rx = 6250 + i*40;
-    svg += greenRoll(rx, YD + 8, 8);
+    svg += rNrForno(rx, YD + 8, 8, '', 0, 0);
     // Little stand legs for the rollers as shown in sketch
     svg += `<line x1="${rx}" y1="${YD + 16}" x2="${rx}" y2="${YD + 30}" stroke="#475569" stroke-width="2"/>`;
     svg += `<line x1="${rx - 5}" y1="${YD + 30}" x2="${rx + 5}" y2="${YD + 30}" stroke="#475569" stroke-width="2"/>`;

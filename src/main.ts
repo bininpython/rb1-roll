@@ -1541,7 +1541,7 @@ function renderRb1Completa() {
   svg += rNrForno(r171X, YM - 8, 8, '', r171X, YM - 15);
 
   // CORRETOR 1 (172) (Strip passes UNDER it)
-  let corrX = r171X + 50; // 2646
+  let corrX = r171X + 150; // Shifted right by 100px
   let corrY = YM - 25; // 425
   
   // Quadrant Pattern

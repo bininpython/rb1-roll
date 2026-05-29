@@ -1739,30 +1739,78 @@ function renderRb1Completa() {
 
   lineTo(4550, YM);
   
-  // Ar Neblina 1
-  svg += tanque(4600, YM - 40, 120, 80, 'AR NEBLINA 1', []);
-  svg += dot(4760, YM, 8);
-  lineTo(4760, YM);
-  
-  // Ar Neblina 2
-  svg += tanque(4800, YM - 45, 250, 90, 'AR NEBLINA 2', [60, 190]);
-  svg += dot(5090, YM, 8);
-  lineTo(5090, YM);
-  
-  // Dip Tanque
-  svg += tanque(5150, YM - 35, 300, 70, 'DIP TANQUE', []);
-  lineTo(5450, YM);
+  // ====================================================================
+  // AR NEBLINA 1 (UND. RESF. ARNEBLINA 1)
+  // Two rectangular boxes: one above strip, one below strip, roll at exit
+  // ====================================================================
+  let an1X = 4580, an1W = 140, an1H = 45;
+  // Top box (above strip)
+  svg += `<rect x="${an1X}" y="${YM - an1H - 2}" width="${an1W}" height="${an1H}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="2"/>`;
+  // Bottom box (below strip)
+  svg += `<rect x="${an1X}" y="${YM + 2}" width="${an1W}" height="${an1H}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="2"/>`;
+  // Title
+  svg += `<text x="${an1X + an1W/2}" y="${YM - an1H - 15}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">AR NEBLINA 1</text>`;
+  // Exit roll (202)
+  svg += rNrForno(an1X + an1W + 25, YM, 8, '', 0, 0);
+  lineTo(an1X + an1W + 25 + 8, YM);
 
   // ====================================================================
-  // SEÇÃO 5: SECAGEM E LOOP INTERMEDIÁRIO
+  // AR NEBLINA 2 (UNID. RESF. ARNEBLINA 2)
+  // Wider split boxes, 3 green rolls below strip (2 inside, 1 outside right)
   // ====================================================================
-  svg += dot(5500, YM, 6);
-  svg += dot(5550, YM-8, 6); svg += dot(5550, YM+8, 6);
-  lineTo(5550, YM);
-  
-  // Secador 2
-  svg += secadorLosango(5650, YM, 90, 90, 'SECADOR 2');
-  lineTo(5650, YM);
+  let an2X = 4790, an2W = 280, an2H = 50;
+  // Top box (above strip)
+  svg += `<rect x="${an2X}" y="${YM - an2H - 2}" width="${an2W}" height="${an2H}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="2"/>`;
+  // Bottom box (below strip)
+  svg += `<rect x="${an2X}" y="${YM + 2}" width="${an2W}" height="${an2H}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="2"/>`;
+  // Title
+  svg += `<text x="${an2X + an2W/2}" y="${YM - an2H - 15}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">AR NEBLINA 2</text>`;
+  // 3 support rolls below the strip
+  svg += rNrForno(an2X + 70, YM + 10, 10, '', 0, 0);
+  svg += rNrForno(an2X + 190, YM + 10, 10, '', 0, 0);
+  svg += rNrForno(an2X + an2W + 25, YM + 10, 10, '', 0, 0);
+  lineTo(an2X + an2W + 25 + 10, YM);
+
+  // ====================================================================
+  // DIP TANQUE
+  // Trapezoidal tank where strip dips down, large roll submerged,
+  // two small rolls stacked at exit
+  // ====================================================================
+  let dtX = 5120, dtW = 300, dtTopY = YM - 10, dtBotY = YM + 120;
+  // Trapezoidal body (wider at top, narrower at bottom-left)
+  svg += `<path d="M ${dtX} ${dtTopY} L ${dtX + dtW} ${dtTopY} L ${dtX + dtW} ${dtBotY} L ${dtX + 60} ${dtBotY} Z" fill="#1e293b" stroke="#334155" stroke-width="2"/>`;
+  // Title
+  svg += `<text x="${dtX + dtW/2}" y="${dtTopY - 15}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">DIP TANQUE</text>`;
+  // Large submerged roll
+  let dtRollX = dtX + dtW - 100, dtRollY = dtBotY - 45;
+  svg += rNrForno(dtRollX, dtRollY, 28, '', 0, 0);
+  // Two small exit rolls (stacked vertically at exit)
+  svg += rNrForno(dtX + dtW - 30, dtTopY + 15, 8, '', 0, 0);
+  svg += rNrForno(dtX + dtW - 30, dtTopY + 35, 8, '', 0, 0);
+  // Strip path: dip down into tank, wrap around large roll, come back up
+  lineTo(dtX + 20, YM);
+  stripPath += `L ${dtRollX} ${dtRollY - 28} `;
+  stripPath += `A 28 28 0 1 1 ${dtRollX + 28} ${dtRollY} `;
+  lineTo(dtX + dtW - 30, dtTopY + 35 + 8);
+  lineTo(dtX + dtW + 10, YM);
+
+  // ====================================================================
+  // SECADOR (Chevron arrow shape pointing left, with internal V-lines)
+  // ====================================================================
+  let secX = dtX + dtW + 30, secW = 140, secH = 70;
+  let secCY = YM;
+  // Chevron body (pointed left like an arrow tip)
+  svg += `<path d="M ${secX} ${secCY} L ${secX + 30} ${secCY - secH/2} L ${secX + secW} ${secCY - secH/2} L ${secX + secW} ${secCY + secH/2} L ${secX + 30} ${secCY + secH/2} Z" fill="#1e293b" stroke="#334155" stroke-width="2"/>`;
+  // Internal chevron V-lines (decorative)
+  for (let v = 0; v < 4; v++) {
+    let vx = secX + 50 + v * 22;
+    svg += `<path d="M ${vx} ${secCY - secH/2 + 8} L ${vx - 12} ${secCY} L ${vx} ${secCY + secH/2 - 8}" fill="none" stroke="#475569" stroke-width="1.5"/>`;
+  }
+  // Title
+  svg += `<text x="${secX + secW/2 + 15}" y="${secCY - secH/2 - 12}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">SECADOR</text>`;
+  // Exit roll at the right tip
+  svg += rNrForno(secX + secW + 15, secCY, 8, '', 0, 0);
+  lineTo(secX + secW + 15 + 8, YM);
   
   // Corretor 3
   svg += corretorCruz(5800, YM, 35, 'CORRETOR 3');

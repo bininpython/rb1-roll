@@ -1945,13 +1945,13 @@ function renderRb1Completa() {
   // SEÇÃO 6: DETALHADA - TANQUE ELETROLÍTICO
   // ====================================================================
   // The entire section is a straight horizontal line!
-  lineTo(7680, YM); 
+  lineTo(7690, YM); 
   
   // Title
-  svg += `<text x="7315" y="${YM - 80}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">Tanque Eletrolitico</text>`;
+  svg += `<text x="7325" y="${YM - 80}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">Tanque Eletrolitico</text>`;
   
   // Tank outline
-  svg += `<rect x="6960" y="${YM - 60}" width="710" height="150" fill="none" stroke="#ffffff" stroke-width="2" rx="4"/>`;
+  svg += `<rect x="6960" y="${YM - 60}" width="730" height="150" fill="none" stroke="#ffffff" stroke-width="2" rx="4"/>`;
   
   // Roll 0: Large 1 (Defletor Entrada)
   svg += `<rect x="6980" y="${YM + 45}" width="40" height="25" fill="#1e293b" rx="2"/>`;
@@ -1959,29 +1959,33 @@ function renderRb1Completa() {
   svg += dot(7000, YM + 30, 30);
   
   // Roll 1: Top 1
-  svg += dot(7070, YM - 15, 15);
+  svg += dot(7060, YM - 15, 15);
   // Roll 2: Bottom 1
-  svg += dot(7140, YM + 15, 15);
+  svg += dot(7120, YM + 15, 15);
   // Roll 3: Top 2
-  svg += dot(7210, YM - 15, 15);
+  svg += dot(7180, YM - 15, 15);
   // Roll 4: Bottom 2
-  svg += dot(7280, YM + 15, 15);
+  svg += dot(7240, YM + 15, 15);
   
   // Roll 5: Large 2 (Centragem)
-  svg += `<rect x="7330" y="${YM + 45}" width="40" height="25" fill="#1e293b" rx="2"/>`;
-  svg += `<rect x="7325" y="${YM + 40}" width="50" height="10" fill="#334155" rx="2"/>`;
-  svg += dot(7350, YM + 30, 30);
+  svg += `<rect x="7280" y="${YM + 45}" width="40" height="25" fill="#1e293b" rx="2"/>`;
+  svg += `<rect x="7275" y="${YM + 40}" width="50" height="10" fill="#334155" rx="2"/>`;
+  svg += dot(7300, YM + 30, 30);
   
   // Roll 6: Top 3
-  svg += dot(7420, YM - 15, 15);
+  svg += dot(7360, YM - 15, 15);
   // Roll 7: Bottom 3
-  svg += dot(7490, YM + 15, 15);
+  svg += dot(7420, YM + 15, 15);
   // Roll 8: Top 4
-  svg += dot(7560, YM - 15, 15);
+  svg += dot(7480, YM - 15, 15);
+  // Roll 9: Bottom 4
+  svg += dot(7540, YM + 15, 15);
+  // Roll 10: Top 5
+  svg += dot(7600, YM - 15, 15);
   
-  // Roll 9: Pinch rolls
-  svg += dot(7630, YM - 10, 10);
-  svg += dot(7630, YM + 10, 10);
+  // Roll 11: Pinch rolls
+  svg += dot(7660, YM - 10, 10);
+  svg += dot(7660, YM + 10, 10);
   
   // Helper for Escovador
   const drawEscovador = (cx: number, cy: number, label: string) => {

@@ -1076,7 +1076,7 @@ function renderRb1Completa() {
   svg += `<text x="90" y="${Y1 - 50}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#94a3b8">ENTRADA 1</text>`;
   
   // Bobina Principal (Premium CAD)
-  svg += rolerDecap(100, Y1 + 40, 40, 'Defletor Entrada', '2140 mm');
+  svg += rolerDecap(100, Y1 + 40, 40, 'Bobinadeira 1', '');
   
   // 1 e 2 na Bobina (Snubber rolls resting on the coil)
   // Coil center is (100, Y1+40=210). Radius=40. Roller radius=8. Gap=1. Dist=49.
@@ -1226,7 +1226,7 @@ function renderRb1Completa() {
   }
 
   // Bobina Principal (Defletor)
-  svg += rolerDecap(100, Y2 + 40, 40, 'Defletor Entrada 2', '2140 mm');
+  svg += rolerDecap(100, Y2 + 40, 40, 'Bobinadeira 2', '');
   
   // 86, 87 (Snubber rolls resting on the coil)
   // Coil center is (100, Y2+40=490). Radius=40. Roller radius=8. Gap=1. Dist=49.

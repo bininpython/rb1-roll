@@ -1235,13 +1235,45 @@ function renderRb1Completa() {
   svg += rNrForno(62.5, 458.5, 8, '', 0, 0);
   svg += rNrForno(83.2, 444.0, 8, '', 0, 0);
 
+  // 88, 89 (Pinch)
+  let p88X = 160;
+  svg += rNrForno(p88X, Y2 - 13.75, 12, '', 0, 0);
+  svg += rNrForno(p88X, Y2 + 13.75, 12, '', 0, 0);
+
+  // 90 (Lower)
+  svg += rNrForno(200, Y2 + 11.75, 10, '', 0, 0);
+
+  // 91-95 (Leveler / Straightener)
+  // Lower: 91, 95, 94. Upper: 92, 93.
+  let l91X = 240;
+  svg += rNrForno(l91X,      Y2 + 7.75, 6, '', 0, 0); // 91 (Lower)
+  svg += rNrForno(l91X + 12, Y2 - 7.75, 6, '', 0, 0); // 92 (Upper)
+  svg += rNrForno(l91X + 24, Y2 + 7.75, 6, '', 0, 0); // 95 (Lower)
+  svg += rNrForno(l91X + 36, Y2 - 7.75, 6, '', 0, 0); // 93 (Upper)
+  svg += rNrForno(l91X + 48, Y2 + 7.75, 6, '', 0, 0); // 94 (Lower)
+
+  // 96-100 (Inline lower)
+  let i96X = 310;
+  for(let i=0; i<5; i++) {
+    svg += rNrForno(i96X + i*15, Y2 + 7.75, 6, '', 0, 0);
+  }
+
+  // 101, 102, 103 (Sensors)
+  // Rectangles above the line, with a probe touching the line
+  let s101X = 390;
+  for(let i=0; i<3; i++) {
+    let sx = s101X + i*20;
+    svg += `<rect x="${sx-5}" y="${Y2-20}" width="10" height="20" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2"/>`;
+    svg += `<line x1="${sx}" y1="${Y2}" x2="${sx}" y2="${Y2+6}" stroke="#0f172a" stroke-width="1.5"/>`;
+  }
+
   // 104, 105 (Pinch)
-  let pX2 = 350;
+  let pX2 = 460;
   svg += rNrForno(pX2, Y2 - 13.75, 12, '', 0, 0);
   svg += rNrForno(pX2, Y2 + 13.75, 12, '', 0, 0);
 
   // TESOURA 2
-  let tes2X = 450;
+  let tes2X = 550;
   svg += `<text x="${tes2X+20}" y="${Y2-35}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">TESOURA 2</text>`;
   svg += `<rect x="${tes2X}" y="${Y2-25}" width="15" height="25" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2"/>`; 
   svg += `<rect x="${tes2X+15}" y="${Y2}" width="15" height="25" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2"/>`; 
@@ -1253,7 +1285,7 @@ function renderRb1Completa() {
   svg += `<line x1="${tes2X+50}" y1="${Y2+60}" x2="${tes2X+50}" y2="${Y2+85}" stroke="${BK}" stroke-width="1.5"/>`; // Plate
 
   // 106-109 Hydraulic Table
-  let tbE2X = 600;
+  let tbE2X = 700;
   // Hydraulic Cylinder
   svg += `<line x1="${tbE2X + 45}" y1="${Y2 + 25}" x2="${tbE2X - 5}" y2="${Y2 + 100}" stroke="#475569" stroke-width="12"/>`;
   svg += `<line x1="${tbE2X + 55}" y1="${Y2 + 5}" x2="${tbE2X + 45}" y2="${Y2 + 25}" stroke="#94a3b8" stroke-width="4"/>`;
@@ -1272,13 +1304,13 @@ function renderRb1Completa() {
   svg += rNrForno(tbE2X + 100, Y2 + 7.75, 6, '', 0, 0);
 
   // 110-116 Inline bottom rollers
-  let inE2X = 780;
+  let inE2X = 860;
   for(let i=0; i<7; i++) {
     svg += rNrForno(inE2X + i*25, Y2 + 7.75, 6, '', 0, 0);
   }
 
   // ENROLADOR DE TIRAS
-  let enrE2X = 1020;
+  let enrE2X = 1080;
   svg += `<text x="${enrE2X+37}" y="${Y2-45}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">ENROLADOR DE TIRAS</text>`;
   // Curved Top Guide (Crescent shape)
   svg += `<path d="M ${enrE2X+15} ${Y2-25} Q ${enrE2X+37} ${Y2-5} ${enrE2X+60} ${Y2-25} Q ${enrE2X+37} ${Y2-15} ${enrE2X+15} ${Y2-25}" fill="#1e293b" stroke="#94a3b8" stroke-width="2"/>`;
@@ -1294,7 +1326,7 @@ function renderRb1Completa() {
   svg += rNrForno(enrE2X + 50, Y2 + 7.75, 6, '', 0, 0); // 121
 
   // 123-125 Bottom rollers
-  let trE2X = 1200;
+  let trE2X = 1240;
   svg += rNrForno(trE2X, Y2 + 7.75, 6, '', 0, 0);
   svg += rNrForno(trE2X + 30, Y2 + 7.75, 6, '', 0, 0);
   svg += rNrForno(trE2X + 60, Y2 + 7.75, 6, '', 0, 0);

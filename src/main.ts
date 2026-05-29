@@ -1850,32 +1850,38 @@ function renderRb1Completa() {
 
   lineTo(sec2Rx + 8, YM);
   
-  // Corretor 3 (Original Black/White style)
-  svg += corretorCruz(5800, YM + 35, 35, '');
-  svg += `<text x="5800" y="${YM + 90}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">CORRETOR 3</text>`;
+  // Corretor 3 (Exact Black/White Quadrant Style)
+  let c3x = 5800, c3y = YM + 35, c3r = 35;
+  svg += `<circle cx="${c3x}" cy="${c3y}" r="${c3r}" fill="#ffffff" stroke="#000000" stroke-width="2"/>`;
+  // Top-left quadrant (Black)
+  svg += `<path d="M ${c3x} ${c3y - c3r} A ${c3r} ${c3r} 0 0 0 ${c3x - c3r} ${c3y} L ${c3x} ${c3y} Z" fill="#000000"/>`;
+  // Bottom-right quadrant (Black)
+  svg += `<path d="M ${c3x} ${c3y + c3r} A ${c3r} ${c3r} 0 0 0 ${c3x + c3r} ${c3y} L ${c3x} ${c3y} Z" fill="#000000"/>`;
+  // Text left-aligned under the roll
+  svg += `<text x="${c3x - c3r}" y="${c3y + c3r + 20}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="start">CORRETOR 3</text>`;
   
-  lineTo(5800, YM); // Arrive at top of Corretor 3
-  stripPath += `A 35 35 0 0 1 5825 ${YM + 11} `; // Leave Corretor 3
+  lineTo(c3x, YM); // Arrive at top of Corretor 3
+  stripPath += `A 35 35 0 0 1 ${c3x + 25} ${c3y - 24} `; // Leave Corretor 3
 
-  // BS 3 (Single large roll)
-  let bs3X = 6080, bs3Y = YM + 50;  
+  // BS 3 (Single large roll, pure white with black outline)
+  let bs3X = 6080, bs3Y = YM + 50, bs3r = 35;  
   
   // Large roll
-  svg += rNrForno(bs3X, bs3Y, 35, '', 0, 0);
+  svg += `<circle cx="${bs3X}" cy="${bs3Y}" r="${bs3r}" fill="#ffffff" stroke="#000000" stroke-width="2"/>`;
   
   // Pinch roll (top-right)
-  svg += rNrForno(bs3X + 35, bs3Y - 28, 10, '', 0, 0); 
+  svg += `<circle cx="${bs3X + 35}" cy="${bs3Y - 28}" r="10" fill="#ffffff" stroke="#000000" stroke-width="2"/>`;
 
-  // Text BS 3
-  svg += `<text x="${bs3X + 50}" y="${bs3Y - 10}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 3</text>`;
+  // Text BS 3 right next to pinch roll
+  svg += `<text x="${bs3X + 55}" y="${bs3Y - 23}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 3</text>`;
 
   // Strip path through BS3
-  lineTo(bs3X - 25, bs3Y - 24); // arriving to top-left of BS3 from Corretor 3
-  stripPath += `A 35 35 0 0 1 ${bs3X + 25} ${bs3Y - 24} `; // wrapping OVER BS3
+  lineTo(bs3X - 25, bs3Y + 24); // arriving to bottom-left of BS3 from Corretor 3
+  stripPath += `A 35 35 0 0 0 ${bs3X + 25} ${bs3Y - 24} `; // wrapping UNDER BS3 (bottom-left to top-right)
 
   // Medium roll after BS3
   let mRx = 6200, mRy = YM + 80; 
-  svg += rNrForno(mRx, mRy, 20, '', 0, 0);
+  svg += `<circle cx="${mRx}" cy="${mRy}" r="20" fill="#ffffff" stroke="#000000" stroke-width="2"/>`;
   
   // Path to medium roll
   lineTo(mRx - 17, mRy + 10); // diagonal slopes DOWN to bottom-left of medium roll
@@ -1885,7 +1891,7 @@ function renderRb1Completa() {
   const YD = YM + 100; // 550
   for (let i=0; i<3; i++) {
     let rx = 6250 + i*40;
-    svg += rNrForno(rx, YD + 8, 8, '', 0, 0);
+    svg += `<circle cx="${rx}" cy="${YD + 8}" r="8" fill="#ffffff" stroke="#000000" stroke-width="2"/>`;
     // Little stand legs for the rollers as shown in sketch
     svg += `<line x1="${rx}" y1="${YD + 16}" x2="${rx}" y2="${YD + 30}" stroke="#475569" stroke-width="2"/>`;
     svg += `<line x1="${rx - 5}" y1="${YD + 30}" x2="${rx + 5}" y2="${YD + 30}" stroke="#475569" stroke-width="2"/>`;

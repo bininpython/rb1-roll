@@ -1229,8 +1229,8 @@ function renderRb1Completa() {
 
   // 104, 105 (Pinch)
   let pX2 = 350;
-  svg += rNrForno(pX2, Y2 - 12, 12, '', pX2, Y2 - 28);
-  svg += rNrForno(pX2, Y2 + 12, 12, '', pX2, Y2 + 34);
+  svg += rNrForno(pX2, Y2 - 13.75, 12, '', 0, 0);
+  svg += rNrForno(pX2, Y2 + 13.75, 12, '', 0, 0);
 
   // TESOURA 2
   let tes2X = 450;
@@ -1258,38 +1258,38 @@ function renderRb1Completa() {
   // Table Box
   svg += `<rect x="${tbE2X - 10}" y="${Y2 + 2}" width="120" height="15" fill="none" stroke="#22c55e" stroke-width="2"/>`;
   // Rollers (106 to 109)
-  svg += rNrForno(tbE2X + 10, Y2 + 6, 6, '', 0, 0);
-  svg += rNrForno(tbE2X + 40, Y2 + 6, 6, '', 0, 0);
-  svg += rNrForno(tbE2X + 70, Y2 + 6, 6, '', 0, 0);
-  svg += rNrForno(tbE2X + 100, Y2 + 6, 6, '', 0, 0);
+  svg += rNrForno(tbE2X + 10, Y2 + 7.75, 6, '', 0, 0);
+  svg += rNrForno(tbE2X + 40, Y2 + 7.75, 6, '', 0, 0);
+  svg += rNrForno(tbE2X + 70, Y2 + 7.75, 6, '', 0, 0);
+  svg += rNrForno(tbE2X + 100, Y2 + 7.75, 6, '', 0, 0);
 
   // 110-116 Inline bottom rollers
   let inE2X = 780;
   for(let i=0; i<7; i++) {
-    svg += rNrForno(inE2X + i*25, Y2 + 6, 6, '', 0, 0);
+    svg += rNrForno(inE2X + i*25, Y2 + 7.75, 6, '', 0, 0);
   }
 
   // ENROLADOR DE TIRAS
   let enrE2X = 1020;
-  svg += `<text x="${enrE2X+60}" y="${Y2-45}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">ENROLADOR DE TIRAS</text>`;
+  svg += `<text x="${enrE2X+37}" y="${Y2-45}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">ENROLADOR DE TIRAS</text>`;
   // Curved Top Guide (Crescent shape)
-  svg += `<path d="M ${enrE2X+20} ${Y2-25} Q ${enrE2X+60} ${Y2-5} ${enrE2X+100} ${Y2-25} Q ${enrE2X+60} ${Y2-15} ${enrE2X+20} ${Y2-25}" fill="#1e293b" stroke="#94a3b8" stroke-width="2"/>`;
+  svg += `<path d="M ${enrE2X+15} ${Y2-25} Q ${enrE2X+37} ${Y2-5} ${enrE2X+60} ${Y2-25} Q ${enrE2X+37} ${Y2-15} ${enrE2X+15} ${Y2-25}" fill="#1e293b" stroke="#94a3b8" stroke-width="2"/>`;
   
-  // Top rollers (117, 122)
-  svg += rNrForno(enrE2X, Y2 - 6, 6, '', 0, 0);
-  svg += rNrForno(enrE2X + 120, Y2 - 6, 6, '', 0, 0);
+  // Upper rollers (117, 119, 120, 122)
+  svg += rNrForno(enrE2X, Y2 - 7.75, 6, '', 0, 0); // 117
+  svg += rNrForno(enrE2X + 25, Y2 - 7.75, 6, '', 0, 0); // 119
+  svg += rNrForno(enrE2X + 50, Y2 - 7.75, 6, '', 0, 0); // 120
+  svg += rNrForno(enrE2X + 75, Y2 - 7.75, 6, '', 0, 0); // 122
   
-  // Bottom rollers (119, 118, 121, 120)
-  svg += rNrForno(enrE2X + 24, Y2 + 6, 6, '', 0, 0);
-  svg += rNrForno(enrE2X + 48, Y2 + 6, 6, '', 0, 0);
-  svg += rNrForno(enrE2X + 72, Y2 + 6, 6, '', 0, 0);
-  svg += rNrForno(enrE2X + 96, Y2 + 6, 6, '', 0, 0);
+  // Lower rollers (118, 121)
+  svg += rNrForno(enrE2X + 25, Y2 + 7.75, 6, '', 0, 0); // 118
+  svg += rNrForno(enrE2X + 50, Y2 + 7.75, 6, '', 0, 0); // 121
 
   // 123-125 Bottom rollers
   let trE2X = 1200;
-  svg += rNrForno(trE2X, Y2 + 6, 6, '', 0, 0);
-  svg += rNrForno(trE2X + 30, Y2 + 6, 6, '', 0, 0);
-  svg += rNrForno(trE2X + 60, Y2 + 6, 6, '', 0, 0);
+  svg += rNrForno(trE2X, Y2 + 7.75, 6, '', 0, 0);
+  svg += rNrForno(trE2X + 30, Y2 + 7.75, 6, '', 0, 0);
+  svg += rNrForno(trE2X + 60, Y2 + 7.75, 6, '', 0, 0);
 
   // Merge Bridle  // Merge Bridle (Restored Mergulhador)
   svg += rolerDecap(1350, Y2-30, 30, 'Mergulhador QUIM 1', '2140 mm');

@@ -1504,14 +1504,15 @@ function renderRb1Completa() {
   svg += rNrForno(dt1RollX, dt1RollY, 20, '', 0, 0); // 166
 
   // Two small exit rolls (stacked vertically at exit) - 167, 169
-  svg += rNrForno(dt1X + dt1W - 20, dt1TopY + 15, 8, '', 0, 0); // 167
-  svg += rNrForno(dt1X + dt1W - 20, dt1TopY + 35, 8, '', 0, 0); // 169
+  let dt1ExitX = dt1X + dt1W - 20;
+  svg += rNrForno(dt1ExitX, YM - 8, 8, '', 0, 0); // 167
+  svg += rNrForno(dt1ExitX, YM + 8, 8, '', 0, 0); // 169
   
   // Strip path for Dip Tanque 1
   lineTo(dt1X + 15, YM);
-  stripPath += `L ${dt1RollX} ${dt1RollY - 20} `;
-  stripPath += `A 20 20 0 1 1 ${dt1RollX + 20} ${dt1RollY} `;
-  lineTo(dt1X + dt1W - 20, dt1TopY + 35 + 8);
+  lineTo(dt1RollX - 20, dt1RollY);
+  stripPath += `A 20 20 0 0 0 ${dt1RollX + 20} ${dt1RollY} `;
+  lineTo(dt1ExitX, YM);
   lineTo(dt1X + dt1W + 10, YM);
 
   // ====================================================================
@@ -1806,13 +1807,14 @@ function renderRb1Completa() {
   let dtRollX = dtX + dtW - 100, dtRollY = dtBotY - 45;
   svg += rNrForno(dtRollX, dtRollY, 28, '', 0, 0);
   // Two small exit rolls (stacked vertically at exit)
-  svg += rNrForno(dtX + dtW - 30, dtTopY + 15, 8, '', 0, 0);
-  svg += rNrForno(dtX + dtW - 30, dtTopY + 35, 8, '', 0, 0);
+  let dtExitX = dtX + dtW - 30;
+  svg += rNrForno(dtExitX, YM - 8, 8, '', 0, 0);
+  svg += rNrForno(dtExitX, YM + 8, 8, '', 0, 0);
   // Strip path: dip down into tank, wrap around large roll, come back up
   lineTo(dtX + 20, YM);
-  stripPath += `L ${dtRollX} ${dtRollY - 28} `;
-  stripPath += `A 28 28 0 1 1 ${dtRollX + 28} ${dtRollY} `;
-  lineTo(dtX + dtW - 30, dtTopY + 35 + 8);
+  lineTo(dtRollX - 28, dtRollY);
+  stripPath += `A 28 28 0 0 0 ${dtRollX + 28} ${dtRollY} `;
+  lineTo(dtExitX, YM);
   lineTo(dtX + dtW + 10, YM);
 
   // ====================================================================

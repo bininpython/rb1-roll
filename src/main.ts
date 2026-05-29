@@ -1823,22 +1823,37 @@ function renderRb1Completa() {
   lineTo(dtX + dtW + 10, YM);
 
   // ====================================================================
-  // SECADOR (Chevron arrow shape pointing left, with internal V-lines)
+  // SECADOR 2 (Open chevron nozzles style)
   // ====================================================================
-  let sec2X = dtX + dtW + 30, sec2W = 140, sec2H = 70;
-  let sec2CY = YM;
-  // Chevron body (pointed left like an arrow tip)
-  svg += `<path d="M ${sec2X} ${sec2CY} L ${sec2X + 30} ${sec2CY - sec2H/2} L ${sec2X + sec2W} ${sec2CY - sec2H/2} L ${sec2X + sec2W} ${sec2CY + sec2H/2} L ${sec2X + 30} ${sec2CY + sec2H/2} Z" fill="#1e293b" stroke="#334155" stroke-width="2"/>`;
-  // Internal chevron V-lines (decorative)
-  for (let v = 0; v < 4; v++) {
-    let vx = sec2X + 50 + v * 22;
-    svg += `<path d="M ${vx} ${sec2CY - sec2H/2 + 8} L ${vx - 12} ${sec2CY} L ${vx} ${sec2CY + sec2H/2 - 8}" fill="none" stroke="#475569" stroke-width="1.5"/>`;
-  }
-  // Title
-  svg += `<text x="${sec2X + sec2W/2 + 15}" y="${sec2CY - sec2H/2 - 12}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">SECADOR</text>`;
-  // Exit roll at the right tip
-  svg += rNrForno(sec2X + sec2W + 15, sec2CY, 8, '', 0, 0);
-  lineTo(sec2X + sec2W + 15 + 8, YM);
+  let sec2X = dtX + dtW + 30;
+  
+  // Text "SECADOR"
+  svg += `<text x="${sec2X + 25}" y="${YM - 60}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">SECADOR</text>`;
+  
+  // Pinch left
+  svg += rNrForno(sec2X, YM - 8, 8, '', sec2X, YM); // Top
+  svg += rNrForno(sec2X, YM + 8, 8, '', sec2X, YM); // Bottom
+  
+  // V-Shapes (Chevrons) - Air Nozzles
+  let sec2ChevronCenter = sec2X + 25;
+  
+  // Top Nozzles (pointing DOWN)
+  svg += `<polyline points="${sec2ChevronCenter - 15},${YM - 35} ${sec2ChevronCenter},${YM - 15} ${sec2ChevronCenter + 15},${YM - 35}" fill="none" stroke="#22c55e" stroke-width="2"/>`;
+  svg += `<polyline points="${sec2ChevronCenter - 15},${YM - 50} ${sec2ChevronCenter},${YM - 30} ${sec2ChevronCenter + 15},${YM - 50}" fill="none" stroke="#22c55e" stroke-width="2"/>`;
+  
+  // Bottom Nozzles (pointing UP)
+  svg += `<polyline points="${sec2ChevronCenter - 15},${YM + 35} ${sec2ChevronCenter},${YM + 15} ${sec2ChevronCenter + 15},${YM + 35}" fill="none" stroke="#22c55e" stroke-width="2"/>`;
+  svg += `<polyline points="${sec2ChevronCenter - 15},${YM + 50} ${sec2ChevronCenter},${YM - 30} ${sec2ChevronCenter + 15},${YM + 50}" fill="none" stroke="#22c55e" stroke-width="2"/>`;
+
+  // Vertical center line (dashed)
+  svg += `<line x1="${sec2ChevronCenter}" y1="${YM - 65}" x2="${sec2ChevronCenter}" y2="${YM + 65}" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="4 4"/>`;
+  
+  // Pinch right
+  let sec2Rx = sec2X + 50;
+  svg += rNrForno(sec2Rx, YM - 8, 8, '', sec2Rx, YM); // Top
+  svg += rNrForno(sec2Rx, YM + 8, 8, '', sec2Rx, YM); // Bottom
+
+  lineTo(sec2Rx + 8, YM);
   
   // Corretor 3
   svg += corretorCruz(5800, YM, 35, 'CORRETOR 3');

@@ -883,7 +883,7 @@ function renderRb1CompletaStats() {
 
 // ===== RB1 COMPLETA — Technical Industrial Diagram =====
 function renderRb1Completa() {
-  const W = 12000, H = 700;
+  const W = 12000, H = 900;
   const BK = '#cbd5e1'; // light slate for lines
   const BG = '#161925'; // dark background
   const LK = '#1a1a1a'; // line color

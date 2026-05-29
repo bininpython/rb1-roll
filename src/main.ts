@@ -1698,10 +1698,10 @@ function renderRb1Completa() {
   svg += rNrForno(r191x - 17, 210, 8, '', 0, 0); // 190 (Top-Left of 191, pinching horizontal strip)
   svg += rNrForno(r192x - 28.3, r192y + 28.3, 8, '', 0, 0); // 193 (Bottom-Left of 192)
 
-  // Roller 194 (Sag curve bottom point)
-  let r194x = 3800;
-  svg += rNrForno(r194x, YM + 8, 8, '', r194x, YM + 25);
-
+  // Removed old Roller 194 (at 3800) per user request (red X).
+  // Adding two new support rolls under the sag curve slope (green circles).
+  svg += rNrForno(3680, 431, 8, '', 0, 0); 
+  svg += rNrForno(3730, 449, 8, '', 0, 0);
   // --- BS2 PATH TRACING ---
   // Extend strip horizontally to Top of 191
   lineTo(r191x, r191y - 30);

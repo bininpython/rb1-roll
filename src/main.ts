@@ -1958,36 +1958,32 @@ function renderRb1Completa() {
   svg += `<rect x="6975" y="${YM + 40}" width="50" height="10" fill="#334155" rx="2"/>`;
   svg += dot(7000, YM + 30, 30);
   
-  // 1. Top 1 (Defletor 1)
-  svg += dot(7055, YM - 15, 15);
-  // 2. Bottom 1 (Fundo Tanque 1)
-  svg += dot(7110, YM + 15, 15);
-  // 3. Top 2 (Mergulhador ELE 1)
-  svg += dot(7165, YM - 15, 15);
-  // 4. Bottom 2 (Fundo Tanque 2)
-  svg += dot(7220, YM + 15, 15);
-  // 5. Top 3 (Defletor 2)
-  svg += dot(7275, YM - 15, 15);
+  // 1. Top 1
+  svg += dot(7065, YM - 15, 15);
+  // 2. Bottom 1
+  svg += dot(7130, YM + 15, 15);
+  // 3. Top 2
+  svg += dot(7195, YM - 15, 15);
+  // 4. Bottom 2
+  svg += dot(7260, YM + 15, 15);
   
-  // 6. Large 2 (Centragem)
-  svg += `<rect x="7315" y="${YM + 45}" width="40" height="25" fill="#1e293b" rx="2"/>`;
-  svg += `<rect x="7310" y="${YM + 40}" width="50" height="10" fill="#334155" rx="2"/>`;
-  svg += dot(7335, YM + 30, 30);
+  // 5. Large 2 (Centragem)
+  svg += `<rect x="7305" y="${YM + 45}" width="40" height="25" fill="#1e293b" rx="2"/>`;
+  svg += `<rect x="7300" y="${YM + 40}" width="50" height="10" fill="#334155" rx="2"/>`;
+  svg += dot(7325, YM + 30, 30);
   
-  // 7. Top 4 (Defletor 3)
-  svg += dot(7395, YM - 15, 15);
-  // 8. Bottom 3 (Fundo Tanque 3)
-  svg += dot(7450, YM + 15, 15);
-  // 9. Top 5 (Mergulhador ELE 2)
-  svg += dot(7505, YM - 15, 15);
-  // 10. Bottom 4 (Fundo Tanque 4)
-  svg += dot(7560, YM + 15, 15);
-  // 11. Top 6 (Defletor 4)
-  svg += dot(7615, YM - 15, 15);
+  // 6. Top 3
+  svg += dot(7390, YM - 15, 15);
+  // 7. Bottom 3
+  svg += dot(7455, YM + 15, 15);
+  // 8. Top 4
+  svg += dot(7520, YM - 15, 15);
+  // 9. Bottom 4
+  svg += dot(7585, YM + 15, 15);
   
-  // 12. Pinch rolls (Espremedor)
-  svg += dot(7670, YM - 10, 10);
-  svg += dot(7670, YM + 10, 10);
+  // 10. Pinch rolls
+  svg += dot(7650, YM - 10, 10);
+  svg += dot(7650, YM + 10, 10);
   
   // Helper for Escovador
   const drawEscovador = (cx: number, cy: number, label: string) => {

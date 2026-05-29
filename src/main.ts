@@ -1824,20 +1824,20 @@ function renderRb1Completa() {
   // ====================================================================
   // SECADOR (Chevron arrow shape pointing left, with internal V-lines)
   // ====================================================================
-  let secX = dtX + dtW + 30, secW = 140, secH = 70;
-  let secCY = YM;
+  let sec2X = dtX + dtW + 30, sec2W = 140, sec2H = 70;
+  let sec2CY = YM;
   // Chevron body (pointed left like an arrow tip)
-  svg += `<path d="M ${secX} ${secCY} L ${secX + 30} ${secCY - secH/2} L ${secX + secW} ${secCY - secH/2} L ${secX + secW} ${secCY + secH/2} L ${secX + 30} ${secCY + secH/2} Z" fill="#1e293b" stroke="#334155" stroke-width="2"/>`;
+  svg += `<path d="M ${sec2X} ${sec2CY} L ${sec2X + 30} ${sec2CY - sec2H/2} L ${sec2X + sec2W} ${sec2CY - sec2H/2} L ${sec2X + sec2W} ${sec2CY + sec2H/2} L ${sec2X + 30} ${sec2CY + sec2H/2} Z" fill="#1e293b" stroke="#334155" stroke-width="2"/>`;
   // Internal chevron V-lines (decorative)
   for (let v = 0; v < 4; v++) {
-    let vx = secX + 50 + v * 22;
-    svg += `<path d="M ${vx} ${secCY - secH/2 + 8} L ${vx - 12} ${secCY} L ${vx} ${secCY + secH/2 - 8}" fill="none" stroke="#475569" stroke-width="1.5"/>`;
+    let vx = sec2X + 50 + v * 22;
+    svg += `<path d="M ${vx} ${sec2CY - sec2H/2 + 8} L ${vx - 12} ${sec2CY} L ${vx} ${sec2CY + sec2H/2 - 8}" fill="none" stroke="#475569" stroke-width="1.5"/>`;
   }
   // Title
-  svg += `<text x="${secX + secW/2 + 15}" y="${secCY - secH/2 - 12}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">SECADOR</text>`;
+  svg += `<text x="${sec2X + sec2W/2 + 15}" y="${sec2CY - sec2H/2 - 12}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">SECADOR</text>`;
   // Exit roll at the right tip
-  svg += rNrForno(secX + secW + 15, secCY, 8, '', 0, 0);
-  lineTo(secX + secW + 15 + 8, YM);
+  svg += rNrForno(sec2X + sec2W + 15, sec2CY, 8, '', 0, 0);
+  lineTo(sec2X + sec2W + 15 + 8, YM);
   
   // Corretor 3
   svg += corretorCruz(5800, YM, 35, 'CORRETOR 3');

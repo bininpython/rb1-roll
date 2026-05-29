@@ -1850,39 +1850,28 @@ function renderRb1Completa() {
 
   lineTo(sec2Rx + 8, YM);
   
-  // r2 = CORRETOR 3 (large, cross pattern)
+  // r2 = CORRETOR 3 (cross/quadrant pattern — as in sketch)
   svg += corretorCruz(5800, YM + 35, 35, '');
   svg += `<text x="5800" y="${YM + 90}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">CORRETOR 3</text>`;
   
-  // Strip arrives at top of r2, wraps clockwise to exit ~4 o'clock
+  // Strip arrives at top of r2, small clockwise wrap exiting at ~1:30 o'clock
   lineTo(5800, YM);
-  stripPath += `A 35 35 0 0 1 ${5800 + 28} ${YM + 35 + 20} `;
+  stripPath += `A 35 35 0 0 1 5830 ${YM + 18} `;
 
-  // ---- BS 3 (Two large rolls in diagonal arrangement) ----
-  // r3 = first large roll (lower-left in the diagonal)
-  let r3x = 5970, r3y = YM + 120, r3r = 32;
-  svg += `<circle cx="${r3x}" cy="${r3y}" r="${r3r}" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+  // BS 3 = ONE large roll + ONE small pinch roll (exactly as in sketch)
+  let bs3X = 6060, bs3Y = YM + 95, bs3R = 38;
+  svg += `<circle cx="${bs3X}" cy="${bs3Y}" r="${bs3R}" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
   
-  // r4 = pinch roll (small, bottom-left of r3)
-  svg += `<circle cx="${r3x - 28}" cy="${r3y + 30}" r="10" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+  // Pinch roll at ~1 o'clock on BS3
+  svg += `<circle cx="${bs3X + 32}" cy="${bs3Y - 28}" r="10" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
 
-  // r5 = second large roll (right of r3, slightly higher, slightly larger)
-  let r5x = 6100, r5y = YM + 100, r5r = 38;
-  svg += `<circle cx="${r5x}" cy="${r5y}" r="${r5r}" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
-  
-  // r6 = pinch roll (small, above-right of r5)
-  svg += `<circle cx="${r5x + 30}" cy="${r5y - 30}" r="10" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+  // BS 3 text to the right
+  svg += `<text x="${bs3X + 55}" y="${bs3Y - 25}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 3</text>`;
 
-  // BS 3 text
-  svg += `<text x="${r5x + 50}" y="${r5y - 15}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 3</text>`;
-
-  // Strip: diagonal DOWN-RIGHT from r2 to bottom of r3, tight wrap UNDER r3
-  lineTo(r3x - 19, r3y + 26);
-  stripPath += `A ${r3r} ${r3r} 0 0 0 ${r3x + 19} ${r3y + 26} `;
-  
-  // Strip: diagonal UP-RIGHT from r3 to top of r5, tight wrap OVER r5
-  lineTo(r5x - 23, r5y - 30);
-  stripPath += `A ${r5r} ${r5r} 0 0 1 ${r5x + 23} ${r5y - 30} `;
+  // Straight diagonal line from Corretor 3 exit to BS3 left side (~10 o'clock)
+  lineTo(bs3X - 29, bs3Y - 25);
+  // Wrap under BS3 (counter-clockwise via bottom, ~10 o'clock to ~4:30)
+  stripPath += `A ${bs3R} ${bs3R} 0 0 0 ${bs3X + 27} ${bs3Y + 27} `;
 
   // r7 = medium green roll (further down-right)
   let r7x = 6250, r7y = YM + 175, r7r = 20;

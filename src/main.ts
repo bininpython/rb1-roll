@@ -1942,15 +1942,46 @@ function renderRb1Completa() {
   stripPath += `A ${climbTopR} ${climbTopR} 0 0 1 ${climbTopX} ${YM} `;
   
   // ====================================================================
-  // SEÇÃO 6: ELETROLÍTICO E DECAPAGEM
+  // SEÇÃO 6: DETALHADA - TANQUE ELETROLÍTICO
   // ====================================================================
-  svg += dot(7000, YM, 8);
-  svg += dot(7080, YM-40, 30); // Deflector superior
-  lineTo(7000, YM); lineTo(7080, YM-40);
+  // The entire section is a straight horizontal line!
+  lineTo(7680, YM); 
   
-  // Tanque Eletrolítico
-  svg += tanque(7150, YM-30, 500, 60, 'TANQUE ELETROLÍTICO', [100, 250, 400]);
-  lineTo(7650, YM);
+  // Defletor Entrada (Large)
+  svg += `<rect x="6980" y="${YM + 45}" width="40" height="25" fill="#1e293b" rx="2"/>`;
+  svg += `<rect x="6975" y="${YM + 40}" width="50" height="10" fill="#334155" rx="2"/>`;
+  svg += dot(7000, YM + 30, 30);
+  
+  // Defletor 1 (Top)
+  svg += dot(7070, YM - 15, 15);
+  // Fundo Tanque 1 (Bottom)
+  svg += dot(7120, YM + 15, 15);
+  // Mergulhador ELE 1 (Top)
+  svg += dot(7170, YM - 15, 15);
+  // Fundo Tanque 2 (Bottom)
+  svg += dot(7220, YM + 15, 15);
+  // Defletor 2 (Top)
+  svg += dot(7270, YM - 15, 15);
+  
+  // Centragem (Large)
+  svg += `<rect x="7320" y="${YM + 45}" width="40" height="25" fill="#1e293b" rx="2"/>`;
+  svg += `<rect x="7315" y="${YM + 40}" width="50" height="10" fill="#334155" rx="2"/>`;
+  svg += dot(7340, YM + 30, 30);
+  
+  // Defletor 3 (Top)
+  svg += dot(7410, YM - 15, 15);
+  // Fundo Tanque 3 (Bottom)
+  svg += dot(7460, YM + 15, 15);
+  // Mergulhador ELE 2 (Top)
+  svg += dot(7510, YM - 15, 15);
+  // Fundo Tanque 4 (Bottom)
+  svg += dot(7560, YM + 15, 15);
+  // Defletor 4 (Top)
+  svg += dot(7610, YM - 15, 15);
+  
+  // Espremedor (Pinch)
+  svg += dot(7660, YM - 10, 10);
+  svg += dot(7660, YM + 10, 10);
   
   // Escovadeira 1
   svg += blocoQuad(7720, YM, 60, 'ESCOV. 1');

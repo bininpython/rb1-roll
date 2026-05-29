@@ -1822,6 +1822,10 @@ function renderRb1Completa() {
   lineTo(dtExitX, YM);
   lineTo(dtX + dtW + 10, YM);
 
+  // Helper for solid green rolls
+  const greenRoll = (cx: number, cy: number, r: number) => 
+    `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+
   // ====================================================================
   // SECADOR 2 (Chevron arrow shape pointing left)
   // ====================================================================
@@ -1842,12 +1846,12 @@ function renderRb1Completa() {
   
   // Exit roll at the right tip (strip passes OVER it)
   let sec2Rx = sec2X + sec2W + 20;
-  svg += rNrForno(sec2Rx, YM + 8, 8, '', sec2Rx, YM + 22);
+  svg += greenRoll(sec2Rx, YM + 8, 8);
 
   lineTo(sec2Rx + 8, YM);
   
-  // Corretor 3
-  svg += corretorCruz(5800, YM + 35, 35, '');
+  // Corretor 3 (Solid Green)
+  svg += greenRoll(5800, YM + 35, 35);
   svg += `<text x="5800" y="${YM + 90}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">CORRETOR 3</text>`;
   
   lineTo(5800, YM); // Arrive at top of Corretor 3
@@ -1857,13 +1861,13 @@ function renderRb1Completa() {
   let bs3X1 = 5950, bs3Y1 = YM + 110; // First large roll (lower)
   let bs3X2 = 6080, bs3Y2 = YM + 50;  // Second large roll (higher)
   
-  // Large rolls
-  svg += rNrForno(bs3X1, bs3Y1, 35, '', 0, 0);
-  svg += rNrForno(bs3X2, bs3Y2, 35, '', 0, 0);
+  // Large rolls (Solid Green)
+  svg += greenRoll(bs3X1, bs3Y1, 35);
+  svg += greenRoll(bs3X2, bs3Y2, 35);
   
-  // Pinch rolls
-  svg += rNrForno(bs3X1 - 35, bs3Y1 + 28, 10, '', 0, 0); // bottom-left of C1
-  svg += rNrForno(bs3X2 + 35, bs3Y2 - 28, 10, '', 0, 0); // top-right of C2
+  // Pinch rolls (Solid Green)
+  svg += greenRoll(bs3X1 - 35, bs3Y1 + 28, 10); // bottom-left of C1
+  svg += greenRoll(bs3X2 + 35, bs3Y2 - 28, 10); // top-right of C2
 
   // Text BS 3
   svg += `<text x="${bs3X2 + 50}" y="${bs3Y2 - 10}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 3</text>`;
@@ -1875,19 +1879,19 @@ function renderRb1Completa() {
   lineTo(bs3X2 - 25, bs3Y2 + 24); // arriving to C2
   stripPath += `A 35 35 0 0 1 ${bs3X2 + 30} ${bs3Y2 - 18} `; // wrapping over C2
 
-  // Medium roll after BS3
+  // Medium roll after BS3 (Solid Green)
   let mRx = 6200, mRy = YM + 80; // 530
-  svg += rNrForno(mRx, mRy, 20, '', 0, 0);
+  svg += greenRoll(mRx, mRy, 20);
   
   // Path to medium roll
   lineTo(mRx - 17, mRy - 10);
   stripPath += `A 20 20 0 0 0 ${mRx} ${mRy + 20} `; // wrapping under medium roll
 
-  // 3 small horizontal rolls with stands
+  // 3 small horizontal rolls with stands (Solid Green)
   const YD = YM + 100; // 550
   for (let i=0; i<3; i++) {
     let rx = 6250 + i*40;
-    svg += rNrForno(rx, YD + 8, 8, '', 0, 0);
+    svg += greenRoll(rx, YD + 8, 8);
     // Little stand legs for the rollers as shown in sketch
     svg += `<line x1="${rx}" y1="${YD + 16}" x2="${rx}" y2="${YD + 30}" stroke="#475569" stroke-width="2"/>`;
     svg += `<line x1="${rx - 5}" y1="${YD + 30}" x2="${rx + 5}" y2="${YD + 30}" stroke="#475569" stroke-width="2"/>`;

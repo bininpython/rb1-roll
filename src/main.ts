@@ -1733,7 +1733,7 @@ function renderRb1Completa() {
     let cx = rx0 + i * 150;
     let r = 26; 
     let cy = YM + r; 
-    svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#22c55e" />`;
+    svg += rNrForno(cx, cy, r, '', 0, 0);
     svg += `<text x="${cx}" y="${cy + r + 20}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#ffffff" text-anchor="middle">Rolo ${i}</text>`;
   }
 

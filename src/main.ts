@@ -1569,7 +1569,7 @@ function renderRb1Completa() {
   svg += rNrForno(r173x, r173y, rL, '', r173x, r173y); // 173
   
   // Pinches 174, 175
-  svg += rNrForno(r173x + 17, r173y + 36.2, 10, '', 0, 0); // 174: Perfectly pinching Bottom-Right of 173
+  svg += rNrForno(r173x + 40, r173y, 10, '', 0, 0); // 174: Perfectly pinching Right edge of 173 (3 o'clock position)
   svg += rNrForno(r176x - 28.3, r176y - 28.3, 10, '', 0, 0); // 175: Perfectly pinching Top-Left of 176
 
   // S-Wrap Path for BS1 (THE PERFECT FIGURE-8 BRIDLE)

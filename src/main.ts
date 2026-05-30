@@ -2043,24 +2043,12 @@ function renderRb1Completa() {
   svg += drawEscovador(8300, YM, 'Escovador 2');
   lineTo(8350, YM);
   
-  // Bypass Espremedor 4 (Linha Reta)
-  svg += dot(8400, Y_quim - 10, 10);
-  svg += dot(8400, Y_quim + 10, 10);
-  svg += `<text x="8400" y="${Y_quim + 35}" font-family="Montserrat, sans-serif" font-size="10" font-weight="900" fill="#ffffff" text-anchor="middle">Espremedor 4</text>`;
-  
-  // Strip goes straight to Secador 3
-  lineTo(8430, YM); // left tip of Secador 3 is at 8430
-  
-  // Secador 3
-  svg += secadorLosango(8480, YM, 100, 100, 'SECADOR 3');
-  lineTo(8480, YM);
+  // Novo rolo no lugar do Espremedor 4
+  svg += dot(8400, YM + 10, 10);
   
   // ====================================================================
   // SEÇÃO 7: SAÍDA E BOBINAMENTO
   // ====================================================================
-  for (let i=0; i<4; i++) {
-    svg += dot(8600 + i*20, YM, 6);
-  }
   lineTo(8660, YM);
   
   // Corretor 4

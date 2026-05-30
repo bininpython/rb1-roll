@@ -1787,9 +1787,9 @@ function renderRb1Completa() {
   let r204x = an2X + 190, r204y = YM + 25;
   let r205x = an2X + an2W + 35, r205y = YM + 10; // Strip back at YM, center YM+10
   
-  svg += rNrForno(r203x, r203y, 10, '203', r203x, r203y + 25);
-  svg += rNrForno(r204x, r204y, 10, '204', r204x, r204y + 25);
-  svg += rNrForno(r205x, r205y, 10, '205', r205x, r205y + 25);
+  svg += rNrForno(r203x, r203y, 10, '', r203x, r203y + 25);
+  svg += rNrForno(r204x, r204y, 10, '', r204x, r204y + 25);
+  svg += rNrForno(r205x, r205y, 10, '', r205x, r205y + 25);
   
   // Tracing the dipped strip path
   lineTo(r203x, YM + 15);

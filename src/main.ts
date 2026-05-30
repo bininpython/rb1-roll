@@ -2237,8 +2237,8 @@ function renderRb1Completa() {
   lineTo(10900 + shiftX, YM + 20);
 
   // Apply the path (Forno Glowing Strip)
-  svg += `<path d="${stripPath}" fill="none" stroke="rgba(0, 255, 255, 0.4)" stroke-width="6" filter="url(#whiteGlow)"/>`;
-  svg += `<path d="${stripPath}" fill="none" stroke="#00ffff" stroke-width="2"/>`;
+  svg += `<path d="${stripPath}" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="4" filter="url(#whiteGlow)"/>`;
+  svg += `<path d="${stripPath}" fill="none" stroke="#ffffff" stroke-width="1.5"/>`;
 
   // Draw background frame again to be on top if needed, or close svg
   svg += '</svg>';

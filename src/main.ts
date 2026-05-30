@@ -1556,7 +1556,7 @@ function renderRb1Completa() {
   // SEÇÃO 3: ACUMULADOR DE ENTRADA (LOOP)
   // ====================================================================
 
-  console.log("Rendering BS1 with Cubic Bezier S-curve version 3");
+  console.log("Rendering BS1 with Perfect Geometric Inner Tangents (R=35)");
 
   // Grupo BS1 (Bridle de Entrada do Loop - Figure-8 S-Wrap Diagonal)
   let bs1_L_X = corrX + 40, bs1_L_Y = 250, rL = 30; // Left-Top large roller
@@ -1577,27 +1577,26 @@ function renderRb1Completa() {
   svg += rNrForno(bs1_L_X + 160, 212, 8, '', 0, 0); 
 
   // Path from Corretor 1 to BS1
-  // 1. Arco sob o Corretor 1 (sai pelo Bottom-Right, tangent angle 64.35 deg)
+  // 1. Arco sob o Corretor 1
   stripPath += `A 25 25 0 0 0 ${corrX + 10.8} 447.5 `;
   
-  // 2. Linha para BS1_R (Bottom-Right, raio efetivo 34 para margem gorda)
-  lineTo(bs1_R_X + 14.8, bs1_R_Y + 30.6); // X=corrX+154.8, Y=380.6
+  // 2. Chegada no BS1_R (Bottom-Right, R=35)
+  lineTo(bs1_R_X + 15, bs1_R_Y + 31.6); 
   
-  // 3. Arco abraçando o lado DIREITO do BS1_R até o exato TOPO
-  // Counter-Clockwise (sweep=0). Raio 34 contorna bem por fora.
-  stripPath += `A 34 34 0 0 0 ${bs1_R_X} ${bs1_R_Y - 34} `; 
+  // 3. Arco contornando a DIREITA do BS1_R até o ponto exato da tangente interna
+  // Ponto de tangente: ângulo -74.67 deg -> dx = 9.25, dy = -33.75
+  stripPath += `A 35 35 0 0 0 ${bs1_R_X + 9.25} ${bs1_R_Y - 33.75} `; 
   
-  // 4. Curva "S" super suave (Cubic Bezier) do TOPO do BS1_R para a BASE do BS1_L
-  // Aumentado a força do controle de 50 para 60 para um "S" mais arredondado
-  stripPath += `C ${bs1_R_X - 60} ${bs1_R_Y - 34} ${bs1_L_X + 60} ${bs1_L_Y + 34} ${bs1_L_X} ${bs1_L_Y + 34} `;
+  // 4. Linha RETA diagonal perfeitamente tangente até o BS1_L
+  // Ponto de tangente: ângulo 105.33 deg -> dx = -9.25, dy = 33.75
+  stripPath += `L ${bs1_L_X - 9.25} ${bs1_L_Y + 33.75} `;
   
-  // 5. Arco perfeito de Meia-Lua abraçando o lado ESQUERDO do BS1_L (da Base ao Topo)
-  // Clockwise (sweep=1). Raio 34.
-  stripPath += `A 34 34 0 0 1 ${bs1_L_X} ${bs1_L_Y - 34} `;   
+  // 5. Arco perfeito abraçando o lado ESQUERDO do BS1_L até o Topo (R=35)
+  stripPath += `A 35 35 0 0 1 ${bs1_L_X} ${bs1_L_Y - 35} `;   
   
-  // 6. Transição suave horizontal de Y=216 para Y=220 (Loop Entrada)
-  stripPath += `L ${bs1_L_X + 40} ${bs1_L_Y - 34} `;
-  stripPath += `C ${bs1_L_X + 80} ${bs1_L_Y - 34} ${bs1_L_X + 120} 220 ${bs1_L_X + 160} 220 `;
+  // 6. Transição suave horizontal para Y=220
+  stripPath += `L ${bs1_L_X + 40} ${bs1_L_Y - 35} `;
+  stripPath += `C ${bs1_L_X + 80} ${bs1_L_Y - 35} ${bs1_L_X + 120} 220 ${bs1_L_X + 160} 220 `;
 
   // LOOP ENTRADA
   let txs = [3100, 3220, 3340]; // 179, 181, 183

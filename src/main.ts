@@ -1556,6 +1556,8 @@ function renderRb1Completa() {
   // SEÇÃO 3: ACUMULADOR DE ENTRADA (LOOP)
   // ====================================================================
 
+  console.log("Rendering BS1 with Cubic Bezier S-curve version 3");
+
   // Grupo BS1 (Bridle de Entrada do Loop - Figure-8 S-Wrap Diagonal)
   let bs1_L_X = corrX + 40, bs1_L_Y = 250, rL = 30; // Left-Top large roller
   let bs1_R_X = corrX + 140, bs1_R_Y = 350; // Right-Bottom large roller
@@ -1586,8 +1588,8 @@ function renderRb1Completa() {
   stripPath += `A 34 34 0 0 0 ${bs1_R_X} ${bs1_R_Y - 34} `; 
   
   // 4. Curva "S" super suave (Cubic Bezier) do TOPO do BS1_R para a BASE do BS1_L
-  // Isso substitui a reta rígida e faz o caimento de fita solta igual ao rascunho!
-  stripPath += `C ${bs1_R_X - 50} ${bs1_R_Y - 34} ${bs1_L_X + 50} ${bs1_L_Y + 34} ${bs1_L_X} ${bs1_L_Y + 34} `;
+  // Aumentado a força do controle de 50 para 60 para um "S" mais arredondado
+  stripPath += `C ${bs1_R_X - 60} ${bs1_R_Y - 34} ${bs1_L_X + 60} ${bs1_L_Y + 34} ${bs1_L_X} ${bs1_L_Y + 34} `;
   
   // 5. Arco perfeito de Meia-Lua abraçando o lado ESQUERDO do BS1_L (da Base ao Topo)
   // Clockwise (sweep=1). Raio 34.

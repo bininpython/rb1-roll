@@ -2132,11 +2132,11 @@ function renderRb1Completa() {
   svg += dot(bs4_2X, bs4_2Y + 45, 10); // Pinch roller BOTTOM
   svg += `<text x="${bs4_1X}" y="${bs4_1Y - 65}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">BS4</text>`;
   
-  // Rolo pequeno de apoio na saída do BS4
-  svg += dot(9272.2, 223.4, 8);
+  // Rolo pequeno de apoio na saída do BS4 (Recalculado para nova inclinação)
+  svg += dot(9271.2, 275.0, 8);
   
   // Fosso / Loop Saída Outline
-  const LYT = 120;
+  const LYT = 220; // Alinhado verticalmente com BS4_1Y
   const LYB = 580;
   let boxX1 = 9280;
   let boxX2 = 9610;
@@ -2165,8 +2165,8 @@ function renderRb1Completa() {
   stripPath += `A 35 35 0 0 1 9081.1 204.0 `; // Arco sobre BS4_1 (Clockwise) até Top-Right
   lineTo(9148.9, 336.0); // Reta diagonal cruzando o espaço (Inner Tangent) até BS4_2 (Bottom-Left)
   
-  stripPath += `A 35 35 0 0 0 9211.7 334.8 `; // Arco sob BS4_2 (Counter-Clockwise) até Bottom-Right
-  lineTo(9318.3, 105.2); // Reta diagonal subindo para a Loop Saida Top 1 (Top-Left)
+  stripPath += `A 35 35 0 0 0 9207.3 341.9 `; // Arco sob BS4_2 (Counter-Clockwise) até Bottom-Right
+  lineTo(9322.7, 198.1); // Reta diagonal subindo para a Loop Saida Top 1 (Top-Left)
   
   stripPath += `A 35 35 0 0 1 9385 ${LYT} `; // Sobre Top 1 até borda direita
   lineTo(9385, LYB); // Desce perfeitamente vertical

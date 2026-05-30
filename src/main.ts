@@ -2029,10 +2029,10 @@ function renderRb1Completa() {
   svg += dot(8090, tq_Y_bot - 30, 30);
   
   // Caminho da tira (Dip Tank)
-  lineTo(7900, YM); // Segue reto até antes do rolo
-  stripPath += `C 7920 ${YM} 7920 ${tq_Y_bot} 7950 ${tq_Y_bot} `; // Curva para descer sob o 1º rolo
+  lineTo(7880, YM); // Segue reto até a borda do tanque
+  stripPath += `C 7900 ${YM} 7900 ${tq_Y_bot} 7950 ${tq_Y_bot} `; // Curva mais ampla para abraçar o 1º rolo sem cortar
   lineTo(8090, tq_Y_bot); // Segue por baixo até o 2º rolo
-  stripPath += `C 8120 ${tq_Y_bot} 8120 ${YM} 8140 ${YM} `; // Curva para subir de volta à linha principal
+  stripPath += `C 8140 ${tq_Y_bot} 8140 ${YM} 8160 ${YM} `; // Curva mais ampla para subir após o 2º rolo sem cortar
   
   // Espremedor 3 (Straight horizontal)
   lineTo(8180, YM);

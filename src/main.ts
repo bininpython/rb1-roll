@@ -2156,19 +2156,25 @@ function renderRb1Completa() {
   svg += `<text x="${C5X}" y="${LYT + 60}" font-family="Montserrat, sans-serif" font-size="14" font-weight="800" fill="#ffffff" text-anchor="middle">CORRETOR 5</text>`;
 
   // ====================================================================
-  // BS 5 (Rolo Simples Superior)
+  // BS 5 (S-Roll: Top-Right para Bottom-Left)
   // ====================================================================
   
   // Rolo pequeno guia após Corretor 5
   let srX = 9750; let srY = 193; // Topo em 185
   svg += dot(srX, srY, 8);
   
-  // BS 5 (Único Rolo)
-  let bs5_2X = 10000; let bs5_2Y = 220; // Topo em 185
+  // BS 5 Rollers
+  let bs5_TR_X = 10000; let bs5_TR_Y = 220; // Rolo Superior Direito (BS 5)
+  let bs5_BL_X = 9900; let bs5_BL_Y = 320;  // Rolo Inferior Esquerdo (Novo)
   
-  svg += dot(bs5_2X, bs5_2Y, 35);
-  svg += dot(bs5_2X, bs5_2Y - 45, 10); // Pinch roller TOP
-  svg += `<text x="${bs5_2X + 45}" y="${bs5_2Y + 5}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 5</text>`;
+  // Rolo Top-Right
+  svg += dot(bs5_TR_X, bs5_TR_Y, 35);
+  svg += dot(bs5_TR_X, bs5_TR_Y - 45, 10); // Pinch roller TOP
+  svg += `<text x="${bs5_TR_X + 45}" y="${bs5_TR_Y + 5}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 5</text>`;
+
+  // Rolo Bottom-Left
+  svg += dot(bs5_BL_X, bs5_BL_Y, 35);
+  svg += dot(bs5_BL_X, bs5_BL_Y + 45, 10); // Pinch roller BOTTOM
 
   // --- Path da Tira (Matematicamente Exato com Inner Tangents) ---
   stripPath += `A 35 35 0 0 0 8984.6 420.3 `; // Sai tangencialmente do Corretor 4 (Bottom-Right)
@@ -2191,11 +2197,16 @@ function renderRb1Completa() {
   
   stripPath += `A 35 35 0 0 1 9630 ${LYT - 35} `; // Abraça o topo esquerdo do Corretor 5 até o topo central
   
-  // Path BS 5 (Linha perfeitamente reta passando sobre o guia e o BS 5)
-  lineTo(10150, LYT - 35);
+  // Path BS 5
+  lineTo(bs5_TR_X, LYT - 35); // Horizontal do Corretor 5 até o topo do TR
+  stripPath += `A 35 35 0 0 1 10009.2 253.7 `; // Abraça TR (Clockwise) até Bottom-Right
+  lineTo(9890.8, 286.3); // Diagonal descendo para a esquerda (Inner Tangent) até BL
+  stripPath += `A 35 35 0 0 0 9900 355 `; // Abraça BL (Counter-Clockwise) até o fundo
+  
+  lineTo(10150, 355); // Sai horizontalmente pela direita, passando sob o TR
   
   // Continuação descendo para a Mesa de Inspeção
-  stripPath += `Q 10250 185 10300 317 Q 10350 ${YM} 10400 ${YM} `;
+  stripPath += `Q 10250 355 10300 400 Q 10350 ${YM} 10400 ${YM} `;
   
   let shiftX = 350; // Shift para acomodar o BS 5
   

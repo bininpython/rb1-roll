@@ -2033,6 +2033,9 @@ function renderRb1Completa() {
   svg += dot(8200, YM + 10, 10);
   lineTo(8200, YM);
   
+  // Novo Rolo (entre Espremedor 3 e Escovador 2)
+  svg += dot(8235, YM + 15, 15);
+  
   // Straight to Escovador 2
   lineTo(8250, YM); // left edge of Escovador 2 is 8250
   

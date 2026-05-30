@@ -1853,16 +1853,16 @@ function renderRb1Completa() {
   // 1. bs3Top (Upper-Right Large Roll)
   let bs3TopX = 6060, bs3TopY = YM + 95, bs3R = 38;
   svg += dot(bs3TopX, bs3TopY, bs3R);
-  // Pinch roll at ~2 o'clock (moved outward to avoid cutting strip)
-  svg += dot(bs3TopX + 38, bs3TopY - 38, 10);
+  // Pinch roll at ~2 o'clock (perfectly touching the core white line)
+  svg += dot(bs3TopX + 34.5, bs3TopY - 34.5, 10);
   // Text to the right
   svg += `<text x="${bs3TopX + 55}" y="${bs3TopY - 25}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 3</text>`;
 
   // 2. bs3Bot (Lower-Left Large Roll)
   let bs3BotX = 5900, bs3BotY = YM + 180;
   svg += dot(bs3BotX, bs3BotY, bs3R);
-  // Pinch roll at ~8 o'clock (moved outward to avoid cutting strip)
-  svg += dot(bs3BotX - 38, bs3BotY + 38, 10);
+  // Pinch roll at ~8 o'clock (perfectly touching the core white line)
+  svg += dot(bs3BotX - 34.5, bs3BotY + 34.5, 10);
 
   // ---- Strip Path through BS 3 ----
   // Line to bs3Top top-left (~11:30)

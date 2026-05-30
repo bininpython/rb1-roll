@@ -2089,28 +2089,28 @@ function renderRb1Completa() {
   // ====================================================================
   // SEÇÃO 7: SAÍDA E BOBINAMENTO
   // ====================================================================
-  lineTo(8750, YM); // Segue direto até o Corretor 4
+  lineTo(8950, YM); // Segue direto até o Corretor 4
   
   // Corretor 4
-  svg += corretorCruz(8750, YM, 35, 'CORRETOR 4');
+  svg += corretorCruz(8950, YM, 35, 'CORRETOR 4');
   
   // Zigue Zague pre-loop
-  svg += dot(8850, YM-20, 8);
-  svg += dot(8900, YM+20, 25);
-  svg += dot(8960, YM-20, 8);
-  svg += dot(9020, YM+30, 8);
-  svg += dot(9080, YM-30, 30);
-  lineTo(8850, YM-20); lineTo(8900, YM+20); lineTo(8960, YM-20); lineTo(9020, YM+30); lineTo(9080, YM-30);
+  svg += dot(9050, YM-20, 8);
+  svg += dot(9100, YM+20, 25);
+  svg += dot(9160, YM-20, 8);
+  svg += dot(9220, YM+30, 8);
+  svg += dot(9280, YM-30, 30);
+  lineTo(9050, YM-20); lineTo(9100, YM+20); lineTo(9160, YM-20); lineTo(9220, YM+30); lineTo(9280, YM-30);
   
   // Fosso Saída
   const LYT = 120;
   const LYB = 580;
-  svg += `<line x1="9150" y1="${LYT}" x2="9150" y2="${LYB+20}" stroke="${BK}" stroke-width="2"/>`;
-  svg += `<line x1="9150" y1="${LYB+20}" x2="9550" y2="${LYB+20}" stroke="${BK}" stroke-width="2"/>`;
-  svg += `<line x1="9550" y1="${LYB+20}" x2="9550" y2="${LYT}" stroke="${BK}" stroke-width="2"/>`;
-  svg += `<text x="9350" y="${LYT - 40}" text-anchor="middle" ${FSL} font-size="12" font-weight="800" fill="${BK}">LOOP DE SAÍDA</text>`;
+  svg += `<line x1="9350" y1="${LYT}" x2="9350" y2="${LYB+20}" stroke="${BK}" stroke-width="2"/>`;
+  svg += `<line x1="9350" y1="${LYB+20}" x2="9750" y2="${LYB+20}" stroke="${BK}" stroke-width="2"/>`;
+  svg += `<line x1="9750" y1="${LYB+20}" x2="9750" y2="${LYT}" stroke="${BK}" stroke-width="2"/>`;
+  svg += `<text x="9550" y="${LYT - 40}" text-anchor="middle" ${FSL} font-size="12" font-weight="800" fill="${BK}">LOOP DE SAÍDA</text>`;
   
-  const oxs = [9200, 9300, 9400, 9500];
+  const oxs = [9400, 9500, 9600, 9700];
   const oys = [LYB, LYT, LYB, LYT];
   for (let i=0; i<4; i++) {
     if (i === 3) {
@@ -2122,38 +2122,38 @@ function renderRb1Completa() {
   }
   
   // Pós loop
-  svg += dot(9620, YM, 8);
+  svg += dot(9820, YM, 8);
   // S-Roll Saida
-  svg += dot(9720, YM+30, 35);
-  svg += dot(9800, YM-30, 35);
-  svg += dot(9880, YM, 8);
-  lineTo(9620, YM); lineTo(9720, YM+30); lineTo(9800, YM-30); lineTo(9880, YM);
+  svg += dot(9920, YM+30, 35);
+  svg += dot(10000, YM-30, 35);
+  svg += dot(10080, YM, 8);
+  lineTo(9820, YM); lineTo(9920, YM+30); lineTo(10000, YM-30); lineTo(10080, YM);
   
   for (let i=0; i<4; i++) {
-    svg += dot(9930 + i*20, YM, 6);
+    svg += dot(10130 + i*20, YM, 6);
   }
-  lineTo(9990, YM);
+  lineTo(10190, YM);
   
   // Mesa Inspecao
-  svg += mesaInspecao(10050, YM, 200);
-  lineTo(10250, YM);
+  svg += mesaInspecao(10250, YM, 200);
+  lineTo(10450, YM);
   
   for (let i=0; i<3; i++) {
-    svg += dot(10300 + i*20, YM, 6);
+    svg += dot(10500 + i*20, YM, 6);
   }
-  lineTo(10340, YM);
+  lineTo(10540, YM);
   
   // Tesoura 3
-  svg += tesoura3(10430, YM, 'TESOURA 3');
-  lineTo(10430, YM);
+  svg += tesoura3(10630, YM, 'TESOURA 3');
+  lineTo(10630, YM);
   
-  svg += dot(10510, YM-15, 15); svg += dot(10510, YM+15, 15);
-  svg += dot(10580, YM, 8);
-  lineTo(10510, YM); lineTo(10580, YM);
+  svg += dot(10710, YM-15, 15); svg += dot(10710, YM+15, 15);
+  svg += dot(10780, YM, 8);
+  lineTo(10710, YM); lineTo(10780, YM);
   
   // Bobinadeira Final
-  svg += solidCoil(10700, YM + 20, 60, 'BOBINADEIRA (RECOILER)');
-  lineTo(10700, YM + 20);
+  svg += solidCoil(10900, YM + 20, 60, 'BOBINADEIRA (RECOILER)');
+  lineTo(10900, YM + 20);
 
   // Apply the path (Forno Glowing Strip)
   svg += `<path d="${stripPath}" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="4" filter="url(#whiteGlow)"/>`;

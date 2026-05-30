@@ -171,6 +171,14 @@
         .legend-item { display: flex; align-items: center; gap: .5rem; font-size: .75rem; color: #444; font-family: 'Open Sans', sans-serif; }
         .legend-icon { width: 28px; height: 16px; display: flex; align-items: center; justify-content: center; }
     </style>
+    <style>
+        /* Forçando a quebra de cache com script injetado */
+    </style>
+    <script>
+        if (window.location.search.indexOf('v=5') === -1) {
+            window.location.search = '?v=5';
+        }
+    </script>
 </head>
 <body class="bg-background text-on-surface antialiased min-h-screen flex flex-col">
 

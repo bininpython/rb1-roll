@@ -2123,17 +2123,17 @@ function renderRb1Completa() {
   // Rolo pequeno de apoio na subida
   svg += dot(9007.9, 318.7, 8); 
   
-  // BS4 (S-Roll Diagonal: Top-Left e Bottom-Right)
+  // BS4 (S-Roll Verticalizado: Top e Bottom)
   let bs4_1X = 9050; let bs4_1Y = 220;
-  let bs4_2X = 9180; let bs4_2Y = 320;
-  svg += dot(bs4_1X, bs4_1Y, 35); // Rolo 1 (Top-Left)
+  let bs4_2X = 9060; let bs4_2Y = 320; // Movido para baixo do Rolo 1 conforme novo esboço
+  svg += dot(bs4_1X, bs4_1Y, 35); // Rolo 1 (Top)
   svg += dot(bs4_1X, bs4_1Y - 45, 10); // Pinch roller TOP
-  svg += dot(bs4_2X, bs4_2Y, 35); // Rolo 2 (Bottom-Right)
+  svg += dot(bs4_2X, bs4_2Y, 35); // Rolo 2 (Bottom)
   svg += dot(bs4_2X, bs4_2Y + 45, 10); // Pinch roller BOTTOM
   svg += `<text x="${bs4_1X}" y="${bs4_1Y - 65}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">BS4</text>`;
   
   // Rolo pequeno de apoio na saída do BS4 (Recalculado para nova inclinação)
-  svg += dot(9271.2, 275.0, 8);
+  svg += dot(9209.3, 276.8, 8);
   
   // Loop Saída (Variáveis de Posicionamento e Texto)
   const LYT = 220; // Alinhado verticalmente com BS4_1Y
@@ -2178,13 +2178,13 @@ function renderRb1Completa() {
 
   // --- Path da Tira (Matematicamente Exato com Inner Tangents) ---
   stripPath += `A 35 35 0 0 0 8984.6 420.3 `; // Sai tangencialmente do Corretor 4 (Bottom-Right)
-  lineTo(9015.4, 214.8); // Reta diagonal (Inner Tangent) até BS4_1 (Top-Left)
+  lineTo(9015.4, 214.8); // Reta diagonal até BS4_1 (Top-Left)
   
-  stripPath += `A 35 35 0 0 1 9081.1 204.0 `; // Arco sobre BS4_1 (Clockwise) até Top-Right
-  lineTo(9148.9, 336.0); // Reta diagonal cruzando o espaço (Inner Tangent) até BS4_2 (Bottom-Left)
+  stripPath += `A 35 35 0 0 1 9077.4 241.8 `; // Abraça sobre BS4_1 (Clockwise) até Bottom-Right
+  lineTo(9032.6, 298.2); // Reta diagonal descendo para a esquerda (Inner Tangent) até BS4_2 (Top-Left)
   
-  stripPath += `A 35 35 0 0 0 9207.3 341.9 `; // Arco sob BS4_2 (Counter-Clockwise) até Bottom-Right
-  lineTo(9322.7, 198.1); // Reta diagonal subindo para a Loop Saida Top 1 (Top-Left)
+  stripPath += `A 35 35 0 0 0 9078.7 349.6 `; // Abraça sob BS4_2 (Counter-Clockwise) até Bottom-Right
+  lineTo(9331.3, 190.4); // Reta diagonal subindo para a Loop Saida Top 1 (Top-Left)
   
   stripPath += `A 35 35 0 0 1 9385 ${LYT} `; // Sobre Top 1 até borda direita
   lineTo(9385, LYB); // Desce perfeitamente vertical

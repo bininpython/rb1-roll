@@ -1556,43 +1556,41 @@ function renderRb1Completa() {
   // SEÇÃO 3: ACUMULADOR DE ENTRADA (LOOP)
   // ====================================================================
 
-  // Grupo BS1 (Bridle de Entrada do Loop - Figure-8 S-Wrap)
-  let r173x = 2860, r173y = 350, rL = 30; // Right large roller
-  let r176x = 2770, r176y = 250; // Left large roller
+  // Grupo BS1 (Bridle de Entrada do Loop - Figure-8 S-Wrap Vertical)
+  let bs1_L_X = corrX + 40, bs1_L_Y = 250, rL = 30; // Left-Top large roller
+  let bs1_R_X = corrX + 140, bs1_R_Y = 350; // Right-Bottom large roller
   
   // Text BS1
-  svg += `<text x="2815" y="190" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">BS1</text>`;
+  svg += `<text x="${bs1_L_X}" y="${bs1_L_Y - 50}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">BS1</text>`;
 
-  svg += rNrForno(r176x, r176y, rL, '', r176x, r176y); // 176
-  svg += rNrForno(r173x, r173y, rL, '', r173x, r173y); // 173
+  svg += rNrForno(bs1_L_X, bs1_L_Y, rL, '', bs1_L_X, bs1_L_Y); 
+  svg += rNrForno(bs1_R_X, bs1_R_Y, rL, '', bs1_R_X, bs1_R_Y); 
   
-  // Pinches 174, 175
-  svg += rNrForno(r173x + 40, r173y, 10, '', 0, 0); // 174: Perfectly pinching Right edge of 173 (3 o'clock position)
-  svg += rNrForno(r176x - 28.3, r176y - 28.3, 10, '', 0, 0); // 175: Perfectly pinching Top-Left of 176
+  // Pinches
+  svg += rNrForno(bs1_R_X + 25, bs1_R_Y + 25, 10, '', 0, 0); // Pinch Bottom-Right of BS1_R
+  svg += rNrForno(bs1_L_X - 25, bs1_L_Y + 10, 10, '', 0, 0); // Pinch Left of BS1_L
+  
+  // Support rollers on horizontal exit
+  svg += rNrForno(bs1_L_X + 80, bs1_L_Y - 22, 8, '', 0, 0); // Under the line Y=220 -> Y=228
+  svg += rNrForno(bs1_L_X + 160, bs1_L_Y - 22, 8, '', 0, 0); 
 
   // S-Wrap Path for BS1 (THE PERFECT FIGURE-8 BRIDLE)
-  // 1. Arc perfectly around the bottom-right quadrant of Corretor 1, then smooth line to BS1
+  // 1. Arc perfectly around the bottom-right quadrant of Corretor 1
   stripPath += `A 25 25 0 0 0 ${corrX + 25} ${corrY} `;
-  stripPath += `Q ${corrX + 25} ${corrY - 20} 2872.8 377.1 `;
   
-  // 2. Arc around 173 (Right -> Top -> Top-Left)
-  // Counter-Clockwise (sweep=0), Large Arc (large=1)
-  stripPath += `A 30 30 0 1 0 2832.1 339.0 `; 
+  // 2. Smooth cubic bezier from Corretor 1 horizontal exit to BS1_R horizontal bottom entry
+  stripPath += `C ${corrX + 80} ${corrY} ${corrX + 80} ${bs1_R_Y + 30} ${bs1_R_X} ${bs1_R_Y + 30} `;
   
-  // 3. Inner tangent diagonal line from 173 (Top-Left) to 176 (Bottom-Right)
-  lineTo(2797.9, 261.0); 
+  // 3. Arc around BS1_R (Bottom -> Right -> Top-Right)
+  // Counter-Clockwise (sweep=0), Small Arc (large=0)
+  stripPath += `A 30 30 0 0 0 ${bs1_R_X + 28.2} ${bs1_R_Y - 10.2} `; 
   
-  // 4. Arc around 176 (Bottom-Right -> Bottom -> Left -> Top)
-  // Clockwise (sweep=1), Large Arc (large=1)
-  stripPath += `A 30 30 0 1 1 2770 220 `;   
+  // 4. Inner tangent diagonal line from BS1_R (Top-Right) to BS1_L (Bottom-Left)
+  lineTo(bs1_L_X - 28.2, bs1_L_Y + 10.2); 
   
-  // 177, 178 (Support rollers on the horizontal exit line)
-  // Horizontal line is at Y = 220.
-  // 177 was removed. Adding a new support roller BELOW the line per user drawing
-  svg += rNrForno(2850, 230, 10, '', 0, 0); // New roll (Bottom)
-  
-  // 178 is BELOW the line, right after 173. Let's place at X = 2930
-  svg += rNrForno(2930, 230, 10, '', 0, 0); // 178 (Bottom)
+  // 5. Arc around BS1_L (Bottom-Left -> Left -> Top)
+  // Clockwise (sweep=1), Small Arc (large=0)
+  stripPath += `A 30 30 0 0 1 ${bs1_L_X} ${bs1_L_Y - 30} `;   
 
   // LOOP ENTRADA
   let txs = [3100, 3220, 3340]; // 179, 181, 183

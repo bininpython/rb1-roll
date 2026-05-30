@@ -2156,22 +2156,16 @@ function renderRb1Completa() {
   svg += `<text x="${C5X}" y="${LYT + 60}" font-family="Montserrat, sans-serif" font-size="14" font-weight="800" fill="#ffffff" text-anchor="middle">CORRETOR 5</text>`;
 
   // ====================================================================
-  // BS 5 (S-Roll Invertido)
+  // BS 5 (Rolo Simples Superior)
   // ====================================================================
   
   // Rolo pequeno guia após Corretor 5
-  let srX = 9750; let srY = 193;
+  let srX = 9750; let srY = 193; // Topo em 185
   svg += dot(srX, srY, 8);
   
-  // BS 5 (R1 Bottom-Left, R2 Top-Right)
-  let bs5_1X = 9850; let bs5_1Y = 320;
-  let bs5_2X = 10000; let bs5_2Y = 220;
+  // BS 5 (Único Rolo)
+  let bs5_2X = 10000; let bs5_2Y = 220; // Topo em 185
   
-  // R1 (Bottom-Left)
-  svg += dot(bs5_1X, bs5_1Y, 35);
-  svg += dot(bs5_1X, bs5_1Y + 45, 10); // Pinch roller BOTTOM
-  
-  // R2 (Top-Right)
   svg += dot(bs5_2X, bs5_2Y, 35);
   svg += dot(bs5_2X, bs5_2Y - 45, 10); // Pinch roller TOP
   svg += `<text x="${bs5_2X + 45}" y="${bs5_2Y + 5}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 5</text>`;
@@ -2196,15 +2190,9 @@ function renderRb1Completa() {
   lineTo(9595, LYT); // Sobe perfeitamente vertical para Corretor 5
   
   stripPath += `A 35 35 0 0 1 9630 ${LYT - 35} `; // Abraça o topo esquerdo do Corretor 5 até o topo central
-  lineTo(9750, LYT - 35); // Horizontal até o topo do rolo guia
   
-  // Path BS 5
-  stripPath += `A 8 8 0 0 1 9754.7 186.6 `; // Curva no rolinho guia
-  lineTo(9829.3, 348.2); // Diagonal descendo para BS5_R1 (Bottom-Left)
-  stripPath += `A 35 35 0 0 0 9879.2 339.3 `; // Abraça por BAIXO o BS5_R1 (Counter-Clockwise)
-  lineTo(9970.8, 200.7); // Diagonal subindo para BS5_R2 (Top-Right)
-  stripPath += `A 35 35 0 0 1 10000 185 `; // Abraça por CIMA o BS5_R2 (Clockwise)
-  lineTo(10150, 185); // Sai horizontalmente
+  // Path BS 5 (Linha perfeitamente reta passando sobre o guia e o BS 5)
+  lineTo(10150, LYT - 35);
   
   // Continuação descendo para a Mesa de Inspeção
   stripPath += `Q 10250 185 10300 317 Q 10350 ${YM} 10400 ${YM} `;

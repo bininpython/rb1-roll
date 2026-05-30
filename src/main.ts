@@ -2155,6 +2155,27 @@ function renderRb1Completa() {
   svg += corretorCruz(C5X, LYT, 35, '');
   svg += `<text x="${C5X}" y="${LYT + 60}" font-family="Montserrat, sans-serif" font-size="14" font-weight="800" fill="#ffffff" text-anchor="middle">CORRETOR 5</text>`;
 
+  // ====================================================================
+  // BS 5 (S-Roll Invertido)
+  // ====================================================================
+  
+  // Rolo pequeno guia após Corretor 5
+  let srX = 9750; let srY = 193;
+  svg += dot(srX, srY, 8);
+  
+  // BS 5 (R1 Bottom-Left, R2 Top-Right)
+  let bs5_1X = 9850; let bs5_1Y = 320;
+  let bs5_2X = 10000; let bs5_2Y = 220;
+  
+  // R1 (Bottom-Left)
+  svg += dot(bs5_1X, bs5_1Y, 35);
+  svg += dot(bs5_1X, bs5_1Y + 45, 10); // Pinch roller BOTTOM
+  
+  // R2 (Top-Right)
+  svg += dot(bs5_2X, bs5_2Y, 35);
+  svg += dot(bs5_2X, bs5_2Y - 45, 10); // Pinch roller TOP
+  svg += `<text x="${bs5_2X + 45}" y="${bs5_2Y + 5}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 5</text>`;
+
   // --- Path da Tira (Matematicamente Exato com Inner Tangents) ---
   stripPath += `A 35 35 0 0 0 8984.6 420.3 `; // Sai tangencialmente do Corretor 4 (Bottom-Right)
   lineTo(9015.4, 214.8); // Reta diagonal (Inner Tangent) até BS4_1 (Top-Left)
@@ -2175,43 +2196,46 @@ function renderRb1Completa() {
   lineTo(9595, LYT); // Sobe perfeitamente vertical para Corretor 5
   
   stripPath += `A 35 35 0 0 1 9630 ${LYT - 35} `; // Abraça o topo esquerdo do Corretor 5 até o topo central
-  lineTo(9680, LYT - 35); // Sai horizontalmente pela direita
-  stripPath += `Q 9720 ${LYT - 35} 9730 ${LYT} `; // Curva suave para descer
-  lineTo(9820, YM); // Chega no rolo Pós loop
+  lineTo(9750, LYT - 35); // Horizontal até o topo do rolo guia
   
-  // Pós loop
-  svg += dot(9820, YM, 8);
-  // S-Roll Saida
-  svg += dot(9920, YM+30, 35);
-  svg += dot(10000, YM-30, 35);
-  svg += dot(10080, YM, 8);
-  lineTo(9820, YM); lineTo(9920, YM+30); lineTo(10000, YM-30); lineTo(10080, YM);
+  // Path BS 5
+  stripPath += `A 8 8 0 0 1 9754.7 186.6 `; // Curva no rolinho guia
+  lineTo(9829.3, 348.2); // Diagonal descendo para BS5_R1 (Bottom-Left)
+  stripPath += `A 35 35 0 0 0 9879.2 339.3 `; // Abraça por BAIXO o BS5_R1 (Counter-Clockwise)
+  lineTo(9970.8, 200.7); // Diagonal subindo para BS5_R2 (Top-Right)
+  stripPath += `A 35 35 0 0 1 10000 185 `; // Abraça por CIMA o BS5_R2 (Clockwise)
+  lineTo(10150, 185); // Sai horizontalmente
+  
+  // Continuação descendo para a Mesa de Inspeção
+  stripPath += `Q 10250 185 10300 317 Q 10350 ${YM} 10400 ${YM} `;
+  
+  let shiftX = 350; // Shift para acomodar o BS 5
   
   for (let i=0; i<4; i++) {
-    svg += dot(10130 + i*20, YM, 6);
+    svg += dot(10130 + shiftX + i*20, YM, 6);
   }
-  lineTo(10190, YM);
+  lineTo(10190 + shiftX, YM);
   
   // Mesa Inspecao
-  svg += mesaInspecao(10250, YM, 200);
-  lineTo(10450, YM);
+  svg += mesaInspecao(10250 + shiftX, YM, 200);
+  lineTo(10450 + shiftX, YM);
   
   for (let i=0; i<3; i++) {
-    svg += dot(10500 + i*20, YM, 6);
+    svg += dot(10500 + shiftX + i*20, YM, 6);
   }
-  lineTo(10540, YM);
+  lineTo(10540 + shiftX, YM);
   
   // Tesoura 3
-  svg += tesoura3(10630, YM, 'TESOURA 3');
-  lineTo(10630, YM);
+  svg += tesoura3(10630 + shiftX, YM, 'TESOURA 3');
+  lineTo(10630 + shiftX, YM);
   
-  svg += dot(10710, YM-15, 15); svg += dot(10710, YM+15, 15);
-  svg += dot(10780, YM, 8);
-  lineTo(10710, YM); lineTo(10780, YM);
+  svg += dot(10710 + shiftX, YM-15, 15); svg += dot(10710 + shiftX, YM+15, 15);
+  svg += dot(10780 + shiftX, YM, 8);
+  lineTo(10710 + shiftX, YM); lineTo(10780 + shiftX, YM);
   
   // Bobinadeira Final
-  svg += solidCoil(10900, YM + 20, 60, 'BOBINADEIRA (RECOILER)');
-  lineTo(10900, YM + 20);
+  svg += solidCoil(10900 + shiftX, YM + 20, 60, 'BOBINADEIRA (RECOILER)');
+  lineTo(10900 + shiftX, YM + 20);
 
   // Apply the path (Forno Glowing Strip)
   svg += `<path d="${stripPath}" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="4" filter="url(#whiteGlow)"/>`;

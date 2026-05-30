@@ -2135,14 +2135,11 @@ function renderRb1Completa() {
   // Rolo pequeno de apoio na saída do BS4 (Recalculado para nova inclinação)
   svg += dot(9271.2, 275.0, 8);
   
-  // Fosso / Loop Saída Outline
+  // Loop Saída (Variáveis de Posicionamento e Texto)
   const LYT = 220; // Alinhado verticalmente com BS4_1Y
   const LYB = 580;
   let boxX1 = 9280;
   let boxX2 = 9610;
-  svg += `<line x1="${boxX1}" y1="${LYT}" x2="${boxX1}" y2="${LYB+30}" stroke="${BK}" stroke-width="2"/>`;
-  svg += `<line x1="${boxX1}" y1="${LYB+30}" x2="${boxX2}" y2="${LYB+30}" stroke="${BK}" stroke-width="2"/>`;
-  svg += `<line x1="${boxX2}" y1="${LYB+30}" x2="${boxX2}" y2="${LYT}" stroke="${BK}" stroke-width="2"/>`;
   svg += `<text x="${(boxX1+boxX2)/2}" y="${LYT - 50}" text-anchor="middle" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff">Loop Saida</text>`;
   
   // Rolos do Loop Saída (Serpentine vertical exata)

@@ -1766,21 +1766,7 @@ function renderRb1Completa() {
   // Title
   svg += `<text x="${an2X + an2W/2}" y="${YM - an2H - 15}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">AR NEBLINA 2</text>`;
   
-  // Nozzles (Top row, following the dip curve)
-  for (let i = 0; i < 7; i++) {
-    let nx = an2X + 20 + i * 40;
-    let ny = (i === 0 || i === 6) ? YM - 15 : YM - 5; 
-    svg += `<circle cx="${nx}" cy="${ny}" r="2.5" fill="#94a3b8" />`;
-  }
-  // Nozzles (Bottom row)
-  for (let i = 0; i < 7; i++) {
-    let nx = an2X + 20 + i * 40;
-    let ny = (i === 0 || i === 6) ? YM + 40 : YM + 50; 
-    // Skip where rolls are (roughly i=1,2 and i=4,5)
-    if (i !== 1 && i !== 5) {
-      svg += `<circle cx="${nx}" cy="${ny}" r="2.5" fill="#94a3b8" />`;
-    }
-  }
+  // Nozzles removed as per user request
 
   // 3 support rolls (203, 204 inside supporting the dip; 205 outside)
   let r203x = an2X + 70, r203y = YM + 25; // Strip at YM+15, so center is YM+15+10=25

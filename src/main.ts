@@ -2115,43 +2115,65 @@ function renderRb1Completa() {
   
   // Corretor 4 (elevado para a fita passar por baixo)
   svg += corretorCruz(8950, YM - 35, 35, '');
-  svg += `<text x="8950" y="${YM + 25}" font-family="Montserrat, sans-serif" font-size="14" font-weight="800" fill="#ffffff" text-anchor="middle">CORRETOR 4</text>`;
   
-  // Rolo pequeno de apoio da diagonal (fita passa por cima dele)
-  svg += dot(9079.4, YM - 68.3, 8); 
+  // ====================================================================
+  // BS4 e LOOP DE SAÍDA (Conforme Esboço)
+  // ====================================================================
   
-  // BS4
-  let bs4X = 9200;
-  let bs4Y = YM - 115;
-  svg += dot(bs4X, bs4Y, 35); // Rolo grande BS4
-  svg += dot(bs4X, bs4Y - 45, 10); // Pinch roller sobre o BS4
-  svg += `<text x="${bs4X + 35}" y="${bs4Y - 55}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS4</text>`;
+  // Rolo pequeno de apoio na subida
+  svg += dot(9000, 360, 8); 
   
-  // Path da tira (Diagonal calculada com tangentes exatas)
-  // A fita já chegou em (8950, YM)
-  stripPath += `Q 8960.5 ${YM} 8969.2 ${YM - 5.7} `; // Curva tangencial saindo do Corretor 4
-  lineTo(9180.8, YM - 144.3); // Linha diagonal tangenciando o rolo BS4 e o Corretor 4
-  stripPath += `Q 9189.5 ${YM - 150} 9200 ${YM - 150} `; // Curva tangencial sobre o BS4
-  lineTo(9220, YM - 150); // Passa horizontalmente sobre o topo do BS4
+  // BS4 (Configuração em S-Roll: Top-Left e Bottom-Right)
+  let bs4_1X = 9080; let bs4_1Y = 250;
+  let bs4_2X = 9150; let bs4_2Y = 330;
+  svg += dot(bs4_1X, bs4_1Y, 35); // Rolo 1 (Top-Left)
+  svg += dot(bs4_1X, bs4_1Y - 45, 10); // Pinch roller TOP
+  svg += dot(bs4_2X, bs4_2Y, 35); // Rolo 2 (Bottom-Right)
+  svg += dot(bs4_2X, bs4_2Y + 45, 10); // Pinch roller BOTTOM
+  svg += `<text x="${bs4_1X}" y="${bs4_1Y - 65}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">BS4</text>`;
   
-  // Fosso Saída
+  // Rolo pequeno de apoio na saída do BS4
+  svg += dot(9250, 240, 8);
+  
+  // Fosso / Loop Saída Outline
   const LYT = 120;
   const LYB = 580;
-  svg += `<line x1="9350" y1="${LYT}" x2="9350" y2="${LYB+20}" stroke="${BK}" stroke-width="2"/>`;
-  svg += `<line x1="9350" y1="${LYB+20}" x2="9750" y2="${LYB+20}" stroke="${BK}" stroke-width="2"/>`;
-  svg += `<line x1="9750" y1="${LYB+20}" x2="9750" y2="${LYT}" stroke="${BK}" stroke-width="2"/>`;
-  svg += `<text x="9550" y="${LYT - 40}" text-anchor="middle" ${FSL} font-size="12" font-weight="800" fill="${BK}">LOOP DE SAÍDA</text>`;
+  svg += `<line x1="9280" y1="${LYT}" x2="9280" y2="${LYB+30}" stroke="${BK}" stroke-width="2"/>`;
+  svg += `<line x1="9280" y1="${LYB+30}" x2="9730" y2="${LYB+30}" stroke="${BK}" stroke-width="2"/>`;
+  svg += `<line x1="9730" y1="${LYB+30}" x2="9730" y2="${LYT}" stroke="${BK}" stroke-width="2"/>`;
+  svg += `<text x="9505" y="${LYT - 50}" text-anchor="middle" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff">Loop Saida</text>`;
   
-  const oxs = [9400, 9500, 9600, 9700];
-  const oys = [LYB, LYT, LYB, LYT];
-  for (let i=0; i<4; i++) {
-    if (i === 3) {
-      svg += corretorCruz(oxs[i], oys[i], 35, 'CORRETOR 5');
-    } else {
-      svg += dot(oxs[i], oys[i], 25);
-    }
-    lineTo(oxs[i], oys[i]);
+  // Rolos do Loop Saída (Top 1, Bottom 1, Top 2, Bottom 2)
+  const loopX = [9350, 9450, 9550, 9650];
+  const loopY = [LYT, LYB, LYT, LYB];
+  for (let i = 0; i < 4; i++) {
+    svg += dot(loopX[i], loopY[i], 35);
   }
+  
+  // Corretor 5
+  svg += corretorCruz(9750, 200, 35, '');
+  svg += `<text x="9750" y="260" font-family="Montserrat, sans-serif" font-size="14" font-weight="800" fill="#ffffff" text-anchor="middle">CORRETOR 5</text>`;
+
+  // --- Path da Tira (Calculado) ---
+  // A fita vem do fundo do Corretor 4 (8950, YM)
+  stripPath += `Q 8970 ${YM} 8980 430 `; // Curva de saída
+  lineTo(9045, 250); // Diagonal subindo até borda esquerda do BS4_1
+  stripPath += `Q 9045 215 9080 215 Q 9115 215 9115 250 `; // Abraça o topo do BS4_1
+  lineTo(9115, 330); // Desce vertical para borda esquerda do BS4_2
+  stripPath += `Q 9115 365 9150 365 Q 9185 365 9185 330 `; // Abraça o fundo do BS4_2
+  lineTo(9315, LYT); // Diagonal subindo até borda esquerda do Top 1 do Loop
+  stripPath += `Q 9315 ${LYT-35} 9350 ${LYT-35} Q 9385 ${LYT-35} 9385 ${LYT} `; // Top 1
+  lineTo(9415, LYB); // Desce para borda esquerda do Bottom 1
+  stripPath += `Q 9415 ${LYB+35} 9450 ${LYB+35} Q 9485 ${LYB+35} 9485 ${LYB} `; // Bottom 1
+  lineTo(9515, LYT); // Sobe para borda esquerda do Top 2
+  stripPath += `Q 9515 ${LYT-35} 9550 ${LYT-35} Q 9585 ${LYT-35} 9585 ${LYT} `; // Top 2
+  lineTo(9615, LYB); // Desce para borda esquerda do Bottom 2
+  stripPath += `Q 9615 ${LYB+35} 9650 ${LYB+35} Q 9685 ${LYB+35} 9685 ${LYB} `; // Bottom 2
+  lineTo(9715, 200); // Sobe para borda esquerda do Corretor 5
+  stripPath += `Q 9715 165 9750 165 `; // Abraça o topo do Corretor 5
+  lineTo(9780, 165); // Sai horizontalmente pela direita
+  stripPath += `Q 9800 165 9810 185 `; // Curva suave para descer
+  lineTo(9820, YM); // Chega no rolo Pós loop
   
   // Pós loop
   svg += dot(9820, YM, 8);

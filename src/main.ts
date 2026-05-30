@@ -1961,11 +1961,11 @@ function renderRb1Completa() {
   // 1. Top 1
   svg += dot(7055, YM - 15, 15);
   // 2. Bottom 1
-  svg += dot(7110, YM + 15, 15);
+  svg += dot(7110, YM + 12, 12);
   // 3. Top 2
   svg += dot(7165, YM - 15, 15);
   // 4. Bottom 2
-  svg += dot(7220, YM + 15, 15);
+  svg += dot(7220, YM + 12, 12);
   // 5. Top 3 (Roll you drew on the left!)
   svg += dot(7275, YM - 15, 15);
   
@@ -1977,11 +1977,11 @@ function renderRb1Completa() {
   // 7. Top 4 (Roll you drew on the right!)
   svg += dot(7385, YM - 15, 15);
   // 8. Bottom 3
-  svg += dot(7440, YM + 15, 15);
+  svg += dot(7440, YM + 12, 12);
   // 9. Top 5
   svg += dot(7495, YM - 15, 15);
   // 10. Bottom 4
-  svg += dot(7550, YM + 15, 15);
+  svg += dot(7550, YM + 12, 12);
   // 11. Top 6
   svg += dot(7605, YM - 15, 15);
   

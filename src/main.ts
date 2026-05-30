@@ -1599,10 +1599,6 @@ function renderRb1Completa() {
 
   svg += `<text x="3280" y="150" font-family="Montserrat, sans-serif" font-size="20" font-weight="900" fill="#ffffff" text-anchor="middle">LOOP ENTRADA</text>`;
 
-  // Draw Pit lines
-  svg += `<line x1="3050" y1="180" x2="3050" y2="720" stroke="#475569" stroke-width="4"/>`;
-  svg += `<line x1="3050" y1="720" x2="3510" y2="720" stroke="#475569" stroke-width="4"/>`;
-  svg += `<line x1="3510" y1="720" x2="3510" y2="180" stroke="#475569" stroke-width="4"/>`;
 
   for (let x of txs) {
     svg += rNrForno(x, TY, 30, '', x, TY);

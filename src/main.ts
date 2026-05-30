@@ -2012,27 +2012,26 @@ function renderRb1Completa() {
   svg += drawEscovador(7750, YM, 'Escovador 1');
   lineTo(7800, YM);
   
-  // Drop to Espremedor 2
-  lineTo(7840, Y_quim);
-  svg += dot(7860, Y_quim - 10, 10);
-  svg += dot(7860, Y_quim + 10, 10);
-  svg += `<text x="7860" y="${Y_quim + 35}" font-family="Montserrat, sans-serif" font-size="10" font-weight="900" fill="#ffffff" text-anchor="middle">Espremedor 2</text>`;
-  lineTo(7860, Y_quim);
+  // To Espremedor 2 (Straight horizontal)
+  lineTo(7840, YM);
+  svg += dot(7860, YM - 10, 10);
+  svg += dot(7860, YM + 10, 10);
+  svg += `<text x="7860" y="${YM + 35}" font-family="Montserrat, sans-serif" font-size="10" font-weight="900" fill="#ffffff" text-anchor="middle">Espremedor 2</text>`;
+  lineTo(7860, YM);
   
-  // Tanque Químico (Mergulhadores moved up, no tanks, no text)
-  svg += dot(7950, Y_quim - 30, 30);
+  // Tanque Químico (Mergulhadores sitting on the straight line)
+  svg += dot(7950, YM - 30, 30);
   
-  svg += dot(8090, Y_quim - 30, 30);
+  svg += dot(8090, YM - 30, 30);
   
-  // Espremedor 3
-  lineTo(8180, Y_quim);
-  svg += dot(8200, Y_quim - 10, 10);
-  svg += dot(8200, Y_quim + 10, 10);
-  svg += `<text x="8200" y="${Y_quim + 35}" font-family="Montserrat, sans-serif" font-size="10" font-weight="900" fill="#ffffff" text-anchor="middle">Espremedor 3</text>`;
-  lineTo(8200, Y_quim);
+  // Espremedor 3 (Straight horizontal)
+  lineTo(8180, YM);
+  svg += dot(8200, YM - 10, 10);
+  svg += dot(8200, YM + 10, 10);
+  svg += `<text x="8200" y="${YM + 35}" font-family="Montserrat, sans-serif" font-size="10" font-weight="900" fill="#ffffff" text-anchor="middle">Espremedor 3</text>`;
+  lineTo(8200, YM);
   
-  // Climb to Escovador 2
-  lineTo(8220, Y_quim);
+  // Straight to Escovador 2
   lineTo(8250, YM); // left edge of Escovador 2 is 8250
   
   // Escovador 2

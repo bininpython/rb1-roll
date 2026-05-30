@@ -1575,22 +1575,26 @@ function renderRb1Completa() {
   svg += rNrForno(bs1_L_X + 160, 212, 8, '', 0, 0); 
 
   // Path from Corretor 1 to BS1
-  // 1. Arco sob o Corretor 1 (sai pelo Bottom-Right, tangent angle 63.6 deg)
-  stripPath += `A 25 25 0 0 0 ${corrX + 11.1} 447.4 `;
+  // 1. Arco sob o Corretor 1 (sai pelo Bottom-Right, tangent angle 64.35 deg)
+  stripPath += `A 25 25 0 0 0 ${corrX + 10.8} 447.5 `;
   
-  // 2. Linha tangente externa de Corretor 1 para BS1_R (Bottom-Right)
-  lineTo(bs1_R_X + 13.3, bs1_R_Y + 26.9); // X=corrX+153.3, Y=376.9
+  // 2. Linha tangente externa para BS1_R (Bottom-Right, raio efetivo 32 para margem)
+  lineTo(bs1_R_X + 13.9, bs1_R_Y + 28.8); // X=corrX+153.9, Y=378.8
   
-  // 3. Arco abraçando o lado DIREITO do BS1_R (Bottom-Right -> Top-Left)
-  // Counter-Clockwise (sweep=0), Small Arc (large=0)
-  stripPath += `A 30 30 0 0 0 ${bs1_R_X + 10.2} ${bs1_R_Y - 28.2} `; // Tangent em -70.1 deg
+  // 3. Arco abraçando o lado DIREITO do BS1_R
+  // Counter-Clockwise (sweep=0). Raio 35 na renderização força o arco a contornar por fora, evitando cortes.
+  stripPath += `A 35 35 0 0 0 ${bs1_R_X + 9.9} ${bs1_R_Y - 30.4} `; // Tangent em -71.9 deg
   
-  // 4. Linha tangente interna cruzando de BS1_R (Top-Left) para BS1_L (Bottom-Right)
-  lineTo(bs1_L_X - 10.2, bs1_L_Y + 28.2); // Tangent em 109.9 deg
+  // 4. Linha tangente interna cruzando para BS1_L (Bottom-Right)
+  lineTo(bs1_L_X - 9.9, bs1_L_Y + 30.4); // Tangent em 108.1 deg
   
-  // 5. Arco abraçando o lado ESQUERDO do BS1_L (Bottom-Right -> Top)
-  // Clockwise (sweep=1), Small Arc (large=0)
-  stripPath += `A 30 30 0 0 1 ${bs1_L_X} 220 `;   
+  // 5. Arco abraçando o lado ESQUERDO do BS1_L
+  // Clockwise (sweep=1). Raio 35 força curva perfeita por fora.
+  stripPath += `A 35 35 0 0 1 ${bs1_L_X} 218 `;   
+  
+  // 6. Transição suave horizontal de Y=218 para Y=220 (Loop Entrada)
+  stripPath += `L ${bs1_L_X + 40} 218 `;
+  stripPath += `C ${bs1_L_X + 80} 218 ${bs1_L_X + 120} 220 ${bs1_L_X + 160} 220 `;
 
   // LOOP ENTRADA
   let txs = [3100, 3220, 3340]; // 179, 181, 183

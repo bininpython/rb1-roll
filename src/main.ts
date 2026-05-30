@@ -2034,7 +2034,7 @@ function renderRb1Completa() {
   lineTo(8200, YM);
   
   // Novo Rolo (entre Espremedor 3 e Escovador 2)
-  svg += dot(8235, YM + 15, 15);
+  svg += dot(8235, YM + 10, 10);
   
   // Straight to Escovador 2
   lineTo(8250, YM); // left edge of Escovador 2 is 8250
@@ -2043,15 +2043,12 @@ function renderRb1Completa() {
   svg += drawEscovador(8300, YM, 'Escovador 2');
   lineTo(8350, YM);
   
-  // Drop to Espremedor 4
-  lineTo(8380, Y_quim);
+  // Bypass Espremedor 4 (Linha Reta)
   svg += dot(8400, Y_quim - 10, 10);
   svg += dot(8400, Y_quim + 10, 10);
   svg += `<text x="8400" y="${Y_quim + 35}" font-family="Montserrat, sans-serif" font-size="10" font-weight="900" fill="#ffffff" text-anchor="middle">Espremedor 4</text>`;
-  lineTo(8400, Y_quim);
   
-  // Climb back to YM for Secador 3
-  lineTo(8415, Y_quim);
+  // Strip goes straight to Secador 3
   lineTo(8430, YM); // left tip of Secador 3 is at 8430
   
   // Secador 3

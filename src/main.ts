@@ -1811,26 +1811,32 @@ function renderRb1Completa() {
     `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
 
   // ====================================================================
-  // SECADOR 2 (Chevron arrow shape pointing left)
+  // SECADOR 2 (Vertical Dashed Line with Green V Shapes)
   // ====================================================================
-  let sec2X = dtX + dtW + 30, sec2W = 140, sec2H = 70;
-  let sec2CY = YM;
-  
-  // Chevron body
-  svg += `<path d="M ${sec2X} ${sec2CY} L ${sec2X + 30} ${sec2CY - sec2H/2} L ${sec2X + sec2W} ${sec2CY - sec2H/2} L ${sec2X + sec2W} ${sec2CY + sec2H/2} L ${sec2X + 30} ${sec2CY + sec2H/2} Z" fill="#1e293b" stroke="#334155" stroke-width="2"/>`;
-  
-  // Internal chevron V-lines
-  for (let v = 0; v < 4; v++) {
-    let vx = sec2X + 50 + v * 22;
-    svg += `<path d="M ${vx} ${sec2CY - sec2H/2 + 8} L ${vx - 12} ${sec2CY} L ${vx} ${sec2CY + sec2H/2 - 8}" fill="none" stroke="#475569" stroke-width="1.5"/>`;
-  }
+  let sec2X = dtX + dtW + 30, sec2W = 140;
+  let sec2CX = sec2X + sec2W/2; // Center of the secador
   
   // Title
-  svg += `<text x="${sec2X + sec2W/2 + 15}" y="${sec2CY - sec2H/2 - 15}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">SECADOR</text>`;
-  
-  // r1 = Exit roll (small green at secador exit)
+  svg += `<text x="${sec2CX}" y="${YM - 75}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">SECADOR</text>`;
+
+  // Dashed vertical line
+  svg += `<line x1="${sec2CX}" y1="${YM - 60}" x2="${sec2CX}" y2="${YM + 60}" stroke="#22c55e" stroke-width="2.5" stroke-dasharray="6,6" stroke-linecap="round"/>`;
+
+  // Top V shapes (pointing down)
+  // V1 (inner)
+  svg += `<path d="M ${sec2CX - 25} ${YM - 40} L ${sec2CX} ${YM - 15} L ${sec2CX + 25} ${YM - 40}" fill="none" stroke="#22c55e" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>`;
+  // V2 (outer)
+  svg += `<path d="M ${sec2CX - 25} ${YM - 55} L ${sec2CX} ${YM - 30} L ${sec2CX + 25} ${YM - 55}" fill="none" stroke="#22c55e" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>`;
+
+  // Bottom V shapes (pointing up)
+  // ^1 (inner)
+  svg += `<path d="M ${sec2CX - 25} ${YM + 40} L ${sec2CX} ${YM + 15} L ${sec2CX + 25} ${YM + 40}" fill="none" stroke="#22c55e" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>`;
+  // ^2 (outer)
+  svg += `<path d="M ${sec2CX - 25} ${YM + 55} L ${sec2CX} ${YM + 30} L ${sec2CX + 25} ${YM + 55}" fill="none" stroke="#22c55e" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>`;
+
+  // r1 = Exit roll (small green at secador exit) - updated to match other rollers
   let sec2Rx = sec2X + sec2W + 20;
-  svg += `<circle cx="${sec2Rx}" cy="${YM + 8}" r="8" fill="#10b981" stroke="#0f172a" stroke-width="2"/>`;
+  svg += rNrForno(sec2Rx, YM + 8, 8, '', 0, 0);
 
   lineTo(sec2Rx + 8, YM);
   

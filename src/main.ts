@@ -2079,14 +2079,20 @@ function renderRb1Completa() {
     svg += `<circle cx="${nx}" cy="${YM + 25}" r="3.5" fill="#cbd5e1" />`;
   }
   
+  // Rolos após o Enxaguador
+  // Rolo único por baixo
+  svg += dot(8635, YM + 10, 10);
+  // Par de rolos (Pinch rollers)
+  svg += dot(8680, YM - 10, 10);
+  svg += dot(8680, YM + 10, 10);
+
   // ====================================================================
   // SEÇÃO 7: SAÍDA E BOBINAMENTO
   // ====================================================================
-  lineTo(8660, YM);
+  lineTo(8750, YM); // Segue direto até o Corretor 4
   
   // Corretor 4
   svg += corretorCruz(8750, YM, 35, 'CORRETOR 4');
-  lineTo(8750, YM);
   
   // Zigue Zague pre-loop
   svg += dot(8850, YM-20, 8);

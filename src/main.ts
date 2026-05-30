@@ -1949,7 +1949,7 @@ function renderRb1Completa() {
   svg += `<text x="7325" y="${YM - 80}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">Tanque Eletrolitico</text>`;
   
   // Tank outline
-  svg += `<rect x="6960" y="${YM - 60}" width="730" height="150" fill="none" stroke="#ffffff" stroke-width="2" rx="4"/>`;
+  svg += `<rect x="6960" y="${YM - 60}" width="730" height="150" fill="#1e293b" stroke="#334155" stroke-width="2" rx="4"/>`;
   
   // Roll 0: Large 1 (Defletor Entrada)
   svg += `<rect x="6980" y="${YM + 45}" width="40" height="25" fill="#1e293b" rx="2"/>`;
@@ -2020,7 +2020,7 @@ function renderRb1Completa() {
   
   // Tanque Químico Outline and Text
   svg += `<text x="8020" y="345" font-family="Montserrat, sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">Tanque Quimico</text>`;
-  svg += `<rect x="7880" y="360" width="280" height="130" fill="none" stroke="#ffffff" stroke-width="1.5" />`;
+  svg += `<rect x="7880" y="360" width="280" height="130" fill="#1e293b" stroke="#334155" stroke-width="2" rx="4"/>`;
 
   // Tanque Químico (Mergulhadores sitting on the straight line)
   svg += dot(7950, YM - 30, 30);

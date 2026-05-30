@@ -2046,6 +2046,32 @@ function renderRb1Completa() {
   // Novo rolo no lugar do Espremedor 4
   svg += dot(8400, YM + 10, 10);
   
+  // ENXAGUADOR
+  let enxX = 8460;
+  let enxW = 140;
+  
+  // Title
+  svg += `<text x="${enxX + enxW/2}" y="${YM - 55}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">ENXAGUADOR</text>`;
+  
+  // Top cover
+  svg += `<polyline points="${enxX},${YM - 12} ${enxX},${YM - 45} ${enxX + enxW},${YM - 45} ${enxX + enxW},${YM - 12}" fill="none" stroke="#94a3b8" stroke-width="2.5"/>`;
+  // Top caps
+  svg += `<line x1="${enxX - 6}" y1="${YM - 12}" x2="${enxX + 6}" y2="${YM - 12}" stroke="#94a3b8" stroke-width="2.5"/>`;
+  svg += `<line x1="${enxX + enxW - 6}" y1="${YM - 12}" x2="${enxX + enxW + 6}" y2="${YM - 12}" stroke="#94a3b8" stroke-width="2.5"/>`;
+
+  // Bottom cover
+  svg += `<polyline points="${enxX},${YM + 12} ${enxX},${YM + 45} ${enxX + enxW},${YM + 45} ${enxX + enxW},${YM + 12}" fill="none" stroke="#94a3b8" stroke-width="2.5"/>`;
+  // Bottom caps
+  svg += `<line x1="${enxX - 6}" y1="${YM + 12}" x2="${enxX + 6}" y2="${YM + 12}" stroke="#94a3b8" stroke-width="2.5"/>`;
+  svg += `<line x1="${enxX + enxW - 6}" y1="${YM + 12}" x2="${enxX + enxW + 6}" y2="${YM + 12}" stroke="#94a3b8" stroke-width="2.5"/>`;
+
+  // Spray Nozzles (3 Top, 3 Bottom)
+  for (let i = 1; i <= 3; i++) {
+    let nx = enxX + (enxW / 4) * i;
+    svg += `<circle cx="${nx}" cy="${YM - 25}" r="3.5" fill="#cbd5e1" />`;
+    svg += `<circle cx="${nx}" cy="${YM + 25}" r="3.5" fill="#cbd5e1" />`;
+  }
+  
   // ====================================================================
   // SEÇÃO 7: SAÍDA E BOBINAMENTO
   // ====================================================================

@@ -2113,16 +2113,26 @@ function renderRb1Completa() {
   // ====================================================================
   lineTo(8950, YM); // Segue direto até o Corretor 4
   
-  // Corretor 4
-  svg += corretorCruz(8950, YM, 35, 'CORRETOR 4');
+  // Corretor 4 (elevado para a fita passar por baixo)
+  svg += corretorCruz(8950, YM - 35, 35, '');
+  svg += `<text x="8950" y="${YM + 25}" font-family="Montserrat, sans-serif" font-size="14" font-weight="800" fill="#ffffff" text-anchor="middle">CORRETOR 4</text>`;
   
-  // Zigue Zague pre-loop
-  svg += dot(9050, YM-20, 8);
-  svg += dot(9100, YM+20, 25);
-  svg += dot(9160, YM-20, 8);
-  svg += dot(9220, YM+30, 8);
-  svg += dot(9280, YM-30, 30);
-  lineTo(9050, YM-20); lineTo(9100, YM+20); lineTo(9160, YM-20); lineTo(9220, YM+30); lineTo(9280, YM-30);
+  // Rolo pequeno na diagonal
+  svg += dot(9085, YM - 88, 8); 
+  
+  // BS4
+  let bs4X = 9200;
+  let bs4Y = YM - 115;
+  svg += dot(bs4X, bs4Y, 35); // Rolo grande BS4
+  svg += dot(bs4X, bs4Y - 45, 10); // Pinch roller sobre o BS4
+  svg += `<text x="${bs4X + 35}" y="${bs4Y - 55}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS4</text>`;
+  
+  // Path da tira (Diagonal para cima)
+  lineTo(8980, YM); // Passa reto sob o Corretor 4
+  stripPath += `Q 9010 ${YM} 9020 ${YM - 10} `; // Curva suave para iniciar a subida
+  lineTo(9160, YM - 150); // Linha diagonal tangente ao BS4
+  stripPath += `Q 9180 ${YM - 150} 9200 ${YM - 150} `; // Curva sobre o BS4
+  lineTo(9220, YM - 150); // Passa sobre o topo do BS4
   
   // Fosso Saída
   const LYT = 120;

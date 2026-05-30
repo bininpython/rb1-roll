@@ -1959,29 +1959,31 @@ function renderRb1Completa() {
   svg += dot(7000, YM + 30, 30);
   
   // 1. Top 1
-  svg += dot(7066, YM - 15, 15);
+  svg += dot(7060, YM - 15, 15);
   // 2. Bottom 1
-  svg += dot(7132, YM + 15, 15);
+  svg += dot(7120, YM + 15, 15);
   // 3. Top 2
-  svg += dot(7198, YM - 15, 15);
+  svg += dot(7180, YM - 15, 15);
   // 4. Bottom 2
-  svg += dot(7264, YM + 15, 15);
+  svg += dot(7240, YM + 15, 15);
   
   // 5. Large 2 (Centragem)
-  svg += `<rect x="7310" y="${YM + 45}" width="40" height="25" fill="#1e293b" rx="2"/>`;
-  svg += `<rect x="7305" y="${YM + 40}" width="50" height="10" fill="#334155" rx="2"/>`;
-  svg += dot(7330, YM + 30, 30);
+  svg += `<rect x="7280" y="${YM + 45}" width="40" height="25" fill="#1e293b" rx="2"/>`;
+  svg += `<rect x="7275" y="${YM + 40}" width="50" height="10" fill="#334155" rx="2"/>`;
+  svg += dot(7300, YM + 30, 30);
   
-  // 6. Bottom 3
-  svg += dot(7396, YM + 15, 15);
-  // 7. Top 3
-  svg += dot(7462, YM - 15, 15);
-  // 8. Bottom 4
-  svg += dot(7528, YM + 15, 15);
-  // 9. Top 4
-  svg += dot(7594, YM - 15, 15);
+  // 6. Top 3
+  svg += dot(7360, YM - 15, 15);
+  // 7. Bottom 3
+  svg += dot(7420, YM + 15, 15);
+  // 8. Top 4
+  svg += dot(7480, YM - 15, 15);
+  // 9. Bottom 4
+  svg += dot(7540, YM + 15, 15);
+  // 10. Top 5
+  svg += dot(7600, YM - 15, 15);
   
-  // 10. Pinch rolls
+  // 11. Pinch rolls
   svg += dot(7660, YM - 10, 10);
   svg += dot(7660, YM + 10, 10);
   

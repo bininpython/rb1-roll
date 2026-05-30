@@ -2086,6 +2086,28 @@ function renderRb1Completa() {
   svg += dot(8680, YM - 10, 10);
   svg += dot(8680, YM + 10, 10);
 
+  // SECADOR
+  let secX = 8750;
+  
+  // Title
+  svg += `<text x="${secX}" y="${YM - 70}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">SECADOR</text>`;
+  
+  // Dashed center line
+  svg += `<line x1="${secX}" y1="${YM - 55}" x2="${secX}" y2="${YM + 55}" stroke="#22c55e" stroke-width="2" stroke-dasharray="6,4" />`;
+  
+  // Top Chevrons (pointing down)
+  svg += `<polyline points="${secX - 15},${YM - 45} ${secX},${YM - 25} ${secX + 15},${YM - 45}" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />`;
+  svg += `<polyline points="${secX - 15},${YM - 30} ${secX},${YM - 10} ${secX + 15},${YM - 30}" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />`;
+  
+  // Bottom Chevrons (pointing up)
+  svg += `<polyline points="${secX - 15},${YM + 45} ${secX},${YM + 25} ${secX + 15},${YM + 45}" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />`;
+  svg += `<polyline points="${secX - 15},${YM + 30} ${secX},${YM + 10} ${secX + 15},${YM + 30}" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />`;
+  
+  // 4 pequenos rolos após o secador
+  for (let i = 0; i < 4; i++) {
+    svg += dot(8820 + i*24, YM, 8);
+  }
+
   // ====================================================================
   // SEÇÃO 7: SAÍDA E BOBINAMENTO
   // ====================================================================

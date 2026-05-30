@@ -908,12 +908,10 @@ function renderRb1Completa() {
       <feGaussianBlur stdDeviation="2" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
-      .spin-slow { animation: spin 4s linear infinite; }
-      .spin-fast { animation: spin 1.5s linear infinite; }
-      .strip-anim { animation: dashMove 0.8s linear infinite; }
-      @keyframes spin { 100% { transform: rotate(360deg); } }
-      @keyframes dashMove { to { stroke-dashoffset: -20; } }
-    </style>
+    <filter id="yellowGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
     <filter id="blueGlow" x="-20%" y="-20%" width="140%" height="140%">
       <feGaussianBlur stdDeviation="3" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
@@ -1996,8 +1994,8 @@ function renderRb1Completa() {
     s += `<text x="${cx}" y="${cy - 55}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#f97316" text-anchor="middle">${label}</text>`;
     
     const dotYellow = (x: number, y: number, r: number) => {
-      let b = `<circle cx="${x}" cy="${y}" r="${r}" fill="#422006" stroke="#eab308" stroke-width="1.5"/>`;
-      b += `<circle cx="${x}" cy="${y}" r="${r*0.6}" fill="none" stroke="#eab308" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.5" class="spin-fast" style="transform-origin: ${x}px ${y}px"/>`;
+      let b = `<circle cx="${x}" cy="${y}" r="${r}" fill="#ca8a04" stroke="#facc15" stroke-width="2" filter="url(#yellowGlow)"/>`;
+      b += `<circle cx="${x}" cy="${y}" r="${r*0.6}" fill="none" stroke="#fef08a" stroke-width="1.2" stroke-dasharray="2 2" opacity="0.8" class="spin-fast" style="transform-origin: ${x}px ${y}px"/>`;
       return b;
     };
 

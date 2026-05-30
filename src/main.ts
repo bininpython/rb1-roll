@@ -2117,8 +2117,8 @@ function renderRb1Completa() {
   svg += corretorCruz(8950, YM - 35, 35, '');
   svg += `<text x="8950" y="${YM + 25}" font-family="Montserrat, sans-serif" font-size="14" font-weight="800" fill="#ffffff" text-anchor="middle">CORRETOR 4</text>`;
   
-  // Rolo pequeno na diagonal
-  svg += dot(9085, YM - 88, 8); 
+  // Rolo pequeno de apoio da diagonal (fita passa por cima dele)
+  svg += dot(9079.4, YM - 68.3, 8); 
   
   // BS4
   let bs4X = 9200;
@@ -2127,12 +2127,12 @@ function renderRb1Completa() {
   svg += dot(bs4X, bs4Y - 45, 10); // Pinch roller sobre o BS4
   svg += `<text x="${bs4X + 35}" y="${bs4Y - 55}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS4</text>`;
   
-  // Path da tira (Diagonal para cima)
-  lineTo(8980, YM); // Passa reto sob o Corretor 4
-  stripPath += `Q 9010 ${YM} 9020 ${YM - 10} `; // Curva suave para iniciar a subida
-  lineTo(9160, YM - 150); // Linha diagonal tangente ao BS4
-  stripPath += `Q 9180 ${YM - 150} 9200 ${YM - 150} `; // Curva sobre o BS4
-  lineTo(9220, YM - 150); // Passa sobre o topo do BS4
+  // Path da tira (Diagonal calculada com tangentes exatas)
+  // A fita já chegou em (8950, YM)
+  stripPath += `Q 8960.5 ${YM} 8969.2 ${YM - 5.7} `; // Curva tangencial saindo do Corretor 4
+  lineTo(9180.8, YM - 144.3); // Linha diagonal tangenciando o rolo BS4 e o Corretor 4
+  stripPath += `Q 9189.5 ${YM - 150} 9200 ${YM - 150} `; // Curva tangencial sobre o BS4
+  lineTo(9220, YM - 150); // Passa horizontalmente sobre o topo do BS4
   
   // Fosso Saída
   const LYT = 120;

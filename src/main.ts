@@ -1559,7 +1559,7 @@ function renderRb1Completa() {
   console.log("Rendering BS1 with Perfect Geometric Inner Tangents v4 (R=36)");
 
   // Grupo BS1 (Bridle de Entrada do Loop - Figure-8 S-Wrap Diagonal)
-  let bs1_L_X = corrX + 40, bs1_L_Y = 250, rL = 30; // Left-Top large roller
+  let bs1_L_X = corrX + 40, bs1_L_Y = 250, rL = 36; // Left-Top large roller (increased to 36 to touch the strip)
   let bs1_R_X = corrX + 140, bs1_R_Y = 350; // Right-Bottom large roller
   
   // Text BS1

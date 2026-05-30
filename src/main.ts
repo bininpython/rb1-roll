@@ -2103,9 +2103,9 @@ function renderRb1Completa() {
   svg += `<polyline points="${secadorX - 15},${YM + 45} ${secadorX},${YM + 25} ${secadorX + 15},${YM + 45}" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />`;
   svg += `<polyline points="${secadorX - 15},${YM + 30} ${secadorX},${YM + 10} ${secadorX + 15},${YM + 30}" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />`;
   
-  // 4 pequenos rolos após o secador
+  // 4 pequenos rolos após o secador (abaixo da linha branca)
   for (let i = 0; i < 4; i++) {
-    svg += dot(8820 + i*24, YM, 8);
+    svg += dot(8820 + i*24, YM + 8, 8);
   }
 
   // ====================================================================

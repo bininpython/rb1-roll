@@ -2054,13 +2054,13 @@ function renderRb1Completa() {
   svg += `<text x="${enxX + enxW/2}" y="${YM - 55}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">ENXAGUADOR</text>`;
   
   // Top cover
-  svg += `<polyline points="${enxX},${YM - 12} ${enxX},${YM - 45} ${enxX + enxW},${YM - 45} ${enxX + enxW},${YM - 12}" fill="none" stroke="#94a3b8" stroke-width="2.5"/>`;
+  svg += `<polyline points="${enxX},${YM - 12} ${enxX},${YM - 45} ${enxX + enxW},${YM - 45} ${enxX + enxW},${YM - 12}" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5"/>`;
   // Top caps
   svg += `<line x1="${enxX - 6}" y1="${YM - 12}" x2="${enxX + 6}" y2="${YM - 12}" stroke="#94a3b8" stroke-width="2.5"/>`;
   svg += `<line x1="${enxX + enxW - 6}" y1="${YM - 12}" x2="${enxX + enxW + 6}" y2="${YM - 12}" stroke="#94a3b8" stroke-width="2.5"/>`;
 
   // Bottom cover
-  svg += `<polyline points="${enxX},${YM + 12} ${enxX},${YM + 45} ${enxX + enxW},${YM + 45} ${enxX + enxW},${YM + 12}" fill="none" stroke="#94a3b8" stroke-width="2.5"/>`;
+  svg += `<polyline points="${enxX},${YM + 12} ${enxX},${YM + 45} ${enxX + enxW},${YM + 45} ${enxX + enxW},${YM + 12}" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5"/>`;
   // Bottom caps
   svg += `<line x1="${enxX - 6}" y1="${YM + 12}" x2="${enxX + 6}" y2="${YM + 12}" stroke="#94a3b8" stroke-width="2.5"/>`;
   svg += `<line x1="${enxX + enxW - 6}" y1="${YM + 12}" x2="${enxX + enxW + 6}" y2="${YM + 12}" stroke="#94a3b8" stroke-width="2.5"/>`;

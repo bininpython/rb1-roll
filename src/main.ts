@@ -1796,7 +1796,7 @@ function renderRb1Completa() {
   let dtRollX = dtX + dtW - 100, dtRollY = dtBotY - 45;
   svg += rNrForno(dtRollX, dtRollY, 28, '', 0, 0);
   // Two small exit rolls (stacked vertically at exit)
-  let dtExitX = dtX + dtW - 30;
+  let dtExitX = dtX + dtW + 15; // Moved outside to the right
   svg += rNrForno(dtExitX, YM - 8, 8, '', 0, 0);
   svg += rNrForno(dtExitX, YM + 8, 8, '', 0, 0);
   // Strip path: dip down into tank, wrap around large roll, come back up

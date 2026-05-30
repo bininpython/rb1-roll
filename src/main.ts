@@ -1994,10 +1994,17 @@ function renderRb1Completa() {
     let s = `<rect x="${cx - 50}" y="${cy - 40}" width="100" height="80" fill="#1e293b" stroke="#475569" stroke-width="2" rx="6"/>`;
     s += `<rect x="${cx - 20}" y="${cy + 40}" width="40" height="40" fill="#0f172a" rx="2"/>`;
     s += `<text x="${cx}" y="${cy - 55}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#f97316" text-anchor="middle">${label}</text>`;
-    s += dot(cx - 20, cy - 15, 12);
-    s += dot(cx - 20, cy + 15, 12);
-    s += dot(cx + 20, cy - 15, 12);
-    s += dot(cx + 20, cy + 15, 12);
+    
+    const dotYellow = (x: number, y: number, r: number) => {
+      let b = `<circle cx="${x}" cy="${y}" r="${r}" fill="#422006" stroke="#eab308" stroke-width="1.5"/>`;
+      b += `<circle cx="${x}" cy="${y}" r="${r*0.6}" fill="none" stroke="#eab308" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.5" class="spin-fast" style="transform-origin: ${x}px ${y}px"/>`;
+      return b;
+    };
+
+    s += dot(cx - 20, cy - 15, 12);       // Top-Left: Green
+    s += dotYellow(cx - 20, cy + 15, 12); // Bottom-Left: Yellow (Brush)
+    s += dotYellow(cx + 20, cy - 15, 12); // Top-Right: Yellow (Brush)
+    s += dot(cx + 20, cy + 15, 12);       // Bottom-Right: Green
     return s;
   };
 

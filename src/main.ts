@@ -1556,41 +1556,36 @@ function renderRb1Completa() {
   // SEÇÃO 3: ACUMULADOR DE ENTRADA (LOOP)
   // ====================================================================
 
-  // Grupo BS1 (Bridle de Entrada do Loop - Figure-8 S-Wrap Vertical)
-  let bs1_L_X = corrX + 40, bs1_L_Y = 250, rL = 30; // Left-Top large roller
-  let bs1_R_X = corrX + 140, bs1_R_Y = 350; // Right-Bottom large roller
+  // Grupo BS1 (Bridle de Entrada do Loop - Layout Simplificado conforme esboço)
+  let bs1_L_X = corrX + 40, bs1_L_Y = 250, rL = 30; // Único rolo grande mantido (L_Top)
   
   // Text BS1
   svg += `<text x="${bs1_L_X}" y="${bs1_L_Y - 50}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">BS1</text>`;
 
   svg += rNrForno(bs1_L_X, bs1_L_Y, rL, '', bs1_L_X, bs1_L_Y); 
-  svg += rNrForno(bs1_R_X, bs1_R_Y, rL, '', bs1_R_X, bs1_R_Y); 
   
-  // Pinches
-  svg += rNrForno(bs1_R_X + 25, bs1_R_Y + 25, 10, '', 0, 0); // Pinch Bottom-Right of BS1_R
-  svg += rNrForno(bs1_L_X - 25, bs1_L_Y + 10, 10, '', 0, 0); // Pinch Left of BS1_L
+  // Pinches e Guias
+  svg += rNrForno(corrX + 55, 357, 10, '', 0, 0); // Rolo guia na curva de subida
+  svg += rNrForno(corrX, 260, 10, '', 0, 0); // Pinch encostado na esquerda do BS1_L
   
-  // Support rollers on horizontal exit
-  svg += rNrForno(bs1_L_X + 80, bs1_L_Y - 22, 8, '', 0, 0); // Under the line Y=220 -> Y=228
-  svg += rNrForno(bs1_L_X + 160, bs1_L_Y - 22, 8, '', 0, 0); 
+  // Support rollers on horizontal exit (Linha Y=220)
+  svg += rNrForno(bs1_L_X + 80, 230, 8, '', 0, 0); 
+  svg += rNrForno(bs1_L_X + 160, 230, 8, '', 0, 0); 
 
-  // S-Wrap Path for BS1 (THE PERFECT FIGURE-8 BRIDLE)
-  // 1. Arc perfectly around the bottom-right quadrant of Corretor 1
-  stripPath += `A 25 25 0 0 0 ${corrX + 25} ${corrY} `;
+  // Path from Corretor 1 to BS1
+  // 1. Arco sob o Corretor 1 (sai pelo Bottom-Right)
+  // Centro é (corrX, 425), raio 25. Ponto de saída em 45 graus: X=corrX+17.7, Y=442.7
+  stripPath += `A 25 25 0 0 0 ${corrX + 17.7} 442.7 `;
   
-  // 2. Smooth cubic bezier from Corretor 1 horizontal exit to BS1_R horizontal bottom entry
-  stripPath += `C ${corrX + 80} ${corrY} ${corrX + 80} ${bs1_R_Y + 30} ${bs1_R_X} ${bs1_R_Y + 30} `;
+  // 2. Curva Cúbica Bezier em forma de "C" subindo até o rolo BS1
+  // Controle 1: Segue a tangente UP-RIGHT do Corretor 1
+  // Controle 2: Segue a tangente DOWN-RIGHT vindo do BS1_L
+  // Destino: Ponto Bottom-Left do BS1_L (X=corrX+18.8, Y=271.2)
+  stripPath += `C ${corrX + 67.7} 392.7 ${corrX + 68.8} 321.2 ${corrX + 18.8} 271.2 `;
   
-  // 3. Arc around BS1_R (Bottom -> Right -> Top-Right)
-  // Counter-Clockwise (sweep=0), Small Arc (large=0)
-  stripPath += `A 30 30 0 0 0 ${bs1_R_X + 28.2} ${bs1_R_Y - 10.2} `; 
-  
-  // 4. Inner tangent diagonal line from BS1_R (Top-Right) to BS1_L (Bottom-Left)
-  lineTo(bs1_L_X - 28.2, bs1_L_Y + 10.2); 
-  
-  // 5. Arc around BS1_L (Bottom-Left -> Left -> Top)
+  // 3. Arco abraçando o lado esquerdo do BS1_L até o topo
   // Clockwise (sweep=1), Small Arc (large=0)
-  stripPath += `A 30 30 0 0 1 ${bs1_L_X} ${bs1_L_Y - 30} `;   
+  stripPath += `A 30 30 0 0 1 ${bs1_L_X} 220 `;   
 
   // LOOP ENTRADA
   let txs = [3100, 3220, 3340]; // 179, 181, 183

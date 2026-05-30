@@ -2022,10 +2022,17 @@ function renderRb1Completa() {
   svg += `<text x="8020" y="${YM - 80}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">Tanque Quimico</text>`;
   svg += `<rect x="7880" y="${YM - 60}" width="280" height="150" fill="#1e293b" stroke="#334155" stroke-width="2" rx="4"/>`;
 
-  // Tanque Químico (Mergulhadores sitting on the straight line)
-  svg += dot(7950, YM - 30, 30);
+  let tq_Y_bot = YM + 50; // Profundidade da tira dentro do tanque
   
-  svg += dot(8090, YM - 30, 30);
+  // Tanque Químico (Mergulhadores rebaixados para mergulhar a tira)
+  svg += dot(7950, tq_Y_bot - 30, 30);
+  svg += dot(8090, tq_Y_bot - 30, 30);
+  
+  // Caminho da tira (Dip Tank)
+  lineTo(7900, YM); // Segue reto até antes do rolo
+  stripPath += `C 7920 ${YM} 7920 ${tq_Y_bot} 7950 ${tq_Y_bot} `; // Curva para descer sob o 1º rolo
+  lineTo(8090, tq_Y_bot); // Segue por baixo até o 2º rolo
+  stripPath += `C 8120 ${tq_Y_bot} 8120 ${YM} 8140 ${YM} `; // Curva para subir de volta à linha principal
   
   // Espremedor 3 (Straight horizontal)
   lineTo(8180, YM);

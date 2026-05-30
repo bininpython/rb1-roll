@@ -1578,23 +1578,24 @@ function renderRb1Completa() {
   // 1. Arco sob o Corretor 1 (sai pelo Bottom-Right, tangent angle 64.35 deg)
   stripPath += `A 25 25 0 0 0 ${corrX + 10.8} 447.5 `;
   
-  // 2. Linha tangente externa para BS1_R (Bottom-Right, raio efetivo 32 para margem)
-  lineTo(bs1_R_X + 13.9, bs1_R_Y + 28.8); // X=corrX+153.9, Y=378.8
+  // 2. Linha para BS1_R (Bottom-Right, raio efetivo 34 para margem gorda)
+  lineTo(bs1_R_X + 14.8, bs1_R_Y + 30.6); // X=corrX+154.8, Y=380.6
   
-  // 3. Arco abraçando o lado DIREITO do BS1_R
-  // Counter-Clockwise (sweep=0). Raio 35 na renderização força o arco a contornar por fora, evitando cortes.
-  stripPath += `A 35 35 0 0 0 ${bs1_R_X + 9.9} ${bs1_R_Y - 30.4} `; // Tangent em -71.9 deg
+  // 3. Arco abraçando o lado DIREITO do BS1_R até o exato TOPO
+  // Counter-Clockwise (sweep=0). Raio 34 contorna bem por fora.
+  stripPath += `A 34 34 0 0 0 ${bs1_R_X} ${bs1_R_Y - 34} `; 
   
-  // 4. Linha tangente interna cruzando para BS1_L (Bottom-Right)
-  lineTo(bs1_L_X - 9.9, bs1_L_Y + 30.4); // Tangent em 108.1 deg
+  // 4. Curva "S" super suave (Cubic Bezier) do TOPO do BS1_R para a BASE do BS1_L
+  // Isso substitui a reta rígida e faz o caimento de fita solta igual ao rascunho!
+  stripPath += `C ${bs1_R_X - 50} ${bs1_R_Y - 34} ${bs1_L_X + 50} ${bs1_L_Y + 34} ${bs1_L_X} ${bs1_L_Y + 34} `;
   
-  // 5. Arco abraçando o lado ESQUERDO do BS1_L
-  // Clockwise (sweep=1). Raio 35 força curva perfeita por fora.
-  stripPath += `A 35 35 0 0 1 ${bs1_L_X} 218 `;   
+  // 5. Arco perfeito de Meia-Lua abraçando o lado ESQUERDO do BS1_L (da Base ao Topo)
+  // Clockwise (sweep=1). Raio 34.
+  stripPath += `A 34 34 0 0 1 ${bs1_L_X} ${bs1_L_Y - 34} `;   
   
-  // 6. Transição suave horizontal de Y=218 para Y=220 (Loop Entrada)
-  stripPath += `L ${bs1_L_X + 40} 218 `;
-  stripPath += `C ${bs1_L_X + 80} 218 ${bs1_L_X + 120} 220 ${bs1_L_X + 160} 220 `;
+  // 6. Transição suave horizontal de Y=216 para Y=220 (Loop Entrada)
+  stripPath += `L ${bs1_L_X + 40} ${bs1_L_Y - 34} `;
+  stripPath += `C ${bs1_L_X + 80} ${bs1_L_Y - 34} ${bs1_L_X + 120} 220 ${bs1_L_X + 160} 220 `;
 
   // LOOP ENTRADA
   let txs = [3100, 3220, 3340]; // 179, 181, 183

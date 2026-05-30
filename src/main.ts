@@ -2121,7 +2121,7 @@ function renderRb1Completa() {
   // ====================================================================
   
   // Rolo pequeno de apoio na subida
-  svg += dot(8995, 330, 8); 
+  svg += dot(9007.9, 318.7, 8); 
   
   // BS4 (S-Roll Diagonal: Top-Left e Bottom-Right)
   let bs4_1X = 9050; let bs4_1Y = 220;
@@ -2133,7 +2133,7 @@ function renderRb1Completa() {
   svg += `<text x="${bs4_1X}" y="${bs4_1Y - 65}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">BS4</text>`;
   
   // Rolo pequeno de apoio na saída do BS4
-  svg += dot(9275, 230, 8);
+  svg += dot(9272.2, 223.4, 8);
   
   // Fosso / Loop Saída Outline
   const LYT = 120;
@@ -2158,25 +2158,27 @@ function renderRb1Completa() {
   svg += corretorCruz(C5X, LYT, 35, '');
   svg += `<text x="${C5X}" y="${LYT + 60}" font-family="Montserrat, sans-serif" font-size="14" font-weight="800" fill="#ffffff" text-anchor="middle">CORRETOR 5</text>`;
 
-  // --- Path da Tira (Matematicamente Fiel) ---
-  stripPath += `Q 8960 ${YM} 8965 420 `; // Sai do Corretor 4
-  lineTo(9015, 220); // Sobe para borda esquerda do BS4_1
-  stripPath += `A 35 35 0 0 1 9075 244.5 `; // Arco sobre BS4_1 (Clockwise)
-  lineTo(9155, 295.5); // Linha reta diagonal cruzando o espaço (Inner Tangent)
-  stripPath += `A 35 35 0 0 0 9215 320 `; // Arco sob BS4_2 (Counter-Clockwise)
-  lineTo(9315, LYT); // Diagonal subindo para a borda esquerda do Top 1 do Loop
+  // --- Path da Tira (Matematicamente Exato com Inner Tangents) ---
+  stripPath += `A 35 35 0 0 0 8984.6 420.3 `; // Sai tangencialmente do Corretor 4 (Bottom-Right)
+  lineTo(9015.4, 214.8); // Reta diagonal (Inner Tangent) até BS4_1 (Top-Left)
   
-  stripPath += `A 35 35 0 0 1 9385 ${LYT} `; // Sobre Top 1
-  lineTo(9385, LYB); // Desce vertical para borda esquerda do Bottom 1
-  stripPath += `A 35 35 0 0 0 9455 ${LYB} `; // Sob Bottom 1
-  lineTo(9455, LYT); // Sobe vertical para borda esquerda do Top 2
-  stripPath += `A 35 35 0 0 1 9525 ${LYT} `; // Sobre Top 2
-  lineTo(9525, LYB); // Desce vertical para borda esquerda do Bottom 2
-  stripPath += `A 35 35 0 0 0 9595 ${LYB} `; // Sob Bottom 2
-  lineTo(9595, LYT); // Sobe vertical para borda esquerda do Corretor 5
+  stripPath += `A 35 35 0 0 1 9081.1 204.0 `; // Arco sobre BS4_1 (Clockwise) até Top-Right
+  lineTo(9148.9, 336.0); // Reta diagonal cruzando o espaço (Inner Tangent) até BS4_2 (Bottom-Left)
   
-  stripPath += `A 35 35 0 0 1 9630 ${LYT - 35} `; // Abraça o topo do Corretor 5
-  lineTo(9680, LYT - 35); // Sai horizontalmente
+  stripPath += `A 35 35 0 0 0 9211.7 334.8 `; // Arco sob BS4_2 (Counter-Clockwise) até Bottom-Right
+  lineTo(9318.3, 105.2); // Reta diagonal subindo para a Loop Saida Top 1 (Top-Left)
+  
+  stripPath += `A 35 35 0 0 1 9385 ${LYT} `; // Sobre Top 1 até borda direita
+  lineTo(9385, LYB); // Desce perfeitamente vertical
+  stripPath += `A 35 35 0 0 0 9455 ${LYB} `; // Sob Bottom 1 até borda direita
+  lineTo(9455, LYT); // Sobe perfeitamente vertical
+  stripPath += `A 35 35 0 0 1 9525 ${LYT} `; // Sobre Top 2 até borda direita
+  lineTo(9525, LYB); // Desce perfeitamente vertical
+  stripPath += `A 35 35 0 0 0 9595 ${LYB} `; // Sob Bottom 2 até borda direita
+  lineTo(9595, LYT); // Sobe perfeitamente vertical para Corretor 5
+  
+  stripPath += `A 35 35 0 0 1 9630 ${LYT - 35} `; // Abraça o topo esquerdo do Corretor 5 até o topo central
+  lineTo(9680, LYT - 35); // Sai horizontalmente pela direita
   stripPath += `Q 9720 ${LYT - 35} 9730 ${LYT} `; // Curva suave para descer
   lineTo(9820, YM); // Chega no rolo Pós loop
   

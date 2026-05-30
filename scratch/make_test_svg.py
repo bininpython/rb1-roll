@@ -1,25 +1,50 @@
-import os
 
-html_content = '''<html><body><svg width="800" height="800" viewBox="2600 200 400 400" style="background: #111">
-    <!-- Corretor 1 -->
-    <circle cx="2746" cy="425" r="25" fill="#052e16" stroke="#22c55e" stroke-width="2"/>
-    <circle cx="2746" cy="425" r="2" fill="#fff"/>
-    
-    <!-- BS1 176 -->
-    <circle cx="2770" cy="250" r="30" fill="#052e16" stroke="#22c55e" stroke-width="2"/>
-    
-    <!-- BS1 173 -->
-    <circle cx="2860" cy="350" r="30" fill="#052e16" stroke="#22c55e" stroke-width="2"/>
-    
-    <!-- BS1 174 (pinch) -->
-    <circle cx="2888" cy="378" r="10" fill="#052e16" stroke="#22c55e" stroke-width="2"/>
-    
-    <!-- PATH -->
-    <path d="M 2600 450 L 2746 450 A 25 25 0 0 0 2759 446.4 L 2875.6 375.6 A 30 30 0 1 0 2832.1 339.0" fill="none" stroke="#fff" stroke-width="3"/>
-    
-    <!-- OLD PATH in RED -->
-    <path d="M 2600 450 L 2746 450 Q 2786 450 2866.6 379.2" fill="none" stroke="#f00" stroke-width="1" opacity="0.5"/>
-</svg></body></html>'''
+import math
 
-with open(r"c:\Users\Usuario\Desktop\forno\test_svg.html", "w") as f:
-    f.write(html_content)
+def get_tangent(c1, r1, c2, r2, internal=False):
+    dx = c2[0] - c1[0]
+    dy = c2[1] - c1[1]
+    dist = math.hypot(dx, dy)
+    if internal:
+        dr = r1 + r2
+    else:
+        dr = r1 - r2
+    angle = math.atan2(dy, dx)
+    if dist < dr: return None
+    theta = math.acos(dr / dist)
+    
+    # We return the two points
+    a1 = angle + theta
+    a2 = angle - theta
+    if internal:
+        return (
+            (c1[0] + r1 * math.cos(a1), c1[1] + r1 * math.sin(a1)),
+            (c2[0] - r2 * math.cos(a1), c2[1] - r2 * math.sin(a1))
+        )
+    else:
+        return (
+            (c1[0] + r1 * math.cos(a1), c1[1] + r1 * math.sin(a1)),
+            (c2[0] + r2 * math.cos(a1), c2[1] + r2 * math.sin(a1))
+        )
+
+# YM = 450.
+C3 = (5800, 485) # Corretor 3 center, r=35, top is 450
+C1 = (5950, 550) # r=35
+C2 = (6070, 500) # r=35
+
+print(f'Corretor 3: {C3}')
+print(f'C1: {C1}')
+print(f'C2: {C2}')
+
+# We want tangent from C3 to C1.
+# Strip goes OVER C3, UNDER C1. So it leaves C3 at bottom-right, arrives C1 at bottom-left.
+# This is an EXTERNAL tangent.
+t1 = get_tangent(C3, 35, C1, 35, False)
+print(f'Tangent C3 to C1: {t1}')
+
+# We want tangent from C1 to C2.
+# Strip goes UNDER C1, OVER C2. So it leaves C1 at top-right, arrives C2 at top-left.
+# This is an INTERNAL tangent.
+t2 = get_tangent(C1, 35, C2, 35, True)
+print(f'Tangent C1 to C2: {t2}')
+

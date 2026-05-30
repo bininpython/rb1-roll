@@ -94,8 +94,14 @@ export const getRolo = (p: number): Rolo | undefined => {
 export const fmtDate = (d: string) => new Date(d).toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
 
 export function sanitize(str: string): string {
+  if (!str) return str;
   const map: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;', "/": '&#x2F;' };
   return str.replace(/[&<>"'/]/ig, match => (map[match]));
+}
+
+export function unsanitize(str: string): string {
+  if (!str) return str;
+  return str.replace(/&#x2F;/g, '/').replace(/&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&amp;/g, '&');
 }
 
 // ===== Cloud Sync (Supabase) =====
@@ -108,9 +114,9 @@ export async function loadData() {
       supabase.from('estoque').select('*'),
       supabase.from('historico').select('*')
     ]);
-    if (resR.data) rolos = resR.data;
-    if (resE.data) estoque = resE.data;
-    if (resH.data) historico = resH.data;
+    if (resR.data) rolos = resR.data.map((r: any) => ({ ...r, obs_motivo: unsanitize(r.obs_motivo) }));
+    if (resE.data) estoque = resE.data.map((e: any) => ({ ...e, obs: unsanitize(e.obs) }));
+    if (resH.data) historico = resH.data.map((h: any) => ({ ...h, obs_motivo: unsanitize(h.obs_motivo) }));
     // Dispara evento para o main.ts renderizar a tela após carregar
     window.dispatchEvent(new Event('dataLoaded'));
   } catch (e) {
@@ -127,7 +133,7 @@ export async function registrarSubstituicao(pos: Posicao, turno: Turno, estoqueI
   if (!['TM', 'TT', 'TN'].includes(turno)) throw new Error('Turno inválido.');
   if ((pos < 0 || pos > 4) && !DECAPAGEM_MAP[pos]) throw new Error('Posição inválida.');
 
-  const motSafe = sanitize(motivo);
+  const motSafe = motivo;
   const oldRolo = getRolo(pos);
   const age = oldRolo ? calcDays(oldRolo.data_troca) : 0;
   
@@ -165,7 +171,7 @@ export async function editarHistorico(id: string, turno: Turno, dtStr: string, m
   const h = historico[hIdx];
   const dObj = new Date(dtStr);
   if (dtStr && !isNaN(dObj.getTime())) h.data_troca = dObj.toISOString();
-  if (motivo) h.obs_motivo = sanitize(motivo);
+  if (motivo) h.obs_motivo = motivo;
   h.turno = turno;
 
   // Background Sync com o Supabase
@@ -176,7 +182,7 @@ export async function adicionarEstoque(diam: number, obs: string) {
   if (diam < 100 || diam > 1300) throw new Error('Diâmetro fora do padrão (100-1300mm).');
   
   const newItem: EstoqueItem = {
-    id: genId(), diametro: diam, obs: sanitize(obs), data_entrada: new Date().toISOString()
+    id: genId(), diametro: diam, obs: obs, data_entrada: new Date().toISOString()
   };
 
   // Atualização Otimista

@@ -2180,7 +2180,7 @@ function renderRb1Completa() {
   stripPath += `A 35 35 0 0 0 8984.6 420.3 `; // Sai tangencialmente do Corretor 4 (Bottom-Right)
   lineTo(9015.4, 214.8); // Reta diagonal até BS4_1 (Top-Left)
   
-  stripPath += `A 35 35 0 0 1 9077.4 241.8 `; // Abraça sobre BS4_1 (Clockwise) até Bottom-Right
+  stripPath += `A 35 35 0 1 1 9077.4 241.8 `; // Abraça sobre BS4_1 (Clockwise, LARGE ARC) até Bottom-Right
   lineTo(9032.6, 298.2); // Reta diagonal descendo para a esquerda (Inner Tangent) até BS4_2 (Top-Left)
   
   stripPath += `A 35 35 0 0 0 9078.7 349.6 `; // Abraça sob BS4_2 (Counter-Clockwise) até Bottom-Right

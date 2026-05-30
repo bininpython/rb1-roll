@@ -1569,8 +1569,8 @@ function renderRb1Completa() {
   svg += rNrForno(bs1_R_X, bs1_R_Y, rL, '', bs1_R_X, bs1_R_Y); 
   
   // Pinches e Guias
-  svg += rNrForno(bs1_R_X + 40, bs1_R_Y, 10, '', 0, 0); // Pinch Right of BS1_R
-  svg += rNrForno(bs1_L_X - 10, bs1_L_Y - 42, 10, '', 0, 0); // Pinch Top of BS1_L (fita passa por BAIXO dele)
+  svg += rNrForno(bs1_R_X + 46, bs1_R_Y, 10, '', 0, 0); // Pinch Right of BS1_R (moved from 40 to 46)
+  svg += rNrForno(bs1_L_X - 10.6, bs1_L_Y - 44.8, 10, '', 0, 0); // Pinch Top of BS1_L (moved to avoid cut)
   
   // Support rollers on horizontal exit (Linha Y=220, fita passa por BAIXO deles)
   svg += rNrForno(bs1_L_X + 80, 212, 8, '', 0, 0); 

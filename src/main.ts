@@ -1573,7 +1573,7 @@ function renderRb1Completa() {
   svg += rNrForno(bs1_L_X - 10.6, bs1_L_Y - 44.8, 10, '', 0, 0); // Pinch Top of BS1_L (moved to avoid cut)
   
   // Support rollers on horizontal exit (Linha Y=220, fita passa por BAIXO deles)
-  svg += rNrForno(bs1_L_X + 80, 212, 8, '', 0, 0); 
+  svg += rNrForno(bs1_L_X + 80, 207.5, 8, '', 0, 0); // Ajustado Y para acompanhar a descida da curva
   svg += rNrForno(bs1_L_X + 160, 212, 8, '', 0, 0); 
 
   // Path from Corretor 1 to BS1

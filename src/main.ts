@@ -1581,14 +1581,14 @@ function renderRb1Completa() {
   // 2. Linha tangente externa de Corretor 1 para BS1_R (Bottom-Right)
   lineTo(bs1_R_X + 13.3, bs1_R_Y + 26.9); // X=corrX+153.3, Y=376.9
   
-  // 3. Arco abraçando o lado DIREITO do BS1_R (Bottom-Right -> Top-Right)
+  // 3. Arco abraçando o lado DIREITO do BS1_R (Bottom-Right -> Top-Left)
   // Counter-Clockwise (sweep=0), Small Arc (large=0)
-  stripPath += `A 30 30 0 0 0 ${bs1_R_X + 28.2} ${bs1_R_Y - 10.2} `; // X=corrX+168.2, Y=339.8
+  stripPath += `A 30 30 0 0 0 ${bs1_R_X + 10.2} ${bs1_R_Y - 28.2} `; // Tangent em -70.1 deg
   
-  // 4. Linha tangente interna cruzando de BS1_R (Top-Right) para BS1_L (Bottom-Left)
-  lineTo(bs1_L_X - 28.2, bs1_L_Y + 10.2); // X=corrX+11.8, Y=260.2
+  // 4. Linha tangente interna cruzando de BS1_R (Top-Left) para BS1_L (Bottom-Right)
+  lineTo(bs1_L_X - 10.2, bs1_L_Y + 28.2); // Tangent em 109.9 deg
   
-  // 5. Arco abraçando o lado ESQUERDO do BS1_L (Bottom-Left -> Top)
+  // 5. Arco abraçando o lado ESQUERDO do BS1_L (Bottom-Right -> Top)
   // Clockwise (sweep=1), Small Arc (large=0)
   stripPath += `A 30 30 0 0 1 ${bs1_L_X} 220 `;   
 

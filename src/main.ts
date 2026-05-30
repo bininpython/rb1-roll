@@ -1670,50 +1670,48 @@ function renderRb1Completa() {
 
   // The vertical pit line is at X = 3510, so we leave a gap around it
   let x186 = 3505;
-  svg += rNrForno(x186, 222, 8, '', x186, 222 - 15); // 186 (Under strip, Y=214)
+  svg += rNrForno(x186, 230, 8, '', x186, 230 - 15); // 186 (Under strip)
   
   let x187 = 3535;
-  svg += rNrForno(x187, 206, 8, '', x187, 206 - 15); // 187 (Over strip)
+  svg += rNrForno(x187, 210, 8, '', x187, 210 - 15); // 187 (Over strip)
   
   let x188 = 3535;
-  svg += rNrForno(x188, 222, 8, '', x188, 222 - 15); // 188 (Under strip)
+  svg += rNrForno(x188, 230, 8, '', x188, 230 - 15); // 188 (Under strip)
   
   let x189 = 3575;
-  svg += rNrForno(x189, 222, 8, '', x189, 222 - 15); // 189 (Under strip)
+  svg += rNrForno(x189, 230, 8, '', x189, 230 - 15); // 189 (Under strip)
 
   // BS2 Text
   svg += `<text x="3655" y="190" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">BS2</text>`;
 
   // Left Large Roller (192) - Lower position
   let r192x = 3610, r192y = 350;
-  svg += rNrForno(r192x, r192y, 36, '', r192x, r192y);
+  svg += rNrForno(r192x, r192y, 30, '', r192x, r192y);
 
   // Right Large Roller (191) - Higher position
   let r191x = 3700, r191y = 250;
-  svg += rNrForno(r191x, r191y, 36, '', r191x, r191y);
+  svg += rNrForno(r191x, r191y, 30, '', r191x, r191y);
 
-  // Pinches 190, 193 (Perfectly touching the 36 radius strip core)
-  svg += rNrForno(r191x - 31.1, r191y - 31.1, 8, '', 0, 0); // 190 (Top-Left of 191)
-  svg += rNrForno(r192x - 31.1, r192y + 31.1, 8, '', 0, 0); // 193 (Bottom-Left of 192)
+  // Pinches 190, 193 (Perfectly positioned as per blueprint)
+  svg += rNrForno(r191x - 17, 210, 8, '', 0, 0); // 190 (Top-Left of 191, pinching horizontal strip)
+  svg += rNrForno(r192x - 28.3, r192y + 28.3, 8, '', 0, 0); // 193 (Bottom-Left of 192)
 
   // Removed old Roller 194 (at 3800) per user request (red X).
   // Adding two new support rolls. First is UNDER the sag curve, second is OVER the sag curve.
   svg += rNrForno(3680, 433, 8, '', 0, 0); // Under the strip
   svg += rNrForno(3730, 431, 8, '', 0, 0); // Over the strip
   // --- BS2 PATH TRACING ---
-  // Transition smoothly from Y=220 to Y=214
-  lineTo(3480, 214);
   // Extend strip horizontally to Top of 191
-  lineTo(r191x, 214);
+  lineTo(r191x, r191y - 30);
   
-  // Wrap 191 (Top -> Right -> Bottom-Left) [Mathematically perfect for R=36]
-  stripPath += `A 36 36 0 1 1 3693.98 285.49 `;
+  // Wrap 191 (Top -> Right -> Bottom-Left)
+  stripPath += `A 30 30 0 1 1 3692.2 278.8 `;
   
   // Diagonal inner tangent line from 191 to 192 (Bottom-Left to Top-Right)
-  lineTo(3616.02, 314.51);
+  lineTo(3617.8, 321.2);
   
-  // Wrap 192 (Top-Right -> Top -> Left -> Bottom) [Mathematically perfect for R=36]
-  stripPath += `A 36 36 0 1 0 3610 386 `;
+  // Wrap 192 (Top-Right -> Top -> Left -> Bottom)
+  stripPath += `A 30 30 0 1 0 3610 380 `;
   
   // Smooth Catenary Sag Curve to Roller 194 (using Quadratic Bezier)
   stripPath += `Q 3700 450 3800 450 `;

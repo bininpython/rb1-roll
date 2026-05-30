@@ -1675,7 +1675,8 @@ function renderRb1Completa() {
   let x187 = 3535;
   svg += rNrForno(x187, 210, 8, '', x187, 210 - 15); // 187 (Over strip)
   
-  // 188 removed per user request (red X)
+  let x188 = 3535;
+  svg += rNrForno(x188, 230, 8, '', x188, 230 - 15); // 188 (Under strip)
   
   let x189 = 3575;
   svg += rNrForno(x189, 230, 8, '', x189, 230 - 15); // 189 (Under strip)
@@ -1691,8 +1692,8 @@ function renderRb1Completa() {
   let r191x = 3700, r191y = 250;
   svg += rNrForno(r191x, r191y, 30, '', r191x, r191y);
 
-  // Pinches 193
-  // 190 (Top-Left of 191) removed per user request (red X)
+  // Pinches 190, 193 (Perfectly positioned as per blueprint)
+  svg += rNrForno(r191x - 17, 210, 8, '', 0, 0); // 190 (Top-Left of 191, pinching horizontal strip)
   svg += rNrForno(r192x - 28.3, r192y + 28.3, 8, '', 0, 0); // 193 (Bottom-Left of 192)
 
   // Removed old Roller 194 (at 3800) per user request (red X).

@@ -2016,9 +2016,12 @@ function renderRb1Completa() {
   lineTo(7840, YM);
   svg += dot(7860, YM - 10, 10);
   svg += dot(7860, YM + 10, 10);
-  svg += `<text x="7860" y="${YM + 35}" font-family="Montserrat, sans-serif" font-size="10" font-weight="900" fill="#ffffff" text-anchor="middle">Espremedor 2</text>`;
   lineTo(7860, YM);
   
+  // Tanque Químico Outline and Text
+  svg += `<text x="8020" y="345" font-family="Montserrat, sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">Tanque Quimico</text>`;
+  svg += `<rect x="7880" y="360" width="280" height="130" fill="none" stroke="#ffffff" stroke-width="1.5" />`;
+
   // Tanque Químico (Mergulhadores sitting on the straight line)
   svg += dot(7950, YM - 30, 30);
   
@@ -2028,7 +2031,6 @@ function renderRb1Completa() {
   lineTo(8180, YM);
   svg += dot(8200, YM - 10, 10);
   svg += dot(8200, YM + 10, 10);
-  svg += `<text x="8200" y="${YM + 35}" font-family="Montserrat, sans-serif" font-size="10" font-weight="900" fill="#ffffff" text-anchor="middle">Espremedor 3</text>`;
   lineTo(8200, YM);
   
   // Straight to Escovador 2

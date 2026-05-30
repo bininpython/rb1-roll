@@ -1573,8 +1573,8 @@ function renderRb1Completa() {
   svg += rNrForno(bs1_L_X - 10.6, bs1_L_Y - 44.8, 10, '', 0, 0); // Pinch Top of BS1_L (moved to avoid cut)
   
   // Support rollers on horizontal exit (fita passa por CIMA deles agora)
-  svg += rNrForno(bs1_L_X + 80, 223.5, 8, '', 0, 0); // Moved UNDER the strip (215.5 + 8)
-  svg += rNrForno(bs1_L_X + 160, 228, 8, '', 0, 0); // Moved UNDER the strip (220 + 8) 
+  svg += rNrForno(bs1_L_X + 70, 225, 8, '', 0, 0); // Moved to avoid overlap
+  svg += rNrForno(bs1_L_X + 110, 227.8, 8, '', 0, 0); // Moved OUT of txs[0]
 
   // Path from Corretor 1 to BS1
   // 1. Arco sob o Corretor 1
@@ -1594,9 +1594,9 @@ function renderRb1Completa() {
   // 5. Arco perfeito abraçando o lado ESQUERDO do BS1_L até o Topo (R=36)
   stripPath += `A 36 36 0 0 1 ${bs1_L_X} ${bs1_L_Y - 36} `;   
   
-  // 6. Transição suave horizontal para Y=220
-  stripPath += `L ${bs1_L_X + 40} ${bs1_L_Y - 36} `;
-  stripPath += `C ${bs1_L_X + 80} ${bs1_L_Y - 36} ${bs1_L_X + 120} 220 ${bs1_L_X + 160} 220 `;
+  // 6. Transição suave horizontal para Y=220 (Curva mais curta para não invadir o Loop)
+  stripPath += `L ${bs1_L_X + 20} ${bs1_L_Y - 36} `;
+  stripPath += `C ${bs1_L_X + 50} ${bs1_L_Y - 36} ${bs1_L_X + 80} 220 ${bs1_L_X + 120} 220 `;
 
   // LOOP ENTRADA
   let txs = [3100, 3220, 3340]; // 179, 181, 183

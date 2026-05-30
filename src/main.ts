@@ -2186,3 +2186,5 @@ function renderAll(){
 window.addEventListener('dataLoaded', renderAll);
 initDemo(); renderAll(); setInterval(renderAll,60000);
 
+
+// FORCE VITE RELOAD

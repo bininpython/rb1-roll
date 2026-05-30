@@ -2019,16 +2019,10 @@ function renderRb1Completa() {
   svg += `<text x="7860" y="${Y_quim + 35}" font-family="Montserrat, sans-serif" font-size="10" font-weight="900" fill="#ffffff" text-anchor="middle">Espremedor 2</text>`;
   lineTo(7860, Y_quim);
   
-  // Tanque Químico (Mergulhadores)
-  svg += `<rect x="7930" y="${Y_quim + 45}" width="40" height="25" fill="#1e293b" rx="2"/>`;
-  svg += `<rect x="7925" y="${Y_quim + 40}" width="50" height="10" fill="#334155" rx="2"/>`;
-  svg += dot(7950, Y_quim + 30, 30);
-  svg += `<text x="7950" y="${Y_quim - 15}" font-family="Montserrat, sans-serif" font-size="12" font-weight="900" fill="#ffffff" text-anchor="middle">Mergulhador QUIM 1</text>`;
+  // Tanque Químico (Mergulhadores moved up, no tanks, no text)
+  svg += dot(7950, Y_quim - 30, 30);
   
-  svg += `<rect x="8070" y="${Y_quim + 45}" width="40" height="25" fill="#1e293b" rx="2"/>`;
-  svg += `<rect x="8065" y="${Y_quim + 40}" width="50" height="10" fill="#334155" rx="2"/>`;
-  svg += dot(8090, Y_quim + 30, 30);
-  svg += `<text x="8090" y="${Y_quim - 15}" font-family="Montserrat, sans-serif" font-size="12" font-weight="900" fill="#ffffff" text-anchor="middle">Mergulhador QUIM 2</text>`;
+  svg += dot(8090, Y_quim - 30, 30);
   
   // Espremedor 3
   lineTo(8180, Y_quim);

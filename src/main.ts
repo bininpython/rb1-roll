@@ -626,7 +626,7 @@ function populateEstoqueSelect(){
   const sel=$('inEstoqueRolo') as HTMLSelectElement;
   sel.innerHTML='<option value="">Selecione um rolo do estoque...</option>';
   const posVal = parseInt(($('inPos') as HTMLSelectElement).value);
-  const isDecapagem = !isNaN(posVal) && posVal >= 100;
+  const isDecapagem = !isNaN(posVal) && posVal >= 100 && posVal < 200;
   
   const filteredEstoque = isDecapagem 
     ? estoque.filter(e => e.obs.startsWith('[Decapagem]'))
@@ -639,8 +639,9 @@ function populateEstoqueSelect(){
 }
 
 function updateSubModalFields() {
+    populateEstoqueSelect();
   const posVal = parseInt(($('inPos') as HTMLSelectElement).value);
-  const isDecapagem = !isNaN(posVal) && posVal >= 100;
+  const isDecapagem = !isNaN(posVal) && posVal >= 100 && posVal < 200;
   
   const inTurno = $('inTurno') as HTMLSelectElement;
   const inMotivo = $('inMotivo') as HTMLTextAreaElement;
@@ -702,7 +703,7 @@ document.querySelectorAll<HTMLButtonElement>('#motivoChips .chip').forEach(chip=
   const estId=($('inEstoqueRolo') as HTMLSelectElement).value;
   const dt=($('inData') as HTMLInputElement).value;
   const mot=($('inMotivo') as HTMLTextAreaElement).value.trim();
-  const isDecapagem = pos >= 100;
+  const isDecapagem = pos >= 100 && pos < 200;
   if(isNaN(pos)||!turno||!estId||!dt||(!isDecapagem && !mot)){toast('Preencha todos os campos!','error');return;}
   try{registrarSubstituicao(pos,turno,estId,dt,mot);closeSubModal();renderAll();toast(`Rolo ${pos} substituído!`,'success');}catch(err:any){toast(err.message,'error');}
 });
@@ -806,7 +807,7 @@ $('modalEdit').addEventListener('click',e=>{if(e.target===$('modalEdit'))closeEd
   const mot=($('editMotivo') as HTMLTextAreaElement).value.trim();
   const rec=historico.find(h=>h.id===id);
   const pos = rec ? rec.posicao : 0;
-  const isDecapagem = pos >= 100;
+  const isDecapagem = pos >= 100 && pos < 200;
   if(!isDecapagem && !mot){toast('Motivo obrigatório!','error');return;}
   try{editarHistorico(id,turno,dt,mot);closeEditModal();renderAll();toast('Registro atualizado!','success');}catch(err:any){toast(err.message,'error');}
 });

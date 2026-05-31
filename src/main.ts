@@ -884,6 +884,14 @@ function renderRb1Completa() {
     <filter id="mistBlur" x="-50%" y="-50%" width="200%" height="200%">
       <feGaussianBlur stdDeviation="8" result="blur" />
     </filter>
+    <linearGradient id="waterJetGradDown" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.0"/>
+    </linearGradient>
+    <linearGradient id="waterJetGradUp" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.0"/>
+    </linearGradient>
     <linearGradient id="metalOuter" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#f8fafc"/>
       <stop offset="25%" stop-color="#94a3b8"/>
@@ -2330,9 +2338,34 @@ function renderRb1Completa() {
   svg += `<line x1="${enxX - 6}" y1="${YM + 12}" x2="${enxX + 6}" y2="${YM + 12}" stroke="#94a3b8" stroke-width="2.5"/>`;
   svg += `<line x1="${enxX + enxW - 6}" y1="${YM + 12}" x2="${enxX + enxW + 6}" y2="${YM + 12}" stroke="#94a3b8" stroke-width="2.5"/>`;
 
+  // Helper for water jets
+  function animateWaterJet(nx: number, ny: number, direction: 'down' | 'up', height: number) {
+    let w = '';
+    const endY = direction === 'down' ? ny + height : ny - height;
+    const grad = direction === 'down' ? 'url(#waterJetGradDown)' : 'url(#waterJetGradUp)';
+    
+    w += `<polygon points="${nx-2},${ny} ${nx+2},${ny} ${nx+15},${endY} ${nx-15},${endY}" fill="${grad}" opacity="0.6">
+      <animate attributeName="opacity" values="0.4;0.7;0.4" dur="${0.15 + Math.random()*0.1}s" repeatCount="indefinite" />
+    </polygon>`;
+    
+    for(let i=0; i<5; i++) {
+      const offset = -12 + Math.random() * 24;
+      const dur = (0.2 + Math.random() * 0.15).toFixed(2);
+      const delay = (Math.random() * 0.2).toFixed(2);
+      w += `<line x1="${nx}" y1="${ny}" x2="${nx + offset}" y2="${endY}" stroke="#e0f2fe" stroke-width="${1 + Math.random()}" opacity="0.8" stroke-dasharray="10 15">
+        <animate attributeName="stroke-dashoffset" values="0; -25" dur="${dur}s" begin="${delay}s" repeatCount="indefinite" />
+      </line>`;
+    }
+    return w;
+  }
+
   // Spray Nozzles (3 Top, 3 Bottom)
   for (let i = 1; i <= 3; i++) {
     let nx = enxX + (enxW / 4) * i;
+    // Water jets
+    svg += animateWaterJet(nx, YM - 25, 'down', 25);
+    svg += animateWaterJet(nx, YM + 25, 'up', 25);
+    // Nozzle dots
     svg += `<circle cx="${nx}" cy="${YM - 25}" r="3.5" fill="#cbd5e1" />`;
     svg += `<circle cx="${nx}" cy="${YM + 25}" r="3.5" fill="#cbd5e1" />`;
   }

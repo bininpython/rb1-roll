@@ -1951,7 +1951,7 @@ function renderRb1Completa() {
   for(let i=0; i<12; i++) w3 += `Q ${dtX + i*60 + 30} 0, ${dtX + i*60 + 60} 10 T ${dtX + i*60 + 120} 10 `;
   w3 += `L ${dtX + 1500} ${dtBotY - dtTopY + 20} L ${dtX} ${dtBotY - dtTopY + 20} Z`;
 
-  svg += `<g opacity="0.65">
+  svg += `<g opacity="0.65" pointer-events="none">
     <path d="${w3}" fill="#0284c7">
       <animateTransform attributeName="transform" type="translate" values="0,${dtTopY + 25}; -240,${dtTopY + 25}" dur="6s" repeatCount="indefinite" />
     </path>

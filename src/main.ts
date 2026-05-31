@@ -1,7 +1,7 @@
 /** RB1 System v3 — Main Application (Clean, No Exports) */
 import './style.css';
 import { rolos, estoque, historico, calcDays, getStatus, getRolo, fmtDate, sanitize,
-  registrarSubstituicao, editarHistorico, adicionarEstoque, removerEstoque, initDemo, DECAPAGEM_MAP, DECAPAGEM_ORDER, RB1_COMPLETA_MAP } from './store';
+  registrarSubstituicao, editarHistorico, adicionarEstoque, removerEstoque, initDemo, salvarMetadados, DECAPAGEM_MAP, DECAPAGEM_ORDER, RB1_COMPLETA_MAP } from './store';
 import type { Posicao, Turno, KanbanStatus } from './types';
 
 const $ = (id: string) => document.getElementById(id)!;
@@ -2679,3 +2679,48 @@ initDemo(); renderAll(); setInterval(renderAll,60000);
 
 
 // FORCE VITE RELOAD
+
+// Modal Meta Logic
+(window as any).openEditMetaModal = (pos: number) => {
+  const meta = DECAPAGEM_MAP[pos] || RB1_COMPLETA_MAP[pos];
+  if (!meta) return toast('Roller metadata not found', 'error');
+
+  ($('inMetaPos') as HTMLInputElement).value = String(pos);
+  ($('inMetaNome') as HTMLInputElement).value = meta.nome;
+  ($('inMetaTipo') as HTMLInputElement).value = meta.tipo;
+  ($('inMetaDiam') as HTMLInputElement).value = String(meta.diametroPadrao);
+  ($('inMetaSecao') as HTMLInputElement).value = meta.secao;
+  ($('inMetaRolamento') as HTMLInputElement).value = meta.rolamentoPadrao || '';
+  
+  $('modalMeta').classList.add('active');
+};
+
+function closeMetaModal() {
+  $('modalMeta').classList.remove('active');
+}
+$('modalMetaClose')?.addEventListener('click', closeMetaModal);
+$('btnCancelMeta')?.addEventListener('click', closeMetaModal);
+$('modalMeta')?.addEventListener('click', e => { if (e.target === $('modalMeta')) closeMetaModal(); });
+
+$('formMeta')?.addEventListener('submit', e => {
+  e.preventDefault();
+  const pos = parseInt(($('inMetaPos') as HTMLInputElement).value);
+  const nome = ($('inMetaNome') as HTMLInputElement).value.trim();
+  const tipo = ($('inMetaTipo') as HTMLInputElement).value.trim();
+  const diametroPadrao = parseFloat(($('inMetaDiam') as HTMLInputElement).value);
+  const secao = ($('inMetaSecao') as HTMLInputElement).value.trim();
+  const rolamentoPadrao = ($('inMetaRolamento') as HTMLInputElement).value.trim();
+  
+  if (isNaN(pos) || !nome || !tipo || isNaN(diametroPadrao) || !secao) {
+    return toast('Preencha os campos obrigatórios', 'error');
+  }
+  
+  try {
+    salvarMetadados(pos, { nome, tipo, diametroPadrao, secao, rolamentoPadrao });
+    closeMetaModal();
+    renderAll();
+    toast('Propriedades atualizadas com sucesso!', 'success');
+  } catch (err: any) {
+    toast(err.message, 'error');
+  }
+});

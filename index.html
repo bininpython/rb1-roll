@@ -625,5 +625,48 @@
 
     <div class="toast-container" id="toastContainer"></div>
     <script type="module" src="/src/main.ts?v=7"></script>
+
+    <div class="modal-overlay" id="modalMeta">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Editar Propriedades do Rolo</h3>
+                <button class="modal-close" id="modalMetaClose">&times;</button>
+            </div>
+            <form id="formMeta" class="modal-form">
+                <input type="hidden" id="inMetaPos">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nome do Rolo *</label>
+                        <input type="text" id="inMetaNome" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo *</label>
+                        <input type="text" id="inMetaTipo" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Diâmetro Padrão (mm) *</label>
+                        <input type="number" id="inMetaDiam" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Seção *</label>
+                        <input type="text" id="inMetaSecao" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="width:100%">
+                        <label>Rolamento Utilizado</label>
+                        <input type="text" id="inMetaRolamento" placeholder="Ex: 6204">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" id="btnCancelMeta">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Propriedades</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </body>
 </html>

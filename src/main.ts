@@ -522,10 +522,27 @@ function renderDecapagemTable() {
   body.innerHTML = rowsHtml;
 }
 
-// Expose openSubModalForDecapagem globally so inline onclick works cleanly
-(window as any).openSubModalForDecapagem = (pos: number) => {
+// Expose openSubModalForPos globally so inline onclick works cleanly
+(window as any).openSubModalForPos = (pos: number) => {
   openSubModal();
   const selPos = $('inPos') as HTMLSelectElement;
+  
+  // Inject option dynamically if it doesn't exist
+  if (!Array.from(selPos.options).some(o => o.value === String(pos))) {
+    const meta = DECAPAGEM_MAP[pos] || RB1_COMPLETA_MAP[pos];
+    const label = meta ? `${meta.nome} (Pos ${pos})` : `Posição ${pos}`;
+    const newOpt = new Option(label, String(pos));
+    
+    // Create a new optgroup for dynamically added ones if it doesn't exist
+    let dynGroup = Array.from(selPos.querySelectorAll('optgroup')).find(g => g.label === '— Outros Rolos (RB1) —');
+    if (!dynGroup) {
+      dynGroup = document.createElement('optgroup');
+      dynGroup.label = '— Outros Rolos (RB1) —';
+      selPos.appendChild(dynGroup);
+    }
+    dynGroup.appendChild(newOpt);
+  }
+
   selPos.value = String(pos);
   if (typeof (window as any).updateSubModalFields === 'function') {
     (window as any).updateSubModalFields();
@@ -535,6 +552,8 @@ function renderDecapagemTable() {
   estSelect.value = '';
   ($('inDiam') as HTMLInputElement).value = '';
 };
+
+(window as any).openSubModalForDecapagem = (window as any).openSubModalForPos;
 
 // Inventory
 let currentInvView: 'retifica' | 'rb1' = 'retifica';
@@ -2606,6 +2625,15 @@ function showRoloModal(pos: number) {
       </div>
     `;
   }
+
+  bodyHtml += `
+    <div class="mt-4 pt-4 border-t border-outline-variant/30 flex justify-end">
+      <button class="btn btn-primary text-sm py-1.5 px-4 rounded shadow hover:shadow-md transition-all flex items-center gap-2" onclick="closeRoloModal(); window.openSubModalForPos(${pos})">
+        <span class="material-symbols-outlined text-[18px]">edit_document</span>
+        Registrar Troca / Editar
+      </button>
+    </div>
+  `;
 
   $('roloModalBody').innerHTML = bodyHtml;
   $('roloModal').classList.add('active');

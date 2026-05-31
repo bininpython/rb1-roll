@@ -881,6 +881,9 @@ function renderRb1Completa() {
       <feGaussianBlur stdDeviation="4" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
+    <filter id="mistBlur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+    </filter>
     <linearGradient id="metalOuter" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#f8fafc"/>
       <stop offset="25%" stop-color="#94a3b8"/>
@@ -1843,22 +1846,30 @@ function renderRb1Completa() {
 
   lineTo(4550, YM);
   
-  // Helper for Neblina mist
+  // Helper for realistic Neblina mist
   function animateMist(bx: number, by: number, w: number, h: number, count: number) {
-    let m = '';
+    const cpId = `cpMist-${Math.floor(bx)}-${Math.floor(by)}`;
+    let m = `<clipPath id="${cpId}"><rect x="${bx}" y="${by}" width="${w}" height="${h}" rx="2"/></clipPath>`;
+    m += `<g clip-path="url(#${cpId})">`;
     for (let i = 0; i < count; i++) {
-      const cx = bx + w * 0.1 + Math.random() * w * 0.8;
-      const cy = by + h * 0.2 + Math.random() * h * 0.6;
-      const r = 10 + Math.random() * 15;
-      const dur = (2.5 + Math.random() * 3).toFixed(1);
-      const dx = (Math.random() > 0.5 ? 1 : -1) * (10 + Math.random() * 15);
-      const opMin = (0.05 + Math.random() * 0.1).toFixed(2);
-      const opMax = (0.2 + Math.random() * 0.2).toFixed(2);
-      m += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#e2e8f0" filter="url(#whiteGlow)">
-        <animate attributeName="cx" values="${cx};${cx+dx};${cx}" dur="${dur}s" repeatCount="indefinite" />
-        <animate attributeName="opacity" values="${opMin};${opMax};${opMin}" dur="${dur}s" repeatCount="indefinite" />
-      </circle>`;
+      const rx = 40 + Math.random() * 40; 
+      const ry = 10 + Math.random() * 15;
+      const cy = by + h * 0.1 + Math.random() * h * 0.8;
+      
+      const dur = (3 + Math.random() * 4).toFixed(1);
+      const startX = bx - rx;
+      const endX = bx + w + rx;
+      const leftToRight = Math.random() > 0.5;
+      const val = leftToRight ? `${startX};${endX}` : `${endX};${startX}`;
+      
+      const opMax = (0.25 + Math.random() * 0.35).toFixed(2);
+      
+      m += `<ellipse cy="${cy}" rx="${rx}" ry="${ry}" fill="#f1f5f9" opacity="0" filter="url(#mistBlur)">
+        <animate attributeName="cx" values="${val}" dur="${dur}s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0;${opMax};${opMax};0" keyTimes="0;0.2;0.8;1" dur="${dur}s" repeatCount="indefinite" />
+      </ellipse>`;
     }
+    m += `</g>`;
     return m;
   }
 
@@ -1869,10 +1880,10 @@ function renderRb1Completa() {
   let an1X = 4580, an1W = 140, an1H = 45;
   // Top box (above strip)
   svg += `<rect x="${an1X}" y="${YM - an1H - 5}" width="${an1W}" height="${an1H}" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5" rx="2"/>`;
-  svg += animateMist(an1X, YM - an1H - 5, an1W, an1H, 8);
+  svg += animateMist(an1X, YM - an1H - 5, an1W, an1H, 15);
   // Bottom box (below strip)
   svg += `<rect x="${an1X}" y="${YM + 5}" width="${an1W}" height="${an1H}" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5" rx="2"/>`;
-  svg += animateMist(an1X, YM + 5, an1W, an1H, 8);
+  svg += animateMist(an1X, YM + 5, an1W, an1H, 15);
   // Title
   svg += `<text x="${an1X + an1W/2}" y="${YM - an1H - 15}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">AR NEBLINA 1</text>`;
   // Exit roll (202) - Strip goes OVER it
@@ -1887,10 +1898,10 @@ function renderRb1Completa() {
   let an2X = 4790, an2W = 280, an2H = 50;
   // Top box
   svg += `<rect x="${an2X}" y="${YM - an2H - 10}" width="${an2W}" height="${an2H}" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5" rx="2"/>`;
-  svg += animateMist(an2X, YM - an2H - 10, an2W, an2H, 15);
+  svg += animateMist(an2X, YM - an2H - 10, an2W, an2H, 30);
   // Bottom box
   svg += `<rect x="${an2X}" y="${YM + 25}" width="${an2W}" height="${an2H}" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5" rx="2"/>`;
-  svg += animateMist(an2X, YM + 25, an2W, an2H, 15);
+  svg += animateMist(an2X, YM + 25, an2W, an2H, 30);
   // Title
   svg += `<text x="${an2X + an2W/2}" y="${YM - an2H - 15}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">AR NEBLINA 2</text>`;
   

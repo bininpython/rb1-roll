@@ -214,28 +214,24 @@ export const RB1_COMPLETA_MAP: Record<number, RollerInfo> = {
   338: { posicao: 338, nome: 'Rolo 338', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
   339: { posicao: 339, nome: 'Rolo 339', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
   340: { posicao: 340, nome: 'Rolo 340', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  341: { posicao: 341, nome: 'Rolo 341', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  342: { posicao: 342, nome: 'Rolo 342', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  343: { posicao: 343, nome: 'Rolo 343', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  344: { posicao: 344, nome: 'Rolo 344', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  345: { posicao: 345, nome: 'Rolo 345', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  346: { posicao: 346, nome: 'Rolo 346', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  347: { posicao: 347, nome: 'Rolo 347', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  348: { posicao: 348, nome: 'Rolo 348', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  349: { posicao: 349, nome: 'Rolo 349', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  350: { posicao: 350, nome: 'Rolo 350', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  351: { posicao: 351, nome: 'Rolo 351', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  352: { posicao: 352, nome: 'Rolo 352', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  353: { posicao: 353, nome: 'Rolo 353', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  354: { posicao: 354, nome: 'Rolo 354', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  355: { posicao: 355, nome: 'Rolo 355', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  356: { posicao: 356, nome: 'Rolo 356', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  357: { posicao: 357, nome: 'Rolo 357', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  358: { posicao: 358, nome: 'Rolo 358', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  359: { posicao: 359, nome: 'Rolo 359', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  360: { posicao: 360, nome: 'Rolo 360', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  361: { posicao: 361, nome: 'Rolo 361', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
-  362: { posicao: 362, nome: 'Rolo 362', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Geral' },
+
+
+  441: { posicao: 441, nome: 'Corretor 1', perimetro: 0, diametroPadrao: 500, tipo: 'Corretor', secao: 'Geral', rolamentoPadrao: 'Alinhamento' },
+  442: { posicao: 442, nome: 'Corretor 2', perimetro: 0, diametroPadrao: 500, tipo: 'Corretor', secao: 'Geral', rolamentoPadrao: 'Alinhamento' },
+  443: { posicao: 443, nome: 'Corretor 3', perimetro: 0, diametroPadrao: 500, tipo: 'Corretor', secao: 'Geral', rolamentoPadrao: 'Alinhamento' },
+  444: { posicao: 444, nome: 'Corretor 4', perimetro: 0, diametroPadrao: 500, tipo: 'Corretor', secao: 'Geral', rolamentoPadrao: 'Alinhamento' },
+  445: { posicao: 445, nome: 'Corretor 5', perimetro: 0, diametroPadrao: 500, tipo: 'Corretor', secao: 'Geral', rolamentoPadrao: 'Alinhamento' },
+  
+  450: { posicao: 450, nome: 'Escovador 1 - Sup Esq', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Químico' },
+  451: { posicao: 451, nome: 'Escovador 1 - Escova Inf', perimetro: 0, diametroPadrao: 250, tipo: 'Escova', secao: 'Químico', rolamentoPadrao: 'Alta Rotação' },
+  452: { posicao: 452, nome: 'Escovador 1 - Escova Sup', perimetro: 0, diametroPadrao: 250, tipo: 'Escova', secao: 'Químico', rolamentoPadrao: 'Alta Rotação' },
+  453: { posicao: 453, nome: 'Escovador 1 - Inf Dir', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Químico' },
+  
+  460: { posicao: 460, nome: 'Escovador 2 - Sup Esq', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Químico' },
+  461: { posicao: 461, nome: 'Escovador 2 - Escova Inf', perimetro: 0, diametroPadrao: 250, tipo: 'Escova', secao: 'Químico', rolamentoPadrao: 'Alta Rotação' },
+  462: { posicao: 462, nome: 'Escovador 2 - Escova Sup', perimetro: 0, diametroPadrao: 250, tipo: 'Escova', secao: 'Químico', rolamentoPadrao: 'Alta Rotação' },
+  463: { posicao: 463, nome: 'Escovador 2 - Inf Dir', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Químico' },
+
 };
 
 

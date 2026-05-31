@@ -1049,11 +1049,17 @@ function renderRb1Completa() {
     return s;
   }
   
-  function corretorCruz(cx: number, cy: number, r: number = 25, label: string): string { 
-    let s = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#052e16" stroke="#22c55e" stroke-width="2" filter="url(#greenGlow)"/>`;
+  function corretorCruz(cx: number, cy: number, r: number = 25, label: string, posId?: number): string { 
+    let s = '';
+    if (posId !== undefined) {
+      s += `<g data-rolo-pos="${posId}" class="rolo-clickable" style="cursor: pointer;">`;
+      s += `<circle cx="${cx}" cy="${cy}" r="${r + 15}" fill="transparent" />`;
+    }
+    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#052e16" stroke="#22c55e" stroke-width="2" filter="url(#greenGlow)"/>`;
     s += `<path d="M ${cx} ${cy - r} A ${r} ${r} 0 0 1 ${cx + r} ${cy} L ${cx} ${cy} Z" fill="#4ade80"/>`;
     s += `<path d="M ${cx} ${cy + r} A ${r} ${r} 0 0 1 ${cx - r} ${cy} L ${cx} ${cy} Z" fill="#4ade80"/>`;
     s += `<text x="${cx}" y="${cy - r - 10}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">${label}</text>`;
+    if (posId !== undefined) s += `</g>`;
     return s;
   }
   
@@ -1938,7 +1944,7 @@ function renderRb1Completa() {
   lineTo(sec2Rx + 8, YM);
   
   // r2 = CORRETOR 3 (cross/quadrant pattern — as in sketch)
-  svg += corretorCruz(5800, YM + 35, 35, '');
+  svg += corretorCruz(5800, YM + 35, 35, '', 443);
   svg += `<text x="5800" y="${YM + 90}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">CORRETOR 3</text>`;
   
   // Strip arrives at top of r2, small clockwise wrap
@@ -2125,28 +2131,34 @@ function renderRb1Completa() {
   svg += dot(7660, YM + 10, 10, 330);
   
   // Helper for Escovador
-  const drawEscovador = (cx: number, cy: number, label: string) => {
+  const drawEscovador = (cx: number, cy: number, label: string, baseId: number) => {
     let s = `<rect x="${cx - 50}" y="${cy - 40}" width="100" height="80" fill="#1e293b" stroke="#475569" stroke-width="2" rx="6"/>`;
     s += `<rect x="${cx - 20}" y="${cy + 40}" width="40" height="40" fill="#0f172a" rx="2"/>`;
     s += `<text x="${cx}" y="${cy - 55}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#f97316" text-anchor="middle">${label}</text>`;
     
-    const dotYellow = (x: number, y: number, r: number) => {
-      let b = `<circle cx="${x}" cy="${y}" r="${r}" fill="#ca8a04" stroke="#facc15" stroke-width="2" filter="url(#yellowGlow)"/>`;
+    const dotYellow = (x: number, y: number, r: number, posId?: number) => {
+      let b = '';
+      if (posId !== undefined) {
+        b += `<g data-rolo-pos="${posId}" class="rolo-clickable" style="cursor: pointer;">`;
+        b += `<circle cx="${x}" cy="${y}" r="${r + 10}" fill="transparent" />`;
+      }
+      b += `<circle cx="${x}" cy="${y}" r="${r}" fill="#ca8a04" stroke="#facc15" stroke-width="2" filter="url(#yellowGlow)"/>`;
       b += `<circle cx="${x}" cy="${y}" r="${r*0.6}" fill="none" stroke="#fef08a" stroke-width="1.2" stroke-dasharray="2 2" opacity="0.8" class="spin-fast" style="transform-origin: ${x}px ${y}px"/>`;
+      if (posId !== undefined) b += `</g>`;
       return b;
     };
 
-    s += dot(cx - 20, cy - 15, 12, 331);       // Top-Left: Green
-    s += dotYellow(cx - 20, cy + 15, 12); // Bottom-Left: Yellow (Brush)
-    s += dotYellow(cx + 20, cy - 15, 12); // Top-Right: Yellow (Brush)
-    s += dot(cx + 20, cy + 15, 12, 332);       // Bottom-Right: Green
+    s += dot(cx - 20, cy - 15, 12, baseId);       // Top-Left: Green
+    s += dotYellow(cx - 20, cy + 15, 12, baseId + 1); // Bottom-Left: Yellow (Brush)
+    s += dotYellow(cx + 20, cy - 15, 12, baseId + 2); // Top-Right: Yellow (Brush)
+    s += dot(cx + 20, cy + 15, 12, baseId + 3);       // Bottom-Right: Green
     return s;
   };
 
   const Y_quim = YM + 40; // 490
 
   // Escovador 1
-  svg += drawEscovador(7750, YM, 'Escovador 1');
+  svg += drawEscovador(7750, YM, 'Escovador 1', 450);
   lineTo(7800, YM);
   
   // To Espremedor 2 (Straight horizontal)
@@ -2228,7 +2240,7 @@ function renderRb1Completa() {
   lineTo(8250, YM); // left edge of Escovador 2 is 8250
   
   // Escovador 2
-  svg += drawEscovador(8300, YM, 'Escovador 2');
+  svg += drawEscovador(8300, YM, 'Escovador 2', 460);
   lineTo(8350, YM);
   
   // Novo rolo no lugar do Espremedor 4
@@ -2295,7 +2307,7 @@ function renderRb1Completa() {
   lineTo(8950, YM); // Segue direto até o Corretor 4
   
   // Corretor 4 (elevado para a fita passar por baixo)
-  svg += corretorCruz(8950, YM - 35, 35, '');
+  svg += corretorCruz(8950, YM - 35, 35, '', 444);
   
   // ====================================================================
   // BS4 e LOOP DE SAÍDA (Conforme Esboço Fiel)
@@ -2334,7 +2346,7 @@ function renderRb1Completa() {
   
   // Corretor 5
   const C5X = 9630;
-  svg += corretorCruz(C5X, LYT, 35, '');
+  svg += corretorCruz(C5X, LYT, 35, '', 445);
   // Posiciona o texto à direita da roda (x=C5X+45) e centralizado verticalmente (y=LYT+5)
   svg += `<text x="${C5X + 45}" y="${LYT + 5}" font-family="Montserrat, sans-serif" font-size="14" font-weight="800" fill="#ffffff" text-anchor="start">CORRETOR 5</text>`;
 

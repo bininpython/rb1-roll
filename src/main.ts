@@ -1033,7 +1033,7 @@ function renderRb1Completa() {
     let s=''; for(let i=0; i<count; i++) s += `<rect x="${x + i*spacing}" y="${cy - h/2}" width="${w}" height="${h}" fill="#1e293b" rx="2"/>`; return s;
   }
   function solidCoil(cx: number, cy: number, r: number, label: string): string { 
-    return rolerDecap(cx, cy, r, label, '1334 mm', true);
+    return rolerDecap(cx, cy, r, label, '1334 mm', true, 200);
   }
   
   function maqSolda(cx: number, cy: number): string { 
@@ -1044,7 +1044,7 @@ function renderRb1Completa() {
   
   function secadorLosango(cx: number, cy: number, w: number = 80, h: number = 80, label: string): string { 
     let s = `<polygon points="${cx},${cy - h/2} ${cx + w/2},${cy} ${cx},${cy + h/2} ${cx - w/2},${cy}" fill="#1e293b" stroke="#334155" stroke-width="2"/>`;
-    s += dot(cx - w/2, cy, 6) + dot(cx + w/2, cy, 6);
+    s += dot(cx - w/2, cy, 6, 201) + dot(cx + w/2, cy, 6, 202);
     s += `<text x="${cx}" y="${cy - h/2 - 10}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">${label}</text>`;
     return s;
   }
@@ -1063,7 +1063,7 @@ function renderRb1Completa() {
     s += `<rect x="${x+2}" y="${y+h/2}" width="${w-4}" height="${h/2-2}" fill="#0ea5e9" opacity="0.2"/>`;
     s += `<text x="${x + w/2}" y="${y - 15}" font-family="Montserrat, sans-serif" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">${label}</text>`;
     rollers.forEach(rx => {
-      s += rolerDecap(x + rx, y + h - 25, 20, '', '', false);
+      s += rolerDecap(x + rx, y + h - 25, 20, '', '', false, 203);
     });
     return s;
   }
@@ -1128,43 +1128,43 @@ function renderRb1Completa() {
   svg += `<text x="90" y="${Y1 - 50}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#94a3b8">ENTRADA 1</text>`;
   
   // Bobina Principal (Premium CAD)
-  svg += rolerDecap(100, Y1 + 40, 40, 'Bobinadeira 1', '');
+  svg += rolerDecap(100, Y1 + 40, 40, 'Bobinadeira 1', '', true, 204);
   
   // 1 e 2 na Bobina (Snubber rolls resting on the coil)
   // Coil center is (100, Y1+40=210). Radius=40. Roller radius=8. Gap=1. Dist=49.
   // 1 at 180 degrees: cx = 100 - 49*cos(0) = 51, cy = 210 - 49*sin(0) = 210
   // 2 at 100 degrees: cx = 100 - 49*cos(80) = 100 - 49*0.1736 = 91.5, cy = 210 - 49*sin(80) = 210 - 49*0.9848 = 161.7
-  svg += rNrForno(51.0, 210.0, 8, '', 0, 0);
-  svg += rNrForno(91.5, 161.7, 8, '', 0, 0);
+  svg += rNrForno(51.0, 210.0, 8, '', 0, 0, 205);
+  svg += rNrForno(91.5, 161.7, 8, '', 0, 0, 206);
   
   // 3, 4 (Pinch)
   let pX1 = 158;
-  svg += rNrForno(pX1, Y1 - 13.75, 12, '', 0, 0);
-  svg += rNrForno(pX1, Y1 + 13.75, 12, '', 0, 0);
+  svg += rNrForno(pX1, Y1 - 13.75, 12, '', 0, 0, 207);
+  svg += rNrForno(pX1, Y1 + 13.75, 12, '', 0, 0, 208);
   
   // 5 (Lower)
-  svg += rNrForno(185, Y1 + 11.75, 10, '', 0, 0);
+  svg += rNrForno(185, Y1 + 11.75, 10, '', 0, 0, 209);
   
   // 6-10 (Leveler / Straightener)
   // Upper rollers: 7, 9 (center Y1 - 6.75)
   // Lower rollers: 6, 8, 10 (center Y1 + 6.75)
   let stX1 = 215;
-  svg += rNrForno(stX1,      Y1 + 6.75, 5, '', 0, 0); // 6
-  svg += rNrForno(stX1 + 10, Y1 - 6.75, 5, '', 0, 0); // 7
-  svg += rNrForno(stX1 + 20, Y1 + 6.75, 5, '', 0, 0); // 8
-  svg += rNrForno(stX1 + 30, Y1 - 6.75, 5, '', 0, 0); // 9
-  svg += rNrForno(stX1 + 40, Y1 + 6.75, 5, '', 0, 0); // 10
+  svg += rNrForno(stX1,      Y1 + 6.75, 5, '', 0, 0, 210); // 6
+  svg += rNrForno(stX1 + 10, Y1 - 6.75, 5, '', 0, 0, 211); // 7
+  svg += rNrForno(stX1 + 20, Y1 + 6.75, 5, '', 0, 0, 212); // 8
+  svg += rNrForno(stX1 + 30, Y1 - 6.75, 5, '', 0, 0, 213); // 9
+  svg += rNrForno(stX1 + 40, Y1 + 6.75, 5, '', 0, 0, 214); // 10
 
   // 11-15 (Inline)
   // All lower rollers
   let inX1 = 275;
   for(let i=0; i<5; i++) {
-    svg += rNrForno(inX1 + i*15, Y1 + 6.75, 5, '', 0, 0);
+    svg += rNrForno(inX1 + i*15, Y1 + 6.75, 5, '', 0, 0, 215);
   }
 
   // 19, 20 (Pinch)
-  svg += rNrForno(370, Y1-14, 14, '', 0, 0);
-  svg += rNrForno(370, Y1+14, 14, '', 0, 0);
+  svg += rNrForno(370, Y1-14, 14, '', 0, 0, 216);
+  svg += rNrForno(370, Y1+14, 14, '', 0, 0, 217);
 
   // TESOURA 1
   let tesX = 430;
@@ -1177,14 +1177,14 @@ function renderRb1Completa() {
   // Rectangle and connector removed per user request
   let tbx = tabX;
   for(let i=21; i<=26; i++) {
-    svg += rNrForno(tbx, Y1+5, 5, '', 0, 0);
+    svg += rNrForno(tbx, Y1+5, 5, '', 0, 0, 218);
     tbx += 10;
   }
 
   // 27-31
   let brx = 570;
   for(let i=27; i<=31; i++) {
-    svg += rNrForno(brx, Y1+5, 5, '', 0, 0);
+    svg += rNrForno(brx, Y1+5, 5, '', 0, 0, 219);
     brx += 10;
   }
 
@@ -1196,20 +1196,20 @@ function renderRb1Completa() {
   svg += `<path d="M ${enrX-10} ${Y1-12} L ${enrX} ${Y1-6} L ${enrX+16} ${Y1-6} L ${enrX+26} ${Y1-12}" fill="none" stroke="#64748b" stroke-width="3" stroke-linecap="round"/>`;
   
   // Top rollers (green glowing design)
-  svg += rNrForno(enrX, Y1-8, 8, '', 0, 0);
-  svg += rNrForno(enrX+16, Y1-8, 8, '', 0, 0);
+  svg += rNrForno(enrX, Y1-8, 8, '', 0, 0, 220);
+  svg += rNrForno(enrX+16, Y1-8, 8, '', 0, 0, 221);
   
   // Bottom rollers (green glowing design)
-  svg += rNrForno(enrX, Y1+8, 8, '', 0, 0);
-  svg += rNrForno(enrX+16, Y1+8, 8, '', 0, 0);
+  svg += rNrForno(enrX, Y1+8, 8, '', 0, 0, 222);
+  svg += rNrForno(enrX+16, Y1+8, 8, '', 0, 0, 223);
 
   // 36
-  svg += rNrForno(680, Y1+5, 5, '', 0, 0);
+  svg += rNrForno(680, Y1+5, 5, '', 0, 0, 224);
 
   // 37-42
   let srx = 700;
   for(let i=37; i<=42; i++) {
-    svg += rNrForno(srx, Y1+5, 5, '', 0, 0);
+    svg += rNrForno(srx, Y1+5, 5, '', 0, 0, 225);
     srx += 10;
   }
 
@@ -1219,7 +1219,7 @@ function renderRb1Completa() {
 
   // 44-72
   for(let i=44; i<=72; i++) {
-    svg += rNrForno(srx, Y1+5, 5, '', 0, 0);
+    svg += rNrForno(srx, Y1+5, 5, '', 0, 0, 226);
     srx += 10;
   }
   // Now srx is at 700 + 6*10 + 10 + 29*10 = 1060 (actually, loop runs 29 times, adds 10 at the end, so srx=1060, roller 72 is at 1050).
@@ -1276,42 +1276,42 @@ function renderRb1Completa() {
   }
 
   // Bobina Principal (Defletor)
-  svg += rolerDecap(100, Y2 + 40, 40, 'Bobinadeira 2', '');
+  svg += rolerDecap(100, Y2 + 40, 40, 'Bobinadeira 2', '', true, 227);
   
   // 86, 87 (Snubber rolls resting on the coil)
   // Coil center is (100, Y2+40=490). Radius=40. Roller radius=8. Gap=1. Dist=49.
   // 86 at ~140 degrees: cx = 100 - 49*cos(40) = 62.5, cy = 490 - 49*sin(40) = 458.5
   // 87 at ~110 degrees: cx = 100 - 49*cos(70) = 83.2, cy = 490 - 49*sin(70) = 444.0
-  svg += rNrForno(62.5, 458.5, 8, '', 0, 0);
-  svg += rNrForno(83.2, 444.0, 8, '', 0, 0);
+  svg += rNrForno(62.5, 458.5, 8, '', 0, 0, 228);
+  svg += rNrForno(83.2, 444.0, 8, '', 0, 0, 229);
 
   // 88, 89 (Pinch)
   let p88X = 160;
-  svg += rNrForno(p88X, Y2 - 13.75, 12, '', 0, 0);
-  svg += rNrForno(p88X, Y2 + 13.75, 12, '', 0, 0);
+  svg += rNrForno(p88X, Y2 - 13.75, 12, '', 0, 0, 230);
+  svg += rNrForno(p88X, Y2 + 13.75, 12, '', 0, 0, 231);
 
   // 90 (Lower)
-  svg += rNrForno(200, Y2 + 11.75, 10, '', 0, 0);
+  svg += rNrForno(200, Y2 + 11.75, 10, '', 0, 0, 232);
 
   // 91-95 (Leveler / Straightener)
   // Lower: 91, 95, 94. Upper: 92, 93.
   let l91X = 240;
-  svg += rNrForno(l91X,      Y2 + 7.75, 6, '', 0, 0); // 91 (Lower)
-  svg += rNrForno(l91X + 12, Y2 - 7.75, 6, '', 0, 0); // 92 (Upper)
-  svg += rNrForno(l91X + 24, Y2 + 7.75, 6, '', 0, 0); // 95 (Lower)
-  svg += rNrForno(l91X + 36, Y2 - 7.75, 6, '', 0, 0); // 93 (Upper)
-  svg += rNrForno(l91X + 48, Y2 + 7.75, 6, '', 0, 0); // 94 (Lower)
+  svg += rNrForno(l91X,      Y2 + 7.75, 6, '', 0, 0, 233); // 91 (Lower)
+  svg += rNrForno(l91X + 12, Y2 - 7.75, 6, '', 0, 0, 234); // 92 (Upper)
+  svg += rNrForno(l91X + 24, Y2 + 7.75, 6, '', 0, 0, 235); // 95 (Lower)
+  svg += rNrForno(l91X + 36, Y2 - 7.75, 6, '', 0, 0, 236); // 93 (Upper)
+  svg += rNrForno(l91X + 48, Y2 + 7.75, 6, '', 0, 0, 237); // 94 (Lower)
 
   // 96-100 (Inline lower)
   let i96X = 310;
   for(let i=0; i<5; i++) {
-    svg += rNrForno(i96X + i*15, Y2 + 7.75, 6, '', 0, 0);
+    svg += rNrForno(i96X + i*15, Y2 + 7.75, 6, '', 0, 0, 238);
   }
 
   // 104, 105 (Pinch)
   let pX2 = 460;
-  svg += rNrForno(pX2, Y2 - 13.75, 12, '', 0, 0);
-  svg += rNrForno(pX2, Y2 + 13.75, 12, '', 0, 0);
+  svg += rNrForno(pX2, Y2 - 13.75, 12, '', 0, 0, 239);
+  svg += rNrForno(pX2, Y2 + 13.75, 12, '', 0, 0, 240);
 
   // TESOURA 2
   let tes2X = 550;
@@ -1324,15 +1324,15 @@ function renderRb1Completa() {
   // Table Box
   svg += `<rect x="${tbE2X - 10}" y="${Y2 + 2}" width="120" height="15" fill="none" stroke="#22c55e" stroke-width="2"/>`;
   // Rollers (106 to 109)
-  svg += rNrForno(tbE2X + 10, Y2 + 7.75, 6, '', 0, 0);
-  svg += rNrForno(tbE2X + 40, Y2 + 7.75, 6, '', 0, 0);
-  svg += rNrForno(tbE2X + 70, Y2 + 7.75, 6, '', 0, 0);
-  svg += rNrForno(tbE2X + 100, Y2 + 7.75, 6, '', 0, 0);
+  svg += rNrForno(tbE2X + 10, Y2 + 7.75, 6, '', 0, 0, 241);
+  svg += rNrForno(tbE2X + 40, Y2 + 7.75, 6, '', 0, 0, 242);
+  svg += rNrForno(tbE2X + 70, Y2 + 7.75, 6, '', 0, 0, 243);
+  svg += rNrForno(tbE2X + 100, Y2 + 7.75, 6, '', 0, 0, 244);
 
   // 110-116 Inline bottom rollers
   let inE2X = 860;
   for(let i=0; i<7; i++) {
-    svg += rNrForno(inE2X + i*25, Y2 + 7.75, 6, '', 0, 0);
+    svg += rNrForno(inE2X + i*25, Y2 + 7.75, 6, '', 0, 0, 245);
   }
 
   // ENROLADOR DE TIRAS
@@ -1342,24 +1342,24 @@ function renderRb1Completa() {
   svg += `<path d="M ${enrE2X+15} ${Y2-25} Q ${enrE2X+37} ${Y2-5} ${enrE2X+60} ${Y2-25} Q ${enrE2X+37} ${Y2-15} ${enrE2X+15} ${Y2-25}" fill="#1e293b" stroke="#94a3b8" stroke-width="2"/>`;
   
   // Upper rollers (117, 119, 120, 122)
-  svg += rNrForno(enrE2X, Y2 - 7.75, 6, '', 0, 0); // 117
-  svg += rNrForno(enrE2X + 25, Y2 - 7.75, 6, '', 0, 0); // 119
-  svg += rNrForno(enrE2X + 50, Y2 - 7.75, 6, '', 0, 0); // 120
-  svg += rNrForno(enrE2X + 75, Y2 - 7.75, 6, '', 0, 0); // 122
+  svg += rNrForno(enrE2X, Y2 - 7.75, 6, '', 0, 0, 246); // 117
+  svg += rNrForno(enrE2X + 25, Y2 - 7.75, 6, '', 0, 0, 247); // 119
+  svg += rNrForno(enrE2X + 50, Y2 - 7.75, 6, '', 0, 0, 248); // 120
+  svg += rNrForno(enrE2X + 75, Y2 - 7.75, 6, '', 0, 0, 249); // 122
   
   // Lower rollers (118, 121)
-  svg += rNrForno(enrE2X + 25, Y2 + 7.75, 6, '', 0, 0); // 118
-  svg += rNrForno(enrE2X + 50, Y2 + 7.75, 6, '', 0, 0); // 121
+  svg += rNrForno(enrE2X + 25, Y2 + 7.75, 6, '', 0, 0, 250); // 118
+  svg += rNrForno(enrE2X + 50, Y2 + 7.75, 6, '', 0, 0, 251); // 121
 
   // 123-125 Bottom rollers
   let trE2X = 1240;
-  svg += rNrForno(trE2X, Y2 + 7.75, 6, '', 0, 0);
-  svg += rNrForno(trE2X + 30, Y2 + 7.75, 6, '', 0, 0);
-  svg += rNrForno(trE2X + 60, Y2 + 7.75, 6, '', 0, 0);
+  svg += rNrForno(trE2X, Y2 + 7.75, 6, '', 0, 0, 252);
+  svg += rNrForno(trE2X + 30, Y2 + 7.75, 6, '', 0, 0, 253);
+  svg += rNrForno(trE2X + 60, Y2 + 7.75, 6, '', 0, 0, 254);
 
   // Merge Bridle  // Merge Bridle (Restored Mergulhador)
-  svg += rolerDecap(1350, Y2-30, 30, '', '');
-  svg += dot(1350, Y2+15, 15);
+  svg += rolerDecap(1350, Y2-30, 30, '', '', true, 255);
+  svg += dot(1350, Y2+15, 15, 256);
 
   // Path 1 (Entrada 1)
   stripPath = `M 100 ${Y1} `;
@@ -1382,7 +1382,7 @@ function renderRb1Completa() {
   let ax = 1510;
   for(let i=0; i<7; i++) {
     // cy = YM + 6 (bottom rollers)
-    svg += rNrForno(ax, YM + 6, 6, '', ax, YM + 22);
+    svg += rNrForno(ax, YM + 6, 6, '', ax, YM + 22, 257);
     ax += 14; // Tight spacing
   }
 
@@ -1397,14 +1397,14 @@ function renderRb1Completa() {
   
   // Rollers on table (Bottom rollers, NO LABELS)
   // First one is slightly larger
-  svg += rNrForno(tbX + 15, YM + 10, 10, '', tbX + 15, YM - 15);
-  svg += rNrForno(tbX + 45, YM + 6, 6, '', tbX + 45, YM - 15);
-  svg += rNrForno(tbX + 75, YM + 6, 6, '', tbX + 75, YM - 15);
+  svg += rNrForno(tbX + 15, YM + 10, 10, '', tbX + 15, YM - 15, 258);
+  svg += rNrForno(tbX + 45, YM + 6, 6, '', tbX + 45, YM - 15, 259);
+  svg += rNrForno(tbX + 75, YM + 6, 6, '', tbX + 75, YM - 15, 260);
 
   // 3. Group 2: 10 Rollers ALL BOTTOM, NO LABELS
   let bx = tbX + 105;
   for(let i=0; i<10; i++) {
-    svg += rNrForno(bx, YM + 6, 6, '', bx, YM + 22);
+    svg += rNrForno(bx, YM + 6, 6, '', bx, YM + 22, 261);
     bx += 14; // Tight spacing
   }
 
@@ -1425,13 +1425,13 @@ function renderRb1Completa() {
   // 6. Group 3: 2 Rollers ALL BOTTOM, NO LABELS
   let r147 = cx + 45; // D2
   let r148 = r147 + 35; // D3
-  svg += rNrForno(r147, YM + 8, 8, '', r147, YM + 30);
-  svg += rNrForno(r148, YM + 8, 8, '', r148, YM + 30);
+  svg += rNrForno(r147, YM + 8, 8, '', r147, YM + 30, 262);
+  svg += rNrForno(r148, YM + 8, 8, '', r148, YM + 30, 263);
 
   // 7. Pinch Rollers (149/150): BOTH EXACTLY SAME SIZE (r=8), NO LABELS
   let px = r148 + 55; // D4 (wider gap)
-  svg += rNrForno(px, YM - 8, 8, '', px, YM - 25); // Top
-  svg += rNrForno(px, YM + 8, 8, '', px, YM + 25); // Bottom
+  svg += rNrForno(px, YM - 8, 8, '', px, YM - 25, 264); // Top
+  svg += rNrForno(px, YM + 8, 8, '', px, YM + 25, 265); // Bottom
 
   // 8. Sensor 2 & Scrap Bucket: Box, line passing through, NO LABELS
   let sn2 = px + 40; // D5
@@ -1457,14 +1457,14 @@ function renderRb1Completa() {
   // 4 Bottom Rollers (152-155)
   let rx1 = nx;
   for(let i=0; i<4; i++) {
-    svg += rNrForno(rx1, YM + 6, 6, '', rx1, YM);
+    svg += rNrForno(rx1, YM + 6, 6, '', rx1, YM, 266);
     rx1 += 14;
   }
 
   // Pinch (156, 157)
   let px2 = rx1 + 10;
-  svg += rNrForno(px2, YM - 8, 8, '', px2, YM); // Top
-  svg += rNrForno(px2, YM + 8, 8, '', px2, YM); // Bottom
+  svg += rNrForno(px2, YM - 8, 8, '', px2, YM, 267); // Top
+  svg += rNrForno(px2, YM + 8, 8, '', px2, YM, 268); // Bottom
 
   // Hydraulic Table (158, 159)
   let tb2X = px2 + 20;
@@ -1479,13 +1479,13 @@ function renderRb1Completa() {
   svg += `<rect x="${tb2X - 5}" y="${YM + 2}" width="60" height="25" fill="none" stroke="#22c55e" stroke-width="2"/>`;
   
   // Rollers 158 (large bottom), 159 (small bottom)
-  svg += rNrForno(tb2X + 15, YM + 12, 12, '', tb2X + 15, YM); // 158
-  svg += rNrForno(tb2X + 45, YM + 6, 6, '', tb2X + 45, YM); // 159
+  svg += rNrForno(tb2X + 15, YM + 12, 12, '', tb2X + 15, YM, 269); // 158
+  svg += rNrForno(tb2X + 45, YM + 6, 6, '', tb2X + 45, YM, 270); // 159
 
   // 4 Bottom Rollers (160-163)
   let rx2 = tb2X + 70;
   for(let i=0; i<4; i++) {
-    svg += rNrForno(rx2, YM + 6, 6, '', rx2, YM);
+    svg += rNrForno(rx2, YM + 6, 6, '', rx2, YM, 271);
     rx2 += 14;
   }
 
@@ -1495,8 +1495,8 @@ function renderRb1Completa() {
 
   // Large Deflector Pinch (164, 165)
   let dfX = wblockX + 50;
-  svg += rNrForno(dfX, YM - 10, 10, '', dfX, YM); // 164 (Top)
-  svg += rNrForno(dfX, YM + 25, 25, '', dfX, YM); // 165 (Bottom, very large)
+  svg += rNrForno(dfX, YM - 10, 10, '', dfX, YM, 272); // 164 (Top)
+  svg += rNrForno(dfX, YM + 25, 25, '', dfX, YM, 273); // 165 (Bottom, very large)
 
   // ====================================================================
   // CONTINUAÇÃO: ROLOS 166 A 172 (Tanque, Secador, Corretor)
@@ -1514,7 +1514,7 @@ function renderRb1Completa() {
   
   // Roller 166 (bottom) inside tank
   let r166X = tankStart + 40;
-  svg += rNrForno(r166X, YM + 15, 15, '', r166X, YM);
+  svg += rNrForno(r166X, YM + 15, 15, '', r166X, YM, 274);
 
   // SECADOR
   let secX = tankStart + tankW + 30;
@@ -1523,8 +1523,8 @@ function renderRb1Completa() {
   svg += `<text x="${secX + 25}" y="${YM - 60}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">SECADOR</text>`;
   
   // Pinch left (167, 169)
-  svg += rNrForno(secX, YM - 8, 8, '', secX, YM); // 167 Top
-  svg += rNrForno(secX, YM + 8, 8, '', secX, YM); // 169 Bottom
+  svg += rNrForno(secX, YM - 8, 8, '', secX, YM, 275); // 167 Top
+  svg += rNrForno(secX, YM + 8, 8, '', secX, YM, 276); // 169 Bottom
   
   // V-Shapes (Chevrons) - Air Nozzles
   let chevronCenter = secX + 25;
@@ -1542,12 +1542,12 @@ function renderRb1Completa() {
   
   // Pinch right (168, 170)
   let secRx = secX + 50;
-  svg += rNrForno(secRx, YM - 8, 8, '', secRx, YM); // 168 Top
-  svg += rNrForno(secRx, YM + 8, 8, '', secRx, YM); // 170 Bottom
+  svg += rNrForno(secRx, YM - 8, 8, '', secRx, YM, 277); // 168 Top
+  svg += rNrForno(secRx, YM + 8, 8, '', secRx, YM, 278); // 170 Bottom
 
   // Roller 171 (Strip passes OVER it)
   let r171X = secRx + 40; // 2596
-  svg += rNrForno(r171X, YM + 8, 8, '', r171X, YM + 22);
+  svg += rNrForno(r171X, YM + 8, 8, '', r171X, YM + 22, 279);
 
   // CORRETOR 1 (172) (Strip passes UNDER it)
   let corrX = r171X + 150; // Shifted right by 100px
@@ -1576,16 +1576,16 @@ function renderRb1Completa() {
   // Text BS1
   svg += `<text x="${bs1_L_X}" y="${bs1_L_Y - 60}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">BS1</text>`;
 
-  svg += rNrForno(bs1_L_X, bs1_L_Y, rL, '', bs1_L_X, bs1_L_Y); 
-  svg += rNrForno(bs1_R_X, bs1_R_Y, rL, '', bs1_R_X, bs1_R_Y); 
+  svg += rNrForno(bs1_L_X, bs1_L_Y, rL, '', bs1_L_X, bs1_L_Y, 280); 
+  svg += rNrForno(bs1_R_X, bs1_R_Y, rL, '', bs1_R_X, bs1_R_Y, 281); 
   
   // Pinches e Guias
-  svg += rNrForno(bs1_R_X + 46, bs1_R_Y, 10, '', 0, 0); // Pinch Right of BS1_R (moved from 40 to 46)
-  svg += rNrForno(bs1_L_X - 10.6, bs1_L_Y - 44.8, 10, '', 0, 0); // Pinch Top of BS1_L (moved to avoid cut)
+  svg += rNrForno(bs1_R_X + 46, bs1_R_Y, 10, '', 0, 0, 282); // Pinch Right of BS1_R (moved from 40 to 46)
+  svg += rNrForno(bs1_L_X - 10.6, bs1_L_Y - 44.8, 10, '', 0, 0, 283); // Pinch Top of BS1_L (moved to avoid cut)
   
   // Support rollers on horizontal exit (fita passa por CIMA deles agora)
-  svg += rNrForno(bs1_L_X + 70, 225, 8, '', 0, 0); // Moved to avoid overlap
-  svg += rNrForno(bs1_L_X + 110, 227.8, 8, '', 0, 0); // Moved OUT of txs[0]
+  svg += rNrForno(bs1_L_X + 70, 225, 8, '', 0, 0, 284); // Moved to avoid overlap
+  svg += rNrForno(bs1_L_X + 110, 227.8, 8, '', 0, 0, 285); // Moved OUT of txs[0]
 
   // Path from Corretor 1 to BS1
   // 1. Arco sob o Corretor 1
@@ -1623,10 +1623,10 @@ function renderRb1Completa() {
 
 
   for (let x of txs) {
-    svg += rNrForno(x, TY, 30, '', x, TY);
+    svg += rNrForno(x, TY, 30, '', x, TY, 286);
   }
   for (let x of bxs) {
-    svg += rNrForno(x, BY, 30, '', x, BY);
+    svg += rNrForno(x, BY, 30, '', x, BY, 287);
   }
   
   // Draw Corretor (185) at r185x, TY
@@ -1681,36 +1681,36 @@ function renderRb1Completa() {
 
   // The vertical pit line is at X = 3510, so we leave a gap around it
   let x186 = 3505;
-  svg += rNrForno(x186, 230, 8, '', x186, 230 - 15); // 186 (Under strip)
+  svg += rNrForno(x186, 230, 8, '', x186, 230 - 15, 288); // 186 (Under strip)
   
   let x187 = 3535;
-  svg += rNrForno(x187, 210, 8, '', x187, 210 - 15); // 187 (Over strip)
+  svg += rNrForno(x187, 210, 8, '', x187, 210 - 15, 289); // 187 (Over strip)
   
   let x188 = 3535;
-  svg += rNrForno(x188, 230, 8, '', x188, 230 - 15); // 188 (Under strip)
+  svg += rNrForno(x188, 230, 8, '', x188, 230 - 15, 290); // 188 (Under strip)
   
   let x189 = 3575;
-  svg += rNrForno(x189, 230, 8, '', x189, 230 - 15); // 189 (Under strip)
+  svg += rNrForno(x189, 230, 8, '', x189, 230 - 15, 291); // 189 (Under strip)
 
   // BS2 Text
   svg += `<text x="3655" y="190" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">BS2</text>`;
 
   // Left Large Roller (192) - Lower position
   let r192x = 3610, r192y = 350;
-  svg += rNrForno(r192x, r192y, 30, '', r192x, r192y);
+  svg += rNrForno(r192x, r192y, 30, '', r192x, r192y, 292);
 
   // Right Large Roller (191) - Higher position
   let r191x = 3700, r191y = 250;
-  svg += rNrForno(r191x, r191y, 30, '', r191x, r191y);
+  svg += rNrForno(r191x, r191y, 30, '', r191x, r191y, 293);
 
   // Pinches 190, 193 (Perfectly positioned as per blueprint)
-  svg += rNrForno(r191x - 17, 210, 8, '', 0, 0); // 190 (Top-Left of 191, pinching horizontal strip)
-  svg += rNrForno(r192x - 28.3, r192y + 28.3, 8, '', 0, 0); // 193 (Bottom-Left of 192)
+  svg += rNrForno(r191x - 17, 210, 8, '', 0, 0, 294); // 190 (Top-Left of 191, pinching horizontal strip)
+  svg += rNrForno(r192x - 28.3, r192y + 28.3, 8, '', 0, 0, 295); // 193 (Bottom-Left of 192)
 
   // Removed old Roller 194 (at 3800) per user request (red X).
   // Adding two new support rolls. First is UNDER the sag curve, second is OVER the sag curve.
-  svg += rNrForno(3680, 433, 8, '', 0, 0); // Under the strip
-  svg += rNrForno(3730, 431, 8, '', 0, 0); // Over the strip
+  svg += rNrForno(3680, 433, 8, '', 0, 0, 296); // Under the strip
+  svg += rNrForno(3730, 431, 8, '', 0, 0, 297); // Over the strip
   // --- BS2 PATH TRACING ---
   // Extend strip horizontally to Top of 191
   lineTo(r191x, r191y - 30);
@@ -1846,7 +1846,7 @@ function renderRb1Completa() {
   // Title
   svg += `<text x="${an1X + an1W/2}" y="${YM - an1H - 15}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">AR NEBLINA 1</text>`;
   // Exit roll (202) - Strip goes OVER it
-  svg += rNrForno(an1X + an1W + 10, YM + 8, 8, '', 0, 0);
+  svg += rNrForno(an1X + an1W + 10, YM + 8, 8, '', 0, 0, 298);
   lineTo(an1X + an1W + 10 + 8, YM);
 
   // ====================================================================
@@ -1870,9 +1870,9 @@ function renderRb1Completa() {
   let r204x = an2X + 190, r204y = YM + 25;
   let r205x = an2X + an2W + 35, r205y = YM + 10; // Strip back at YM, center YM+10
   
-  svg += rNrForno(r203x, r203y, 10, '', r203x, r203y + 25);
-  svg += rNrForno(r204x, r204y, 10, '', r204x, r204y + 25);
-  svg += rNrForno(r205x, r205y, 10, '', r205x, r205y + 25);
+  svg += rNrForno(r203x, r203y, 10, '', r203x, r203y + 25, 299);
+  svg += rNrForno(r204x, r204y, 10, '', r204x, r204y + 25, 300);
+  svg += rNrForno(r205x, r205y, 10, '', r205x, r205y + 25, 301);
   
   // Tracing the dipped strip path
   lineTo(r203x, YM + 15);
@@ -1891,11 +1891,11 @@ function renderRb1Completa() {
   svg += `<text x="${dtX + dtW/2}" y="${dtTopY - 15}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">DIP TANQUE</text>`;
   // Large submerged roll
   let dtRollX = dtX + dtW - 100, dtRollY = dtBotY - 45;
-  svg += rNrForno(dtRollX, dtRollY, 28, '', 0, 0);
+  svg += rNrForno(dtRollX, dtRollY, 28, '', 0, 0, 302);
   // Two small exit rolls (stacked vertically at exit)
   let dtExitX = dtX + dtW + 15; // Moved outside to the right
-  svg += rNrForno(dtExitX, YM - 8, 8, '', 0, 0);
-  svg += rNrForno(dtExitX, YM + 8, 8, '', 0, 0);
+  svg += rNrForno(dtExitX, YM - 8, 8, '', 0, 0, 303);
+  svg += rNrForno(dtExitX, YM + 8, 8, '', 0, 0, 304);
   // Strip path: dip down into tank, wrap around large roll, come back up
   lineTo(dtX + 20, YM);
   lineTo(dtRollX - 28, dtRollY);
@@ -1933,7 +1933,7 @@ function renderRb1Completa() {
 
   // r1 = Exit roll (small green at secador exit) - updated to match other rollers
   let sec2Rx = sec2X + sec2W + 20;
-  svg += rNrForno(sec2Rx, YM + 8, 8, '', 0, 0);
+  svg += rNrForno(sec2Rx, YM + 8, 8, '', 0, 0, 305);
 
   lineTo(sec2Rx + 8, YM);
   
@@ -1949,17 +1949,17 @@ function renderRb1Completa() {
   
   // 1. bs3Top (Upper-Right Large Roll)
   let bs3TopX = 6060, bs3TopY = YM + 95, bs3R = 38;
-  svg += dot(bs3TopX, bs3TopY, bs3R);
+  svg += dot(bs3TopX, bs3TopY, bs3R, 306);
   // Pinch roll at ~2 o'clock (perfectly touching the core white line)
-  svg += dot(bs3TopX + 34.5, bs3TopY - 34.5, 10);
+  svg += dot(bs3TopX + 34.5, bs3TopY - 34.5, 10, 307);
   // Text to the right
   svg += `<text x="${bs3TopX + 55}" y="${bs3TopY - 25}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 3</text>`;
 
   // 2. bs3Bot (Lower-Left Large Roll)
   let bs3BotX = 5900, bs3BotY = YM + 180;
-  svg += dot(bs3BotX, bs3BotY, bs3R);
+  svg += dot(bs3BotX, bs3BotY, bs3R, 308);
   // Pinch roll at ~8 o'clock (perfectly touching the core white line)
-  svg += dot(bs3BotX - 34.5, bs3BotY + 34.5, 10);
+  svg += dot(bs3BotX - 34.5, bs3BotY + 34.5, 10, 309);
 
   // ---- Strip Path through BS 3 ----
   // Line to bs3Top top-left (~11:30)
@@ -1974,7 +1974,7 @@ function renderRb1Completa() {
 
   // ---- Medium Roll and Exit ----
   let medX = 6140, medY = YM + 250, medR = 20;
-  svg += dot(medX, medY, medR);
+  svg += dot(medX, medY, medR, 310);
   
   // Line from bs3Bot to med top-left (~10 o'clock) -> DOWN-RIGHT diagonal
   lineTo(medX - 15, medY - 13);
@@ -1985,7 +1985,7 @@ function renderRb1Completa() {
   const YD = medY + medR + 8; // YM + 278
   for (let i = 0; i < 3; i++) {
     let rx = 6220 + i * 40;
-    svg += dot(rx, YD, 8);
+    svg += dot(rx, YD, 8, 311);
     svg += `<line x1="${rx}" y1="${YD + 8}" x2="${rx}" y2="${YD + 22}" stroke="#475569" stroke-width="2"/>`;
     svg += `<line x1="${rx - 5}" y1="${YD + 22}" x2="${rx + 5}" y2="${YD + 22}" stroke="#475569" stroke-width="2"/>`;
   }
@@ -1996,7 +1996,7 @@ function renderRb1Completa() {
   // Long gap, then 11 small rollers with stands
   for (let i = 0; i < 11; i++) {
     let rx = 6380 + i * 35;
-    svg += dot(rx, YD, 8);
+    svg += dot(rx, YD, 8, 312);
     svg += `<line x1="${rx}" y1="${YD + 8}" x2="${rx}" y2="${YD + 22}" stroke="#475569" stroke-width="2"/>`;
     svg += `<line x1="${rx - 5}" y1="${YD + 22}" x2="${rx + 5}" y2="${YD + 22}" stroke="#475569" stroke-width="2"/>`;
   }
@@ -2006,21 +2006,21 @@ function renderRb1Completa() {
   lineTo(climbMedX, YM + 270); // YM + 270 = 720
   
   // Medium roll (bottom of the climb)
-  svg += dot(climbMedX, climbMedY, climbMedR);
+  svg += dot(climbMedX, climbMedY, climbMedR, 313);
   // Wrap UNDER and up the right side (Counter-Clockwise)
   stripPath += `A ${climbMedR} ${climbMedR} 0 0 0 ${climbMedX + climbMedR} ${climbMedY} `;
   
   // Right pinch roll (touching vertical strip from the right side)
-  svg += dot(climbMedX + climbMedR + 10, YM + 140, 10);
+  svg += dot(climbMedX + climbMedR + 10, YM + 140, 10, 314);
   
   // Large roll (top of the climb)
   let climbTopX = climbMedX + climbMedR + 40; // 6865 + 40 = 6905
   let climbTopY = YM + 40; // 450 + 40 = 490
   let climbTopR = 40;
-  svg += dot(climbTopX, climbTopY, climbTopR);
+  svg += dot(climbTopX, climbTopY, climbTopR, 315);
   
   // Top pinch roll (touching top of large roll)
-  svg += dot(climbTopX, YM - 12, 12);
+  svg += dot(climbTopX, YM - 12, 12, 316);
   
   // Vertical line up to large roll left edge
   lineTo(climbTopX - climbTopR, climbTopY);
@@ -2091,38 +2091,38 @@ function renderRb1Completa() {
   // Roll 0: Large 1 (Defletor Entrada)
   svg += `<rect x="6980" y="${YM + 45}" width="40" height="25" fill="#1e293b" rx="2"/>`;
   svg += `<rect x="6975" y="${YM + 40}" width="50" height="10" fill="#334155" rx="2"/>`;
-  svg += dot(7000, YM + 30, 30);
+  svg += dot(7000, YM + 30, 30, 317);
   
   // 1. Top 1
-  svg += dot(7055, YM - 15, 15);
+  svg += dot(7055, YM - 15, 15, 318);
   // 2. Bottom 1
-  svg += dot(7110, YM + 12, 12);
+  svg += dot(7110, YM + 12, 12, 319);
   // 3. Top 2
-  svg += dot(7165, YM - 15, 15);
+  svg += dot(7165, YM - 15, 15, 320);
   // 4. Bottom 2
-  svg += dot(7220, YM + 12, 12);
+  svg += dot(7220, YM + 12, 12, 321);
   // 5. Top 3 (Roll you drew on the left!)
-  svg += dot(7275, YM - 15, 15);
+  svg += dot(7275, YM - 15, 15, 322);
   
   // 6. Large 2 (Centragem)
   svg += `<rect x="7310" y="${YM + 45}" width="40" height="25" fill="#1e293b" rx="2"/>`;
   svg += `<rect x="7305" y="${YM + 40}" width="50" height="10" fill="#334155" rx="2"/>`;
-  svg += dot(7330, YM + 30, 30);
+  svg += dot(7330, YM + 30, 30, 323);
   
   // 7. Top 4 (Roll you drew on the right!)
-  svg += dot(7385, YM - 15, 15);
+  svg += dot(7385, YM - 15, 15, 324);
   // 8. Bottom 3
-  svg += dot(7440, YM + 12, 12);
+  svg += dot(7440, YM + 12, 12, 325);
   // 9. Top 5
-  svg += dot(7495, YM - 15, 15);
+  svg += dot(7495, YM - 15, 15, 326);
   // 10. Bottom 4
-  svg += dot(7550, YM + 12, 12);
+  svg += dot(7550, YM + 12, 12, 327);
   // 11. Top 6
-  svg += dot(7605, YM - 15, 15);
+  svg += dot(7605, YM - 15, 15, 328);
   
   // 12. Pinch rolls
-  svg += dot(7660, YM - 10, 10);
-  svg += dot(7660, YM + 10, 10);
+  svg += dot(7660, YM - 10, 10, 329);
+  svg += dot(7660, YM + 10, 10, 330);
   
   // Helper for Escovador
   const drawEscovador = (cx: number, cy: number, label: string) => {
@@ -2136,10 +2136,10 @@ function renderRb1Completa() {
       return b;
     };
 
-    s += dot(cx - 20, cy - 15, 12);       // Top-Left: Green
+    s += dot(cx - 20, cy - 15, 12, 331);       // Top-Left: Green
     s += dotYellow(cx - 20, cy + 15, 12); // Bottom-Left: Yellow (Brush)
     s += dotYellow(cx + 20, cy - 15, 12); // Top-Right: Yellow (Brush)
-    s += dot(cx + 20, cy + 15, 12);       // Bottom-Right: Green
+    s += dot(cx + 20, cy + 15, 12, 332);       // Bottom-Right: Green
     return s;
   };
 
@@ -2151,8 +2151,8 @@ function renderRb1Completa() {
   
   // To Espremedor 2 (Straight horizontal)
   lineTo(7840, YM);
-  svg += dot(7860, YM - 10, 10);
-  svg += dot(7860, YM + 10, 10);
+  svg += dot(7860, YM - 10, 10, 333);
+  svg += dot(7860, YM + 10, 10, 334);
   lineTo(7860, YM);
   
   // Tanque Químico Outline and Text
@@ -2206,8 +2206,8 @@ function renderRb1Completa() {
   let tq_Y_bot = YM + 50; // Profundidade da tira dentro do tanque
   
   // Tanque Químico (Mergulhadores rebaixados para mergulhar a tira)
-  svg += dot(7950, tq_Y_bot - 30, 30);
-  svg += dot(8090, tq_Y_bot - 30, 30);
+  svg += dot(7950, tq_Y_bot - 30, 30, 335);
+  svg += dot(8090, tq_Y_bot - 30, 30, 336);
   
   // Caminho da tira (Dip Tank)
   lineTo(7880, YM); // Segue reto até a borda do tanque
@@ -2217,12 +2217,12 @@ function renderRb1Completa() {
   
   // Espremedor 3 (Straight horizontal)
   lineTo(8180, YM);
-  svg += dot(8200, YM - 10, 10);
-  svg += dot(8200, YM + 10, 10);
+  svg += dot(8200, YM - 10, 10, 337);
+  svg += dot(8200, YM + 10, 10, 338);
   lineTo(8200, YM);
   
   // Novo Rolo (entre Espremedor 3 e Escovador 2)
-  svg += dot(8235, YM + 10, 10);
+  svg += dot(8235, YM + 10, 10, 339);
   
   // Straight to Escovador 2
   lineTo(8250, YM); // left edge of Escovador 2 is 8250
@@ -2232,7 +2232,7 @@ function renderRb1Completa() {
   lineTo(8350, YM);
   
   // Novo rolo no lugar do Espremedor 4
-  svg += dot(8400, YM + 10, 10);
+  svg += dot(8400, YM + 10, 10, 340);
   
   // ENXAGUADOR
   let enxX = 8460;
@@ -2262,10 +2262,10 @@ function renderRb1Completa() {
   
   // Rolos após o Enxaguador
   // Rolo único por baixo
-  svg += dot(8635, YM + 10, 10);
+  svg += dot(8635, YM + 10, 10, 341);
   // Par de rolos (Pinch rollers)
-  svg += dot(8680, YM - 10, 10);
-  svg += dot(8680, YM + 10, 10);
+  svg += dot(8680, YM - 10, 10, 342);
+  svg += dot(8680, YM + 10, 10, 343);
 
   // SECADOR
   let secadorX = 8750;
@@ -2286,7 +2286,7 @@ function renderRb1Completa() {
   
   // 4 pequenos rolos após o secador (abaixo da linha branca)
   for (let i = 0; i < 4; i++) {
-    svg += dot(8820 + i*24, YM + 8, 8);
+    svg += dot(8820 + i*24, YM + 8, 8, 344);
   }
 
   // ====================================================================
@@ -2302,19 +2302,19 @@ function renderRb1Completa() {
   // ====================================================================
   
   // Rolo pequeno de apoio na subida
-  svg += dot(9007.9, 318.7, 8); 
+  svg += dot(9007.9, 318.7, 8, 345); 
   
   // BS4 (S-Roll Verticalizado: Top e Bottom)
   let bs4_1X = 9050; let bs4_1Y = 220;
   let bs4_2X = 9060; let bs4_2Y = 320; // Movido para baixo do Rolo 1 conforme novo esboço
-  svg += dot(bs4_1X, bs4_1Y, 35); // Rolo 1 (Top)
-  svg += dot(bs4_1X, bs4_1Y - 45, 10); // Pinch roller TOP
-  svg += dot(bs4_2X, bs4_2Y, 35); // Rolo 2 (Bottom)
-  svg += dot(bs4_2X, bs4_2Y + 45, 10); // Pinch roller BOTTOM
+  svg += dot(bs4_1X, bs4_1Y, 35, 346); // Rolo 1 (Top)
+  svg += dot(bs4_1X, bs4_1Y - 45, 10, 347); // Pinch roller TOP
+  svg += dot(bs4_2X, bs4_2Y, 35, 348); // Rolo 2 (Bottom)
+  svg += dot(bs4_2X, bs4_2Y + 45, 10, 349); // Pinch roller BOTTOM
   svg += `<text x="${bs4_1X}" y="${bs4_1Y - 65}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">BS4</text>`;
   
   // Rolo pequeno de apoio na saída do BS4 (Recalculado para nova inclinação)
-  svg += dot(9209.3, 276.8, 8);
+  svg += dot(9209.3, 276.8, 8, 350);
   
   // Loop Saída (Variáveis de Posicionamento e Texto)
   const LYT = 220; // Alinhado verticalmente com BS4_1Y
@@ -2329,7 +2329,7 @@ function renderRb1Completa() {
   svg += `<text x="9490" y="${LYT - 70}" text-anchor="middle" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff">Loop Saida</text>`;
 
   for (let i = 0; i < 4; i++) {
-    svg += dot(loopX[i], loopY[i], 35);
+    svg += dot(loopX[i], loopY[i], 35, 351);
   }
   
   // Corretor 5
@@ -2344,20 +2344,20 @@ function renderRb1Completa() {
   
   // Rolo pequeno guia após Corretor 5
   let srX = 9750; let srY = 193; // Topo em 185
-  svg += dot(srX, srY, 8);
+  svg += dot(srX, srY, 8, 352);
   
   // BS 5 Rollers
   let bs5_TR_X = 10000; let bs5_TR_Y = 220; // Rolo Superior Direito (BS 5)
   let bs5_BL_X = 9900; let bs5_BL_Y = 320;  // Rolo Inferior Esquerdo (Novo)
   
   // Rolo Top-Right
-  svg += dot(bs5_TR_X, bs5_TR_Y, 35);
-  svg += dot(bs5_TR_X, bs5_TR_Y - 45, 10); // Pinch roller TOP
+  svg += dot(bs5_TR_X, bs5_TR_Y, 35, 353);
+  svg += dot(bs5_TR_X, bs5_TR_Y - 45, 10, 354); // Pinch roller TOP
   svg += `<text x="${bs5_TR_X + 45}" y="${bs5_TR_Y + 5}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="start">BS 5</text>`;
 
   // Rolo Bottom-Left
-  svg += dot(bs5_BL_X, bs5_BL_Y, 35);
-  svg += dot(bs5_BL_X, bs5_BL_Y + 45, 10); // Pinch roller BOTTOM
+  svg += dot(bs5_BL_X, bs5_BL_Y, 35, 355);
+  svg += dot(bs5_BL_X, bs5_BL_Y + 45, 10, 356); // Pinch roller BOTTOM
 
   // --- Path da Tira (Matematicamente Exato com Inner Tangents) ---
   stripPath += `A 35 35 0 0 0 8984.6 420.3 `; // Sai tangencialmente do Corretor 4 (Bottom-Right)
@@ -2395,7 +2395,7 @@ function renderRb1Completa() {
   let shiftX = 350; // Shift para acomodar o BS 5
   
   for (let i=0; i<4; i++) {
-    svg += dot(10080 + shiftX + i*40, Y_END + 8, 8);
+    svg += dot(10080 + shiftX + i*40, Y_END + 8, 8, 357);
   }
   lineTo(10190 + shiftX, Y_END);
   
@@ -2405,12 +2405,12 @@ function renderRb1Completa() {
   
   // First group of 3 rollers (under line)
   for (let i=0; i<3; i++) {
-    svg += dot(10520 + shiftX + i*40, Y_END + 8, 8);
+    svg += dot(10520 + shiftX + i*40, Y_END + 8, 8, 358);
   }
   
   // Second group of 3 rollers (under line)
   for (let i=0; i<3; i++) {
-    svg += dot(10700 + shiftX + i*40, Y_END + 8, 8);
+    svg += dot(10700 + shiftX + i*40, Y_END + 8, 8, 359);
   }
   lineTo(10800 + shiftX, Y_END);
   
@@ -2419,11 +2419,11 @@ function renderRb1Completa() {
   lineTo(10860 + shiftX, Y_END);
   
   // Remove only the top large roll, keep the bottom one
-  svg += dot(10940 + shiftX, Y_END + 15, 15);
+  svg += dot(10940 + shiftX, Y_END + 15, 15, 360);
   lineTo(10940 + shiftX, Y_END);
   
   // Move the small support roll to the top of the line
-  svg += dot(11020 + shiftX, Y_END - 8, 8);
+  svg += dot(11020 + shiftX, Y_END - 8, 8, 361);
   lineTo(11020 + shiftX, Y_END);
   
   // Bobinadeira Final
@@ -2434,7 +2434,7 @@ function renderRb1Completa() {
   let extraRollX = 11270 + shiftX;
   let extraRollY = Y_END + 60;
   svg += `<rect x="${extraRollX - 15}" y="${extraRollY + 12}" width="30" height="4" fill="#94a3b8" rx="2"/>`;
-  svg += dot(extraRollX, extraRollY, 12);
+  svg += dot(extraRollX, extraRollY, 12, 362);
 
   // Apply the path (Forno Glowing Strip)
   svg += `<path d="${stripPath}" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="4" filter="url(#whiteGlow)"/>`;

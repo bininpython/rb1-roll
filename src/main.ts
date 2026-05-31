@@ -877,6 +877,10 @@ function renderRb1Completa() {
       <feGaussianBlur stdDeviation="3" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
+    <filter id="redGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
     <linearGradient id="metalOuter" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#f8fafc"/>
       <stop offset="25%" stop-color="#94a3b8"/>
@@ -936,6 +940,15 @@ function renderRb1Completa() {
   </defs>`;
 
   function rolerDecap(cx: number, cy: number, r: number, label: string = '', sub: string = '', hasStand: boolean = true, posId?: number, isLarge: boolean = false) {
+    let fill = "#052e16", stroke = "#22c55e", filter = "url(#greenGlow)";
+    if (posId !== undefined) {
+      const rolo = getRolo(posId as any);
+      if (rolo) {
+        const st = getStatus(calcDays(rolo.data_troca));
+        if (st === 'yellow') { fill = "#422006"; stroke = "#facc15"; filter = "url(#yellowGlow)"; }
+        else if (st === 'red') { fill = "#450a0a"; stroke = "#f87171"; filter = "url(#redGlow)"; }
+      }
+    }
     let s = '';
     if (posId !== undefined) {
       s += `<g data-rolo-pos="${posId}" class="rolo-clickable" style="cursor: pointer;">`;
@@ -949,14 +962,14 @@ function renderRb1Completa() {
       s += `<rect x="${cx - sw/2 - 5}" y="${cy + r + sh - 8}" width="${sw + 10}" height="8" fill="#4b5563" rx="2"/>`;
     }
     
-    // Core (Dark) + Outer Glow (Green)
-    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#052e16" stroke="#22c55e" stroke-width="3" filter="url(#greenGlow)"/>`;
+    // Core (Dark) + Outer Glow
+    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="3" filter="${filter}"/>`;
     
     // Animated Inner Dashed Ring
-    s += `<circle cx="${cx}" cy="${cy}" r="${r * 0.75}" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.6" class="spin-slow" style="transform-origin: ${cx}px ${cy}px"/>`;
+    s += `<circle cx="${cx}" cy="${cy}" r="${r * 0.75}" fill="none" stroke="${stroke}" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.6" class="spin-slow" style="transform-origin: ${cx}px ${cy}px"/>`;
     
     // Center Text (Number / Dot)
-    s += `<circle cx="${cx}" cy="${cy}" r="3" fill="#22c55e"/>`;
+    s += `<circle cx="${cx}" cy="${cy}" r="3" fill="${stroke}"/>`;
 
     // Typography (Stacked Below)
     if (label) {
@@ -981,13 +994,22 @@ function renderRb1Completa() {
   // ====================================================================
   
   function dot(cx: number, cy: number, r: number = 4.5, posId?: number): string { 
+    let fill = "#052e16", stroke = "#22c55e", filter = "url(#greenGlow)";
+    if (posId !== undefined) {
+      const rolo = getRolo(posId as any);
+      if (rolo) {
+        const st = getStatus(calcDays(rolo.data_troca));
+        if (st === 'yellow') { fill = "#422006"; stroke = "#facc15"; filter = "url(#yellowGlow)"; }
+        else if (st === 'red') { fill = "#450a0a"; stroke = "#f87171"; filter = "url(#redGlow)"; }
+      }
+    }
     let s = '';
     if (posId !== undefined) {
       s += `<g data-rolo-pos="${posId}" class="rolo-clickable" style="cursor: pointer;">`;
       s += `<circle cx="${cx}" cy="${cy}" r="${Math.max(r + 10, 20)}" fill="transparent" />`;
     }
-    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#052e16" stroke="#22c55e" stroke-width="1.5" filter="url(#greenGlow)"/>`;
-    s += `<circle cx="${cx}" cy="${cy}" r="${r*0.6}" fill="none" stroke="#22c55e" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.5" class="spin-fast" style="transform-origin: ${cx}px ${cy}px"/>`;
+    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="1.5" filter="${filter}"/>`;
+    s += `<circle cx="${cx}" cy="${cy}" r="${r*0.6}" fill="none" stroke="${stroke}" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.5" class="spin-fast" style="transform-origin: ${cx}px ${cy}px"/>`;
     if (posId !== undefined) s += `</g>`;
     return s;
   }
@@ -1013,14 +1035,23 @@ function renderRb1Completa() {
   }
   
   function corretorCruz(cx: number, cy: number, r: number = 25, label: string, posId?: number): string { 
+    let fill = "#052e16", stroke = "#22c55e", filter = "url(#greenGlow)", inner = "#4ade80";
+    if (posId !== undefined) {
+      const rolo = getRolo(posId as any);
+      if (rolo) {
+        const st = getStatus(calcDays(rolo.data_troca));
+        if (st === 'yellow') { fill = "#422006"; stroke = "#facc15"; filter = "url(#yellowGlow)"; inner = "#facc15"; }
+        else if (st === 'red') { fill = "#450a0a"; stroke = "#f87171"; filter = "url(#redGlow)"; inner = "#f87171"; }
+      }
+    }
     let s = '';
     if (posId !== undefined) {
       s += `<g data-rolo-pos="${posId}" class="rolo-clickable" style="cursor: pointer;">`;
       s += `<circle cx="${cx}" cy="${cy}" r="${r + 15}" fill="transparent" />`;
     }
-    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#052e16" stroke="#22c55e" stroke-width="2" filter="url(#greenGlow)"/>`;
-    s += `<path d="M ${cx} ${cy - r} A ${r} ${r} 0 0 1 ${cx + r} ${cy} L ${cx} ${cy} Z" fill="#4ade80"/>`;
-    s += `<path d="M ${cx} ${cy + r} A ${r} ${r} 0 0 1 ${cx - r} ${cy} L ${cx} ${cy} Z" fill="#4ade80"/>`;
+    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="2" filter="${filter}"/>`;
+    s += `<path d="M ${cx} ${cy - r} A ${r} ${r} 0 0 1 ${cx + r} ${cy} L ${cx} ${cy} Z" fill="${inner}"/>`;
+    s += `<path d="M ${cx} ${cy + r} A ${r} ${r} 0 0 1 ${cx - r} ${cy} L ${cx} ${cy} Z" fill="${inner}"/>`;
     s += `<text x="${cx}" y="${cy - r - 10}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">${label}</text>`;
     if (posId !== undefined) s += `</g>`;
     return s;
@@ -1232,13 +1263,22 @@ function renderRb1Completa() {
   
   // Helper for small numbered rollers
   function rNrForno(cx: number, cy: number, r: number, num: string, nx: number, ny: number, posId?: number) {
+    let fill = "#052e16", stroke = "#22c55e", filter = "url(#greenGlow)";
+    if (posId !== undefined) {
+      const rolo = getRolo(posId as any);
+      if (rolo) {
+        const st = getStatus(calcDays(rolo.data_troca));
+        if (st === 'yellow') { fill = "#422006"; stroke = "#facc15"; filter = "url(#yellowGlow)"; }
+        else if (st === 'red') { fill = "#450a0a"; stroke = "#f87171"; filter = "url(#redGlow)"; }
+      }
+    }
     let s = '';
     if (posId !== undefined) {
       s += `<g data-rolo-pos="${posId}" class="rolo-clickable" style="cursor: pointer;">`;
       s += `<circle cx="${cx}" cy="${cy}" r="${Math.max(r + 10, 20)}" fill="transparent" />`;
     }
-    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#052e16" stroke="#22c55e" stroke-width="1.5" filter="url(#greenGlow)"/>`;
-    s += `<circle cx="${cx}" cy="${cy}" r="${r*0.6}" fill="none" stroke="#22c55e" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.5" class="spin-fast" style="transform-origin: ${cx}px ${cy}px"/>`;
+    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="1.5" filter="${filter}"/>`;
+    s += `<circle cx="${cx}" cy="${cy}" r="${r*0.6}" fill="none" stroke="${stroke}" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.5" class="spin-fast" style="transform-origin: ${cx}px ${cy}px"/>`;
     s += `<text x="${nx}" y="${ny}" font-family="JetBrains Mono, monospace" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">${num}</text>`;
     if (posId !== undefined) s += `</g>`;
     return s;

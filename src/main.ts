@@ -933,6 +933,42 @@ function renderRb1Completa() {
       <stop offset="50%" stop-color="#f8fafc"/>
       <stop offset="100%" stop-color="#64748b"/>
     </linearGradient>
+    <linearGradient id="fireCore" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="15%" stop-color="#fff7a0" stop-opacity="0.9"/>
+      <stop offset="40%" stop-color="#ffaa00" stop-opacity="0.7"/>
+      <stop offset="70%" stop-color="#ff4500" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#8b0000" stop-opacity="0.0"/>
+    </linearGradient>
+    <linearGradient id="fireMid" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#ff6600" stop-opacity="0.85"/>
+      <stop offset="30%" stop-color="#ff8c00" stop-opacity="0.65"/>
+      <stop offset="60%" stop-color="#ff4500" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#cc0000" stop-opacity="0.0"/>
+    </linearGradient>
+    <linearGradient id="fireOuter" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#cc3300" stop-opacity="0.6"/>
+      <stop offset="40%" stop-color="#992200" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#660000" stop-opacity="0.0"/>
+    </linearGradient>
+    <radialGradient id="emberGlow" cx="50%" cy="80%" r="50%">
+      <stop offset="0%" stop-color="#ff6600" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#ff6600" stop-opacity="0.0"/>
+    </radialGradient>
+    <filter id="fireGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    <filter id="fireGlowSoft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    <filter id="heatShimmer" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.015 0.08" numOctaves="3" seed="2">
+        <animate attributeName="seed" values="1;5;2;8;3;7;1" dur="3s" repeatCount="indefinite"/>
+      </feTurbulence>
+      <feDisplacementMap in="SourceGraphic" scale="4" />
+    </filter>
   </defs>`;
 
   function rolerDecap(cx: number, cy: number, r: number, label: string = '', sub: string = '', hasStand: boolean = true) {
@@ -1027,14 +1063,16 @@ function renderRb1Completa() {
   }
   
   function tesoura3(cx: number, cy: number, label: string): string { 
-    let s = `<rect x="${cx - 10}" y="${cy - 20}" width="20" height="40" fill="#1e293b" stroke="#334155" stroke-width="2"/>`;
-    s += `<polygon points="${cx+10},${cy} ${cx+30},${cy-10} ${cx+30},${cy+10}" fill="#334155"/>`;
-    s += `<text x="${cx}" y="${cy - 30}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">${label}</text>`;
+    // Left blade (pointing up)
+    let s = `<rect x="${cx - 10}" y="${cy - 25}" width="10" height="25" fill="#1e293b" stroke="#334155" stroke-width="2"/>`;
+    // Right blade (pointing down)
+    s += `<rect x="${cx}" y="${cy}" width="10" height="25" fill="#1e293b" stroke="#334155" stroke-width="2"/>`;
+    s += `<text x="${cx}" y="${cy - 35}" font-family="Montserrat, sans-serif" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">${label}</text>`;
     return s;
   }
   function mesaInspecao(x: number, y: number, w: number): string { 
-    return `<rect x="${x}" y="${y+5}" width="${w}" height="10" fill="#1e293b" stroke="#334155" stroke-width="2"/>
-            <text x="${x + w/2}" y="${y - 15}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">MESA DE INSPEÇÃO</text>`;
+    return `<rect x="${x}" y="${y+1}" width="${w}" height="60" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+            <text x="${x + w/2}" y="${y - 15}" font-family="Montserrat, sans-serif" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">MESA INSPEÇÃO</text>`;
   }
 
   // ====================================================================
@@ -1080,89 +1118,82 @@ function renderRb1Completa() {
   // Coil center is (100, Y1+40=210). Radius=40. Roller radius=8. Gap=1. Dist=49.
   // 1 at 180 degrees: cx = 100 - 49*cos(0) = 51, cy = 210 - 49*sin(0) = 210
   // 2 at 100 degrees: cx = 100 - 49*cos(80) = 100 - 49*0.1736 = 91.5, cy = 210 - 49*sin(80) = 210 - 49*0.9848 = 161.7
-  svg += rNr(51.0, 210.0, 8, '', 0,0,0,0,0,0);
-  svg += rNr(91.5, 161.7, 8, '', 0,0,0,0,0,0);
+  svg += rNrForno(51.0, 210.0, 8, '', 0, 0);
+  svg += rNrForno(91.5, 161.7, 8, '', 0, 0);
   
   // 3, 4 (Pinch)
   let pX1 = 158;
-  svg += rNr(pX1, Y1 - 13.75, 12, '', 0,0,0,0,0,0);
-  svg += rNr(pX1, Y1 + 13.75, 12, '', 0,0,0,0,0,0);
+  svg += rNrForno(pX1, Y1 - 13.75, 12, '', 0, 0);
+  svg += rNrForno(pX1, Y1 + 13.75, 12, '', 0, 0);
   
   // 5 (Lower)
-  svg += rNr(185, Y1 + 11.75, 10, '', 0,0,0,0,0,0);
+  svg += rNrForno(185, Y1 + 11.75, 10, '', 0, 0);
   
   // 6-10 (Leveler / Straightener)
   // Upper rollers: 7, 9 (center Y1 - 6.75)
   // Lower rollers: 6, 8, 10 (center Y1 + 6.75)
   let stX1 = 215;
-  svg += rNr(stX1,      Y1 + 6.75, 5, '', 0,0,0,0,0,0); // 6
-  svg += rNr(stX1 + 10, Y1 - 6.75, 5, '', 0,0,0,0,0,0); // 7
-  svg += rNr(stX1 + 20, Y1 + 6.75, 5, '', 0,0,0,0,0,0); // 8
-  svg += rNr(stX1 + 30, Y1 - 6.75, 5, '', 0,0,0,0,0,0); // 9
-  svg += rNr(stX1 + 40, Y1 + 6.75, 5, '', 0,0,0,0,0,0); // 10
+  svg += rNrForno(stX1,      Y1 + 6.75, 5, '', 0, 0); // 6
+  svg += rNrForno(stX1 + 10, Y1 - 6.75, 5, '', 0, 0); // 7
+  svg += rNrForno(stX1 + 20, Y1 + 6.75, 5, '', 0, 0); // 8
+  svg += rNrForno(stX1 + 30, Y1 - 6.75, 5, '', 0, 0); // 9
+  svg += rNrForno(stX1 + 40, Y1 + 6.75, 5, '', 0, 0); // 10
 
   // 11-15 (Inline)
   // All lower rollers
   let inX1 = 275;
   for(let i=0; i<5; i++) {
-    svg += rNr(inX1 + i*15, Y1 + 6.75, 5, '', 0,0,0,0,0,0);
+    svg += rNrForno(inX1 + i*15, Y1 + 6.75, 5, '', 0, 0);
   }
 
-  // 16, 17, 18
-  svg += rectSens(350, '16');
-  svg += rectSens(370, '17');
-  svg += rectSens(390, '18');
-
   // 19, 20 (Pinch)
-  svg += rNr(430, Y1-14, 14, '19', 430, Y1-36, 430, Y1-34, 430, Y1-28);
-  svg += rNr(430, Y1+14, 14, '20', 430, Y1+36, 430, Y1+34, 430, Y1+28);
+  svg += rNrForno(370, Y1-14, 14, '', 0, 0);
+  svg += rNrForno(370, Y1+14, 14, '', 0, 0);
 
   // TESOURA 1
-  let tesX = 400;
+  let tesX = 430;
   svg += `<text x="${tesX+20}" y="${Y1-35}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">TESOURA 1</text>`;
   svg += `<rect x="${tesX}" y="${Y1-25}" width="15" height="25" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2"/>`; 
   svg += `<rect x="${tesX+15}" y="${Y1}" width="15" height="25" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2"/>`; 
-  svg += `<polygon points="${tesX+15},${Y1+25} ${tesX+30},${Y1+25} ${tesX+60},${Y1+40} ${tesX+45},${Y1+40}" fill="#334155" stroke="#0f172a" stroke-width="1.2"/>`; 
-  svg += `<rect x="${tesX+35}" y="${Y1+45}" width="35" height="50" fill="#1e293b" stroke="#0f172a" stroke-width="1.2"/>`; 
-  svg += `<path d="M ${tesX+40} ${Y1+55} Q ${tesX+52} ${Y1+50} ${tesX+65} ${Y1+55} M ${tesX+40} ${Y1+65} Q ${tesX+52} ${Y1+60} ${tesX+65} ${Y1+65} M ${tesX+40} ${Y1+75} Q ${tesX+52} ${Y1+70} ${tesX+65} ${Y1+75} M ${tesX+40} ${Y1+85} Q ${tesX+52} ${Y1+80} ${tesX+65} ${Y1+85}" fill="none" stroke="#64748b" stroke-width="1"/>`; 
-  svg += `<polygon points="${tesX+55},${Y1+70} ${tesX+85},${Y1+35} ${tesX+89},${Y1+39} ${tesX+59},${Y1+74}" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2"/>`;
-  svg += `<line x1="${tesX+50}" y1="${Y1+75}" x2="${tesX+60}" y2="${Y1+65}" stroke="${BK}" stroke-width="1.5"/>`; // Rod
-  svg += `<line x1="${tesX+50}" y1="${Y1+60}" x2="${tesX+50}" y2="${Y1+85}" stroke="${BK}" stroke-width="1.5"/>`; // Plate
 
   // Table 21-26
   let tabX = 490;
-  svg += `<rect x="${tabX-10}" y="${Y1}" width="70" height="16" fill="#fff" stroke="${BK}" stroke-width="1.2"/>`;
-  svg += `<line x1="${tesX+89}" y1="${Y1+39}" x2="${tabX+20}" y2="${Y1+16}" stroke="${BK}" stroke-width="1.2"/>`; // Connector
+  // Rectangle and connector removed per user request
   let tbx = tabX;
   for(let i=21; i<=26; i++) {
-    svg += rNr(tbx, Y1+5, 5, i.toString(), tbx, Y1-12, tbx, Y1-10, tbx, Y1);
+    svg += rNrForno(tbx, Y1+5, 5, '', 0, 0);
     tbx += 10;
   }
 
   // 27-31
   let brx = 570;
   for(let i=27; i<=31; i++) {
-    svg += rNr(brx, Y1+5, 5, i.toString(), brx, Y1-12, brx, Y1-10, brx, Y1);
+    svg += rNrForno(brx, Y1+5, 5, '', 0, 0);
     brx += 10;
   }
 
   // ENROLADOR TIRAS
   let enrX = 640;
-  svg += `<text x="${enrX+8}" y="${Y1-35}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">ENROLADOR</text>`;
-  svg += `<text x="${enrX+8}" y="${Y1-23}" font-family="Montserrat, sans-serif" font-size="10" font-weight="800" fill="#fbbf24" text-anchor="middle">1334 mm</text>`;
-  svg += `<path d="M ${enrX-15} ${Y1-15} Q ${enrX+8} ${Y1+2} ${enrX+31} ${Y1-15}" fill="none" stroke="#64748b" stroke-width="3"/>`;
-  svg += rNr(enrX, Y1+6, 6, '32', enrX, Y1+25, enrX, Y1+23, enrX, Y1+12);
-  svg += rNr(enrX+16, Y1+6, 6, '35', enrX+16, Y1+25, enrX+16, Y1+23, enrX+16, Y1+12);
-  svg += rNr(enrX, Y1-6, 6, '33', enrX-12, Y1-28, enrX-10, Y1-26, enrX-4, Y1-10);
-  svg += rNr(enrX+16, Y1-6, 6, '34', enrX+28, Y1-28, enrX+26, Y1-26, enrX+20, Y1-10);
+  svg += `<text x="${enrX+8}" y="${Y1-35}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">ENROLADOR DE TIRAS</text>`;
+  
+  // Bracket arms
+  svg += `<path d="M ${enrX-10} ${Y1-12} L ${enrX} ${Y1-6} L ${enrX+16} ${Y1-6} L ${enrX+26} ${Y1-12}" fill="none" stroke="#64748b" stroke-width="3" stroke-linecap="round"/>`;
+  
+  // Top rollers (green glowing design)
+  svg += rNrForno(enrX, Y1-8, 8, '', 0, 0);
+  svg += rNrForno(enrX+16, Y1-8, 8, '', 0, 0);
+  
+  // Bottom rollers (green glowing design)
+  svg += rNrForno(enrX, Y1+8, 8, '', 0, 0);
+  svg += rNrForno(enrX+16, Y1+8, 8, '', 0, 0);
 
   // 36
-  svg += rNr(680, Y1+5, 5, '36', 680, Y1+20, 680, Y1+18, 680, Y1+10);
+  svg += rNrForno(680, Y1+5, 5, '', 0, 0);
 
   // 37-42
   let srx = 700;
   for(let i=37; i<=42; i++) {
-    svg += rNr(srx, Y1+5, 5, i.toString(), srx, Y1-12, srx, Y1-10, srx, Y1, 8);
+    svg += rNrForno(srx, Y1+5, 5, '', 0, 0);
     srx += 10;
   }
 
@@ -1172,8 +1203,7 @@ function renderRb1Completa() {
 
   // 44-72
   for(let i=44; i<=72; i++) {
-    let th = (i % 2 === 0) ? Y1-15 : Y1-22;
-    svg += rNr(srx, Y1+5, 5, i.toString(), srx-3, th, srx-2, th+2, srx, Y1, 8);
+    svg += rNrForno(srx, Y1+5, 5, '', 0, 0);
     srx += 10;
   }
   // Now srx is at 700 + 6*10 + 10 + 29*10 = 1060 (actually, loop runs 29 times, adds 10 at the end, so srx=1060, roller 72 is at 1050).
@@ -1256,15 +1286,6 @@ function renderRb1Completa() {
     svg += rNrForno(i96X + i*15, Y2 + 7.75, 6, '', 0, 0);
   }
 
-  // 101, 102, 103 (Sensors)
-  // Rectangles above the line, with a probe touching the line
-  let s101X = 390;
-  for(let i=0; i<3; i++) {
-    let sx = s101X + i*20;
-    svg += `<rect x="${sx-5}" y="${Y2-20}" width="10" height="20" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2"/>`;
-    svg += `<line x1="${sx}" y1="${Y2}" x2="${sx}" y2="${Y2+6}" stroke="#0f172a" stroke-width="1.5"/>`;
-  }
-
   // 104, 105 (Pinch)
   let pX2 = 460;
   svg += rNrForno(pX2, Y2 - 13.75, 12, '', 0, 0);
@@ -1275,24 +1296,9 @@ function renderRb1Completa() {
   svg += `<text x="${tes2X+20}" y="${Y2-35}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">TESOURA 2</text>`;
   svg += `<rect x="${tes2X}" y="${Y2-25}" width="15" height="25" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2"/>`; 
   svg += `<rect x="${tes2X+15}" y="${Y2}" width="15" height="25" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2"/>`; 
-  svg += `<polygon points="${tes2X+15},${Y2+25} ${tes2X+30},${Y2+25} ${tes2X+60},${Y2+40} ${tes2X+45},${Y2+40}" fill="#334155" stroke="#0f172a" stroke-width="1.2"/>`; 
-  svg += `<rect x="${tes2X+35}" y="${Y2+45}" width="35" height="50" fill="#1e293b" stroke="#0f172a" stroke-width="1.2"/>`; 
-  svg += `<path d="M ${tes2X+40} ${Y2+55} Q ${tes2X+52} ${Y2+50} ${tes2X+65} ${Y2+55} M ${tes2X+40} ${Y2+65} Q ${tes2X+52} ${Y2+60} ${tes2X+65} ${Y2+65} M ${tes2X+40} ${Y2+75} Q ${tes2X+52} ${Y2+70} ${tes2X+65} ${Y2+75} M ${tes2X+40} ${Y2+85} Q ${tes2X+52} ${Y2+80} ${tes2X+65} ${Y2+85}" fill="none" stroke="#64748b" stroke-width="1"/>`; 
-  svg += `<polygon points="${tes2X+55},${Y2+70} ${tes2X+85},${Y2+35} ${tes2X+89},${Y2+39} ${tes2X+59},${Y2+74}" fill="url(#smallMetal)" stroke="#0f172a" stroke-width="1.2"/>`;
-  svg += `<line x1="${tes2X+50}" y1="${Y2+75}" x2="${tes2X+60}" y2="${Y2+65}" stroke="${BK}" stroke-width="1.5"/>`; // Rod
-  svg += `<line x1="${tes2X+50}" y1="${Y2+60}" x2="${tes2X+50}" y2="${Y2+85}" stroke="${BK}" stroke-width="1.5"/>`; // Plate
 
   // 106-109 Hydraulic Table
   let tbE2X = 700;
-  // Hydraulic Cylinder
-  svg += `<line x1="${tbE2X + 45}" y1="${Y2 + 25}" x2="${tbE2X - 5}" y2="${Y2 + 100}" stroke="#475569" stroke-width="12"/>`;
-  svg += `<line x1="${tbE2X + 55}" y1="${Y2 + 5}" x2="${tbE2X + 45}" y2="${Y2 + 25}" stroke="#94a3b8" stroke-width="4"/>`;
-  // Floor mount
-  svg += `<line x1="${tbE2X - 25}" y1="${Y2 + 100}" x2="${tbE2X + 15}" y2="${Y2 + 100}" stroke="#475569" stroke-width="2"/>`;
-  for(let i=0; i<6; i++) {
-    let hx = (tbE2X - 20) + i*6;
-    svg += `<line x1="${hx}" y1="${Y2 + 100}" x2="${hx - 8}" y2="${Y2 + 110}" stroke="#475569" stroke-width="1.5"/>`;
-  }
   // Table Box
   svg += `<rect x="${tbE2X - 10}" y="${Y2 + 2}" width="120" height="15" fill="none" stroke="#22c55e" stroke-width="2"/>`;
   // Rollers (106 to 109)
@@ -1330,7 +1336,7 @@ function renderRb1Completa() {
   svg += rNrForno(trE2X + 60, Y2 + 7.75, 6, '', 0, 0);
 
   // Merge Bridle  // Merge Bridle (Restored Mergulhador)
-  svg += rolerDecap(1350, Y2-30, 30, 'Mergulhador QUIM 1', '2140 mm');
+  svg += rolerDecap(1350, Y2-30, 30, '', '');
   svg += dot(1350, Y2+15, 15);
 
   // Path 1 (Entrada 1)
@@ -1361,16 +1367,8 @@ function renderRb1Completa() {
   // 2. Hydraulic Table: 3 Rollers ALL BOTTOM, NO LABELS
   let tbX = ax + 15;
   
-  // Hydraulic Cylinder Support
-  svg += `<line x1="${tbX + 30}" y1="${YM + 25}" x2="${tbX - 10}" y2="${YM + 100}" stroke="#475569" stroke-width="12"/>`;
-  svg += `<line x1="${tbX + 40}" y1="${YM + 5}" x2="${tbX + 30}" y2="${YM + 25}" stroke="#94a3b8" stroke-width="4"/>`;
-  
-  // Floor mount with hatching
-  svg += `<line x1="${tbX - 30}" y1="${YM + 100}" x2="${tbX + 10}" y2="${YM + 100}" stroke="#475569" stroke-width="2"/>`;
-  for(let i=0; i<6; i++) {
-    let hx = (tbX - 25) + i*6;
-    svg += `<line x1="${hx}" y1="${YM + 100}" x2="${hx - 8}" y2="${YM + 110}" stroke="#475569" stroke-width="1.5"/>`;
-  }
+  // Hydraulic Cylinder Support (Removido a pedido)
+  // Floor mount with hatching (Removido a pedido)
   
   // Table Box (Snug fit)
   svg += `<rect x="${tbX - 5}" y="${YM + 2}" width="95" height="15" fill="none" stroke="#22c55e" stroke-width="2"/>`;
@@ -1388,9 +1386,9 @@ function renderRb1Completa() {
     bx += 14; // Tight spacing
   }
 
-  // MÁQUINA DE SOLDA 1 Text
+  // MÁQUINA DE SOLDA Text
   let sn1 = bx + 25;
-  svg += `<text x="${sn1 + 30}" y="${YM - 70}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">MÁQUINA DE SOLDA 1</text>`;
+  svg += `<text x="${sn1 + 30}" y="${YM - 70}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">MÁQUINA DE SOLDA</text>`;
 
   // 4. Sensor 1: Box, line passing through, NO LABELS
   svg += `<rect x="${sn1 - 10}" y="${YM - 25}" width="20" height="40" fill="none" stroke="#22c55e" stroke-width="2"/>`;
@@ -1449,20 +1447,11 @@ function renderRb1Completa() {
   // Hydraulic Table (158, 159)
   let tb2X = px2 + 20;
   
-  // Cylinder Support & Floor
+  // Cylinder Support & Floor (Removido a pedido)
   let cylX1 = tb2X + 25;
   let cylY1 = YM + 27;
   let cylX2 = tb2X - 25;
   let cylY2 = YM + 90;
-  
-  svg += `<line x1="${cylX1}" y1="${cylY1}" x2="${cylX2}" y2="${cylY2}" stroke="#475569" stroke-width="12"/>`;
-  svg += `<line x1="${cylX1 - 5}" y1="${cylY1 - 10}" x2="${cylX1}" y2="${cylY1}" stroke="#94a3b8" stroke-width="4"/>`;
-  
-  svg += `<line x1="${cylX2 - 20}" y1="${cylY2}" x2="${cylX2 + 20}" y2="${cylY2}" stroke="#475569" stroke-width="2"/>`;
-  for(let i=0; i<5; i++) {
-    let hx = (cylX2 - 15) + i*8;
-    svg += `<line x1="${hx}" y1="${cylY2}" x2="${hx - 8}" y2="${cylY2 + 10}" stroke="#475569" stroke-width="1.5"/>`;
-  }
   
   // Table Box
   svg += `<rect x="${tb2X - 5}" y="${YM + 2}" width="60" height="25" fill="none" stroke="#22c55e" stroke-width="2"/>`;
@@ -1725,6 +1714,89 @@ function renderRb1Completa() {
   svg += `<rect x="${fX}" y="${fY}" width="${fW}" height="${fH}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="4"/>`;
   svg += `<text x="${fX + fW/2}" y="${fY - 15}" font-family="Montserrat, sans-serif" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">FORNO DE RECOZIMENTO</text>`;
   
+  // ── Realistic multi-layer fire animation ──
+  const flameBottomY = fY + fH;
+  const flameTopY = fY;
+  
+  // Ambient heat glow across the whole furnace interior
+  svg += `<rect x="${fX+2}" y="${fY+2}" width="${fW-4}" height="${fH-4}" fill="url(#emberGlow)" rx="3">
+    <animate attributeName="opacity" values="0.3;0.6;0.4;0.7;0.3" dur="2s" repeatCount="indefinite"/>
+  </rect>`;
+  
+  // Helper: build a flame path with SMIL animation for organic movement
+  function makeFlame(bx: number, by: number, h: number, w: number, dir: number, grad: string, filt: string, dur: string, opRange: string) {
+    // dir=1 = upward (from bottom), dir=-1 = downward (from top)
+    const d = dir;
+    const tipY = by - d * h;
+    const cp1Y = by - d * h * 0.35;
+    const cp2Y = by - d * h * 0.7;
+    const tipNarrow = w * 0.15;
+    const tipWide = w * 0.5;
+    // Two slightly different paths for morphing
+    const path1 = `M ${bx} ${by} C ${bx - tipWide} ${cp1Y} ${bx - tipNarrow} ${cp2Y} ${bx} ${tipY} C ${bx + tipNarrow} ${cp2Y} ${bx + tipWide} ${cp1Y} ${bx} ${by} Z`;
+    const h2 = h * (0.85 + Math.random() * 0.3);
+    const w2 = w * (0.8 + Math.random() * 0.4);
+    const tipY2 = by - d * h2;
+    const cp1Y2 = by - d * h2 * 0.4;
+    const cp2Y2 = by - d * h2 * 0.65;
+    const tipN2 = w2 * 0.1;
+    const tipW2 = w2 * 0.55;
+    const path2 = `M ${bx} ${by} C ${bx - tipW2} ${cp1Y2} ${bx - tipN2} ${cp2Y2} ${bx} ${tipY2} C ${bx + tipN2} ${cp2Y2} ${bx + tipW2} ${cp1Y2} ${bx} ${by} Z`;
+    return `<path fill="url(#${grad})" filter="url(#${filt})">
+      <animate attributeName="d" values="${path1};${path2};${path1}" dur="${dur}" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+      <animate attributeName="opacity" values="${opRange}" dur="${dur}" repeatCount="indefinite"/>
+    </path>`;
+  }
+
+  // --- BOTTOM FLAMES (3 layers: outer, mid, core) ---
+  const nFlames = 14;
+  const sp = fW / (nFlames + 1);
+  
+  // Layer 1: Outer glow (large, dim, reddish)
+  for (let i = 1; i <= nFlames; i++) {
+    const fx = fX + i * sp + (Math.random() - 0.5) * 8;
+    const h = 45 + Math.random() * 30;
+    const w = 18 + Math.random() * 12;
+    const dur = (1.2 + Math.random() * 0.8).toFixed(2) + 's';
+    svg += makeFlame(fx, flameBottomY, h, w, 1, 'fireOuter', 'fireGlowSoft', dur, '0.3;0.55;0.35;0.5;0.3');
+  }
+  // Layer 2: Mid flames (bright orange)
+  for (let i = 1; i <= nFlames; i++) {
+    const fx = fX + i * sp + (Math.random() - 0.5) * 5;
+    const h = 35 + Math.random() * 25;
+    const w = 12 + Math.random() * 8;
+    const dur = (0.8 + Math.random() * 0.6).toFixed(2) + 's';
+    svg += makeFlame(fx, flameBottomY, h, w, 1, 'fireMid', 'fireGlow', dur, '0.5;0.8;0.55;0.75;0.5');
+  }
+  // Layer 3: Core (white-hot, small, bright)
+  for (let i = 1; i <= nFlames; i++) {
+    const fx = fX + i * sp + (Math.random() - 0.5) * 3;
+    const h = 18 + Math.random() * 15;
+    const w = 6 + Math.random() * 5;
+    const dur = (0.5 + Math.random() * 0.5).toFixed(2) + 's';
+    svg += makeFlame(fx, flameBottomY, h, w, 1, 'fireCore', 'fireGlow', dur, '0.6;1;0.7;0.95;0.6');
+  }
+  
+  // --- TOP FLAMES (inverted, smaller, 2 layers) ---
+  const nTopFlames = 10;
+  const spTop = fW / (nTopFlames + 1);
+  // Outer top
+  for (let i = 1; i <= nTopFlames; i++) {
+    const fx = fX + i * spTop + (Math.random() - 0.5) * 6;
+    const h = 25 + Math.random() * 18;
+    const w = 14 + Math.random() * 8;
+    const dur = (1.0 + Math.random() * 0.8).toFixed(2) + 's';
+    svg += makeFlame(fx, flameTopY, h, w, -1, 'fireOuter', 'fireGlowSoft', dur, '0.2;0.4;0.25;0.35;0.2');
+  }
+  // Core top
+  for (let i = 1; i <= nTopFlames; i++) {
+    const fx = fX + i * spTop + (Math.random() - 0.5) * 4;
+    const h = 14 + Math.random() * 10;
+    const w = 6 + Math.random() * 5;
+    const dur = (0.6 + Math.random() * 0.5).toFixed(2) + 's';
+    svg += makeFlame(fx, flameTopY, h, w, -1, 'fireMid', 'fireGlow', dur, '0.3;0.6;0.35;0.55;0.3');
+  }
+  
   // 5 Support Rolls (Rolo 0 outside, Rolo 1-4 inside)
   let rx0 = 3875;
   for (let i = 0; i < 5; i++) {
@@ -1913,8 +1985,8 @@ function renderRb1Completa() {
   // Wrap UNDER and up the right side (Counter-Clockwise)
   stripPath += `A ${climbMedR} ${climbMedR} 0 0 0 ${climbMedX + climbMedR} ${climbMedY} `;
   
-  // Left pinch roll (touching vertical strip)
-  svg += dot(climbMedX + climbMedR - 10, YM + 140, 10);
+  // Right pinch roll (touching vertical strip from the right side)
+  svg += dot(climbMedX + climbMedR + 10, YM + 140, 10);
   
   // Large roll (top of the climb)
   let climbTopX = climbMedX + climbMedR + 40; // 6865 + 40 = 6905
@@ -1943,6 +2015,54 @@ function renderRb1Completa() {
   // Tank outline
   svg += `<rect x="6960" y="${YM - 60}" width="730" height="150" fill="#1e293b" stroke="#334155" stroke-width="2" rx="4"/>`;
   
+  // ── Animated orange liquid inside the tank ──
+  const etankX = 6960, etankW = 730, etankRx = 4;
+  const liquidTopY = YM - 15; // liquid level (upper surface)
+  const liquidBotY = YM + 88; // bottom of tank interior
+  
+  // Liquid body (clipped inside the tank)
+  svg += `<clipPath id="tankClip"><rect x="${etankX + 2}" y="${YM - 58}" width="${etankW - 4}" height="146" rx="${etankRx}"/></clipPath>`;
+  svg += `<g clip-path="url(#tankClip)">`;
+  
+  // Main liquid fill (gradient from darker orange at bottom to lighter at surface)
+  const lx = etankX + 2;
+  const lw = etankW - 4;
+  // Static liquid body below the wave
+  svg += `<rect x="${lx}" y="${liquidTopY + 8}" width="${lw}" height="${liquidBotY - liquidTopY}" fill="#c2410c" opacity="0.45"/>`;
+  svg += `<rect x="${lx}" y="${liquidTopY + 25}" width="${lw}" height="${liquidBotY - liquidTopY - 15}" fill="#ea580c" opacity="0.25"/>`;
+  
+  // Animated wave surface (top of liquid) — 2 overlapping waves for realism
+  const wY = liquidTopY;
+  const wA = 5; // wave amplitude
+  // Wave 1 (main surface)
+  const wave1a = `M ${lx} ${wY + wA} Q ${lx + lw*0.1} ${wY - wA} ${lx + lw*0.2} ${wY + wA*0.5} T ${lx + lw*0.4} ${wY + wA} T ${lx + lw*0.6} ${wY - wA*0.3} T ${lx + lw*0.8} ${wY + wA*0.7} T ${lx + lw} ${wY + wA*0.2} L ${lx + lw} ${liquidBotY} L ${lx} ${liquidBotY} Z`;
+  const wave1b = `M ${lx} ${wY - wA*0.3} Q ${lx + lw*0.1} ${wY + wA} ${lx + lw*0.2} ${wY - wA*0.5} T ${lx + lw*0.4} ${wY - wA*0.3} T ${lx + lw*0.6} ${wY + wA*0.8} T ${lx + lw*0.8} ${wY - wA*0.5} T ${lx + lw} ${wY + wA*0.6} L ${lx + lw} ${liquidBotY} L ${lx} ${liquidBotY} Z`;
+  svg += `<path fill="#ea580c" opacity="0.35">
+    <animate attributeName="d" values="${wave1a};${wave1b};${wave1a}" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+  </path>`;
+  
+  // Wave 2 (secondary, lighter, offset timing)
+  const wave2a = `M ${lx} ${wY + wA*0.6} Q ${lx + lw*0.15} ${wY - wA*0.8} ${lx + lw*0.25} ${wY + wA*0.3} T ${lx + lw*0.5} ${wY - wA*0.5} T ${lx + lw*0.75} ${wY + wA*0.9} T ${lx + lw} ${wY - wA*0.2} L ${lx + lw} ${liquidBotY} L ${lx} ${liquidBotY} Z`;
+  const wave2b = `M ${lx} ${wY - wA*0.5} Q ${lx + lw*0.15} ${wY + wA*0.7} ${lx + lw*0.25} ${wY - wA*0.6} T ${lx + lw*0.5} ${wY + wA*0.7} T ${lx + lw*0.75} ${wY - wA*0.4} T ${lx + lw} ${wY + wA*0.8} L ${lx + lw} ${liquidBotY} L ${lx} ${liquidBotY} Z`;
+  svg += `<path fill="#fb923c" opacity="0.2">
+    <animate attributeName="d" values="${wave2a};${wave2b};${wave2a}" dur="2.3s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+  </path>`;
+  
+  // Subtle bubbles (small circles that float up)
+  for (let i = 0; i < 8; i++) {
+    const bx = etankX + 40 + Math.random() * (etankW - 80);
+    const br = 2 + Math.random() * 3;
+    const bdur = (2 + Math.random() * 3).toFixed(1);
+    const bdelay = (Math.random() * 3).toFixed(1);
+    svg += `<circle cx="${bx}" cy="${liquidBotY}" r="${br}" fill="#fdba74" opacity="0.4">
+      <animate attributeName="cy" values="${liquidBotY};${liquidTopY - 5};${liquidTopY - 5}" dur="${bdur}s" begin="${bdelay}s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.4;0.3;0" dur="${bdur}s" begin="${bdelay}s" repeatCount="indefinite"/>
+    </circle>`;
+  }
+  
+  svg += `</g>`;
+  
+
   // Roll 0: Large 1 (Defletor Entrada)
   svg += `<rect x="6980" y="${YM + 45}" width="40" height="25" fill="#1e293b" rx="2"/>`;
   svg += `<rect x="6975" y="${YM + 40}" width="50" height="10" fill="#334155" rx="2"/>`;
@@ -2013,6 +2133,50 @@ function renderRb1Completa() {
   // Tanque Químico Outline and Text
   svg += `<text x="8020" y="${YM - 80}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">Tanque Quimico</text>`;
   svg += `<rect x="7880" y="${YM - 60}" width="280" height="150" fill="#1e293b" stroke="#334155" stroke-width="2" rx="4"/>`;
+
+  // ── Animated green liquid inside the Tanque Químico ──
+  const qtX = 7880, qtW = 280, qtRx = 4;
+  const qlTopY = YM - 10; // liquid surface level
+  const qlBotY = YM + 88; // bottom of tank interior
+  
+  svg += `<clipPath id="qtClip"><rect x="${qtX + 2}" y="${YM - 58}" width="${qtW - 4}" height="146" rx="${qtRx}"/></clipPath>`;
+  svg += `<g clip-path="url(#qtClip)">`;
+  
+  const qlx = qtX + 2;
+  const qlw = qtW - 4;
+  // Static liquid body
+  svg += `<rect x="${qlx}" y="${qlTopY + 8}" width="${qlw}" height="${qlBotY - qlTopY}" fill="#065f46" opacity="0.5"/>`;
+  svg += `<rect x="${qlx}" y="${qlTopY + 20}" width="${qlw}" height="${qlBotY - qlTopY - 10}" fill="#059669" opacity="0.25"/>`;
+  
+  // Wave 1
+  const qwY = qlTopY;
+  const qwA = 4;
+  const qw1a = `M ${qlx} ${qwY + qwA} Q ${qlx + qlw*0.12} ${qwY - qwA} ${qlx + qlw*0.25} ${qwY + qwA*0.4} T ${qlx + qlw*0.5} ${qwY + qwA*0.8} T ${qlx + qlw*0.75} ${qwY - qwA*0.3} T ${qlx + qlw} ${qwY + qwA*0.5} L ${qlx + qlw} ${qlBotY} L ${qlx} ${qlBotY} Z`;
+  const qw1b = `M ${qlx} ${qwY - qwA*0.4} Q ${qlx + qlw*0.12} ${qwY + qwA*0.8} ${qlx + qlw*0.25} ${qwY - qwA*0.5} T ${qlx + qlw*0.5} ${qwY - qwA*0.2} T ${qlx + qlw*0.75} ${qwY + qwA*0.7} T ${qlx + qlw} ${qwY - qwA*0.3} L ${qlx + qlw} ${qlBotY} L ${qlx} ${qlBotY} Z`;
+  svg += `<path fill="#10b981" opacity="0.35">
+    <animate attributeName="d" values="${qw1a};${qw1b};${qw1a}" dur="2.8s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+  </path>`;
+  
+  // Wave 2
+  const qw2a = `M ${qlx} ${qwY + qwA*0.3} Q ${qlx + qlw*0.18} ${qwY - qwA*0.6} ${qlx + qlw*0.3} ${qwY + qwA*0.6} T ${qlx + qlw*0.55} ${qwY - qwA*0.4} T ${qlx + qlw*0.8} ${qwY + qwA*0.5} T ${qlx + qlw} ${qwY - qwA*0.1} L ${qlx + qlw} ${qlBotY} L ${qlx} ${qlBotY} Z`;
+  const qw2b = `M ${qlx} ${qwY - qwA*0.3} Q ${qlx + qlw*0.18} ${qwY + qwA*0.5} ${qlx + qlw*0.3} ${qwY - qwA*0.4} T ${qlx + qlw*0.55} ${qwY + qwA*0.6} T ${qlx + qlw*0.8} ${qwY - qwA*0.5} T ${qlx + qlw} ${qwY + qwA*0.7} L ${qlx + qlw} ${qlBotY} L ${qlx} ${qlBotY} Z`;
+  svg += `<path fill="#34d399" opacity="0.2">
+    <animate attributeName="d" values="${qw2a};${qw2b};${qw2a}" dur="2.1s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+  </path>`;
+  
+  // Bubbles
+  for (let i = 0; i < 6; i++) {
+    const bx = qtX + 30 + Math.random() * (qtW - 60);
+    const br = 1.5 + Math.random() * 2.5;
+    const bdur = (2.5 + Math.random() * 2.5).toFixed(1);
+    const bdelay = (Math.random() * 3).toFixed(1);
+    svg += `<circle cx="${bx}" cy="${qlBotY}" r="${br}" fill="#6ee7b7" opacity="0.45">
+      <animate attributeName="cy" values="${qlBotY};${qlTopY - 5};${qlTopY - 5}" dur="${bdur}s" begin="${bdelay}s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.45;0.3;0" dur="${bdur}s" begin="${bdelay}s" repeatCount="indefinite"/>
+    </circle>`;
+  }
+  
+  svg += `</g>`;
 
   let tq_Y_bot = YM + 50; // Profundidade da tira dentro do tanque
   
@@ -2130,14 +2294,15 @@ function renderRb1Completa() {
   // Loop Saída (Variáveis de Posicionamento e Texto)
   const LYT = 220; // Alinhado verticalmente com BS4_1Y
   const LYB = 580;
-  let boxX1 = 9280;
-  let boxX2 = 9610;
-  svg += `<text x="${(boxX1+boxX2)/2}" y="${LYT - 50}" text-anchor="middle" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff">Loop Saida</text>`;
   
   // Rolos do Loop Saída (Serpentine vertical exata)
   // Distanciamento de 70px (2R) garante linhas perfeitamente verticais
   const loopX = [9350, 9420, 9490, 9560];
   const loopY = [LYT, LYB, LYT, LYB];
+  
+  // Centraliza o texto Loop Saída sobre todo o conjunto (rolo do meio é 9490) e um pouco mais para cima
+  svg += `<text x="9490" y="${LYT - 70}" text-anchor="middle" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff">Loop Saida</text>`;
+
   for (let i = 0; i < 4; i++) {
     svg += dot(loopX[i], loopY[i], 35);
   }
@@ -2145,7 +2310,8 @@ function renderRb1Completa() {
   // Corretor 5
   const C5X = 9630;
   svg += corretorCruz(C5X, LYT, 35, '');
-  svg += `<text x="${C5X}" y="${LYT + 60}" font-family="Montserrat, sans-serif" font-size="14" font-weight="800" fill="#ffffff" text-anchor="middle">CORRETOR 5</text>`;
+  // Posiciona o texto à direita da roda (x=C5X+45) e centralizado verticalmente (y=LYT+5)
+  svg += `<text x="${C5X + 45}" y="${LYT + 5}" font-family="Montserrat, sans-serif" font-size="14" font-weight="800" fill="#ffffff" text-anchor="start">CORRETOR 5</text>`;
 
   // ====================================================================
   // BS 5 (S-Roll: Top-Right para Bottom-Left)
@@ -2197,36 +2363,53 @@ function renderRb1Completa() {
   
   lineTo(10150, 355); // Sai horizontalmente pela direita, passando sob o TR
   
-  // Continuação descendo para a Mesa de Inspeção
-  stripPath += `Q 10250 355 10300 400 Q 10350 ${YM} 10400 ${YM} `;
+  // Continuação horizontal para a Mesa de Inspeção
+  let Y_END = 355;
+  lineTo(10400, Y_END); 
   
   let shiftX = 350; // Shift para acomodar o BS 5
   
   for (let i=0; i<4; i++) {
-    svg += dot(10130 + shiftX + i*20, YM, 6);
+    svg += dot(10080 + shiftX + i*40, Y_END + 8, 8);
   }
-  lineTo(10190 + shiftX, YM);
+  lineTo(10190 + shiftX, Y_END);
   
   // Mesa Inspecao
-  svg += mesaInspecao(10250 + shiftX, YM, 200);
-  lineTo(10450 + shiftX, YM);
+  svg += mesaInspecao(10250 + shiftX, Y_END, 200);
+  lineTo(10450 + shiftX, Y_END);
   
+  // First group of 3 rollers (under line)
   for (let i=0; i<3; i++) {
-    svg += dot(10500 + shiftX + i*20, YM, 6);
+    svg += dot(10520 + shiftX + i*40, Y_END + 8, 8);
   }
-  lineTo(10540 + shiftX, YM);
+  
+  // Second group of 3 rollers (under line)
+  for (let i=0; i<3; i++) {
+    svg += dot(10700 + shiftX + i*40, Y_END + 8, 8);
+  }
+  lineTo(10800 + shiftX, Y_END);
   
   // Tesoura 3
-  svg += tesoura3(10630 + shiftX, YM, 'TESOURA 3');
-  lineTo(10630 + shiftX, YM);
+  svg += tesoura3(10860 + shiftX, Y_END, 'TESOURA 3');
+  lineTo(10860 + shiftX, Y_END);
   
-  svg += dot(10710 + shiftX, YM-15, 15); svg += dot(10710 + shiftX, YM+15, 15);
-  svg += dot(10780 + shiftX, YM, 8);
-  lineTo(10710 + shiftX, YM); lineTo(10780 + shiftX, YM);
+  // Remove only the top large roll, keep the bottom one
+  svg += dot(10940 + shiftX, Y_END + 15, 15);
+  lineTo(10940 + shiftX, Y_END);
+  
+  // Move the small support roll to the top of the line
+  svg += dot(11020 + shiftX, Y_END - 8, 8);
+  lineTo(11020 + shiftX, Y_END);
   
   // Bobinadeira Final
-  svg += solidCoil(10900 + shiftX, YM + 20, 60, 'BOBINADEIRA (RECOILER)');
-  lineTo(10900 + shiftX, YM + 20);
+  svg += solidCoil(11150 + shiftX, Y_END + 20, 60, 'BOBINADEIRA (RECOILER)');
+  lineTo(11150 + shiftX, Y_END + 20);
+  
+  // Novo rolo após a Bobinadeira (solicitado na imagem)
+  let extraRollX = 11270 + shiftX;
+  let extraRollY = Y_END + 60;
+  svg += `<rect x="${extraRollX - 15}" y="${extraRollY + 12}" width="30" height="4" fill="#94a3b8" rx="2"/>`;
+  svg += dot(extraRollX, extraRollY, 12);
 
   // Apply the path (Forno Glowing Strip)
   svg += `<path d="${stripPath}" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="4" filter="url(#whiteGlow)"/>`;
@@ -2237,7 +2420,16 @@ function renderRb1Completa() {
   
   // Inject into DOM
   const el = document.getElementById('rb1CompletaDiagram');
-  if (el) el.innerHTML = svg;
+  if (el) {
+    el.innerHTML = svg;
+    let parent = el.parentElement;
+    if (parent && parent.classList.contains('blueprint-container')) {
+      parent.style.overflow = '';
+      parent.style.cursor = '';
+      parent.style.height = ''; 
+      parent.style.position = '';
+    }
+  }
 
   // Legend
   const legend = document.getElementById('rb1CompletaLegend');

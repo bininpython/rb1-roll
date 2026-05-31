@@ -164,6 +164,14 @@ function renderDecapagem() {
       <stop offset="75%" stop-color="#ca8a04" />
       <stop offset="100%" stop-color="#854d0e" />
     </linearGradient>
+    <filter id="greenGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+    </filter>
+    <filter id="yellowGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+    </filter>
   </defs>`;
   
   // Background
@@ -193,154 +201,76 @@ function renderDecapagem() {
   
   // Large Cylinders (Center y = 350, Radius = 30)
   function largeCylinder(x: number, y: number, dir: 'cw' | 'ccw' = 'cw', pos: number) {
-    let c = `<g class="decapagem-interactive-roll" data-pos="${pos}">`;
-    c += baseBlock(x, y + 30); // Base starts at bottom of cylinder (350 + 30 = 380)
-    
-    // Backing circle to hide the pedestal underneath
-    c += `<circle cx="${x}" cy="${y}" r="30" fill="#11141a" />`;
-    
-    // Rotating group for shifting metallic gradient, spokes and dashed ring
-    c += `<g>`;
-    const rotVal = dir === 'cw' ? `0 ${x} ${y};360 ${x} ${y}` : `360 ${x} ${y};0 ${x} ${y}`;
-    c += `<animateTransform attributeName="transform" type="rotate" values="${rotVal}" dur="12s" repeatCount="indefinite" />`;
-    
-    // Shifting metal reflection fill
-    c += `<circle cx="${x}" cy="${y}" r="29.5" fill="url(#metalRoll)" />`;
-    
-    // Multi-spoke mechanical crosshairs (8 lines)
-    c += `<line x1="${x - 24}" y1="${y}" x2="${x + 24}" y2="${y}" stroke="#f8fafc" stroke-width="0.8" opacity="0.3" />`;
-    c += `<line x1="${x}" y1="${y - 24}" x2="${x}" y2="${y + 24}" stroke="#f8fafc" stroke-width="0.8" opacity="0.3" />`;
-    c += `<line x1="${x - 17}" y1="${y - 17}" x2="${x + 17}" y2="${y + 17}" stroke="#f8fafc" stroke-width="0.8" opacity="0.2" />`;
-    c += `<line x1="${x - 17}" y1="${y + 17}" x2="${x + 17}" y2="${y - 17}" stroke="#f8fafc" stroke-width="0.8" opacity="0.2" />`;
-    
-    // Inner dashed indicator circle
-    c += `<circle cx="${x}" cy="${y}" r="18" fill="none" stroke="#f8fafc" stroke-width="1" stroke-dasharray="2 3" opacity="0.35" />`;
-    c += `</g>`;
-    
-    // Static crisp casing ring on top
-    c += `<circle cx="${x}" cy="${y}" r="30" fill="none" stroke="#e2e8f0" stroke-width="2" />`;
-    c += `<circle cx="${x}" cy="${y}" r="4.5" fill="#11141a" stroke="#e2e8f0" stroke-width="1.5" />`;
-    c += `<circle cx="${x}" cy="${y}" r="1.5" fill="#e2e8f0" />`;
-    c += `</g>`;
-    return c;
+    let s = `<g class="decapagem-interactive-roll" data-pos="${pos}" style="cursor:pointer">`;
+    // Stand
+    s += `<rect x="${x - 15}" y="${y + 30}" width="30" height="25" fill="#374151" rx="2"/>`;
+    s += `<rect x="${x - 20}" y="${y + 50}" width="40" height="8" fill="#4b5563" rx="2"/>`;
+    // Core (Dark) + Outer Glow (Green)
+    s += `<circle cx="${x}" cy="${y}" r="30" fill="#052e16" stroke="#22c55e" stroke-width="3" filter="url(#greenGlow)"/>`;
+    // Animated Inner Dashed Ring
+    s += `<circle cx="${x}" cy="${y}" r="22.5" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.6" class="spin-slow" style="transform-origin: ${x}px ${y}px"/>`;
+    // Center Text (Number / Dot)
+    s += `<circle cx="${x}" cy="${y}" r="3" fill="#22c55e"/>`;
+    // Hitbox
+    s += `<circle cx="${x}" cy="${y}" r="35" fill="transparent" />`;
+    s += `</g>`;
+    return s;
   }
   
   // Small wave rollers (Radius = 10)
   function smallRoll(x: number, y: number, dir: 'cw' | 'ccw', pos: number) {
-    let s = `<g class="decapagem-interactive-roll" data-pos="${pos}">`;
-    s += `<circle cx="${x}" cy="${y}" r="10" fill="#11141a" />`; // Backing
-    s += `<g>`;
-    const rotVal = dir === 'cw' ? `0 ${x} ${y};360 ${x} ${y}` : `360 ${x} ${y};0 ${x} ${y}`;
-    s += `<animateTransform attributeName="transform" type="rotate" values="${rotVal}" dur="5s" repeatCount="indefinite" />`;
-    
-    // Shifting metal reflection fill
-    s += `<circle cx="${x}" cy="${y}" r="9.5" fill="url(#metalRoll)" />`;
-    
-    // Inner crosshairs
-    s += `<line x1="${x - 7}" y1="${y}" x2="${x + 7}" y2="${y}" stroke="#f8fafc" stroke-width="0.8" opacity="0.35" />`;
-    s += `<line x1="${x}" y1="${y - 7}" x2="${x}" y2="${y + 7}" stroke="#f8fafc" stroke-width="0.8" opacity="0.35" />`;
-    s += `</g>`;
-    
-    // Outer crisp ring
-    s += `<circle cx="${x}" cy="${y}" r="10" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
-    s += `<circle cx="${x}" cy="${y}" r="1.5" fill="#e2e8f0" />`;
+    let s = `<g class="decapagem-interactive-roll" data-pos="${pos}" style="cursor:pointer">`;
+    s += `<circle cx="${x}" cy="${y}" r="15" fill="transparent" />`; // Hitbox
+    s += `<circle cx="${x}" cy="${y}" r="10" fill="#052e16" stroke="#22c55e" stroke-width="1.5" filter="url(#greenGlow)"/>`;
+    s += `<circle cx="${x}" cy="${y}" r="6" fill="none" stroke="#22c55e" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.5" class="spin-fast" style="transform-origin: ${x}px ${y}px"/>`;
     s += `</g>`;
     return s;
   }
   
   // Vertical pinch pair (Radius = 8)
   function pinchRolls(x: number, y: number, pos: number) {
-    let p = `<g class="decapagem-interactive-roll" data-pos="${pos}">`;
+    let p = `<g class="decapagem-interactive-roll" data-pos="${pos}" style="cursor:pointer">`;
     const cyTop = y - 10;
     const cyBottom = y + 10;
     const r = 8;
-    const dur = '4s';
-    
-    // Top roller (CCW)
-    p += `<circle cx="${x}" cy="${cyTop}" r="${r}" fill="#11141a" />`;
-    p += `<g>`;
-    p += `<animateTransform attributeName="transform" type="rotate" values="360 ${x} ${cyTop};0 ${x} ${cyTop}" dur="${dur}" repeatCount="indefinite" />`;
-    p += `<circle cx="${x}" cy="${cyTop}" r="${r - 0.5}" fill="url(#metalRoll)" />`;
-    p += `<line x1="${x - 5}" y1="${cyTop}" x2="${x + 5}" y2="${cyTop}" stroke="#f8fafc" stroke-width="0.8" opacity="0.35" />`;
-    p += `<line x1="${x}" y1="${cyTop - 5}" x2="${x}" y2="${cyTop + 5}" stroke="#f8fafc" stroke-width="0.8" opacity="0.35" />`;
+    p += `<circle cx="${x}" cy="${y}" r="25" fill="transparent" />`; // Hitbox
+    // Top
+    p += `<circle cx="${x}" cy="${cyTop}" r="${r}" fill="#052e16" stroke="#22c55e" stroke-width="1.5" filter="url(#greenGlow)"/>`;
+    p += `<circle cx="${x}" cy="${cyTop}" r="${r*0.6}" fill="none" stroke="#22c55e" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.5" class="spin-fast" style="transform-origin: ${x}px ${cyTop}px"/>`;
+    // Bottom
+    p += `<circle cx="${x}" cy="${cyBottom}" r="${r}" fill="#052e16" stroke="#22c55e" stroke-width="1.5" filter="url(#greenGlow)"/>`;
+    p += `<circle cx="${x}" cy="${cyBottom}" r="${r*0.6}" fill="none" stroke="#22c55e" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.5" class="spin-fast" style="transform-origin: ${x}px ${cyBottom}px"/>`;
     p += `</g>`;
-    p += `<circle cx="${x}" cy="${cyTop}" r="${r}" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
-    p += `<circle cx="${x}" cy="${cyTop}" r="1.5" fill="#e2e8f0" />`;
-    
-    // Bottom roller (CW)
-    p += `<circle cx="${x}" cy="${cyBottom}" r="${r}" fill="#11141a" />`;
-    p += `<g>`;
-    p += `<animateTransform attributeName="transform" type="rotate" values="0 ${x} ${cyBottom};360 ${x} ${cyBottom}" dur="${dur}" repeatCount="indefinite" />`;
-    p += `<circle cx="${x}" cy="${cyBottom}" r="${r - 0.5}" fill="url(#metalRoll)" />`;
-    p += `<line x1="${x - 5}" y1="${cyBottom}" x2="${x + 5}" y2="${cyBottom}" stroke="#f8fafc" stroke-width="0.8" opacity="0.35" />`;
-    p += `<line x1="${x}" y1="${cyBottom - 5}" x2="${x}" y2="${cyBottom + 5}" stroke="#f8fafc" stroke-width="0.8" opacity="0.35" />`;
-    p += `</g>`;
-    p += `<circle cx="${x}" cy="${cyBottom}" r="${r}" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
-    p += `<circle cx="${x}" cy="${cyBottom}" r="1.5" fill="#e2e8f0" />`;
-    p += `</g>`;
-    
     return p;
   }
   
   // 2x2 Station (with 2 yellow and 2 white rollers)
   function brushStation(x: number, y: number, pos: number) {
-    let b = `<g class="decapagem-interactive-roll" data-pos="${pos}">`;
-    b += tallBaseBlock(x, y + 30); // Stand starts at bottom of station box (320 + 30 = 350)
+    let b = `<g class="decapagem-interactive-roll" data-pos="${pos}" style="cursor:pointer">`;
     // Outer station housing box
-    b += `<rect x="${x - 30}" y="${y - 30}" width="60" height="60" rx="4" fill="none" stroke="#9ca3af" stroke-width="1.5" />`;
+    b += `<rect x="${x - 30}" y="${y - 30}" width="60" height="60" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5" rx="4"/>`;
+    b += `<rect x="${x - 12}" y="${y + 30}" width="24" height="25" fill="#0f172a" rx="2"/>`; // Stand
+    b += `<rect x="${x - 30}" y="${y - 30}" width="60" height="60" fill="transparent"/>`; // Hitbox
     
     const r = 8;
-    const dur = '4s';
-    
-    // Roller top-left: White, CCW
+    // Roller top-left: White
     const cxTL = x - 15, cyTL = y - 15;
-    b += `<circle cx="${cxTL}" cy="${cyTL}" r="${r}" fill="#11141a" />`;
-    b += `<g>`;
-    b += `<animateTransform attributeName="transform" type="rotate" values="360 ${cxTL} ${cyTL};0 ${cxTL} ${cyTL}" dur="${dur}" repeatCount="indefinite" />`;
-    b += `<circle cx="${cxTL}" cy="${cyTL}" r="${r - 0.5}" fill="url(#metalRoll)" />`;
-    b += `<line x1="${cxTL - 5}" y1="${cyTL}" x2="${cxTL + 5}" y2="${cyTL}" stroke="#f8fafc" stroke-width="0.8" opacity="0.35" />`;
-    b += `<line x1="${cxTL}" y1="${cyTL - 5}" x2="${cxTL}" y2="${cyTL + 5}" stroke="#f8fafc" stroke-width="0.8" opacity="0.35" />`;
-    b += `</g>`;
-    b += `<circle cx="${cxTL}" cy="${cyTL}" r="${r}" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
-    b += `<circle cx="${cxTL}" cy="${cyTL}" r="1.5" fill="#e2e8f0" />`;
-    
-    // Roller top-right: Yellow, CCW
+    b += `<circle cx="${cxTL}" cy="${cyTL}" r="${r}" fill="#052e16" stroke="#22c55e" stroke-width="1.5" filter="url(#greenGlow)"/>`;
+    b += `<circle cx="${cxTL}" cy="${cyTL}" r="${r*0.6}" fill="none" stroke="#22c55e" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.5" class="spin-fast" style="transform-origin: ${cxTL}px ${cyTL}px"/>`;
+    // Roller top-right: Yellow
     const cxTR = x + 15, cyTR = y - 15;
-    b += `<circle cx="${cxTR}" cy="${cyTR}" r="${r}" fill="#11141a" />`;
-    b += `<g>`;
-    b += `<animateTransform attributeName="transform" type="rotate" values="360 ${cxTR} ${cyTR};0 ${cxTR} ${cyTR}" dur="${dur}" repeatCount="indefinite" />`;
-    b += `<circle cx="${cxTR}" cy="${cyTR}" r="${r - 0.5}" fill="url(#yellowMetalRoll)" />`;
-    b += `<line x1="${cxTR - 5}" y1="${cyTR}" x2="${cxTR + 5}" y2="${cyTR}" stroke="#78350f" stroke-width="0.8" opacity="0.45" />`;
-    b += `<line x1="${cxTR}" y1="${cyTR - 5}" x2="${cxTR}" y2="${cyTR + 5}" stroke="#78350f" stroke-width="0.8" opacity="0.45" />`;
-    b += `</g>`;
-    b += `<circle cx="${cxTR}" cy="${cyTR}" r="${r}" fill="none" stroke="#eab308" stroke-width="1.8" />`;
-    b += `<circle cx="${cxTR}" cy="${cyTR}" r="1.5" fill="#78350f" />`;
-    
-    // Roller bottom-left: Yellow, CW
+    b += `<circle cx="${cxTR}" cy="${cyTR}" r="${r}" fill="#ca8a04" stroke="#facc15" stroke-width="1.5" filter="url(#yellowGlow)"/>`;
+    b += `<circle cx="${cxTR}" cy="${cyTR}" r="${r*0.6}" fill="none" stroke="#fef08a" stroke-width="1.2" stroke-dasharray="2 2" opacity="0.8" class="spin-fast" style="transform-origin: ${cxTR}px ${cyTR}px"/>`;
+    // Roller bottom-left: Yellow
     const cxBL = x - 15, cyBL = y + 15;
-    b += `<circle cx="${cxBL}" cy="${cyBL}" r="${r}" fill="#11141a" />`;
-    b += `<g>`;
-    b += `<animateTransform attributeName="transform" type="rotate" values="0 ${cxBL} ${cyBL};360 ${cxBL} ${cyBL}" dur="${dur}" repeatCount="indefinite" />`;
-    b += `<circle cx="${cxBL}" cy="${cyBL}" r="${r - 0.5}" fill="url(#yellowMetalRoll)" />`;
-    b += `<line x1="${cxBL - 5}" y1="${cyBL}" x2="${cxBL + 5}" y2="${cyBL}" stroke="#78350f" stroke-width="0.8" opacity="0.45" />`;
-    b += `<line x1="${cxBL}" y1="${cyBL - 5}" x2="${cxBL}" y2="${cyBL + 5}" stroke="#78350f" stroke-width="0.8" opacity="0.45" />`;
-    b += `</g>`;
-    b += `<circle cx="${cxBL}" cy="${cyBL}" r="${r}" fill="none" stroke="#eab308" stroke-width="1.8" />`;
-    b += `<circle cx="${cxBL}" cy="${cyBL}" r="1.5" fill="#78350f" />`;
-    
-    // Roller bottom-right: White, CW
+    b += `<circle cx="${cxBL}" cy="${cyBL}" r="${r}" fill="#ca8a04" stroke="#facc15" stroke-width="1.5" filter="url(#yellowGlow)"/>`;
+    b += `<circle cx="${cxBL}" cy="${cyBL}" r="${r*0.6}" fill="none" stroke="#fef08a" stroke-width="1.2" stroke-dasharray="2 2" opacity="0.8" class="spin-fast" style="transform-origin: ${cxBL}px ${cyBL}px"/>`;
+    // Roller bottom-right: White
     const cxBR = x + 15, cyBR = y + 15;
-    b += `<circle cx="${cxBR}" cy="${cyBR}" r="${r}" fill="#11141a" />`;
-    b += `<g>`;
-    b += `<animateTransform attributeName="transform" type="rotate" values="0 ${cxBR} ${cyBR};360 ${cxBR} ${cyBR}" dur="${dur}" repeatCount="indefinite" />`;
-    b += `<circle cx="${cxBR}" cy="${cyBR}" r="${r - 0.5}" fill="url(#metalRoll)" />`;
-    b += `<line x1="${cxBR - 5}" y1="${cyBR}" x2="${cxBR + 5}" y2="${cyBR}" stroke="#f8fafc" stroke-width="0.8" opacity="0.35" />`;
-    b += `<line x1="${cxBR}" y1="${cyBR - 5}" x2="${cxBR}" y2="${cyBR + 5}" stroke="#f8fafc" stroke-width="0.8" opacity="0.35" />`;
-    b += `</g>`;
-    b += `<circle cx="${cxBR}" cy="${cyBR}" r="${r}" fill="none" stroke="#e2e8f0" stroke-width="1.8" />`;
-    b += `<circle cx="${cxBR}" cy="${cyBR}" r="1.5" fill="#e2e8f0" />`;
-    b += `</g>`;
+    b += `<circle cx="${cxBR}" cy="${cyBR}" r="${r}" fill="#052e16" stroke="#22c55e" stroke-width="1.5" filter="url(#greenGlow)"/>`;
+    b += `<circle cx="${cxBR}" cy="${cyBR}" r="${r*0.6}" fill="none" stroke="#22c55e" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.5" class="spin-fast" style="transform-origin: ${cxBR}px ${cyBR}px"/>`;
     
+    b += `</g>`;
     return b;
   }
 

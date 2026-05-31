@@ -324,7 +324,7 @@ export async function registrarSubstituicao(pos: Posicao, turno: Turno, estoqueI
   if (!estItem) throw new Error('Rolo selecionado não existe mais no estoque.');
   if (isNaN(new Date(dtStr).getTime())) throw new Error('Data inválida.');
   if (!['TM', 'TT', 'TN'].includes(turno)) throw new Error('Turno inválido.');
-  if ((pos < 0 || pos > 4) && !DECAPAGEM_MAP[pos]) throw new Error('Posição inválida.');
+  if ((pos < 0 || pos > 4) && !DECAPAGEM_MAP[pos] && !RB1_COMPLETA_MAP[pos]) throw new Error('Posição inválida.');
 
   const motSafe = motivo;
   const oldRolo = getRolo(pos);

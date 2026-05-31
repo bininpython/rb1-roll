@@ -1215,10 +1215,10 @@ function renderRb1Completa() {
 
   // ENROLADOR TIRAS
   let enrX = 640;
-  svg += `<text x="${enrX+8}" y="${Y1-35}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">ENROLADOR DE TIRAS</text>`;
+  svg += `<text x="${enrX+8}" y="${Y1-35}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle" style="pointer-events:none;">ENROLADOR DE TIRAS</text>`;
   
   // Bracket arms
-  svg += `<path d="M ${enrX-10} ${Y1-12} L ${enrX} ${Y1-6} L ${enrX+16} ${Y1-6} L ${enrX+26} ${Y1-12}" fill="none" stroke="#64748b" stroke-width="3" stroke-linecap="round"/>`;
+  svg += `<path d="M ${enrX-10} ${Y1-12} L ${enrX} ${Y1-6} L ${enrX+16} ${Y1-6} L ${enrX+26} ${Y1-12}" fill="none" stroke="#64748b" stroke-width="3" stroke-linecap="round" style="pointer-events:none;"/>`;
   
   // Top rollers (green glowing design)
   svg += rNrForno(enrX, Y1-8, 8, '', 0, 0, 220);
@@ -1362,9 +1362,9 @@ function renderRb1Completa() {
 
   // ENROLADOR DE TIRAS
   let enrE2X = 1080;
-  svg += `<text x="${enrE2X+37}" y="${Y2-45}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">ENROLADOR DE TIRAS</text>`;
+  svg += `<text x="${enrE2X+37}" y="${Y2-45}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle" style="pointer-events:none;">ENROLADOR DE TIRAS</text>`;
   // Curved Top Guide (Crescent shape)
-  svg += `<path d="M ${enrE2X+15} ${Y2-25} Q ${enrE2X+37} ${Y2-5} ${enrE2X+60} ${Y2-25} Q ${enrE2X+37} ${Y2-15} ${enrE2X+15} ${Y2-25}" fill="#1e293b" stroke="#94a3b8" stroke-width="2"/>`;
+  svg += `<path d="M ${enrE2X+15} ${Y2-25} Q ${enrE2X+37} ${Y2-5} ${enrE2X+60} ${Y2-25} Q ${enrE2X+37} ${Y2-15} ${enrE2X+15} ${Y2-25}" fill="#1e293b" stroke="#94a3b8" stroke-width="2" style="pointer-events:none;"/>`;
   
   // Upper rollers (117, 119, 120, 122)
   svg += rNrForno(enrE2X, Y2 - 7.75, 6, '', 0, 0, 246); // 117

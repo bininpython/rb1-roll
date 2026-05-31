@@ -2308,6 +2308,7 @@ function renderRb1Completa() {
   
   // Corretor 4 (elevado para a fita passar por baixo)
   svg += corretorCruz(8950, YM - 35, 35, '', 444);
+  svg += `<text x="8950" y="${YM + 25}" font-family="Inter, sans-serif" font-size="16" fill="#ffffff" text-anchor="middle">Corretor 4</text>`;
   
   // ====================================================================
   // BS4 e LOOP DE SAÍDA (Conforme Esboço Fiel)

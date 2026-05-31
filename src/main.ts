@@ -1843,6 +1843,25 @@ function renderRb1Completa() {
 
   lineTo(4550, YM);
   
+  // Helper for Neblina mist
+  function animateMist(bx: number, by: number, w: number, h: number, count: number) {
+    let m = '';
+    for (let i = 0; i < count; i++) {
+      const cx = bx + w * 0.1 + Math.random() * w * 0.8;
+      const cy = by + h * 0.2 + Math.random() * h * 0.6;
+      const r = 10 + Math.random() * 15;
+      const dur = (2.5 + Math.random() * 3).toFixed(1);
+      const dx = (Math.random() > 0.5 ? 1 : -1) * (10 + Math.random() * 15);
+      const opMin = (0.05 + Math.random() * 0.1).toFixed(2);
+      const opMax = (0.2 + Math.random() * 0.2).toFixed(2);
+      m += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#e2e8f0" filter="url(#whiteGlow)">
+        <animate attributeName="cx" values="${cx};${cx+dx};${cx}" dur="${dur}s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="${opMin};${opMax};${opMin}" dur="${dur}s" repeatCount="indefinite" />
+      </circle>`;
+    }
+    return m;
+  }
+
   // ====================================================================
   // AR NEBLINA 1 (UND. RESF. ARNEBLINA 1)
   // Two rectangular boxes: one above strip, one below strip, roll at exit
@@ -1850,8 +1869,10 @@ function renderRb1Completa() {
   let an1X = 4580, an1W = 140, an1H = 45;
   // Top box (above strip)
   svg += `<rect x="${an1X}" y="${YM - an1H - 5}" width="${an1W}" height="${an1H}" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5" rx="2"/>`;
+  svg += animateMist(an1X, YM - an1H - 5, an1W, an1H, 8);
   // Bottom box (below strip)
   svg += `<rect x="${an1X}" y="${YM + 5}" width="${an1W}" height="${an1H}" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5" rx="2"/>`;
+  svg += animateMist(an1X, YM + 5, an1W, an1H, 8);
   // Title
   svg += `<text x="${an1X + an1W/2}" y="${YM - an1H - 15}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">AR NEBLINA 1</text>`;
   // Exit roll (202) - Strip goes OVER it
@@ -1862,13 +1883,14 @@ function renderRb1Completa() {
   // AR NEBLINA 2 (UNID. RESF. ARNEBLINA 2)
   // Wider split boxes with large gap. Strip dips down inside.
   // Rolls 203, 204 support the dip. Roll 205 at exit.
-  // Nozzle dots above and below the strip.
   // ====================================================================
   let an2X = 4790, an2W = 280, an2H = 50;
   // Top box
   svg += `<rect x="${an2X}" y="${YM - an2H - 10}" width="${an2W}" height="${an2H}" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5" rx="2"/>`;
+  svg += animateMist(an2X, YM - an2H - 10, an2W, an2H, 15);
   // Bottom box
   svg += `<rect x="${an2X}" y="${YM + 25}" width="${an2W}" height="${an2H}" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5" rx="2"/>`;
+  svg += animateMist(an2X, YM + 25, an2W, an2H, 15);
   // Title
   svg += `<text x="${an2X + an2W/2}" y="${YM - an2H - 15}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">AR NEBLINA 2</text>`;
   

@@ -2662,8 +2662,82 @@ function renderAll(){
   renderMonthly();
   renderDecapagemMonthly();
 }
+
+function setupHoverTooltips() {
+  let tooltip = document.getElementById('roloHoverTooltip');
+  if (!tooltip) {
+    tooltip = document.createElement('div');
+    tooltip.id = 'roloHoverTooltip';
+    tooltip.className = 'fixed z-[9999] bg-surface text-on-surface p-4 rounded-xl shadow-2xl border border-outline-variant pointer-events-none opacity-0 transition-opacity duration-150 transform -translate-x-1/2 -translate-y-full';
+    tooltip.style.minWidth = '240px';
+    tooltip.style.marginTop = '-15px'; // offset above cursor
+    tooltip.innerHTML = '';
+    document.body.appendChild(tooltip);
+  }
+
+  const handleMouseOver = (e: MouseEvent) => {
+    const target = e.target as Element;
+    const g = target.closest('.rolo-clickable') || target.closest('.decapagem-interactive-roll');
+    if (!g) return;
+    
+    const posStr = g.getAttribute('data-rolo-pos') || g.getAttribute('data-pos');
+    if (!posStr) return;
+    const pos = parseInt(posStr, 10);
+    const meta = DECAPAGEM_MAP[pos] || RB1_COMPLETA_MAP[pos];
+    const rolo = getRolo(pos as any);
+    
+    if (!meta || !rolo) return;
+
+    const days = calcDays(rolo.data_troca);
+    const st = getStatus(days);
+    const dateStr = new Date(rolo.data_troca).toLocaleDateString('pt-BR');
+    
+    let statusBadge = '';
+    if (st === 'green') statusBadge = '<span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded ml-auto">NORMAL</span>';
+    else if (st === 'yellow') statusBadge = '<span class="bg-yellow-100 text-yellow-800 text-[10px] font-bold px-2 py-0.5 rounded ml-auto">ATENÇÃO</span>';
+    else if (st === 'red') statusBadge = '<span class="bg-red-100 text-red-800 text-[10px] font-bold px-2 py-0.5 rounded ml-auto">TROCAR</span>';
+
+    tooltip!.innerHTML = `
+      <div class="mb-2 pb-2 border-b border-outline-variant/30">
+        <div class="text-xs text-primary font-bold uppercase tracking-wider mb-0.5">${meta.tipo}</div>
+        <div class="font-bold text-base flex items-center">${meta.nome} ${statusBadge}</div>
+      </div>
+      <div class="space-y-1.5 text-sm">
+        <div class="flex justify-between"><span class="text-on-surface-variant text-xs font-semibold">Diâmetro:</span><span class="font-mono font-bold text-primary">${rolo.diametro} mm</span></div>
+        <div class="flex justify-between"><span class="text-on-surface-variant text-xs font-semibold">Tempo de Uso:</span><span class="font-bold">${days !== null ? days + ' dias' : '—'}</span></div>
+        <div class="flex justify-between"><span class="text-on-surface-variant text-xs font-semibold">Última Troca:</span><span class="text-xs font-medium">${dateStr} (T ${rolo.turno})</span></div>
+      </div>
+    `;
+
+    tooltip!.style.opacity = '1';
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (tooltip!.style.opacity === '1') {
+      tooltip!.style.left = e.clientX + 'px';
+      tooltip!.style.top = e.clientY + 'px';
+    }
+  };
+
+  const handleMouseOut = (e: MouseEvent) => {
+    tooltip!.style.opacity = '0';
+  };
+
+  const attachEvents = (diagId: string) => {
+    const diag = document.getElementById(diagId);
+    if (diag) {
+      diag.addEventListener('mouseover', handleMouseOver);
+      diag.addEventListener('mousemove', handleMouseMove);
+      diag.addEventListener('mouseout', handleMouseOut);
+    }
+  };
+
+  attachEvents('rb1CompletaDiagram');
+  attachEvents('decapagemDiagram');
+}
+
 window.addEventListener('dataLoaded', renderAll);
-initDemo(); renderAll(); setInterval(renderAll,60000);
+initDemo(); renderAll(); setupHoverTooltips(); setInterval(renderAll,60000);
 
 
 // FORCE VITE RELOAD

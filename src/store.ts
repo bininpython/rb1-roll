@@ -320,31 +320,41 @@ export async function loadData() {
 // ===== Operações CRUD Sincronizadas =====
 
 export async function registrarSubstituicao(pos: Posicao, turno: Turno, estoqueId: string, dtStr: string, motivo: string) {
-  const estItem = estoque.find(e => e.id === estoqueId);
-  if (!estItem) throw new Error('Rolo selecionado não existe mais no estoque.');
+  let diametro = 0;
+  if (estoqueId === 'DIRECT') {
+    const r = getRolo(pos);
+    const meta = DECAPAGEM_MAP[pos] || RB1_COMPLETA_MAP[pos];
+    diametro = r && !r.id.startsWith('virtual') ? r.diametro : (meta ? meta.diametroPadrao : 0);
+  } else {
+    const estItem = estoque.find(e => e.id === estoqueId);
+    if (!estItem) throw new Error('Rolo selecionado não existe mais no estoque.');
+    diametro = estItem.diametro;
+  }
   if (isNaN(new Date(dtStr).getTime())) throw new Error('Data inválida.');
   if (!['TM', 'TT', 'TN'].includes(turno)) throw new Error('Turno inválido.');
   if ((pos < 0 || pos > 4) && !DECAPAGEM_MAP[pos] && !RB1_COMPLETA_MAP[pos]) throw new Error('Posição inválida.');
 
   const motSafe = motivo;
   const oldRolo = getRolo(pos);
-  const age = oldRolo ? calcDays(oldRolo.data_troca) : 0;
+  const age = oldRolo && !oldRolo.id.startsWith('virtual') ? calcDays(oldRolo.data_troca) : 0;
   
   // Cria novos registros
   const newHist: HistoricoRecord = {
     id: genId(), posicao: pos, data_troca: new Date(dtStr).toISOString(), turno,
-    diametro: estItem.diametro, obs_motivo: motSafe, idade_dias: age, created_at: new Date().toISOString()
+    diametro: diametro, obs_motivo: motSafe, idade_dias: age, created_at: new Date().toISOString()
   };
   const newRolo: Rolo = {
     id: genId(), posicao: pos, data_troca: new Date(dtStr).toISOString(),
-    turno, diametro: estItem.diametro, obs_motivo: motSafe
+    turno, diametro: diametro, obs_motivo: motSafe
   };
 
   // Atualização Otimista UI (Rápida)
   historico.unshift(newHist);
   const rIdx = rolos.findIndex(r => r.posicao === pos);
   if (rIdx >= 0) rolos[rIdx] = newRolo; else rolos.push(newRolo);
-  estoque = estoque.filter(e => e.id !== estoqueId);
+  if (estoqueId !== 'DIRECT') {
+    estoque = estoque.filter(e => e.id !== estoqueId);
+  }
 
   // Background Sync com o Supabase
   await supabase.from('historico').insert([newHist]);
@@ -353,7 +363,9 @@ export async function registrarSubstituicao(pos: Posicao, turno: Turno, estoqueI
   } else {
     await supabase.from('rolos').insert([newRolo]);
   }
-  await supabase.from('estoque').delete().eq('id', estoqueId);
+  if (estoqueId !== 'DIRECT') {
+    await supabase.from('estoque').delete().eq('id', estoqueId);
+  }
 }
 
 export async function editarHistorico(id: string, turno: Turno, dtStr: string, motivo: string) {

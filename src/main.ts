@@ -636,6 +636,9 @@ function populateEstoqueSelect(){
     const cleaned = e.obs.replace(/^\[Forno\]\s*|^\[Decapagem\]\s*/, '');
     sel.innerHTML+=`<option value="${e.id}">⊘ ${e.diametro} mm — ${sanitize(cleaned)||'Sem obs.'}</option>`;
   });
+  if (!isNaN(posVal) && posVal >= 200) {
+    sel.innerHTML += `<option value="DIRECT">⚡ Sem Estoque (Manter Diâmetro Atual)</option>`;
+  }
 }
 
 function updateSubModalFields() {
@@ -679,8 +682,16 @@ function closeSubModal(){$('modalSub').classList.remove('active');($('formSub') 
 
 $('inEstoqueRolo').addEventListener('change',()=>{
   const sel=($('inEstoqueRolo') as HTMLSelectElement).value;
-  const item=estoque.find(e=>e.id===sel);
-  ($('inDiam') as HTMLInputElement).value=item?String(item.diametro):'';
+  if (sel === 'DIRECT') {
+    const pos = parseInt(($('inPos') as HTMLSelectElement).value);
+    const r = getRolo(pos);
+    const meta = DECAPAGEM_MAP[pos] || RB1_COMPLETA_MAP[pos];
+    const diametro = r && !r.id.startsWith('virtual') ? r.diametro : (meta ? meta.diametroPadrao : '');
+    ($('inDiam') as HTMLInputElement).value = String(diametro);
+  } else {
+    const item=estoque.find(e=>e.id===sel);
+    ($('inDiam') as HTMLInputElement).value=item?String(item.diametro):'';
+  }
 });
 $('btnNovaSub').addEventListener('click',openSubModal);
 $('modalSubClose').addEventListener('click',closeSubModal);
@@ -994,7 +1005,7 @@ function renderRb1Completa() {
     </filter>
   </defs>`;
 
-  function rolerDecap(cx: number, cy: number, r: number, label: string = '', sub: string = '', hasStand: boolean = true, posId?: number) {
+  function rolerDecap(cx: number, cy: number, r: number, label: string = '', sub: string = '', hasStand: boolean = true, posId?: number, isLarge: boolean = false) {
     let s = '';
     if (posId !== undefined) {
       s += `<g data-rolo-pos="${posId}" class="rolo-clickable" style="cursor: pointer;">`;
@@ -1020,7 +1031,9 @@ function renderRb1Completa() {
     // Typography (Stacked Below)
     if (label) {
       let textY = hasStand ? cy + r + sh + 15 : cy + r + 15;
-      s += `<text x="${cx}" y="${textY}" font-family="JetBrains Mono, monospace" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">${label}</text>`;
+      let fSize = isLarge ? '13' : '10';
+      let fWeight = isLarge ? '900' : 'bold';
+      s += `<text x="${cx}" y="${textY}" font-family="JetBrains Mono, monospace" font-size="${fSize}" font-weight="${fWeight}" fill="#ffffff" text-anchor="middle">${label.toUpperCase()}</text>`;
       if (sub) {
         s += `<text x="${cx}" y="${textY + 12}" font-family="JetBrains Mono, monospace" font-size="9" font-weight="bold" fill="#22c55e" text-anchor="middle">${sub}</text>`;
         s += `<text x="${cx}" y="${textY + 23}" font-family="JetBrains Mono, monospace" font-size="8" fill="#9ca3af" text-anchor="middle">2140mm</text>`;
@@ -1053,7 +1066,7 @@ function renderRb1Completa() {
     let s=''; for(let i=0; i<count; i++) s += `<rect x="${x + i*spacing}" y="${cy - h/2}" width="${w}" height="${h}" fill="#1e293b" rx="2"/>`; return s;
   }
   function solidCoil(cx: number, cy: number, r: number, label: string): string { 
-    return rolerDecap(cx, cy, r, label, '1334 mm', true, 200);
+    return rolerDecap(cx, cy, r, label, '', true, 200);
   }
   
   function maqSolda(cx: number, cy: number): string { 
@@ -1113,7 +1126,7 @@ function renderRb1Completa() {
     return s;
   }
   function mesaInspecao(x: number, y: number, w: number): string { 
-    return `<rect x="${x}" y="${y+1}" width="${w}" height="60" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+    return `<rect x="${x}" y="${y+1}" width="${w}" height="60" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5"/>
             <text x="${x + w/2}" y="${y - 15}" font-family="Montserrat, sans-serif" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">MESA INSPEÇÃO</text>`;
   }
 
@@ -1154,7 +1167,7 @@ function renderRb1Completa() {
   svg += `<text x="90" y="${Y1 - 50}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#94a3b8">ENTRADA 1</text>`;
   
   // Bobina Principal (Premium CAD)
-  svg += rolerDecap(100, Y1 + 40, 40, 'Bobinadeira 1', '', true, 204);
+  svg += rolerDecap(100, Y1 + 40, 40, 'Desbobinadeira 1', '', true, 204, true);
   
   // 1 e 2 na Bobina (Snubber rolls resting on the coil)
   // Coil center is (100, Y1+40=210). Radius=40. Roller radius=8. Gap=1. Dist=49.
@@ -1302,7 +1315,7 @@ function renderRb1Completa() {
   }
 
   // Bobina Principal (Defletor)
-  svg += rolerDecap(100, Y2 + 40, 40, 'Bobinadeira 2', '', true, 227);
+  svg += rolerDecap(100, Y2 + 40, 40, 'Desbobinadeira 2', '', true, 227, true);
   
   // 86, 87 (Snubber rolls resting on the coil)
   // Coil center is (100, Y2+40=490). Radius=40. Roller radius=8. Gap=1. Dist=49.
@@ -1759,7 +1772,7 @@ function renderRb1Completa() {
   // ====================================================================
   // Forno
   let fX = 3950, fY = YM - 40, fW = 600, fH = 140;
-  svg += `<rect x="${fX}" y="${fY}" width="${fW}" height="${fH}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="4"/>`;
+  svg += `<rect x="${fX}" y="${fY}" width="${fW}" height="${fH}" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5" rx="4"/>`;
   svg += `<text x="${fX + fW/2}" y="${fY - 15}" font-family="Montserrat, sans-serif" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">FORNO DE RECOZIMENTO</text>`;
   
   // ── Realistic wispy fire animation ──
@@ -1866,9 +1879,9 @@ function renderRb1Completa() {
   // ====================================================================
   let an1X = 4580, an1W = 140, an1H = 45;
   // Top box (above strip)
-  svg += `<rect x="${an1X}" y="${YM - an1H - 5}" width="${an1W}" height="${an1H}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="2"/>`;
+  svg += `<rect x="${an1X}" y="${YM - an1H - 5}" width="${an1W}" height="${an1H}" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5" rx="2"/>`;
   // Bottom box (below strip)
-  svg += `<rect x="${an1X}" y="${YM + 5}" width="${an1W}" height="${an1H}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="2"/>`;
+  svg += `<rect x="${an1X}" y="${YM + 5}" width="${an1W}" height="${an1H}" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5" rx="2"/>`;
   // Title
   svg += `<text x="${an1X + an1W/2}" y="${YM - an1H - 15}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">AR NEBLINA 1</text>`;
   // Exit roll (202) - Strip goes OVER it
@@ -1883,9 +1896,9 @@ function renderRb1Completa() {
   // ====================================================================
   let an2X = 4790, an2W = 280, an2H = 50;
   // Top box
-  svg += `<rect x="${an2X}" y="${YM - an2H - 10}" width="${an2W}" height="${an2H}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="2"/>`;
+  svg += `<rect x="${an2X}" y="${YM - an2H - 10}" width="${an2W}" height="${an2H}" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5" rx="2"/>`;
   // Bottom box
-  svg += `<rect x="${an2X}" y="${YM + 25}" width="${an2W}" height="${an2H}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="2"/>`;
+  svg += `<rect x="${an2X}" y="${YM + 25}" width="${an2W}" height="${an2H}" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5" rx="2"/>`;
   // Title
   svg += `<text x="${an2X + an2W/2}" y="${YM - an2H - 15}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">AR NEBLINA 2</text>`;
   
@@ -1912,7 +1925,7 @@ function renderRb1Completa() {
   // ====================================================================
   let dtX = 5120, dtW = 300, dtTopY = YM - 20, dtBotY = YM + 120;
   // Trapezoidal body (wider at top, narrower at bottom-left)
-  svg += `<path d="M ${dtX} ${dtTopY} L ${dtX + dtW} ${dtTopY} L ${dtX + dtW} ${dtBotY} L ${dtX + 60} ${dtBotY} Z" fill="#1e293b" stroke="#334155" stroke-width="2"/>`;
+  svg += `<path d="M ${dtX} ${dtTopY} L ${dtX + dtW} ${dtTopY} L ${dtX + dtW} ${dtBotY} L ${dtX + 60} ${dtBotY} Z" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5"/>`;
   // Title
   svg += `<text x="${dtX + dtW/2}" y="${dtTopY - 15}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">DIP TANQUE</text>`;
   // Large submerged roll
@@ -2064,7 +2077,7 @@ function renderRb1Completa() {
   svg += `<text x="7325" y="${YM - 80}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">Tanque Eletrolitico</text>`;
   
   // Tank outline
-  svg += `<rect x="6960" y="${YM - 60}" width="730" height="150" fill="#1e293b" stroke="#334155" stroke-width="2" rx="4"/>`;
+  svg += `<rect x="6960" y="${YM - 60}" width="730" height="150" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5" rx="4"/>`;
   
   // ── Animated orange liquid inside the tank ──
   const etankX = 6960, etankW = 730, etankRx = 4;
@@ -2152,7 +2165,7 @@ function renderRb1Completa() {
   
   // Helper for Escovador
   const drawEscovador = (cx: number, cy: number, label: string, baseId: number) => {
-    let s = `<rect x="${cx - 50}" y="${cy - 40}" width="100" height="80" fill="#1e293b" stroke="#475569" stroke-width="2" rx="6"/>`;
+    let s = `<rect x="${cx - 50}" y="${cy - 40}" width="100" height="80" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5" rx="6"/>`;
     s += `<rect x="${cx - 20}" y="${cy + 40}" width="40" height="40" fill="#0f172a" rx="2"/>`;
     s += `<text x="${cx}" y="${cy - 55}" font-family="Montserrat, sans-serif" font-size="14" font-weight="900" fill="#f97316" text-anchor="middle">${label}</text>`;
     
@@ -2189,7 +2202,7 @@ function renderRb1Completa() {
   
   // Tanque Químico Outline and Text
   svg += `<text x="8020" y="${YM - 80}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">Tanque Quimico</text>`;
-  svg += `<rect x="7880" y="${YM - 60}" width="280" height="150" fill="#1e293b" stroke="#334155" stroke-width="2" rx="4"/>`;
+  svg += `<rect x="7880" y="${YM - 60}" width="280" height="150" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5" rx="4"/>`;
 
   // ── Animated green liquid inside the Tanque Químico ──
   const qtX = 7880, qtW = 280, qtRx = 4;
@@ -2328,7 +2341,7 @@ function renderRb1Completa() {
   
   // Corretor 4 (elevado para a fita passar por baixo)
   svg += corretorCruz(8950, YM - 35, 35, '', 444);
-  svg += `<text x="8950" y="${YM + 25}" font-family="Inter, sans-serif" font-size="16" fill="#ffffff" text-anchor="middle">Corretor 4</text>`;
+  svg += `<text x="8950" y="${YM + 25}" font-family="Inter, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">Corretor 4</text>`;
   
   // ====================================================================
   // BS4 e LOOP DE SAÍDA (Conforme Esboço Fiel)
@@ -2460,7 +2473,7 @@ function renderRb1Completa() {
   lineTo(11020 + shiftX, Y_END);
   
   // Bobinadeira Final
-  svg += solidCoil(11150 + shiftX, Y_END + 20, 60, 'BOBINADEIRA (RECOILER)');
+  svg += solidCoil(11150 + shiftX, Y_END + 20, 60, 'Bobinadeira');
   lineTo(11150 + shiftX, Y_END + 20);
   
   // Novo rolo após a Bobinadeira (solicitado na imagem)
@@ -2628,7 +2641,11 @@ function showRoloModal(pos: number) {
   }
 
   bodyHtml += `
-    <div class="mt-4 pt-4 border-t border-outline-variant/30 flex justify-end">
+    <div class="mt-4 pt-4 border-t border-outline-variant/30 flex justify-end gap-2">
+      <button class="btn btn-ghost text-sm py-1.5 px-4 rounded shadow hover:shadow-md transition-all flex items-center gap-2" onclick="closeRoloModal(); window.openEditMetaModal(${pos})">
+        <span class="material-symbols-outlined text-[18px]">settings</span>
+        Editar Propriedades
+      </button>
       <button class="btn btn-primary text-sm py-1.5 px-4 rounded shadow hover:shadow-md transition-all flex items-center gap-2" onclick="closeRoloModal(); window.openSubModalForPos(${pos})">
         <span class="material-symbols-outlined text-[18px]">edit_document</span>
         Registrar Troca / Editar
@@ -2643,6 +2660,7 @@ function showRoloModal(pos: number) {
 function closeRoloModal() {
   $('roloModal').classList.remove('active');
 }
+(window as any).closeRoloModal = closeRoloModal;
 
 $('roloModalClose').addEventListener('click', closeRoloModal);
 $('roloModal').addEventListener('click', e => { if (e.target === $('roloModal')) closeRoloModal(); });

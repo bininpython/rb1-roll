@@ -1928,12 +1928,41 @@ function renderRb1Completa() {
   // ====================================================================
   let dtX = 5120, dtW = 300, dtTopY = YM - 20, dtBotY = YM + 120;
   // Trapezoidal body (wider at top, narrower at bottom-left)
-  svg += `<path d="M ${dtX} ${dtTopY} L ${dtX + dtW} ${dtTopY} L ${dtX + dtW} ${dtBotY} L ${dtX + 60} ${dtBotY} Z" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5"/>`;
+  const dtTankPath = `M ${dtX} ${dtTopY} L ${dtX + dtW} ${dtTopY} L ${dtX + dtW} ${dtBotY} L ${dtX + 60} ${dtBotY} Z`;
+  svg += `<path d="${dtTankPath}" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5"/>`;
   // Title
   svg += `<text x="${dtX + dtW/2}" y="${dtTopY - 15}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">DIP TANQUE</text>`;
   // Large submerged roll
   let dtRollX = dtX + dtW - 100, dtRollY = dtBotY - 45;
   svg += rNrForno(dtRollX, dtRollY, 28, '', 0, 0, 302);
+  
+  // Water Animation
+  svg += `<clipPath id="dipWaterClip"><path d="${dtTankPath}"/></clipPath>`;
+  svg += `<g clip-path="url(#dipWaterClip)">`;
+  let w1 = `M ${dtX} 0 `;
+  for(let i=0; i<12; i++) w1 += `Q ${dtX + i*40 + 20} -8, ${dtX + i*40 + 40} 0 T ${dtX + i*40 + 80} 0 `;
+  w1 += `L ${dtX + 1000} ${dtBotY - dtTopY + 20} L ${dtX} ${dtBotY - dtTopY + 20} Z`;
+
+  let w2 = `M ${dtX} 5 `;
+  for(let i=0; i<12; i++) w2 += `Q ${dtX + i*50 + 25} -5, ${dtX + i*50 + 50} 5 T ${dtX + i*50 + 100} 5 `;
+  w2 += `L ${dtX + 1200} ${dtBotY - dtTopY + 20} L ${dtX} ${dtBotY - dtTopY + 20} Z`;
+
+  let w3 = `M ${dtX} 10 `;
+  for(let i=0; i<12; i++) w3 += `Q ${dtX + i*60 + 30} 0, ${dtX + i*60 + 60} 10 T ${dtX + i*60 + 120} 10 `;
+  w3 += `L ${dtX + 1500} ${dtBotY - dtTopY + 20} L ${dtX} ${dtBotY - dtTopY + 20} Z`;
+
+  svg += `<g opacity="0.65">
+    <path d="${w3}" fill="#0284c7">
+      <animateTransform attributeName="transform" type="translate" values="0,${dtTopY + 25}; -240,${dtTopY + 25}" dur="6s" repeatCount="indefinite" />
+    </path>
+    <path d="${w1}" fill="#0ea5e9">
+      <animateTransform attributeName="transform" type="translate" values="0,${dtTopY + 30}; -160,${dtTopY + 30}" dur="3.5s" repeatCount="indefinite" />
+    </path>
+    <path d="${w2}" fill="#38bdf8">
+      <animateTransform attributeName="transform" type="translate" values="-200,${dtTopY + 35}; 0,${dtTopY + 35}" dur="5s" repeatCount="indefinite" />
+    </path>
+  </g>`;
+  svg += `</g>`;
   // Two small exit rolls (stacked vertically at exit)
   let dtExitX = dtX + dtW + 15; // Moved outside to the right
   svg += rNrForno(dtExitX, YM - 8, 8, '', 0, 0, 303);

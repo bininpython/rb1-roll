@@ -1,7 +1,7 @@
 /** RB1 System v3 — Main Application (Clean, No Exports) */
 import './style.css';
 import { rolos, estoque, historico, calcDays, getStatus, getRolo, fmtDate, sanitize,
-  registrarSubstituicao, editarHistorico, adicionarEstoque, removerEstoque, initDemo, DECAPAGEM_MAP, DECAPAGEM_ORDER } from './store';
+  registrarSubstituicao, editarHistorico, adicionarEstoque, removerEstoque, initDemo, DECAPAGEM_MAP, DECAPAGEM_ORDER, RB1_COMPLETA_MAP } from './store';
 import type { Posicao, Turno, KanbanStatus } from './types';
 
 const $ = (id: string) => document.getElementById(id)!;
@@ -934,45 +934,52 @@ function renderRb1Completa() {
       <stop offset="100%" stop-color="#64748b"/>
     </linearGradient>
     <linearGradient id="fireCore" x1="0%" y1="100%" x2="0%" y2="0%">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
-      <stop offset="15%" stop-color="#fff7a0" stop-opacity="0.9"/>
-      <stop offset="40%" stop-color="#ffaa00" stop-opacity="0.7"/>
-      <stop offset="70%" stop-color="#ff4500" stop-opacity="0.4"/>
-      <stop offset="100%" stop-color="#8b0000" stop-opacity="0.0"/>
+      <stop offset="0%" stop-color="#fffbe6" stop-opacity="1"/>
+      <stop offset="8%" stop-color="#fff176" stop-opacity="0.95"/>
+      <stop offset="25%" stop-color="#ffcc02" stop-opacity="0.85"/>
+      <stop offset="50%" stop-color="#ff8f00" stop-opacity="0.6"/>
+      <stop offset="80%" stop-color="#e65100" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#bf360c" stop-opacity="0.0"/>
     </linearGradient>
     <linearGradient id="fireMid" x1="0%" y1="100%" x2="0%" y2="0%">
-      <stop offset="0%" stop-color="#ff6600" stop-opacity="0.85"/>
-      <stop offset="30%" stop-color="#ff8c00" stop-opacity="0.65"/>
-      <stop offset="60%" stop-color="#ff4500" stop-opacity="0.4"/>
-      <stop offset="100%" stop-color="#cc0000" stop-opacity="0.0"/>
+      <stop offset="0%" stop-color="#ffab00" stop-opacity="0.9"/>
+      <stop offset="20%" stop-color="#ff8f00" stop-opacity="0.75"/>
+      <stop offset="50%" stop-color="#ff6d00" stop-opacity="0.5"/>
+      <stop offset="80%" stop-color="#dd2c00" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#870000" stop-opacity="0.0"/>
     </linearGradient>
     <linearGradient id="fireOuter" x1="0%" y1="100%" x2="0%" y2="0%">
-      <stop offset="0%" stop-color="#cc3300" stop-opacity="0.6"/>
-      <stop offset="40%" stop-color="#992200" stop-opacity="0.35"/>
-      <stop offset="100%" stop-color="#660000" stop-opacity="0.0"/>
+      <stop offset="0%" stop-color="#ff6d00" stop-opacity="0.7"/>
+      <stop offset="30%" stop-color="#e65100" stop-opacity="0.45"/>
+      <stop offset="65%" stop-color="#bf360c" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#4e0000" stop-opacity="0.0"/>
     </linearGradient>
-    <radialGradient id="emberGlow" cx="50%" cy="80%" r="50%">
-      <stop offset="0%" stop-color="#ff6600" stop-opacity="0.3"/>
-      <stop offset="100%" stop-color="#ff6600" stop-opacity="0.0"/>
+    <linearGradient id="fireBase" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#ff8f00" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#e65100" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#bf360c" stop-opacity="0.1"/>
+    </linearGradient>
+    <radialGradient id="emberGlow" cx="50%" cy="100%" r="60%">
+      <stop offset="0%" stop-color="#ff6d00" stop-opacity="0.45"/>
+      <stop offset="50%" stop-color="#e65100" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#4e0000" stop-opacity="0.0"/>
     </radialGradient>
-    <filter id="fireGlow" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="3" result="blur" />
+    <filter id="fireGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="2.5" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
-    <filter id="fireGlowSoft" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="6" result="blur" />
+    <filter id="fireGlowSoft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="5" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
-    </filter>
-    <filter id="heatShimmer" x="-10%" y="-10%" width="120%" height="120%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.015 0.08" numOctaves="3" seed="2">
-        <animate attributeName="seed" values="1;5;2;8;3;7;1" dur="3s" repeatCount="indefinite"/>
-      </feTurbulence>
-      <feDisplacementMap in="SourceGraphic" scale="4" />
     </filter>
   </defs>`;
 
-  function rolerDecap(cx: number, cy: number, r: number, label: string = '', sub: string = '', hasStand: boolean = true) {
+  function rolerDecap(cx: number, cy: number, r: number, label: string = '', sub: string = '', hasStand: boolean = true, posId?: number) {
     let s = '';
+    if (posId !== undefined) {
+      s += `<g data-rolo-pos="${posId}" class="rolo-clickable" style="cursor: pointer;">`;
+      s += `<circle cx="${cx}" cy="${cy}" r="${Math.max(r + 10, 25)}" fill="transparent" />`; // Invisible hit area
+    }
     // Stand Forno Style
     let sh = 30;
     if (hasStand) {
@@ -999,6 +1006,9 @@ function renderRb1Completa() {
         s += `<text x="${cx}" y="${textY + 23}" font-family="JetBrains Mono, monospace" font-size="8" fill="#9ca3af" text-anchor="middle">2140mm</text>`;
       }
     }
+    if (posId !== undefined) {
+      s += `</g>`;
+    }
     return s;
   }
 
@@ -1007,9 +1017,15 @@ function renderRb1Completa() {
   // HELPER FUNCTIONS (Absolutely Empty)
   // ====================================================================
   
-  function dot(cx: number, cy: number, r: number = 4.5): string { 
-    let s = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#052e16" stroke="#22c55e" stroke-width="1.5" filter="url(#greenGlow)"/>`;
+  function dot(cx: number, cy: number, r: number = 4.5, posId?: number): string { 
+    let s = '';
+    if (posId !== undefined) {
+      s += `<g data-rolo-pos="${posId}" class="rolo-clickable" style="cursor: pointer;">`;
+      s += `<circle cx="${cx}" cy="${cy}" r="${Math.max(r + 10, 20)}" fill="transparent" />`;
+    }
+    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#052e16" stroke="#22c55e" stroke-width="1.5" filter="url(#greenGlow)"/>`;
     s += `<circle cx="${cx}" cy="${cy}" r="${r*0.6}" fill="none" stroke="#22c55e" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.5" class="spin-fast" style="transform-origin: ${cx}px ${cy}px"/>`;
+    if (posId !== undefined) s += `</g>`;
     return s;
   }
   
@@ -1017,7 +1033,7 @@ function renderRb1Completa() {
     let s=''; for(let i=0; i<count; i++) s += `<rect x="${x + i*spacing}" y="${cy - h/2}" width="${w}" height="${h}" fill="#1e293b" rx="2"/>`; return s;
   }
   function solidCoil(cx: number, cy: number, r: number, label: string): string { 
-    return rolerDecap(cx, cy, r, label, '1334 mm');
+    return rolerDecap(cx, cy, r, label, '1334 mm', true);
   }
   
   function maqSolda(cx: number, cy: number): string { 
@@ -1246,10 +1262,16 @@ function renderRb1Completa() {
   svg += `<text x="60" y="${Y2 - 50}" font-family="Montserrat, sans-serif" font-size="16" font-weight="900" fill="#94a3b8">ENTRADA 2</text>`;
   
   // Helper for small numbered rollers
-  function rNrForno(cx: number, cy: number, r: number, num: string, nx: number, ny: number) {
-    let s = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#052e16" stroke="#22c55e" stroke-width="1.5" filter="url(#greenGlow)"/>`;
+  function rNrForno(cx: number, cy: number, r: number, num: string, nx: number, ny: number, posId?: number) {
+    let s = '';
+    if (posId !== undefined) {
+      s += `<g data-rolo-pos="${posId}" class="rolo-clickable" style="cursor: pointer;">`;
+      s += `<circle cx="${cx}" cy="${cy}" r="${Math.max(r + 10, 20)}" fill="transparent" />`;
+    }
+    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#052e16" stroke="#22c55e" stroke-width="1.5" filter="url(#greenGlow)"/>`;
     s += `<circle cx="${cx}" cy="${cy}" r="${r*0.6}" fill="none" stroke="#22c55e" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.5" class="spin-fast" style="transform-origin: ${cx}px ${cy}px"/>`;
     s += `<text x="${nx}" y="${ny}" font-family="JetBrains Mono, monospace" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">${num}</text>`;
+    if (posId !== undefined) s += `</g>`;
     return s;
   }
 
@@ -1714,88 +1736,91 @@ function renderRb1Completa() {
   svg += `<rect x="${fX}" y="${fY}" width="${fW}" height="${fH}" fill="#1e293b" stroke="#334155" stroke-width="2" rx="4"/>`;
   svg += `<text x="${fX + fW/2}" y="${fY - 15}" font-family="Montserrat, sans-serif" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">FORNO DE RECOZIMENTO</text>`;
   
-  // ── Realistic multi-layer fire animation ──
+  // ── Realistic wispy fire animation ──
   const flameBottomY = fY + fH;
-  const flameTopY = fY;
   
-  // Ambient heat glow across the whole furnace interior
-  svg += `<rect x="${fX+2}" y="${fY+2}" width="${fW-4}" height="${fH-4}" fill="url(#emberGlow)" rx="3">
-    <animate attributeName="opacity" values="0.3;0.6;0.4;0.7;0.3" dur="2s" repeatCount="indefinite"/>
+  // Clip flames to furnace interior
+  svg += `<clipPath id="furnaceClip"><rect x="${fX+1}" y="${fY+1}" width="${fW-2}" height="${fH-2}" rx="3"/></clipPath>`;
+  svg += `<g clip-path="url(#furnaceClip)">`;
+  
+  // Ambient heat glow (continuous warm base)
+  svg += `<rect x="${fX}" y="${flameBottomY - 50}" width="${fW}" height="50" fill="url(#emberGlow)">
+    <animate attributeName="opacity" values="0.6;0.9;0.7;1;0.6" dur="1.5s" repeatCount="indefinite"/>
+  </rect>`;
+  // Secondary glow higher up
+  svg += `<rect x="${fX}" y="${flameBottomY - 90}" width="${fW}" height="90" fill="url(#fireBase)" opacity="0.15">
+    <animate attributeName="opacity" values="0.1;0.2;0.15;0.25;0.1" dur="2s" repeatCount="indefinite"/>
   </rect>`;
   
-  // Helper: build a flame path with SMIL animation for organic movement
-  function makeFlame(bx: number, by: number, h: number, w: number, dir: number, grad: string, filt: string, dur: string, opRange: string) {
-    // dir=1 = upward (from bottom), dir=-1 = downward (from top)
-    const d = dir;
-    const tipY = by - d * h;
-    const cp1Y = by - d * h * 0.35;
-    const cp2Y = by - d * h * 0.7;
-    const tipNarrow = w * 0.15;
-    const tipWide = w * 0.5;
-    // Two slightly different paths for morphing
-    const path1 = `M ${bx} ${by} C ${bx - tipWide} ${cp1Y} ${bx - tipNarrow} ${cp2Y} ${bx} ${tipY} C ${bx + tipNarrow} ${cp2Y} ${bx + tipWide} ${cp1Y} ${bx} ${by} Z`;
-    const h2 = h * (0.85 + Math.random() * 0.3);
-    const w2 = w * (0.8 + Math.random() * 0.4);
-    const tipY2 = by - d * h2;
-    const cp1Y2 = by - d * h2 * 0.4;
-    const cp2Y2 = by - d * h2 * 0.65;
-    const tipN2 = w2 * 0.1;
-    const tipW2 = w2 * 0.55;
-    const path2 = `M ${bx} ${by} C ${bx - tipW2} ${cp1Y2} ${bx - tipN2} ${cp2Y2} ${bx} ${tipY2} C ${bx + tipN2} ${cp2Y2} ${bx + tipW2} ${cp1Y2} ${bx} ${by} Z`;
+  // Helper: thin wispy S-curve flame tongue
+  function wispyFlame(bx: number, by: number, h: number, sway: number, w: number, grad: string, filt: string, dur: string, opRange: string) {
+    // S-curve flame: base at (bx, by), tip at (bx + sway, by - h)
+    // Path 1
+    const m1x = bx + sway * 0.3;
+    const m1y = by - h * 0.5;
+    const t1x = bx + sway;
+    const t1y = by - h;
+    const p1 = `M ${bx - w} ${by} C ${bx - w*0.8} ${by - h*0.2} ${m1x - w*0.4} ${m1y} ${t1x} ${t1y} C ${m1x + w*0.4} ${m1y} ${bx + w*0.8} ${by - h*0.2} ${bx + w} ${by} Z`;
+    // Path 2 (different sway for morphing)
+    const sw2 = sway * (0.5 + Math.random() * 1.0) * (Math.random() > 0.5 ? 1 : -0.6);
+    const h2 = h * (0.8 + Math.random() * 0.35);
+    const w2 = w * (0.7 + Math.random() * 0.5);
+    const m2x = bx + sw2 * 0.4;
+    const m2y = by - h2 * 0.45;
+    const t2x = bx + sw2;
+    const t2y = by - h2;
+    const p2 = `M ${bx - w2} ${by} C ${bx - w2*0.7} ${by - h2*0.25} ${m2x - w2*0.35} ${m2y} ${t2x} ${t2y} C ${m2x + w2*0.35} ${m2y} ${bx + w2*0.7} ${by - h2*0.25} ${bx + w2} ${by} Z`;
     return `<path fill="url(#${grad})" filter="url(#${filt})">
-      <animate attributeName="d" values="${path1};${path2};${path1}" dur="${dur}" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+      <animate attributeName="d" values="${p1};${p2};${p1}" dur="${dur}" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95"/>
       <animate attributeName="opacity" values="${opRange}" dur="${dur}" repeatCount="indefinite"/>
     </path>`;
   }
 
-  // --- BOTTOM FLAMES (3 layers: outer, mid, core) ---
-  const nFlames = 14;
-  const sp = fW / (nFlames + 1);
-  
-  // Layer 1: Outer glow (large, dim, reddish)
-  for (let i = 1; i <= nFlames; i++) {
-    const fx = fX + i * sp + (Math.random() - 0.5) * 8;
-    const h = 45 + Math.random() * 30;
-    const w = 18 + Math.random() * 12;
-    const dur = (1.2 + Math.random() * 0.8).toFixed(2) + 's';
-    svg += makeFlame(fx, flameBottomY, h, w, 1, 'fireOuter', 'fireGlowSoft', dur, '0.3;0.55;0.35;0.5;0.3');
-  }
-  // Layer 2: Mid flames (bright orange)
-  for (let i = 1; i <= nFlames; i++) {
-    const fx = fX + i * sp + (Math.random() - 0.5) * 5;
-    const h = 35 + Math.random() * 25;
-    const w = 12 + Math.random() * 8;
-    const dur = (0.8 + Math.random() * 0.6).toFixed(2) + 's';
-    svg += makeFlame(fx, flameBottomY, h, w, 1, 'fireMid', 'fireGlow', dur, '0.5;0.8;0.55;0.75;0.5');
-  }
-  // Layer 3: Core (white-hot, small, bright)
-  for (let i = 1; i <= nFlames; i++) {
-    const fx = fX + i * sp + (Math.random() - 0.5) * 3;
-    const h = 18 + Math.random() * 15;
-    const w = 6 + Math.random() * 5;
-    const dur = (0.5 + Math.random() * 0.5).toFixed(2) + 's';
-    svg += makeFlame(fx, flameBottomY, h, w, 1, 'fireCore', 'fireGlow', dur, '0.6;1;0.7;0.95;0.6');
+  // --- Layer 1: Background glow flames (wide, dim, red-orange) ---
+  const n1 = 20;
+  for (let i = 0; i < n1; i++) {
+    const fx = fX + 10 + (fW - 20) * (i / (n1 - 1)) + (Math.random() - 0.5) * 15;
+    const h = 60 + Math.random() * 50;
+    const sway = (Math.random() - 0.5) * 20;
+    const w = 8 + Math.random() * 6;
+    const dur = (1.5 + Math.random() * 1.2).toFixed(2) + 's';
+    svg += wispyFlame(fx, flameBottomY, h, sway, w, 'fireOuter', 'fireGlowSoft', dur, '0.25;0.45;0.3;0.5;0.25');
   }
   
-  // --- TOP FLAMES (inverted, smaller, 2 layers) ---
-  const nTopFlames = 10;
-  const spTop = fW / (nTopFlames + 1);
-  // Outer top
-  for (let i = 1; i <= nTopFlames; i++) {
-    const fx = fX + i * spTop + (Math.random() - 0.5) * 6;
-    const h = 25 + Math.random() * 18;
-    const w = 14 + Math.random() * 8;
-    const dur = (1.0 + Math.random() * 0.8).toFixed(2) + 's';
-    svg += makeFlame(fx, flameTopY, h, w, -1, 'fireOuter', 'fireGlowSoft', dur, '0.2;0.4;0.25;0.35;0.2');
+  // --- Layer 2: Mid flames (orange, medium) ---
+  const n2 = 25;
+  for (let i = 0; i < n2; i++) {
+    const fx = fX + 8 + (fW - 16) * (i / (n2 - 1)) + (Math.random() - 0.5) * 10;
+    const h = 45 + Math.random() * 45;
+    const sway = (Math.random() - 0.5) * 16;
+    const w = 4 + Math.random() * 5;
+    const dur = (0.8 + Math.random() * 1.0).toFixed(2) + 's';
+    svg += wispyFlame(fx, flameBottomY, h, sway, w, 'fireMid', 'fireGlow', dur, '0.4;0.7;0.45;0.65;0.4');
   }
-  // Core top
-  for (let i = 1; i <= nTopFlames; i++) {
-    const fx = fX + i * spTop + (Math.random() - 0.5) * 4;
-    const h = 14 + Math.random() * 10;
-    const w = 6 + Math.random() * 5;
-    const dur = (0.6 + Math.random() * 0.5).toFixed(2) + 's';
-    svg += makeFlame(fx, flameTopY, h, w, -1, 'fireMid', 'fireGlow', dur, '0.3;0.6;0.35;0.55;0.3');
+  
+  // --- Layer 3: Bright core flames (yellow-white, thin, tall) ---
+  const n3 = 30;
+  for (let i = 0; i < n3; i++) {
+    const fx = fX + 12 + (fW - 24) * (i / (n3 - 1)) + (Math.random() - 0.5) * 8;
+    const h = 30 + Math.random() * 55;
+    const sway = (Math.random() - 0.5) * 12;
+    const w = 2 + Math.random() * 3;
+    const dur = (0.6 + Math.random() * 0.8).toFixed(2) + 's';
+    svg += wispyFlame(fx, flameBottomY, h, sway, w, 'fireCore', 'fireGlow', dur, '0.5;0.9;0.6;0.85;0.5');
   }
+  
+  // --- Layer 4: Sparkling tips (very thin, very tall, flickering) ---
+  const n4 = 15;
+  for (let i = 0; i < n4; i++) {
+    const fx = fX + 20 + (fW - 40) * (i / (n4 - 1)) + (Math.random() - 0.5) * 12;
+    const h = 70 + Math.random() * 50;
+    const sway = (Math.random() - 0.5) * 25;
+    const w = 1.5 + Math.random() * 2;
+    const dur = (0.5 + Math.random() * 0.6).toFixed(2) + 's';
+    svg += wispyFlame(fx, flameBottomY, h, sway, w, 'fireCore', 'fireGlow', dur, '0.2;0.7;0.1;0.6;0.2');
+  }
+  
+  svg += `</g>`;
   
   // 5 Support Rolls (Rolo 0 outside, Rolo 1-4 inside)
   let rx0 = 3875;
@@ -1803,7 +1828,7 @@ function renderRb1Completa() {
     let cx = rx0 + i * 150;
     let r = 26; 
     let cy = YM + r; 
-    svg += rNrForno(cx, cy, r, '', 0, 0);
+    svg += rNrForno(cx, cy, r, '', 0, 0, i);
     svg += `<text x="${cx}" y="${cy + r + 20}" font-family="Montserrat, sans-serif" font-size="11" font-weight="900" fill="#ffffff" text-anchor="middle">Rolo ${i}</text>`;
   }
 
@@ -2462,6 +2487,136 @@ function renderRb1Completa() {
     `;
   }
 }
+
+// ============================================================================
+// ROLO MODAL LOGIC
+// ============================================================================
+
+function showRoloModal(pos: number) {
+  const r = getRolo(pos);
+  const meta = DECAPAGEM_MAP[pos] || RB1_COMPLETA_MAP[pos];
+  
+  if (!meta) {
+    toast(`Metadados não encontrados para a posição ${pos}`, 'error');
+    return;
+  }
+
+  $('roloModalTitle').innerText = `${meta.nome} (Pos ${pos})`;
+  $('roloModalSecao').innerText = meta.secao;
+
+  let bodyHtml = '';
+  
+  if (r && !r.id.startsWith('virtual')) {
+    const days = calcDays(r.data_troca);
+    const st = getStatus(days);
+    const bg = st === 'green' ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : st === 'yellow' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' : 'bg-red-100 text-red-800 border-red-200';
+    
+    bodyHtml += `
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-surface-container-low p-3 rounded-md border border-outline-variant/50">
+          <span class="text-[10px] uppercase font-bold text-outline">Status Kanban</span>
+          <div class="mt-1 font-mono font-bold text-sm px-2 py-1 rounded border inline-block ${bg}">${st.toUpperCase()}</div>
+        </div>
+        <div class="bg-surface-container-low p-3 rounded-md border border-outline-variant/50">
+          <span class="text-[10px] uppercase font-bold text-outline">Diâmetro Atual</span>
+          <div class="mt-1 font-mono font-bold text-sm text-primary-container">${r.diametro} mm</div>
+        </div>
+        <div class="bg-surface-container-low p-3 rounded-md border border-outline-variant/50">
+          <span class="text-[10px] uppercase font-bold text-outline">Rolamento Utilizado</span>
+          <div class="mt-1 font-bold text-sm text-on-surface">${r.rolamento || meta.rolamentoPadrao || 'Padrão'}</div>
+        </div>
+        <div class="bg-surface-container-low p-3 rounded-md border border-outline-variant/50">
+          <span class="text-[10px] uppercase font-bold text-outline">Tempo de Uso</span>
+          <div class="mt-1 font-mono font-bold text-sm text-on-surface">${days} dias</div>
+        </div>
+        <div class="bg-surface-container-low p-3 rounded-md border border-outline-variant/50 col-span-2 flex justify-between items-center">
+          <div>
+            <span class="text-[10px] uppercase font-bold text-outline">Última Troca</span>
+            <div class="mt-1 text-sm text-on-surface">${new Date(r.data_troca).toLocaleDateString('pt-BR')} (Turno ${r.turno})</div>
+          </div>
+          <div class="text-right">
+             <span class="text-[10px] uppercase font-bold text-outline">Motivo</span>
+             <div class="mt-1 text-sm text-on-surface max-w-[200px] truncate" title="${r.obs_motivo || 'Não informado'}">${r.obs_motivo || 'Não informado'}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  } else {
+    bodyHtml += `
+      <div class="bg-surface-container-low p-4 rounded-md border border-outline-variant/50 text-center">
+        <span class="material-symbols-outlined text-outline text-3xl mb-2">info</span>
+        <h4 class="font-bold text-on-surface">Sem dados registrados</h4>
+        <p class="text-sm text-on-surface-variant mt-1">Este rolo ainda não possui registros de troca no sistema.</p>
+        <div class="mt-3 grid grid-cols-2 gap-2 text-left">
+          <div class="bg-white p-2 rounded border border-outline-variant/30">
+            <span class="text-[9px] uppercase font-bold text-outline">Tipo</span>
+            <div class="font-mono text-xs">${meta.tipo}</div>
+          </div>
+          <div class="bg-white p-2 rounded border border-outline-variant/30">
+            <span class="text-[9px] uppercase font-bold text-outline">Diâmetro Padrão</span>
+            <div class="font-mono text-xs">${meta.diametroPadrao} mm</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Histórico Table
+  const hist = historico.filter(h => h.posicao === pos).sort((a, b) => new Date(b.data_troca).getTime() - new Date(a.data_troca).getTime()).slice(0, 5);
+  
+  if (hist.length > 0) {
+    bodyHtml += `
+      <div class="mt-2">
+        <h4 class="text-xs font-bold uppercase text-outline mb-2">Últimas 5 Trocas</h4>
+        <div class="overflow-x-auto border border-outline-variant/50 rounded-md">
+          <table class="w-full text-left border-collapse text-[11px]">
+            <thead class="bg-surface-container text-on-surface-variant uppercase">
+              <tr>
+                <th class="px-2 py-1.5">Data</th>
+                <th class="px-2 py-1.5">Turno</th>
+                <th class="px-2 py-1.5">Motivo</th>
+                <th class="px-2 py-1.5">Diâmetro</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${hist.map(h => `
+                <tr class="border-t border-outline-variant/30">
+                  <td class="px-2 py-1.5">${new Date(h.data_troca).toLocaleDateString('pt-BR')}</td>
+                  <td class="px-2 py-1.5"><span class="turno-badge turno-${h.turno} scale-75 origin-left inline-block">${h.turno}</span></td>
+                  <td class="px-2 py-1.5 truncate max-w-[120px]" title="${h.obs_motivo}">${h.obs_motivo}</td>
+                  <td class="px-2 py-1.5 font-mono">${h.diametro}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  }
+
+  $('roloModalBody').innerHTML = bodyHtml;
+  $('roloModal').classList.add('active');
+}
+
+function closeRoloModal() {
+  $('roloModal').classList.remove('active');
+}
+
+$('roloModalClose').addEventListener('click', closeRoloModal);
+$('roloModal').addEventListener('click', e => { if (e.target === $('roloModal')) closeRoloModal(); });
+
+// Event Delegation for RB1 Completa Diagram
+$('rb1CompletaDiagram').addEventListener('click', (e) => {
+  const target = e.target as SVGElement;
+  const g = target.closest('.rolo-clickable');
+  if (g) {
+    const posId = g.getAttribute('data-rolo-pos');
+    if (posId) {
+      showRoloModal(parseInt(posId, 10));
+    }
+  }
+});
+
 
 function renderAll(){
   renderStats();

@@ -5,16 +5,17 @@ export let rolos: Rolo[] = [];
 export let estoque: EstoqueItem[] = [];
 export let historico: HistoricoRecord[] = [];
 
-export interface DecapagemRollerInfo {
+export interface RollerInfo {
   readonly posicao: number;
   readonly nome: string;
   readonly perimetro: number;
   readonly diametroPadrao: number;
-  readonly tipo: 'Rolo' | 'Escova';
-  readonly secao: 'Eletrolítico' | 'Químico';
+  readonly tipo: 'Rolo' | 'Escova' | string;
+  readonly secao: string;
+  readonly rolamentoPadrao?: string;
 }
 
-export const DECAPAGEM_MAP: Record<number, DecapagemRollerInfo> = {
+export const DECAPAGEM_MAP: Record<number, RollerInfo> = {
   100: { posicao: 100, nome: 'Defletor Entrada', perimetro: 3140, diametroPadrao: 1000, tipo: 'Rolo', secao: 'Eletrolítico' },
   101: { posicao: 101, nome: 'Defletor 1', perimetro: 1884, diametroPadrao: 600, tipo: 'Rolo', secao: 'Eletrolítico' },
   102: { posicao: 102, nome: 'Fundo do tanque 1', perimetro: 320, diametroPadrao: 101.9, tipo: 'Rolo', secao: 'Eletrolítico' },
@@ -65,6 +66,16 @@ export const DECAPAGEM_ORDER = [
   119, 129 // Espremedor 4 (Sup / Inf)
 ];
 
+export const RB1_COMPLETA_MAP: Record<number, RollerInfo> = {
+  // Forno section
+  0: { posicao: 0, nome: 'Rolo Forno 0', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Forno', rolamentoPadrao: 'Alta Temp' },
+  1: { posicao: 1, nome: 'Rolo Forno 1', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Forno', rolamentoPadrao: 'Alta Temp' },
+  2: { posicao: 2, nome: 'Rolo Forno 2', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Forno', rolamentoPadrao: 'Alta Temp' },
+  3: { posicao: 3, nome: 'Rolo Forno 3', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Forno', rolamentoPadrao: 'Alta Temp' },
+  4: { posicao: 4, nome: 'Rolo Forno 4', perimetro: 0, diametroPadrao: 200, tipo: 'Rolo', secao: 'Forno', rolamentoPadrao: 'Alta Temp' },
+};
+
+
 // Funções Utilitárias e de Segurança
 export const genId = () => Math.random().toString(36).substring(2, 9);
 export const calcDays = (d: string) => Math.floor((Date.now() - new Date(d).getTime()) / 864e5);
@@ -73,7 +84,7 @@ export const getStatus = (days: number | null): KanbanStatus => { if (days === n
 export const getRolo = (p: number): Rolo | undefined => {
   const r = rolos.find(x => x.posicao === p);
   if (r) return r;
-  const meta = DECAPAGEM_MAP[p];
+  const meta = DECAPAGEM_MAP[p] || RB1_COMPLETA_MAP[p];
   if (meta) {
     // Consistent fallback data based on position
     const daysAgo = (p % 4) + 1; // 1 to 4 days ago
@@ -85,7 +96,8 @@ export const getRolo = (p: number): Rolo | undefined => {
       data_troca: dt.toISOString(),
       turno: 'TT',
       diametro: meta.diametroPadrao,
-      obs_motivo: ''
+      obs_motivo: '',
+      rolamento: meta.rolamentoPadrao || 'Padrão'
     };
   }
   return undefined;

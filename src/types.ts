@@ -10,6 +10,7 @@ export interface Rolo {
         turno: Turno;
         diametro: number;
         obs_motivo: string;
+        rolamento?: string;
 }
 
 export interface EstoqueItem {
@@ -30,4 +31,5 @@ export interface HistoricoRecord {
         obs_motivo: string;
         idade_dias: number;
         created_at: string;
+        rolamento?: string;
 }

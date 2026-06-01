@@ -2565,6 +2565,8 @@ function renderRb1Completa() {
   svg += `
     <defs>
       <path id="redArrow" d="M -20 -15 L 20 0 L -20 15 Z" fill="#ef4444" stroke="#ffffff" stroke-width="2" />
+      <path id="trackPath1" d="${stripPath}" />
+      <path id="trackPath2" d="${pathArrow2}" />
       <filter id="redGlow">
         <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
         <feMerge>
@@ -2605,7 +2607,7 @@ function renderRb1Completa() {
         rb1PanZoomInstance = panzoom(svgEl, {
           maxZoom: 5,
           minZoom: 0.1,
-          initialZoom: 0.15,
+          initialZoom: 0.8,
           initialX: 0,
           initialY: 0,
           bounds: true,
@@ -2613,6 +2615,7 @@ function renderRb1Completa() {
           smoothScroll: false
         });
 
+        
         // Controls
         const btnIn = document.getElementById('btnZoomInCompleta');
         const btnOut = document.getElementById('btnZoomOutCompleta');
@@ -2620,8 +2623,8 @@ function renderRb1Completa() {
         const btnPause = document.getElementById('btnPauseAnimation');
         const iconPause = document.getElementById('iconPauseAnimation');
 
+        let isPaused = false;
         if (btnPause && iconPause) {
-          let isPaused = false;
           btnPause.onclick = () => {
             isPaused = !isPaused;
             if (isPaused) {
@@ -2635,6 +2638,45 @@ function renderRb1Completa() {
             }
           };
         }
+
+        // Camera Tracking Loop
+        const track1 = document.getElementById('trackPath1') as unknown as SVGPathElement;
+        const track2 = document.getElementById('trackPath2') as unknown as SVGPathElement;
+        const totalDuration = 40; // matches dur="40s"
+
+        function updateCamera() {
+          if (!document.body.contains(svgEl)) return;
+          if (!isPaused && rb1PanZoomInstance && track1 && track2) {
+            const time = (svgEl as SVGSVGElement).getCurrentTime() % (totalDuration * 2);
+            let p;
+            if (time < totalDuration) {
+              const progress = time / totalDuration;
+              p = track1.getPointAtLength(progress * track1.getTotalLength());
+            } else {
+              const progress = (time - totalDuration) / totalDuration;
+              p = track2.getPointAtLength(progress * track2.getTotalLength());
+            }
+
+            if (p && el) {
+              const container = el.parentElement;
+              if (container) {
+                const cw = container.clientWidth;
+                const ch = container.clientHeight;
+                const zoom = rb1PanZoomInstance.getTransform().scale;
+                
+                // Keep the Y slightly lower so the arrow is in upper-mid screen
+                const panX = (cw / 2) - p.x * zoom;
+                const panY = (ch / 2) - p.y * zoom;
+                
+                // Smooth move
+                rb1PanZoomInstance.moveTo(panX, panY);
+              }
+            }
+          }
+          requestAnimationFrame(updateCamera);
+        }
+        updateCamera();
+
 
         if (btnIn) {
           btnIn.onclick = () => {

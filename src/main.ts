@@ -7,6 +7,9 @@ import panzoom from 'panzoom';
 
 const $ = (id: string) => document.getElementById(id)!;
 let rb1PanZoomInstance: any = null;
+let globalAnimTime = 0;
+let globalAnimLastTime = performance.now();
+let globalIsPaused = false;
 
 function toast(msg: string, type: 'success'|'error'|'info' = 'info') {
   const c = $('toastContainer'), t = document.createElement('div');
@@ -2617,11 +2620,14 @@ function renderRb1Completa() {
         const btnPause = document.getElementById('btnPauseAnimation');
         const iconPause = document.getElementById('iconPauseAnimation');
 
-        let isPaused = false;
         if (btnPause && iconPause) {
+          if (globalIsPaused) {
+             iconPause.textContent = 'play_arrow';
+             btnPause.classList.add('bg-primary/50');
+          }
           btnPause.onclick = () => {
-            isPaused = !isPaused;
-            if (isPaused) {
+            globalIsPaused = !globalIsPaused;
+            if (globalIsPaused) {
               (svgEl as SVGSVGElement).pauseAnimations();
               iconPause.textContent = 'play_arrow';
               btnPause.classList.add('bg-primary/50');
@@ -2640,18 +2646,15 @@ function renderRb1Completa() {
         const arrow2 = document.getElementById('arrow2Group');
         const totalDuration = 300; // 300 seconds per path (very slow movement)
         
-        let animTime = 0;
-        let lastTime = performance.now();
-
         function updateCamera(now: number) {
           if (!document.body.contains(svgEl)) return;
           
-          let dt = (now - lastTime) / 1000;
-          lastTime = now;
+          let dt = (now - globalAnimLastTime) / 1000;
+          globalAnimLastTime = now;
           
-          if (!isPaused && rb1PanZoomInstance && track1 && track2 && arrow1 && arrow2) {
-            animTime += dt;
-            const time = animTime % (totalDuration * 2);
+          if (!globalIsPaused && rb1PanZoomInstance && track1 && track2 && arrow1 && arrow2) {
+            globalAnimTime += dt;
+            const time = globalAnimTime % (totalDuration * 2);
             let p, pNext, activeArrow, trackPath;
             
             if (time < totalDuration) {

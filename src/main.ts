@@ -2576,17 +2576,11 @@ function renderRb1Completa() {
       </filter>
     </defs>
     
-    <g id="arrow1Group">
-      <use href="#redArrow" filter="url(#redGlow)">
-        <animateMotion id="animArrow1" begin="0s;animArrow2.end" dur="40s" fill="freeze" rotate="auto" path="${stripPath}" />
-        <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.999;1" begin="animArrow1.begin" dur="40s" fill="freeze" />
-      </use>
+    <g id="arrow1Group" style="display: none;">
+      <use href="#redArrow" filter="url(#redGlow)" />
     </g>
-    <g id="arrow2Group" opacity="0">
-      <use href="#redArrow" filter="url(#redGlow)">
-        <animateMotion id="animArrow2" begin="animArrow1.end" dur="40s" fill="freeze" rotate="auto" path="${pathArrow2}" />
-        <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.999;1" begin="animArrow2.begin" dur="40s" fill="freeze" />
-      </use>
+    <g id="arrow2Group" style="display: none;">
+      <use href="#redArrow" filter="url(#redGlow)" />
     </g>
   `;
 
@@ -2642,20 +2636,46 @@ function renderRb1Completa() {
         // Camera Tracking Loop
         const track1 = document.getElementById('trackPath1') as unknown as SVGPathElement;
         const track2 = document.getElementById('trackPath2') as unknown as SVGPathElement;
-        const totalDuration = 40; // matches dur="40s"
+        const arrow1 = document.getElementById('arrow1Group');
+        const arrow2 = document.getElementById('arrow2Group');
+        const totalDuration = 40; // 40 seconds per path
+        
+        let animTime = 0;
+        let lastTime = performance.now();
 
-        function updateCamera() {
+        function updateCamera(now: number) {
           if (!document.body.contains(svgEl)) return;
-          if (!isPaused && rb1PanZoomInstance && track1 && track2) {
-            const time = (svgEl as SVGSVGElement).getCurrentTime() % (totalDuration * 2);
-            let p;
+          
+          let dt = (now - lastTime) / 1000;
+          lastTime = now;
+          
+          if (!isPaused && rb1PanZoomInstance && track1 && track2 && arrow1 && arrow2) {
+            animTime += dt;
+            const time = animTime % (totalDuration * 2);
+            let p, pNext, activeArrow, trackPath;
+            
             if (time < totalDuration) {
-              const progress = time / totalDuration;
-              p = track1.getPointAtLength(progress * track1.getTotalLength());
+              activeArrow = arrow1;
+              arrow2.style.display = 'none';
+              trackPath = track1;
             } else {
-              const progress = (time - totalDuration) / totalDuration;
-              p = track2.getPointAtLength(progress * track2.getTotalLength());
+              activeArrow = arrow2;
+              arrow1.style.display = 'none';
+              trackPath = track2;
             }
+
+            activeArrow.style.display = 'block';
+            let progress = (time % totalDuration) / totalDuration;
+            let len = trackPath.getTotalLength();
+            let currentDist = progress * len;
+            p = trackPath.getPointAtLength(currentDist);
+            
+            // Calculate angle
+            let nextDist = Math.min(len, currentDist + 1);
+            pNext = trackPath.getPointAtLength(nextDist);
+            let angle = Math.atan2(pNext.y - p.y, pNext.x - p.x) * (180 / Math.PI);
+            
+            activeArrow.setAttribute('transform', `translate(${p.x}, ${p.y}) rotate(${angle})`);
 
             if (p && el) {
               const container = el.parentElement;
@@ -2664,18 +2684,16 @@ function renderRb1Completa() {
                 const ch = container.clientHeight;
                 const zoom = rb1PanZoomInstance.getTransform().scale;
                 
-                // Keep the Y slightly lower so the arrow is in upper-mid screen
                 const panX = (cw / 2) - p.x * zoom;
                 const panY = (ch / 2) - p.y * zoom;
                 
-                // Smooth move
                 rb1PanZoomInstance.moveTo(panX, panY);
               }
             }
           }
           requestAnimationFrame(updateCamera);
         }
-        updateCamera();
+        requestAnimationFrame(updateCamera);
 
 
         if (btnIn) {

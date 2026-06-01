@@ -1,7 +1,7 @@
 /** RB1 System v3 — Main Application (Clean, No Exports) */
 import './style.css';
 import { rolos, estoque, historico, calcDays, getStatus, getRolo, fmtDate, sanitize,
-  registrarSubstituicao, editarHistorico, adicionarEstoque, removerEstoque, initDemo, salvarMetadados, DECAPAGEM_MAP, DECAPAGEM_ORDER, RB1_COMPLETA_MAP } from './store';
+  registrarSubstituicao, editarHistorico, adicionarEstoque, removerEstoque, initDemo, salvarMetadados, DECAPAGEM_MAP, DECAPAGEM_ORDER, RB1_COMPLETA_MAP, RollerInfo } from './store';
 import type { Posicao, Turno, KanbanStatus } from './types';
 
 const $ = (id: string) => document.getElementById(id)!;
@@ -691,7 +691,10 @@ $('modalEst').addEventListener('click',e=>{if(e.target===$('modalEst')){$('modal
   if(!d){toast('Informe o diâmetro!','error');return;}
   try{
     const isDecTab = $('tabDecapagem').classList.contains('active');
-    const taggedObs = isDecTab ? '[Decapagem] ' + obs : '[Forno] ' + obs;
+    const part1 = String(Math.floor(Math.random() * 90000) + 10000);
+    const part2 = String(Math.floor(Math.random() * 90) + 10);
+    const code = `RB1 ${part1}-${part2}`;
+    const taggedObs = (isDecTab ? '[Decapagem] ' : '[Forno] ') + obs + ` [Cód: ${code}]`;
     adicionarEstoque(d,taggedObs);
     $('modalEst').classList.remove('active');
     ($('formEst') as HTMLFormElement).reset();
@@ -2567,35 +2570,43 @@ function renderRb1Completa() {
     }
   }
 
-  // Legend
-  const legend = document.getElementById('rb1CompletaLegend');
-  if (legend) {
-    legend.innerHTML = `
-      <div class="legend-item">
-        <div class="legend-icon"><svg width="24" height="14"><circle cx="7" cy="7" r="5" fill="#000"/></svg></div>
-        <span>Rolo guia mecânico</span>
-      </div>
-      <div class="legend-item">
-        <div class="legend-icon"><svg width="28" height="16"><circle cx="14" cy="8" r="7" fill="#000"/><circle cx="14" cy="8" r="3.5" fill="url(#metalRoll)"/><circle cx="14" cy="8" r="1.5" fill="#000"/></svg></div>
-        <span>Bobina / Mandril</span>
-      </div>
-      <div class="legend-item">
-        <div class="legend-icon"><svg width="28" height="14"><rect x="4" y="1" width="12" height="12" fill="none" stroke="#000" stroke-width="1.5"/></svg></div>
-        <span>Estrutura / Tesoura</span>
-      </div>
-      <div class="legend-item">
-        <div class="legend-icon"><svg width="28" height="14"><path d="M 4 10 Q 14 -2 24 10" fill="none" stroke="#000" stroke-width="2"/></svg></div>
-        <span>Calandra / Enrolador</span>
-      </div>
-      <div class="legend-item">
-        <div class="legend-icon"><svg width="28" height="14"><polygon points="14,1 24,13 4,13" fill="none" stroke="#000" stroke-width="1.5"/></svg></div>
-        <span>Secador / Forno Térmico</span>
-      </div>
-      <div class="legend-item">
-        <div class="legend-icon"><svg width="28" height="14"><circle cx="14" cy="7" r="6" fill="none" stroke="#000" stroke-width="1.5"/><path d="M 14 1 A 6 6 0 0 1 20 7 L 14 7 Z" fill="#000"/><path d="M 14 13 A 6 6 0 0 1 8 7 L 14 7 Z" fill="#000"/></svg></div>
-        <span>Corretor de Alinhamento</span>
-      </div>
-    `;
+  // Legend logic removed to replace with lists
+}
+
+function renderRb1CompletaLists() {
+  const allMetadata = new Map<number, RollerInfo>();
+  Object.values(RB1_COMPLETA_MAP).forEach(m => allMetadata.set(m.posicao, m));
+  Object.values(DECAPAGEM_MAP).forEach(m => allMetadata.set(m.posicao, m));
+  const sortedMetadata = Array.from(allMetadata.values()).sort((a,b) => a.posicao - b.posicao);
+  
+  const listAll = $('listAllRollers');
+  if (listAll) {
+    listAll.innerHTML = sortedMetadata.map(m => `
+      <tr class="hover:bg-surface-bright/50 transition-colors">
+        <td class="px-4 py-3 font-medium text-on-surface">${m.posicao}</td>
+        <td class="px-4 py-3 font-mono text-primary">${m.recurso || '<span class="text-gray-400">Sem código</span>'}</td>
+        <td class="px-4 py-3">${m.nome}</td>
+        <td class="px-4 py-3">${m.tipo}</td>
+        <td class="px-4 py-3">
+          <button class="btn btn-sm btn-outline" onclick="window.openEditMetaModal(${m.posicao})">✏️ Editar</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  const listStock = $('listGeneralStock');
+  if (listStock) {
+    if (!estoque.length) {
+      listStock.innerHTML = `<tr><td colspan="3" class="px-4 py-8 text-center text-on-surface-variant italic">Nenhum rolo no estoque geral.</td></tr>`;
+    } else {
+      listStock.innerHTML = estoque.map(e => `
+        <tr class="hover:bg-surface-bright/50 transition-colors">
+          <td class="px-4 py-3 font-medium text-on-surface">⌀ ${e.diametro} mm</td>
+          <td class="px-4 py-3">${sanitize(e.obs) || '—'}</td>
+          <td class="px-4 py-3">${new Date(e.data_entrada).toLocaleDateString('pt-BR')}</td>
+        </tr>
+      `).join('');
+    }
   }
 }
 
@@ -2751,6 +2762,7 @@ function renderAll(){
   renderDecapagem();
   renderDecapagemTable();
   renderRb1Completa();
+  renderRb1CompletaLists();
   renderInventory();
   renderDecapagemInventory();
   renderHistory();
@@ -2849,6 +2861,19 @@ initDemo(); renderAll(); setupHoverTooltips(); setInterval(renderAll,60000);
   ($('inMetaSecao') as HTMLInputElement).value = meta.secao;
   ($('inMetaRolamento') as HTMLInputElement).value = meta.rolamentoPadrao || '';
   
+  // Logic for 'Recurso' (roller code)
+  let recursoValue = meta.recurso;
+  if (!recursoValue) {
+    // Generate a code: RB1 xxxxx-xx
+    const part1 = String(Math.floor(Math.random() * 90000) + 10000);
+    const part2 = String(Math.floor(Math.random() * 90) + 10);
+    recursoValue = `RB1 ${part1}-${part2}`;
+  }
+  ($('inMetaRecurso') as HTMLInputElement).value = recursoValue;
+  ($('inMetaSituacao') as HTMLSelectElement).value = meta.situacao || 'Em Uso';
+  ($('inMetaDiamInicial') as HTMLInputElement).value = meta.diametroInicial != null ? String(meta.diametroInicial) : '';
+  ($('inMetaDiamFinal') as HTMLInputElement).value = meta.diametroFinal != null ? String(meta.diametroFinal) : '';
+  
   $('modalMeta').classList.add('active');
 };
 
@@ -2867,13 +2892,19 @@ $('formMeta')?.addEventListener('submit', e => {
   const diametroPadrao = parseFloat(($('inMetaDiam') as HTMLInputElement).value);
   const secao = ($('inMetaSecao') as HTMLInputElement).value.trim();
   const rolamentoPadrao = ($('inMetaRolamento') as HTMLInputElement).value.trim();
+  const recurso = ($('inMetaRecurso') as HTMLInputElement).value.trim();
+  const situacao = ($('inMetaSituacao') as HTMLSelectElement).value;
+  const diametroInicialStr = ($('inMetaDiamInicial') as HTMLInputElement).value;
+  const diametroInicial = diametroInicialStr ? parseFloat(diametroInicialStr) : undefined;
+  const diametroFinalStr = ($('inMetaDiamFinal') as HTMLInputElement).value;
+  const diametroFinal = diametroFinalStr ? parseFloat(diametroFinalStr) : undefined;
   
   if (isNaN(pos) || !nome || !tipo || isNaN(diametroPadrao) || !secao) {
     return toast('Preencha os campos obrigatórios', 'error');
   }
   
   try {
-    salvarMetadados(pos, { nome, tipo, diametroPadrao, secao, rolamentoPadrao });
+    salvarMetadados(pos, { nome, tipo, diametroPadrao, secao, rolamentoPadrao, recurso, situacao, diametroInicial, diametroFinal });
     closeMetaModal();
     renderAll();
     toast('Propriedades atualizadas com sucesso!', 'success');

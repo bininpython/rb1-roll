@@ -13,6 +13,10 @@ export interface RollerInfo {
   readonly tipo: 'Rolo' | 'Escova' | string;
   readonly secao: string;
   readonly rolamentoPadrao?: string;
+  readonly recurso?: string;
+  readonly situacao?: string;
+  readonly diametroInicial?: number;
+  readonly diametroFinal?: number;
 }
 
 export const DECAPAGEM_MAP: Record<number, RollerInfo> = {
@@ -292,8 +296,8 @@ export function sanitize(str: string): string {
   return str.replace(/[&<>"'/]/ig, match => (map[match]));
 }
 
-export function unsanitize(str: string): string {
-  if (!str) return str;
+export function unsanitize(str: string | null | undefined): string {
+  if (!str) return '';
   return str.replace(/&#x2F;/g, '/').replace(/&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&amp;/g, '&');
 }
 

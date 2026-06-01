@@ -2638,7 +2638,7 @@ function renderRb1Completa() {
         const track2 = document.getElementById('trackPath2') as unknown as SVGPathElement;
         const arrow1 = document.getElementById('arrow1Group');
         const arrow2 = document.getElementById('arrow2Group');
-        const totalDuration = 40; // 40 seconds per path
+        const totalDuration = 120; // 120 seconds per path (slower movement)
         
         let animTime = 0;
         let lastTime = performance.now();

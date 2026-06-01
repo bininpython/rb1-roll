@@ -2556,6 +2556,38 @@ function renderRb1Completa() {
   svg += `<path d="${stripPath}" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="4" filter="url(#whiteGlow)"/>`;
   svg += `<path d="${stripPath}" fill="none" stroke="#ffffff" stroke-width="1.5"/>`;
 
+  // Create path for Entrada 2 arrow
+  let commonPartIdx = stripPath.indexOf(" 1350 450 ");
+  let commonPart = stripPath.substring(commonPartIdx + " 1350 450 ".length);
+  let pathArrow2 = p2 + commonPart;
+
+  // Add the animated red arrows!
+  svg += `
+    <defs>
+      <path id="redArrow" d="M -20 -15 L 20 0 L -20 15 Z" fill="#ef4444" stroke="#ffffff" stroke-width="2" />
+      <filter id="redGlow">
+        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+        <feMerge>
+          <feMergeNode in="coloredBlur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+    
+    <g id="arrow1Group">
+      <use href="#redArrow" filter="url(#redGlow)">
+        <animateMotion id="animArrow1" begin="0s;animArrow2.end" dur="40s" fill="freeze" rotate="auto" path="${stripPath}" />
+        <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.999;1" begin="animArrow1.begin" dur="40s" fill="freeze" />
+      </use>
+    </g>
+    <g id="arrow2Group" opacity="0">
+      <use href="#redArrow" filter="url(#redGlow)">
+        <animateMotion id="animArrow2" begin="animArrow1.end" dur="40s" fill="freeze" rotate="auto" path="${pathArrow2}" />
+        <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.999;1" begin="animArrow2.begin" dur="40s" fill="freeze" />
+      </use>
+    </g>
+  `;
+
   // Draw background frame again to be on top if needed, or close svg
   svg += '</svg>';
   
@@ -2585,6 +2617,24 @@ function renderRb1Completa() {
         const btnIn = document.getElementById('btnZoomInCompleta');
         const btnOut = document.getElementById('btnZoomOutCompleta');
         const btnReset = document.getElementById('btnZoomResetCompleta');
+        const btnPause = document.getElementById('btnPauseAnimation');
+        const iconPause = document.getElementById('iconPauseAnimation');
+
+        if (btnPause && iconPause) {
+          let isPaused = false;
+          btnPause.onclick = () => {
+            isPaused = !isPaused;
+            if (isPaused) {
+              (svgEl as SVGSVGElement).pauseAnimations();
+              iconPause.textContent = 'play_arrow';
+              btnPause.classList.add('bg-primary/50');
+            } else {
+              (svgEl as SVGSVGElement).unpauseAnimations();
+              iconPause.textContent = 'pause';
+              btnPause.classList.remove('bg-primary/50');
+            }
+          };
+        }
 
         if (btnIn) {
           btnIn.onclick = () => {

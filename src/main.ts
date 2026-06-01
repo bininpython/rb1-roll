@@ -3,8 +3,10 @@ import './style.css';
 import { rolos, estoque, historico, calcDays, getStatus, getRolo, fmtDate, sanitize,
   registrarSubstituicao, editarHistorico, adicionarEstoque, removerEstoque, initDemo, salvarMetadados, DECAPAGEM_MAP, DECAPAGEM_ORDER, RB1_COMPLETA_MAP, RollerInfo } from './store';
 import type { Posicao, Turno, KanbanStatus } from './types';
+import panzoom from 'panzoom';
 
 const $ = (id: string) => document.getElementById(id)!;
+let rb1PanZoomInstance: any = null;
 
 function toast(msg: string, type: 'success'|'error'|'info' = 'info') {
   const c = $('toastContainer'), t = document.createElement('div');
@@ -2561,12 +2563,48 @@ function renderRb1Completa() {
   const el = document.getElementById('rb1CompletaDiagram');
   if (el) {
     el.innerHTML = svg;
-    let parent = el.parentElement;
-    if (parent && parent.classList.contains('blueprint-container')) {
-      parent.style.overflow = '';
-      parent.style.cursor = '';
-      parent.style.height = ''; 
-      parent.style.position = '';
+    const svgEl = el.querySelector('svg');
+    if (svgEl) {
+      if (rb1PanZoomInstance) {
+        rb1PanZoomInstance.dispose();
+      }
+      // Initialize panzoom
+      rb1PanZoomInstance = panzoom(svgEl, {
+        maxZoom: 5,
+        minZoom: 0.1,
+        initialZoom: 0.15,
+        initialX: 0,
+        initialY: 0,
+        bounds: true,
+        boundsPadding: 0.1,
+        smoothScroll: false
+      });
+
+      // Controls
+      const btnIn = document.getElementById('btnZoomInCompleta');
+      const btnOut = document.getElementById('btnZoomOutCompleta');
+      const btnReset = document.getElementById('btnZoomResetCompleta');
+
+      if (btnIn) {
+        btnIn.onclick = () => {
+          const cx = el.clientWidth / 2;
+          const cy = el.clientHeight / 2;
+          rb1PanZoomInstance.smoothZoom(cx, cy, 1.5);
+        };
+      }
+      if (btnOut) {
+        btnOut.onclick = () => {
+          const cx = el.clientWidth / 2;
+          const cy = el.clientHeight / 2;
+          rb1PanZoomInstance.smoothZoom(cx, cy, 0.66);
+        };
+      }
+      if (btnReset) {
+        btnReset.onclick = () => {
+          rb1PanZoomInstance.moveTo(0, 0);
+          rb1PanZoomInstance.zoomAbs(0, 0, 0.15);
+        };
+      }
     }
   }
 

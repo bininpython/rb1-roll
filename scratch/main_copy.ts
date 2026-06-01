@@ -849,7 +849,7 @@ function renderRb1CompletaStats() {
 
 // ===== RB1 COMPLETA — Technical Industrial Diagram =====
 function renderRb1Completa() {
-  const W = 3600, H = 3600;
+  const W = 12000, H = 900;
   const BK = '#cbd5e1'; // light slate for lines
   const BG = '#161925'; // dark background
   const LK = '#1a1a1a'; // line color
@@ -1394,26 +1394,14 @@ function renderRb1Completa() {
   stripPath += `A 30 30 0 0 0 1350 450 `;
 
   // Path 2 (Entrada 2)
-  svg += `<g transform="translate(0, 0)">`;
   let p2 = `M 100 ${Y2} `;
   p2 += `L 1350 ${Y2} `; 
   svg += `<path d="${p2}" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="4" filter="url(#whiteGlow)"/>`;
   svg += `<path d="${p2}" fill="none" stroke="#ffffff" stroke-width="1.5"/>`;
 
-  
-  // === RENDER PREVIOUS PATH ===
-  svg += `<path d="${stripPath}" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="4" filter="url(#whiteGlow)"/>`;
-  svg += `<path d="${stripPath}" fill="none" stroke="#ffffff" stroke-width="1.5"/>`;
-  svg += `</g>`; // Close previous row
-
-  // === START NEW ROW ===
-  svg += `<g transform="translate(-1400, 450)">`;
-  stripPath = `M 1510 450 `;
-  
-  // Adding Row Title
-  svg += `<text x="1510" y="320" font-family="Montserrat, sans-serif" font-size="24" font-weight="900" fill="#38bdf8" opacity="0.6">CONTINUAÇÃO 1</text>`;
-
-  // SEÇÃO 2: SOLDA E PREPARAÇÃO====================================================================
+  // ====================================================================
+  // SEÇÃO 2: SOLDA E PREPARAÇÃO (Layout Atualizado)
+  // ====================================================================
   
   // 1. Group 1: 7 Rollers ALL BOTTOM, NO LABELS
   let ax = 1510;
@@ -1600,20 +1588,9 @@ function renderRb1Completa() {
   // Extend strip path horizontally through Secador and 171, hitting EXACT bottom of Corretor 1
   lineTo(corrX, YM); 
 
-  
-  // === RENDER PREVIOUS PATH ===
-  svg += `<path d="${stripPath}" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="4" filter="url(#whiteGlow)"/>`;
-  svg += `<path d="${stripPath}" fill="none" stroke="#ffffff" stroke-width="1.5"/>`;
-  svg += `</g>`; // Close previous row
-
-  // === START NEW ROW ===
-  svg += `<g transform="translate(-2650, 1050)">`;
-  stripPath = `M 2750 450 `;
-  
-  // Adding Row Title
-  svg += `<text x="2750" y="320" font-family="Montserrat, sans-serif" font-size="24" font-weight="900" fill="#38bdf8" opacity="0.6">CONTINUAÇÃO 2</text>`;
-
-  // SEÇÃO 3: ACUMULADOR DE ENTRADA====================================================================
+  // ====================================================================
+  // SEÇÃO 3: ACUMULADOR DE ENTRADA (LOOP)
+  // ====================================================================
 
   console.log("Rendering BS1 with Perfect Geometric Inner Tangents v4 (R=36)");
 
@@ -1776,20 +1753,9 @@ function renderRb1Completa() {
   stripPath += `Q 3700 450 3800 450 `;
   
 
-  
-  // === RENDER PREVIOUS PATH ===
-  svg += `<path d="${stripPath}" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="4" filter="url(#whiteGlow)"/>`;
-  svg += `<path d="${stripPath}" fill="none" stroke="#ffffff" stroke-width="1.5"/>`;
-  svg += `</g>`; // Close previous row
-
-  // === START NEW ROW ===
-  svg += `<g transform="translate(-3850, 1550)">`;
-  stripPath = `M 3800 450 `;
-  
-  // Adding Row Title
-  svg += `<text x="3800" y="320" font-family="Montserrat, sans-serif" font-size="24" font-weight="900" fill="#38bdf8" opacity="0.6">CONTINUAÇÃO 3</text>`;
-
-  // SEÇÃO 4: FORNO E RESFRIAMENTO====================================================================
+  // ====================================================================
+  // SEÇÃO 4: FORNO E RESFRIAMENTO
+  // ====================================================================
   // Forno
   let fX = 3950, fY = YM - 40, fW = 600, fH = 140;
   svg += `<rect x="${fX}" y="${fY}" width="${fW}" height="${fH}" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5" rx="4"/>`;
@@ -2063,20 +2029,7 @@ function renderRb1Completa() {
   lineTo(5800, YM);
   stripPath += `A 35 35 0 0 1 5820 ${YM + 6} `;
 
-  
-  // === RENDER PREVIOUS PATH ===
-  svg += `<path d="${stripPath}" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="4" filter="url(#whiteGlow)"/>`;
-  svg += `<path d="${stripPath}" fill="none" stroke="#ffffff" stroke-width="1.5"/>`;
-  svg += `</g>`; // Close previous row
-
-  // === START NEW ROW ===
-  svg += `<g transform="translate(-5750, 2150)">`;
-  stripPath = `M 5800 450 `;
-  
-  // Adding Row Title
-  svg += `<text x="5800" y="320" font-family="Montserrat, sans-serif" font-size="24" font-weight="900" fill="#38bdf8" opacity="0.6">CONTINUAÇÃO 4</text>`;
-
-  // ---- BS 3 SECTION ----
+  // ---- BS 3 SECTION (Upper-right and Lower-left large rolls) ----
   
   // 1. bs3Top (Upper-Right Large Roll)
   let bs3TopX = 6060, bs3TopY = YM + 95, bs3R = 38;
@@ -2461,20 +2414,7 @@ function renderRb1Completa() {
   svg += `<text x="8950" y="${YM + 25}" font-family="Inter, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">Corretor 4</text>`;
   
   // ====================================================================
-  
-  // === RENDER PREVIOUS PATH ===
-  svg += `<path d="${stripPath}" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="4" filter="url(#whiteGlow)"/>`;
-  svg += `<path d="${stripPath}" fill="none" stroke="#ffffff" stroke-width="1.5"/>`;
-  svg += `</g>`; // Close previous row
-
-  // === START NEW ROW ===
-  svg += `<g transform="translate(-8850, 2750)">`;
-  stripPath = `M 8950 450 `;
-  
-  // Adding Row Title
-  svg += `<text x="8950" y="320" font-family="Montserrat, sans-serif" font-size="24" font-weight="900" fill="#38bdf8" opacity="0.6">CONTINUAÇÃO 5</text>`;
-
-  // BS4 e LOOP DE SAÍDA
+  // BS4 e LOOP DE SAÍDA (Conforme Esboço Fiel)
   // ====================================================================
   
   // Rolo pequeno de apoio na subida
@@ -2633,7 +2573,7 @@ function renderRb1Completa() {
         rb1PanZoomInstance = panzoom(svgEl, {
           maxZoom: 5,
           minZoom: 0.1,
-          initialZoom: 0.25,
+          initialZoom: 0.15,
           initialX: 0,
           initialY: 0,
           bounds: true,

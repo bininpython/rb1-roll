@@ -2565,45 +2565,49 @@ function renderRb1Completa() {
     el.innerHTML = svg;
     const svgEl = el.querySelector('svg');
     if (svgEl) {
-      if (rb1PanZoomInstance) {
-        rb1PanZoomInstance.dispose();
-      }
-      // Initialize panzoom
-      rb1PanZoomInstance = panzoom(svgEl, {
-        maxZoom: 5,
-        minZoom: 0.1,
-        initialZoom: 0.15,
-        initialX: 0,
-        initialY: 0,
-        bounds: true,
-        boundsPadding: 0.1,
-        smoothScroll: false
-      });
+      try {
+        if (rb1PanZoomInstance) {
+          rb1PanZoomInstance.dispose();
+        }
+        // Initialize panzoom
+        rb1PanZoomInstance = panzoom(svgEl, {
+          maxZoom: 5,
+          minZoom: 0.1,
+          initialZoom: 0.15,
+          initialX: 0,
+          initialY: 0,
+          bounds: true,
+          boundsPadding: 0.1,
+          smoothScroll: false
+        });
 
-      // Controls
-      const btnIn = document.getElementById('btnZoomInCompleta');
-      const btnOut = document.getElementById('btnZoomOutCompleta');
-      const btnReset = document.getElementById('btnZoomResetCompleta');
+        // Controls
+        const btnIn = document.getElementById('btnZoomInCompleta');
+        const btnOut = document.getElementById('btnZoomOutCompleta');
+        const btnReset = document.getElementById('btnZoomResetCompleta');
 
-      if (btnIn) {
-        btnIn.onclick = () => {
-          const cx = el.clientWidth / 2;
-          const cy = el.clientHeight / 2;
-          rb1PanZoomInstance.smoothZoom(cx, cy, 1.5);
-        };
-      }
-      if (btnOut) {
-        btnOut.onclick = () => {
-          const cx = el.clientWidth / 2;
-          const cy = el.clientHeight / 2;
-          rb1PanZoomInstance.smoothZoom(cx, cy, 0.66);
-        };
-      }
-      if (btnReset) {
-        btnReset.onclick = () => {
-          rb1PanZoomInstance.moveTo(0, 0);
-          rb1PanZoomInstance.zoomAbs(0, 0, 0.15);
-        };
+        if (btnIn) {
+          btnIn.onclick = () => {
+            const cx = el.clientWidth / 2;
+            const cy = el.clientHeight / 2;
+            rb1PanZoomInstance.smoothZoom(cx, cy, 1.5);
+          };
+        }
+        if (btnOut) {
+          btnOut.onclick = () => {
+            const cx = el.clientWidth / 2;
+            const cy = el.clientHeight / 2;
+            rb1PanZoomInstance.smoothZoom(cx, cy, 0.66);
+          };
+        }
+        if (btnReset) {
+          btnReset.onclick = () => {
+            rb1PanZoomInstance.moveTo(0, 0);
+            rb1PanZoomInstance.zoomAbs(0, 0, 0.15);
+          };
+        }
+      } catch (err) {
+        console.warn('Panzoom initialization skipped or failed:', err);
       }
     }
   }

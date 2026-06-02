@@ -25,22 +25,23 @@ export function initAuth() {
   }
 
   const ID_MAPPING: Record<string, string> = {
-    'rb1 1000-vw': 'rb1.viewer@aperam.com',
-    'rb1 2000-ed': 'rb1.editor@aperam.com',
-    'rb1 3000-ad': 'rb1.admin@aperam.com'
+    'rb11000vw': 'rb1.viewer@aperam.com',
+    'rb12000ed': 'rb1.editor@aperam.com',
+    'rb13000ad': 'rb1.admin@aperam.com'
   };
 
   // Lógica de Login
   if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const loginId = loginEmail.value.trim().toLowerCase();
+      const rawLoginId = loginEmail.value.trim().toLowerCase();
+      const loginId = rawLoginId.replace(/[\s-]/g, ''); // Remove espaços e hífens
       const password = loginPassword.value.trim();
 
       if (!loginId || !password) return;
 
       const mappedEmail = ID_MAPPING[loginId];
-      const email = mappedEmail ? mappedEmail : `${loginId.replace(/\s+/g, '')}@aperam.com`;
+      const email = mappedEmail ? mappedEmail : `${loginId}@aperam.com`;
 
       // Estado de loading
       const originalText = btnLoginSubmit.innerHTML;

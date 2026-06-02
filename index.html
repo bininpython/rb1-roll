@@ -631,18 +631,33 @@
                             <div class="font-mono text-2xl font-bold text-primary" id="adminTotalSwaps">--</div>
                             <p class="text-[10px] text-on-surface-variant/70 mt-1">Soma de todos os setores</p>
                         </div>
-                        <div class="bg-surface-container-low border border-outline-variant/50 rounded-lg p-5 flex flex-col items-center justify-center">
-                            <button id="btnDownloadCSV" class="btn btn-primary w-full h-full text-sm py-4 flex flex-col items-center justify-center gap-2">
-                                <span class="material-symbols-outlined text-3xl">download</span>
-                                <span>Baixar Relatório Mensal (CSV)</span>
+                        <div class="bg-surface-container-low border border-outline-variant/50 rounded-lg p-5 flex flex-col gap-3 justify-center">
+                            <div class="w-full">
+                                <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1 block">Mês do Relatório</label>
+                                <input type="month" id="adminCsvMonth" class="w-full bg-white border border-outline-variant/60 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-primary transition-colors text-on-surface">
+                            </div>
+                            <button id="btnDownloadCSV" class="btn btn-primary w-full text-sm py-2.5 flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-lg">download</span>
+                                <span>Baixar CSV</span>
                             </button>
                         </div>
                     </div>
 
                     <div class="mt-4 border-t border-outline-variant/30 pt-6">
-                        <h4 class="font-display text-sm font-bold text-on-surface mb-4">Métricas de Vida Útil (Em breve)</h4>
-                        <div class="bg-surface-container h-40 rounded-lg border border-outline-variant/40 flex items-center justify-center text-on-surface-variant/50">
-                            Gráficos de análise de durabilidade (MTBF)
+                        <h4 class="font-display text-sm font-bold text-on-surface mb-4">Métricas de Vida Útil e Trocas</h4>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="bg-surface-container-low border border-outline-variant/50 rounded-lg p-4">
+                                <h5 class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-3 text-center">Vida Útil Média (Dias) por Setor</h5>
+                                <div class="relative h-64 w-full">
+                                    <canvas id="chartSetorLife"></canvas>
+                                </div>
+                            </div>
+                            <div class="bg-surface-container-low border border-outline-variant/50 rounded-lg p-4">
+                                <h5 class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-3 text-center">Evolução de Trocas (Últimos 6 Meses)</h5>
+                                <div class="relative h-64 w-full">
+                                    <canvas id="chartTrend"></canvas>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

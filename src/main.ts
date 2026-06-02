@@ -5,10 +5,16 @@ import { rolos, estoque, historico, calcDays, getStatus, getRolo, fmtDate, sanit
 import type { Posicao, Turno, KanbanStatus } from './types';
 import panzoom from 'panzoom';
 import { initAuth, currentUserRole } from './auth';
+import { Chart, registerables } from 'chart.js';
+
+Chart.register(...registerables);
 
 const $ = (id: string) => document.getElementById(id)!;
 
 // ===== RBAC & Admin Logic =====
+let chartSetorLifeInstance: Chart | null = null;
+let chartTrendInstance: Chart | null = null;
+
 export function applyCurrentRole() {
   const isEditorOrAdmin = currentUserRole === 'editor' || currentUserRole === 'admin';
   const isAdmin = currentUserRole === 'admin';
@@ -21,14 +27,115 @@ export function applyCurrentRole() {
 }
 
 export function updateAdminMetrics() {
-  const totalSwaps = historico.filter(h => {
+  const monthInput = $('adminCsvMonth') as HTMLInputElement;
+  if (monthInput && !monthInput.value) {
+    const today = new Date();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    monthInput.value = `${today.getFullYear()}-${mm}`;
+  }
+
+  const [selYear, selMonth] = monthInput ? monthInput.value.split('-').map(Number) : [new Date().getFullYear(), new Date().getMonth() + 1];
+
+  const monthSwaps = historico.filter(h => {
     const d = new Date(h.data_troca);
-    const now = new Date();
-    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-  }).length;
-  const cost = totalSwaps * 2500; // R$ 2.500 por troca
-  if ($('adminTotalSwaps')) $('adminTotalSwaps').textContent = totalSwaps.toString();
+    return d.getMonth() + 1 === selMonth && d.getFullYear() === selYear;
+  });
+
+  const cost = monthSwaps.length * 2500; // R$ 2.500 por troca
+  if ($('adminTotalSwaps')) $('adminTotalSwaps').textContent = monthSwaps.length.toString();
   if ($('adminCostMonth')) $('adminCostMonth').textContent = `R$ ${cost.toLocaleString('pt-BR')}`;
+
+  renderAdminCharts();
+}
+
+function renderAdminCharts() {
+  const ctxSetor = $('chartSetorLife') as HTMLCanvasElement;
+  const ctxTrend = $('chartTrend') as HTMLCanvasElement;
+  if (!ctxSetor || !ctxTrend) return;
+
+  // Aggregate Data for Sector Life
+  const sectorData: Record<string, { totalDays: number; count: number }> = {
+    'Forno': { totalDays: 0, count: 0 },
+    'Eletrolítico': { totalDays: 0, count: 0 },
+    'Químico': { totalDays: 0, count: 0 },
+    'Geral': { totalDays: 0, count: 0 }
+  };
+
+  historico.forEach(h => {
+    const meta = DECAPAGEM_MAP[h.posicao] || RB1_COMPLETA_MAP[h.posicao];
+    const sec = meta ? meta.secao : 'Geral';
+    let key = sec;
+    if (sec.includes('Eletrolítico')) key = 'Eletrolítico';
+    else if (sec.includes('Químico')) key = 'Químico';
+    else if (sec.includes('Forno')) key = 'Forno';
+    else key = 'Geral';
+
+    if (sectorData[key]) {
+      sectorData[key].totalDays += (h.idade_dias || 0);
+      sectorData[key].count++;
+    }
+  });
+
+  const sectorLabels = Object.keys(sectorData);
+  const sectorAverages = sectorLabels.map(k => sectorData[k].count > 0 ? Math.round(sectorData[k].totalDays / sectorData[k].count) : 0);
+
+  if (chartSetorLifeInstance) chartSetorLifeInstance.destroy();
+  chartSetorLifeInstance = new Chart(ctxSetor, {
+    type: 'bar',
+    data: {
+      labels: sectorLabels,
+      datasets: [{
+        label: 'Média de Vida Útil (Dias)',
+        data: sectorAverages,
+        backgroundColor: ['#f97316', '#3b82f6', '#10b981', '#6b7280'],
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  // Aggregate Data for 6-Month Trend
+  const today = new Date();
+  const months: string[] = [];
+  const trendCounts: number[] = [];
+  
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+    months.push(d.toLocaleString('pt-BR', { month: 'short', year: 'numeric' }));
+    
+    const count = historico.filter(h => {
+      const hd = new Date(h.data_troca);
+      return hd.getMonth() === d.getMonth() && hd.getFullYear() === d.getFullYear();
+    }).length;
+    trendCounts.push(count);
+  }
+
+  if (chartTrendInstance) chartTrendInstance.destroy();
+  chartTrendInstance = new Chart(ctxTrend, {
+    type: 'line',
+    data: {
+      labels: months,
+      datasets: [{
+        label: 'Nº de Trocas',
+        data: trendCounts,
+        borderColor: '#8b5cf6',
+        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+        borderWidth: 3,
+        tension: 0.4,
+        fill: true,
+        pointBackgroundColor: '#8b5cf6'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+    }
+  });
 }
 
 window.addEventListener('authRoleChanged', (e: any) => {
@@ -39,24 +146,54 @@ window.addEventListener('authRoleChanged', (e: any) => {
 });
 // ==============================
 
-// CSV Download listener inside dataLoaded or globally
+// CSV Download listener
 $('btnDownloadCSV')?.addEventListener('click', () => {
-  const headers = ['ID', 'Posicao', 'Turno', 'Data Troca', 'Diametro', 'Motivo', 'Idade Dias'];
-  const rows = historico.map(h => [
-    h.id, h.posicao, h.turno, new Date(h.data_troca).toLocaleString('pt-BR'), 
-    h.diametro, `"${sanitize(h.obs_motivo)}"`, h.idade_dias
-  ]);
+  const monthInput = $('adminCsvMonth') as HTMLInputElement;
+  const [selYear, selMonth] = monthInput ? monthInput.value.split('-').map(Number) : [new Date().getFullYear(), new Date().getMonth() + 1];
+
+  const filtered = historico.filter(h => {
+    const d = new Date(h.data_troca);
+    return d.getMonth() + 1 === selMonth && d.getFullYear() === selYear;
+  });
+
+  if (filtered.length === 0) {
+    // @ts-ignore
+    return toast('Nenhuma troca encontrada neste mês.', 'error');
+  }
+
+  const headers = ['Setor', 'Recurso', 'Posicao', 'Tipo', 'Data da Troca', 'Turno', 'Diametro (mm)', 'Vida Util (Dias)', 'Observacao'];
+  
+  const rows = filtered.map(h => {
+    const meta = DECAPAGEM_MAP[h.posicao] || RB1_COMPLETA_MAP[h.posicao];
+    const setor = meta ? meta.secao : 'Geral';
+    const recurso = meta?.recurso || '';
+    const tipo = meta?.tipo || 'Rolo';
+    return [
+      `"${setor}"`,
+      `"${recurso}"`,
+      h.posicao,
+      `"${tipo}"`,
+      `"${fmtDate(h.data_troca)}"`,
+      h.turno,
+      h.diametro,
+      h.idade_dias,
+      `"${sanitize(h.obs_motivo)}"`
+    ];
+  });
+  
   const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' }); // BOM for Excel
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.setAttribute('href', url);
-  link.setAttribute('download', `RB1_Relatorio_${new Date().toISOString().slice(0,7)}.csv`);
+  link.setAttribute('download', `RB1_Relatorio_${monthInput?.value || 'all'}.csv`);
   link.style.display = 'none';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 });
+
+$('adminCsvMonth')?.addEventListener('change', updateAdminMetrics);
 
 initAuth();
 let rb1PanZoomInstance: any = null;

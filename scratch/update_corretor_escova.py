@@ -14,7 +14,7 @@ def main():
     
     corretor1_new = """    // Quadrant Pattern (Refactored to corretorCruz)
     svg += corretorCruz(corrX, corrY, 25, 'CORRETOR 1', 341);"""
-
+#.map// local( X = 5785.14 and Y = 235648.15)
     content = content.replace(corretor1_old, corretor1_new)
 
     # Corretor 2 replacement

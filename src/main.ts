@@ -4,8 +4,61 @@ import { rolos, estoque, historico, calcDays, getStatus, getRolo, fmtDate, sanit
   registrarSubstituicao, editarHistorico, adicionarEstoque, removerEstoque, initDemo, salvarMetadados, DECAPAGEM_MAP, DECAPAGEM_ORDER, RB1_COMPLETA_MAP, RollerInfo } from './store';
 import type { Posicao, Turno, KanbanStatus } from './types';
 import panzoom from 'panzoom';
+import { initAuth, currentUserRole } from './auth';
 
 const $ = (id: string) => document.getElementById(id)!;
+
+// ===== RBAC & Admin Logic =====
+export function applyCurrentRole() {
+  const isEditorOrAdmin = currentUserRole === 'editor' || currentUserRole === 'admin';
+  const isAdmin = currentUserRole === 'admin';
+  document.querySelectorAll('.require-edit').forEach(el => {
+    (el as HTMLElement).style.display = isEditorOrAdmin ? '' : 'none';
+  });
+  document.querySelectorAll('.require-admin').forEach(el => {
+    (el as HTMLElement).style.display = isAdmin ? '' : 'none';
+  });
+}
+
+export function updateAdminMetrics() {
+  const totalSwaps = historico.filter(h => {
+    const d = new Date(h.data_troca);
+    const now = new Date();
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  }).length;
+  const cost = totalSwaps * 2500; // R$ 2.500 por troca
+  if ($('adminTotalSwaps')) $('adminTotalSwaps').textContent = totalSwaps.toString();
+  if ($('adminCostMonth')) $('adminCostMonth').textContent = `R$ ${cost.toLocaleString('pt-BR')}`;
+}
+
+window.addEventListener('authRoleChanged', (e: any) => {
+  applyCurrentRole();
+  if (e.detail !== 'admin' && $('tabAdmin')?.classList.contains('active')) {
+    switchTab('Forno');
+  }
+});
+// ==============================
+
+// CSV Download listener inside dataLoaded or globally
+$('btnDownloadCSV')?.addEventListener('click', () => {
+  const headers = ['ID', 'Posicao', 'Turno', 'Data Troca', 'Diametro', 'Motivo', 'Idade Dias'];
+  const rows = historico.map(h => [
+    h.id, h.posicao, h.turno, new Date(h.data_troca).toLocaleString('pt-BR'), 
+    h.diametro, `"${sanitize(h.obs_motivo)}"`, h.idade_dias
+  ]);
+  const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', `RB1_Relatorio_${new Date().toISOString().slice(0,7)}.csv`);
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+});
+
+initAuth();
 let rb1PanZoomInstance: any = null;
 let globalAnimTime = 0;
 let globalAnimLastTime = performance.now();
@@ -27,17 +80,23 @@ function tickClock() {
 setInterval(tickClock, 1000); tickClock();
 
 // Tabs
-const TABS = ['Forno','Decapagem','Rb1Completa'] as const;
+const TABS = ['Forno','Decapagem','Rb1Completa', 'Admin'] as const;
 function switchTab(active: typeof TABS[number]) {
   TABS.forEach(t => {
     const tab = $(`tab${t}`), view = $(`view${t}`);
-    if (t === active) { tab.classList.add('active'); view.classList.remove('view-hidden'); view.classList.add('view-active'); }
-    else { tab.classList.remove('active'); view.classList.remove('view-active'); view.classList.add('view-hidden'); }
+    if (t === active) { 
+      if(tab) tab.classList.add('active'); 
+      if(view) { view.classList.remove('view-hidden'); view.classList.add('view-active'); }
+    } else { 
+      if(tab) tab.classList.remove('active'); 
+      if(view) { view.classList.remove('view-active'); view.classList.add('view-hidden'); }
+    }
   });
 }
-$('tabForno').addEventListener('click', () => switchTab('Forno'));
-$('tabDecapagem').addEventListener('click', () => switchTab('Decapagem'));
-$('tabRb1Completa').addEventListener('click', () => switchTab('Rb1Completa'));
+$('tabForno')?.addEventListener('click', () => switchTab('Forno'));
+$('tabDecapagem')?.addEventListener('click', () => switchTab('Decapagem'));
+$('tabRb1Completa')?.addEventListener('click', () => switchTab('Rb1Completa'));
+$('tabAdmin')?.addEventListener('click', () => switchTab('Admin'));
 
 // Stats
 function renderStats() {
@@ -65,6 +124,8 @@ function renderStats() {
     <div class="w-10 h-10 rounded-lg ${icons[s.c]} flex items-center justify-center text-lg flex-shrink-0">${s.i}</div>
     <div><div class="font-display text-xl font-extrabold text-on-surface">${s.v}</div>
     <div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">${s.l}</div></div></div>`).join('');
+  
+  updateAdminMetrics();
 }
 
 function renderDecapagemStats() {
@@ -446,7 +507,7 @@ function renderDecapagemTable() {
         <td class="px-4 py-3"><span class="age-badge age-${st} text-xs font-bold px-2 py-0.5 rounded inline-block">${days}d</span></td>
         <td class="px-4 py-3 text-on-surface-variant text-sm truncate max-w-[160px]" title="${sanitize(rolo.obs_motivo)}">${sanitize(rolo.obs_motivo) || '—'}</td>
         <td class="px-4 py-3">
-          <button class="text-orange-600 hover:text-orange-800 border border-orange-300 hover:bg-orange-50 px-2.5 py-1 rounded-md text-[11px] font-bold inline-flex items-center gap-1 transition-all" onclick="window.openSubModalForDecapagem(${p})">
+          <button class="require-edit text-orange-600 hover:text-orange-800 border border-orange-300 hover:bg-orange-50 px-2.5 py-1 rounded-md text-[11px] font-bold inline-flex items-center gap-1 transition-all" onclick="window.openSubModalForDecapagem(${p})">
             🔄 Substituir
           </button>
         </td>
@@ -455,6 +516,7 @@ function renderDecapagemTable() {
   }).join('');
   
   body.innerHTML = rowsHtml;
+  applyCurrentRole(); // ensure visibility
 }
 
 // Expose openSubModalForPos globally so inline onclick works cleanly
@@ -509,11 +571,12 @@ function renderInventory() {
   empty.style.display='none';
   list.innerHTML=currentList.map(e=>{
     const cleaned = e.obs.replace(/^\[Forno\]\s*/, '');
-    return `<div class="inv-item"><div class="inv-item-info"><span class="inv-item-diam">⊘ ${e.diametro} mm</span><span class="inv-item-obs">${sanitize(cleaned)||'Sem obs.'}</span></div><div class="inv-item-actions"><button data-remove-est="${e.id}" title="Remover">✕</button></div></div>`;
+    return `<div class="inv-item"><div class="inv-item-info"><span class="inv-item-diam">⊘ ${e.diametro} mm</span><span class="inv-item-obs">${sanitize(cleaned)||'Sem obs.'}</span></div><div class="inv-item-actions"><button class="require-edit" data-remove-est="${e.id}" title="Remover">✕</button></div></div>`;
   }).join('');
   list.querySelectorAll<HTMLButtonElement>('[data-remove-est]').forEach(btn=>{
     btn.addEventListener('click',()=>{removerEstoque(btn.dataset.removeEst!);renderAll();toast('Rolo removido','info');});
   });
+  applyCurrentRole();
 }
 
 function renderDecapagemInventory() {
@@ -531,11 +594,12 @@ function renderDecapagemInventory() {
   empty.style.display='none';
   list.innerHTML=currentList.map(e=>{
     const cleaned = e.obs.replace(/^\[Decapagem\]\s*/, '');
-    return `<div class="inv-item"><div class="inv-item-info"><span class="inv-item-diam">⊘ ${e.diametro} mm</span><span class="inv-item-obs">${sanitize(cleaned)||'Sem obs.'}</span></div><div class="inv-item-actions"><button data-remove-est="${e.id}" title="Remover">✕</button></div></div>`;
+    return `<div class="inv-item"><div class="inv-item-info"><span class="inv-item-diam">⊘ ${e.diametro} mm</span><span class="inv-item-obs">${sanitize(cleaned)||'Sem obs.'}</span></div><div class="inv-item-actions"><button class="require-edit" data-remove-est="${e.id}" title="Remover">✕</button></div></div>`;
   }).join('');
   list.querySelectorAll<HTMLButtonElement>('[data-remove-est]').forEach(btn=>{
     btn.addEventListener('click',()=>{removerEstoque(btn.dataset.removeEst!);renderAll();toast('Rolo removido','info');});
   });
+  applyCurrentRole();
 }
 
 // History
@@ -549,11 +613,12 @@ function renderHistory() {
   empty.style.display='none';
   body.innerHTML=data.map(h=>{const st=getStatus(h.idade_dias);
     const posLabel = h.posicao >= 100 ? (DECAPAGEM_MAP[h.posicao]?.nome || `Pos ${h.posicao}`) : `Rolo ${h.posicao}`;
-    return `<tr class="border-b border-outline-variant/20 hover:bg-surface-bright/80 transition-colors"><td class="px-4 py-3 font-mono text-xs text-on-surface-variant">${fmtDate(h.data_troca)}</td><td class="px-4 py-3 font-semibold text-on-surface">${posLabel}</td><td class="px-4 py-3"><span class="turno-badge turno-${h.turno} text-[10px] font-bold px-2 py-0.5 rounded inline-block">${h.turno}</span></td><td class="px-4 py-3 font-mono">${h.diametro} mm</td><td class="px-4 py-3 text-on-surface-variant max-w-[180px] truncate">${sanitize(h.obs_motivo) || '—'}</td><td class="px-4 py-3"><span class="age-badge age-${st} text-xs font-bold px-2 py-0.5 rounded inline-block">${h.idade_dias}d</span></td><td class="px-4 py-3"><button class="text-purple-600 hover:text-purple-800 hover:bg-purple-50 p-1.5 rounded-md transition-all" data-edit="${h.id}">✏️</button></td></tr>`;
+    return `<tr class="border-b border-outline-variant/20 hover:bg-surface-bright/80 transition-colors"><td class="px-4 py-3 font-mono text-xs text-on-surface-variant">${fmtDate(h.data_troca)}</td><td class="px-4 py-3 font-semibold text-on-surface">${posLabel}</td><td class="px-4 py-3"><span class="turno-badge turno-${h.turno} text-[10px] font-bold px-2 py-0.5 rounded inline-block">${h.turno}</span></td><td class="px-4 py-3 font-mono">${h.diametro} mm</td><td class="px-4 py-3 text-on-surface-variant max-w-[180px] truncate">${sanitize(h.obs_motivo) || '—'}</td><td class="px-4 py-3"><span class="age-badge age-${st} text-xs font-bold px-2 py-0.5 rounded inline-block">${h.idade_dias}d</span></td><td class="px-4 py-3"><button class="require-edit text-purple-600 hover:text-purple-800 hover:bg-purple-50 p-1.5 rounded-md transition-all" data-edit="${h.id}">✏️</button></td></tr>`;
   }).join('');
   body.querySelectorAll<HTMLButtonElement>('[data-edit]').forEach(btn=>{
     btn.addEventListener('click',()=>openEditModal(btn.dataset.edit!));
   });
+  applyCurrentRole();
 }
 
 // Modal: Substituição
@@ -2727,6 +2792,8 @@ function renderRb1Completa() {
 
   // Legend logic removed to replace with lists
 }
+
+// RBAC was moved to top
 
 function renderRb1CompletaLists() {
   const allMetadata = new Map<number, RollerInfo>();

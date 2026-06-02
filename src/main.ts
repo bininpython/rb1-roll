@@ -44,10 +44,10 @@ export function updateAdminMetrics() {
 
   if ($('adminTotalSwaps')) $('adminTotalSwaps').textContent = monthSwaps.length.toString();
 
-  renderAdminCharts();
+  renderAdminCharts(selYear, selMonth, monthSwaps);
 }
 
-function renderAdminCharts() {
+function renderAdminCharts(selYear: number, selMonth: number, monthSwaps: any[]) {
   const ctxSetor = $('chartSetorLife') as HTMLCanvasElement;
   const ctxTrend = $('chartTrend') as HTMLCanvasElement;
   const ctxMotivos = $('chartMotivos') as HTMLCanvasElement;
@@ -61,7 +61,7 @@ function renderAdminCharts() {
     'Geral': { totalDays: 0, count: 0 }
   };
 
-  historico.forEach(h => {
+  monthSwaps.forEach(h => {
     const meta = DECAPAGEM_MAP[h.posicao] || RB1_COMPLETA_MAP[h.posicao];
     const sec = meta ? meta.secao : 'Geral';
     let key = sec;
@@ -99,12 +99,10 @@ function renderAdminCharts() {
   });
 
   // Aggregate Data for 6-Month Trend
-  const today = new Date();
   const months: string[] = [];
   const trendCounts: number[] = [];
-  
   for (let i = 5; i >= 0; i--) {
-    const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+    const d = new Date(selYear, (selMonth - 1) - i, 1);
     months.push(d.toLocaleString('pt-BR', { month: 'short', year: 'numeric' }));
     
     const count = historico.filter(h => {
@@ -139,9 +137,9 @@ function renderAdminCharts() {
 
   // Aggregate Data for Reasons
   const reasonData: Record<string, number> = {};
-  historico.forEach(h => {
+  monthSwaps.forEach(h => {
     let rawMotivo = h.obs_motivo ? sanitize(h.obs_motivo).trim() : '';
-    if (!rawMotivo) rawMotivo = 'Sem observação';
+    if (!rawMotivo || rawMotivo === '-') rawMotivo = 'Não informado';
     rawMotivo = rawMotivo.charAt(0).toUpperCase() + rawMotivo.slice(1);
     
     reasonData[rawMotivo] = (reasonData[rawMotivo] || 0) + 1;

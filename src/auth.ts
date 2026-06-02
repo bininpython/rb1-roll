@@ -24,6 +24,12 @@ export function initAuth() {
     setTimeout(() => loginError.classList.add('hidden'), 5000);
   }
 
+  const ID_MAPPING: Record<string, string> = {
+    'rb1 1000-vw': 'rb1.viewer@aperam.com',
+    'rb1 2000-ed': 'rb1.editor@aperam.com',
+    'rb1 3000-ad': 'rb1.admin@aperam.com'
+  };
+
   // Lógica de Login
   if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
@@ -33,7 +39,8 @@ export function initAuth() {
 
       if (!loginId || !password) return;
 
-      const email = `${loginId}@aperam.com`;
+      const mappedEmail = ID_MAPPING[loginId];
+      const email = mappedEmail ? mappedEmail : `${loginId.replace(/\s+/g, '')}@aperam.com`;
 
       // Estado de loading
       const originalText = btnLoginSubmit.innerHTML;
@@ -47,7 +54,7 @@ export function initAuth() {
 
       // Auto-cadastro para os usuários padrão se não existirem
       if (error && error.message.includes('Invalid login credentials')) {
-        if (['viewer', 'editor', 'admin'].includes(loginId)) {
+        if (mappedEmail) {
           console.log(`Auto-cadastrando o usuário padrão ${loginId}...`);
           const signUpRes = await supabase.auth.signUp({ email, password });
           if (signUpRes.error) {
@@ -80,8 +87,8 @@ export function initAuth() {
     if (session) {
       // Deduzir a role baseada no email (ex: admin@aperam.com -> admin)
       const email = session.user.email || '';
-      if (email.startsWith('admin')) currentUserRole = 'admin';
-      else if (email.startsWith('editor')) currentUserRole = 'editor';
+      if (email.includes('admin')) currentUserRole = 'admin';
+      else if (email.includes('editor')) currentUserRole = 'editor';
       else currentUserRole = 'viewer';
 
       // Dispara evento para main.ts aplicar as permissões na UI

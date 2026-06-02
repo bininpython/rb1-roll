@@ -249,7 +249,7 @@ function tickClock() {
 setInterval(tickClock, 1000); tickClock();
 
 // Tabs
-const TABS = ['Forno','Decapagem','Rb1Completa', 'Admin'] as const;
+const TABS = ['Forno','Decapagem','Rb1Completa','Kpi','Admin'] as const;
 function switchTab(active: typeof TABS[number]) {
   TABS.forEach(t => {
     const tab = $(`tab${t}`), view = $(`view${t}`);
@@ -265,6 +265,7 @@ function switchTab(active: typeof TABS[number]) {
 $('tabForno')?.addEventListener('click', () => switchTab('Forno'));
 $('tabDecapagem')?.addEventListener('click', () => switchTab('Decapagem'));
 $('tabRb1Completa')?.addEventListener('click', () => switchTab('Rb1Completa'));
+$('tabKpi')?.addEventListener('click', () => switchTab('Kpi'));
 $('tabAdmin')?.addEventListener('click', () => switchTab('Admin'));
 
 // Stats

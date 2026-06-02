@@ -52,6 +52,8 @@ export function initAuth() {
           const signUpRes = await supabase.auth.signUp({ email, password });
           if (signUpRes.error) {
             error = signUpRes.error;
+          } else if (!signUpRes.data.session) {
+            error = { message: 'Confirmação de e-mail obrigatória ativada no Supabase. Desative-a no painel (Auth > Providers > Email).' } as any;
           } else {
             error = null; // Sucesso no auto-cadastro, logado!
           }
@@ -59,7 +61,7 @@ export function initAuth() {
       }
 
       if (error) {
-        showError('Credenciais incorretas.');
+        showError(error.message === 'Invalid login credentials' ? 'Credenciais incorretas.' : error.message);
         btnLoginSubmit.innerHTML = originalText;
         btnLoginSubmit.disabled = false;
       }

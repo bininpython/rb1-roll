@@ -14,6 +14,7 @@ const $ = (id: string) => document.getElementById(id)!;
 // ===== RBAC & Admin Logic =====
 let chartSetorLifeInstance: Chart | null = null;
 let chartTrendInstance: Chart | null = null;
+let chartMotivosInstance: Chart | null = null;
 
 export function applyCurrentRole() {
   const isEditorOrAdmin = currentUserRole === 'editor' || currentUserRole === 'admin';
@@ -41,9 +42,7 @@ export function updateAdminMetrics() {
     return d.getMonth() + 1 === selMonth && d.getFullYear() === selYear;
   });
 
-  const cost = monthSwaps.length * 2500; // R$ 2.500 por troca
   if ($('adminTotalSwaps')) $('adminTotalSwaps').textContent = monthSwaps.length.toString();
-  if ($('adminCostMonth')) $('adminCostMonth').textContent = `R$ ${cost.toLocaleString('pt-BR')}`;
 
   renderAdminCharts();
 }
@@ -51,7 +50,8 @@ export function updateAdminMetrics() {
 function renderAdminCharts() {
   const ctxSetor = $('chartSetorLife') as HTMLCanvasElement;
   const ctxTrend = $('chartTrend') as HTMLCanvasElement;
-  if (!ctxSetor || !ctxTrend) return;
+  const ctxMotivos = $('chartMotivos') as HTMLCanvasElement;
+  if (!ctxSetor || !ctxTrend || !ctxMotivos) return;
 
   // Aggregate Data for Sector Life
   const sectorData: Record<string, { totalDays: number; count: number }> = {
@@ -134,6 +134,40 @@ function renderAdminCharts() {
       responsive: true,
       maintainAspectRatio: false,
       scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+    }
+  });
+
+  // Aggregate Data for Reasons
+  const reasonData: Record<string, number> = {};
+  historico.forEach(h => {
+    let rawMotivo = h.obs_motivo ? sanitize(h.obs_motivo).trim() : '';
+    if (!rawMotivo) rawMotivo = 'Sem observação';
+    rawMotivo = rawMotivo.charAt(0).toUpperCase() + rawMotivo.slice(1);
+    
+    reasonData[rawMotivo] = (reasonData[rawMotivo] || 0) + 1;
+  });
+
+  const sortedReasons = Object.entries(reasonData).sort((a,b) => b[1] - a[1]).slice(0, 5);
+  const reasonLabels = sortedReasons.map(r => r[0].length > 20 ? r[0].substring(0,20)+'...' : r[0]);
+  const reasonCounts = sortedReasons.map(r => r[1]);
+
+  if (chartMotivosInstance) chartMotivosInstance.destroy();
+  chartMotivosInstance = new Chart(ctxMotivos, {
+    type: 'doughnut',
+    data: {
+      labels: reasonLabels,
+      datasets: [{
+        data: reasonCounts,
+        backgroundColor: ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } }
+      }
     }
   });
 }

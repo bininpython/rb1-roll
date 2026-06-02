@@ -1,7 +1,7 @@
 /** RB1 System v3 — Main Application (Clean, No Exports) */
 import './style.css';
 import { rolos, estoque, historico, calcDays, getStatus, getRolo, fmtDate, sanitize,
-  registrarSubstituicao, editarHistorico, adicionarEstoque, removerEstoque, initDemo, salvarMetadados, DECAPAGEM_MAP, DECAPAGEM_ORDER, RB1_COMPLETA_MAP, RollerInfo } from './store';
+  registrarSubstituicao, editarHistorico, adicionarEstoque, removerEstoque, initDemo, salvarMetadados, DECAPAGEM_MAP, DECAPAGEM_ORDER, RB1_COMPLETA_MAP, RollerInfo, precosFinanceiro, savePrecos } from './store';
 import type { Posicao, Turno, KanbanStatus } from './types';
 import panzoom from 'panzoom';
 import { initAuth, currentUserRole } from './auth';
@@ -44,7 +44,50 @@ export function updateAdminMetrics() {
 
   if ($('adminTotalSwaps')) $('adminTotalSwaps').textContent = monthSwaps.length.toString();
 
+  updateWalletMetrics(monthSwaps);
   renderAdminCharts(selYear, selMonth, monthSwaps);
+}
+
+export function updateWalletMetrics(monthSwaps: any[]) {
+  const inRolo = $('inPriceRolo') as HTMLInputElement;
+  const inEscova = $('inPriceEscova') as HTMLInputElement;
+  const inArrForno = $('inPriceArruelaForno') as HTMLInputElement;
+  const inRoloForno = $('inPriceRoloForno') as HTMLInputElement;
+  
+  // Hydrate inputs
+  if (inRolo && !inRolo.value && precosFinanceiro.rolo > 0) inRolo.value = precosFinanceiro.rolo.toString();
+  if (inEscova && !inEscova.value && precosFinanceiro.escova > 0) inEscova.value = precosFinanceiro.escova.toString();
+  if (inArrForno && !inArrForno.value && precosFinanceiro.arruelaForno > 0) inArrForno.value = precosFinanceiro.arruelaForno.toString();
+  if (inRoloForno && !inRoloForno.value && precosFinanceiro.roloForno > 0) inRoloForno.value = precosFinanceiro.roloForno.toString();
+
+  let sumRolos = 0;
+  let sumEscovas = 0;
+  let sumRolosForno = 0;
+  let sumArruelas = 0;
+
+  monthSwaps.forEach(h => {
+    const meta = DECAPAGEM_MAP[h.posicao] || RB1_COMPLETA_MAP[h.posicao];
+    if (!meta) return;
+
+    if (meta.secao.includes('Forno')) {
+      sumRolosForno += precosFinanceiro.roloForno || 0;
+      sumArruelas += precosFinanceiro.arruelaForno || 0;
+    } else if (meta.tipo.toLowerCase().includes('escova')) {
+      sumEscovas += precosFinanceiro.escova || 0;
+    } else {
+      sumRolos += precosFinanceiro.rolo || 0;
+    }
+  });
+
+  const total = sumRolos + sumEscovas + sumRolosForno + sumArruelas;
+  
+  const fmt = (v: number) => `R$ ${v.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits:2})}`;
+  
+  if ($('walletTotalGasto')) $('walletTotalGasto').textContent = fmt(total);
+  if ($('walletCostRolos')) $('walletCostRolos').textContent = fmt(sumRolos);
+  if ($('walletCostEscovas')) $('walletCostEscovas').textContent = fmt(sumEscovas);
+  if ($('walletCostRolosForno')) $('walletCostRolosForno').textContent = fmt(sumRolosForno);
+  if ($('walletCostArruelas')) $('walletCostArruelas').textContent = fmt(sumArruelas);
 }
 
 function renderAdminCharts(selYear: number, selMonth: number, monthSwaps: any[]) {
@@ -177,6 +220,17 @@ window.addEventListener('authRoleChanged', (e: any) => {
   }
 });
 // ==============================
+
+$('btnSavePrices')?.addEventListener('click', () => {
+  const inRolo = parseFloat(($('inPriceRolo') as HTMLInputElement).value) || 0;
+  const inEscova = parseFloat(($('inPriceEscova') as HTMLInputElement).value) || 0;
+  const inArrForno = parseFloat(($('inPriceArruelaForno') as HTMLInputElement).value) || 0;
+  const inRoloForno = parseFloat(($('inPriceRoloForno') as HTMLInputElement).value) || 0;
+  
+  savePrecos({ rolo: inRolo, escova: inEscova, arruelaForno: inArrForno, roloForno: inRoloForno });
+  toast('Preços atualizados com sucesso!', 'success');
+  updateAdminMetrics();
+});
 
 // CSV Download listener
 $('btnDownloadCSV')?.addEventListener('click', () => {

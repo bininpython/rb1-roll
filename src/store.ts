@@ -5,6 +5,14 @@ export let rolos: Rolo[] = [];
 export let estoque: EstoqueItem[] = [];
 export let historico: HistoricoRecord[] = [];
 
+// ===== Financeiro =====
+export let precosFinanceiro = {
+  rolo: 0,
+  escova: 0,
+  arruelaForno: 0,
+  roloForno: 0
+};
+
 export interface RollerInfo {
   readonly posicao: number;
   readonly nome: string;
@@ -455,3 +463,27 @@ export function salvarMetadados(posicao: number, novosDados: Partial<RollerInfo>
 
 // Chamar na inicialização
 loadMetadataOverrides();
+
+// ===== Gestão Financeira (Preços) =====
+export function loadPrecos() {
+  try {
+    const saved = localStorage.getItem('RB1_FINANCE_PRICES');
+    if (saved) {
+      Object.assign(precosFinanceiro, JSON.parse(saved));
+    }
+  } catch (err) {
+    console.error('Erro ao carregar preços:', err);
+  }
+}
+
+export function savePrecos(novosPrecos: Partial<typeof precosFinanceiro>) {
+  try {
+    Object.assign(precosFinanceiro, novosPrecos);
+    localStorage.setItem('RB1_FINANCE_PRICES', JSON.stringify(precosFinanceiro));
+  } catch (err) {
+    console.error('Erro ao salvar preços:', err);
+    throw new Error('Falha ao salvar no armazenamento local');
+  }
+}
+
+loadPrecos();

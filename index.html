@@ -685,6 +685,84 @@
 
         <!-- ===== ADMIN VIEW ===== -->
         <div id="viewAdmin" class="view-hidden w-full flex flex-col gap-6">
+
+            <!-- Gestão Financeira: Carteira de Rolos -->
+            <section class="bg-white border border-outline-variant/60 rounded-lg overflow-hidden shadow-sm">
+                <div class="px-5 py-3.5 border-b border-outline-variant/40 flex justify-between items-center bg-surface-bright">
+                    <h2 class="font-display text-sm font-bold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[18px] text-green-600">account_balance_wallet</span>
+                        Carteira de Rolos (Gestão Financeira)
+                    </h2>
+                </div>
+                <div class="p-6 flex flex-col xl:flex-row gap-6">
+                    
+                    <!-- Configuração de Preços -->
+                    <div class="w-full xl:w-1/3 bg-surface-container-low border border-outline-variant/50 rounded-lg p-5 flex flex-col gap-4">
+                        <h4 class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2 border-b border-outline-variant/30 pb-2">Tabela de Preços (Unitário)</h4>
+                        
+                        <div class="flex flex-col gap-3">
+                            <div>
+                                <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1 block">Rolo Padrão (R$)</label>
+                                <input type="number" id="inPriceRolo" step="0.01" class="w-full bg-white border border-outline-variant/60 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:border-primary text-on-surface" placeholder="Ex: 5000">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1 block">Escova (R$)</label>
+                                <input type="number" id="inPriceEscova" step="0.01" class="w-full bg-white border border-outline-variant/60 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:border-primary text-on-surface" placeholder="Ex: 3500">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1 block">Arruela de Forno (R$)</label>
+                                <input type="number" id="inPriceArruelaForno" step="0.01" class="w-full bg-white border border-outline-variant/60 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:border-primary text-on-surface" placeholder="Ex: 1200">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1 block">Rolo do Forno (R$)</label>
+                                <input type="number" id="inPriceRoloForno" step="0.01" class="w-full bg-white border border-outline-variant/60 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:border-primary text-on-surface" placeholder="Ex: 8000">
+                            </div>
+                            <button id="btnSavePrices" class="btn btn-primary text-sm py-2 mt-2 flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-[16px]">save</span>
+                                Salvar Preços
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard de Gastos (Mês Atual) -->
+                    <div class="w-full xl:w-2/3 flex flex-col gap-4">
+                        <h4 class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1 border-b border-outline-variant/30 pb-2">Gastos no Mês Atual</h4>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Total Gasto -->
+                            <div class="bg-gradient-to-br from-green-50 to-emerald-100 border border-green-200 rounded-lg p-5 flex flex-col justify-between shadow-sm relative overflow-hidden">
+                                <div class="absolute -right-4 -top-4 opacity-10">
+                                    <span class="material-symbols-outlined text-8xl text-green-700">payments</span>
+                                </div>
+                                <h5 class="text-[11px] font-bold text-green-800 uppercase tracking-widest mb-2 z-10">Total Gasto Geral</h5>
+                                <div class="font-mono text-3xl font-black text-green-700 z-10" id="walletTotalGasto">R$ 0,00</div>
+                            </div>
+                            
+                            <!-- Quebra de Custos -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-surface-container-lowest border border-outline-variant/50 rounded-lg p-3 flex flex-col justify-center text-center">
+                                    <span class="text-[9px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Rolos Padrão</span>
+                                    <span class="font-mono text-sm font-bold text-on-surface" id="walletCostRolos">R$ 0,00</span>
+                                </div>
+                                <div class="bg-surface-container-lowest border border-outline-variant/50 rounded-lg p-3 flex flex-col justify-center text-center">
+                                    <span class="text-[9px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Escovas</span>
+                                    <span class="font-mono text-sm font-bold text-on-surface" id="walletCostEscovas">R$ 0,00</span>
+                                </div>
+                                <div class="bg-surface-container-lowest border border-outline-variant/50 rounded-lg p-3 flex flex-col justify-center text-center">
+                                    <span class="text-[9px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Rolos de Forno</span>
+                                    <span class="font-mono text-sm font-bold text-on-surface" id="walletCostRolosForno">R$ 0,00</span>
+                                </div>
+                                <div class="bg-surface-container-lowest border border-outline-variant/50 rounded-lg p-3 flex flex-col justify-center text-center">
+                                    <span class="text-[9px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Arruelas (Forno)</span>
+                                    <span class="font-mono text-sm font-bold text-on-surface" id="walletCostArruelas">R$ 0,00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
             <!-- Reports & Costs -->
             <section class="bg-white border border-outline-variant/60 rounded-lg overflow-hidden shadow-sm">
                 <div class="px-5 py-3.5 border-b border-outline-variant/40 flex justify-between items-center bg-surface-bright">

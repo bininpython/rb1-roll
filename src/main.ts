@@ -3308,51 +3308,51 @@ $('formMeta')?.addEventListener('submit', e => {
 // ===== KPI KANBAN DASHBOARD =====
 function renderKpiDashboard() {
   const fornoData = [
-    { label: 'Velocidade', value: '18.05', unit: 'm/min', status: 'gray' },
-    { label: 'Oxigenio', value: '21', unit: '%', status: 'gray' },
-    { label: 'PCI', value: '2382.31', unit: 'kcal/Nm3', status: 'gray' },
-    { label: 'Emissividade', value: '0.9', unit: '', status: 'gray' },
-    { label: 'Zona 1', value: '601.03', unit: '°C', status: 'gray' },
-    { label: 'Zona 2', value: '649.95', unit: '°C', status: 'gray' },
-    { label: 'Zona 3', value: '765.13', unit: '°C', status: 'gray' },
-    { label: 'Zona 4', value: '771.97', unit: '°C', status: 'gray' },
-    { label: 'Zona 5', value: '757.95', unit: '°C', status: 'gray' },
-    { label: 'Zona 6', value: '733.07', unit: '°C', status: 'gray' },
-    { label: 'Zona 7', value: '745.01', unit: '°C', status: 'gray' },
-    { label: 'Zona 8', value: '632.89', unit: '°C', status: 'gray' },
-    { label: 'Pirometro 01', value: '616.24', unit: '°C', status: 'gray' },
-    { label: 'Pirometro 02', value: '600', unit: '°C', status: 'gray' },
-    { label: 'Vazao total de ar', value: '6470.56', unit: 'Nm3/h', status: 'gray' }
+    { label: 'Velocidade', value: '--', unit: '', status: 'gray' },
+    { label: 'Oxigenio', value: '--', unit: '', status: 'gray' },
+    { label: 'PCI', value: '--', unit: '', status: 'gray' },
+    { label: 'Emissividade', value: '--', unit: '', status: 'gray' },
+    { label: 'Zona 1', value: '--', unit: '', status: 'gray' },
+    { label: 'Zona 2', value: '--', unit: '', status: 'gray' },
+    { label: 'Zona 3', value: '--', unit: '', status: 'gray' },
+    { label: 'Zona 4', value: '--', unit: '', status: 'gray' },
+    { label: 'Zona 5', value: '--', unit: '', status: 'gray' },
+    { label: 'Zona 6', value: '--', unit: '', status: 'gray' },
+    { label: 'Zona 7', value: '--', unit: '', status: 'gray' },
+    { label: 'Zona 8', value: '--', unit: '', status: 'gray' },
+    { label: 'Pirometro 01', value: '--', unit: '', status: 'gray' },
+    { label: 'Pirometro 02', value: '--', unit: '', status: 'gray' },
+    { label: 'Vazao total de ar', value: '--', unit: '', status: 'gray' }
   ];
 
   const eleData = [
-    { label: 'Retificador 01', value: '5098.78', unit: 'A', status: 'gray' },
-    { label: 'Retificador 02', value: '5046.3', unit: 'A', status: 'gray' },
-    { label: 'Retificador 03', value: '5046.25', unit: 'A', status: 'gray' },
-    { label: 'Retificador 04', value: '5100.19', unit: 'A', status: 'gray' },
-    { label: 'Tanque 01', value: '60.81', unit: '°C', status: 'gray' },
-    { label: 'Tanque 02', value: '61.4', unit: '°C', status: 'gray' },
-    { label: 'PH', value: '5.77', unit: '', status: 'gray' },
-    { label: 'Teor Fe', value: '290.42', unit: '', status: 'gray' },
-    { label: 'Condutividade', value: '112.5', unit: '', status: 'gray' },
-    { label: 'Corrente Esc. 01', value: '15.69', unit: 'A', status: 'gray' },
-    { label: 'Corrente Esc. 02', value: '16.44', unit: 'A', status: 'gray' },
-    { label: 'Corrente Esc. 03', value: '18.92', unit: 'A', status: 'gray' },
-    { label: 'Corrente Esc. 04', value: '18.99', unit: 'A', status: 'gray' },
-    { label: 'Concentr. Sulf. Sodio', value: '220.6', unit: 'g/l', status: 'gray' }
+    { label: 'Retificador 01', value: '--', unit: '', status: 'gray' },
+    { label: 'Retificador 02', value: '--', unit: '', status: 'gray' },
+    { label: 'Retificador 03', value: '--', unit: '', status: 'gray' },
+    { label: 'Retificador 04', value: '--', unit: '', status: 'gray' },
+    { label: 'Tanque 01', value: '--', unit: '', status: 'gray' },
+    { label: 'Tanque 02', value: '--', unit: '', status: 'gray' },
+    { label: 'PH', value: '--', unit: '', status: 'gray' },
+    { label: 'Teor Fe', value: '--', unit: '', status: 'gray' },
+    { label: 'Condutividade', value: '--', unit: '', status: 'gray' },
+    { label: 'Corrente Esc. 01', value: '--', unit: '', status: 'gray' },
+    { label: 'Corrente Esc. 02', value: '--', unit: '', status: 'gray' },
+    { label: 'Corrente Esc. 03', value: '--', unit: '', status: 'gray' },
+    { label: 'Corrente Esc. 04', value: '--', unit: '', status: 'gray' },
+    { label: 'Concentr. Sulf. Sodio', value: '--', unit: '', status: 'gray' }
   ];
 
   const quiData = [
-    { label: 'HNO3', value: '7.36', unit: '%', status: 'green' },
-    { label: 'HF', value: '4.73', unit: '%', status: 'red' },
-    { label: 'Teor Ferro', value: '4.18', unit: '%', status: 'red' },
-    { label: 'Temperatura', value: '51.63', unit: '°C', status: 'green' }
+    { label: 'HNO3', value: '--', unit: '', status: 'green' },
+    { label: 'HF', value: '--', unit: '', status: 'red' },
+    { label: 'Teor Ferro', value: '--', unit: '', status: 'red' },
+    { label: 'Temperatura', value: '--', unit: '', status: 'green' }
   ];
 
   const desData = [
-    { label: 'Produtividade', value: '21.66', unit: 'Ton/h', status: 'gray' },
-    { label: 'TV', value: '36.09', unit: '', status: 'gray' },
-    { label: 'Cons de GN/ton', value: '6.53', unit: 'N.m³/t', status: 'gray' }
+    { label: 'Produtividade', value: '--', unit: '', status: 'gray' },
+    { label: 'TV', value: '--', unit: '', status: 'gray' },
+    { label: 'Cons de GN/ton', value: '--', unit: '', status: 'gray' }
   ];
 
   function getCardHtml(item: any) {

@@ -3304,3 +3304,99 @@ $('formMeta')?.addEventListener('submit', e => {
     toast(err.message, 'error');
   }
 });
+
+// ===== KPI KANBAN DASHBOARD =====
+function renderKpiDashboard() {
+  const fornoData = [
+    { label: 'Velocidade', value: '18.05', unit: 'm/min', status: 'gray' },
+    { label: 'Oxigenio', value: '21', unit: '%', status: 'gray' },
+    { label: 'PCI', value: '2382.31', unit: 'kcal/Nm3', status: 'gray' },
+    { label: 'Emissividade', value: '0.9', unit: '', status: 'gray' },
+    { label: 'Zona 1', value: '601.03', unit: '°C', status: 'gray' },
+    { label: 'Zona 2', value: '649.95', unit: '°C', status: 'gray' },
+    { label: 'Zona 3', value: '765.13', unit: '°C', status: 'gray' },
+    { label: 'Zona 4', value: '771.97', unit: '°C', status: 'gray' },
+    { label: 'Zona 5', value: '757.95', unit: '°C', status: 'gray' },
+    { label: 'Zona 6', value: '733.07', unit: '°C', status: 'gray' },
+    { label: 'Zona 7', value: '745.01', unit: '°C', status: 'gray' },
+    { label: 'Zona 8', value: '632.89', unit: '°C', status: 'gray' },
+    { label: 'Pirometro 01', value: '616.24', unit: '°C', status: 'gray' },
+    { label: 'Pirometro 02', value: '600', unit: '°C', status: 'gray' },
+    { label: 'Vazao total de ar', value: '6470.56', unit: 'Nm3/h', status: 'gray' }
+  ];
+
+  const eleData = [
+    { label: 'Retificador 01', value: '5098.78', unit: 'A', status: 'gray' },
+    { label: 'Retificador 02', value: '5046.3', unit: 'A', status: 'gray' },
+    { label: 'Retificador 03', value: '5046.25', unit: 'A', status: 'gray' },
+    { label: 'Retificador 04', value: '5100.19', unit: 'A', status: 'gray' },
+    { label: 'Tanque 01', value: '60.81', unit: '°C', status: 'gray' },
+    { label: 'Tanque 02', value: '61.4', unit: '°C', status: 'gray' },
+    { label: 'PH', value: '5.77', unit: '', status: 'gray' },
+    { label: 'Teor Fe', value: '290.42', unit: '', status: 'gray' },
+    { label: 'Condutividade', value: '112.5', unit: '', status: 'gray' },
+    { label: 'Corrente Esc. 01', value: '15.69', unit: 'A', status: 'gray' },
+    { label: 'Corrente Esc. 02', value: '16.44', unit: 'A', status: 'gray' },
+    { label: 'Corrente Esc. 03', value: '18.92', unit: 'A', status: 'gray' },
+    { label: 'Corrente Esc. 04', value: '18.99', unit: 'A', status: 'gray' },
+    { label: 'Concentr. Sulf. Sodio', value: '220.6', unit: 'g/l', status: 'gray' }
+  ];
+
+  const quiData = [
+    { label: 'HNO3', value: '7.36', unit: '%', status: 'green' },
+    { label: 'HF', value: '4.73', unit: '%', status: 'red' },
+    { label: 'Teor Ferro', value: '4.18', unit: '%', status: 'red' },
+    { label: 'Temperatura', value: '51.63', unit: '°C', status: 'green' }
+  ];
+
+  const desData = [
+    { label: 'Produtividade', value: '21.66', unit: 'Ton/h', status: 'gray' },
+    { label: 'TV', value: '36.09', unit: '', status: 'gray' },
+    { label: 'Cons de GN/ton', value: '6.53', unit: 'N.m³/t', status: 'gray' }
+  ];
+
+  function getCardHtml(item: any) {
+    let bg = 'bg-surface-container/60 hover:bg-surface-container border-outline-variant/40 hover:border-primary/40 text-on-surface';
+    let text = 'text-primary';
+    let labelColor = 'text-on-surface-variant';
+    
+    if (item.status === 'green') {
+      bg = 'bg-green-600 hover:bg-green-500 border-green-500 shadow-[0_0_12px_rgba(22,163,74,0.35)] text-white';
+      text = 'text-white font-extrabold';
+      labelColor = 'text-green-50';
+    } else if (item.status === 'red') {
+      bg = 'bg-red-600 hover:bg-red-500 border-red-500 shadow-[0_0_12px_rgba(220,38,38,0.35)] text-white';
+      text = 'text-white font-extrabold';
+      labelColor = 'text-red-50';
+    } else if (item.status === 'yellow') {
+      bg = 'bg-yellow-500 hover:bg-yellow-400 border-yellow-400 shadow-[0_0_12px_rgba(234,179,8,0.35)] text-gray-900';
+      text = 'text-gray-900 font-extrabold';
+      labelColor = 'text-yellow-900/80';
+    }
+
+    return `
+      <div class="flex flex-col items-center justify-center text-center border rounded-lg p-3 transition-all cursor-default select-none shadow-sm hover:shadow-md hover:-translate-y-0.5 min-h-[70px] ${bg}">
+        <span class="text-[9px] font-bold uppercase tracking-widest ${labelColor} mb-1.5 leading-[1.1] break-words w-full px-1">${item.label}</span>
+        <div class="flex items-baseline justify-center gap-1">
+          <span class="font-mono text-[13px] sm:text-[14px] font-bold ${text} tracking-tight">${item.value}</span>
+          ${item.unit ? `<span class="text-[9px] font-semibold ${labelColor} opacity-90">${item.unit}</span>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  const kpiColForno = document.getElementById('kpiColForno');
+  if (kpiColForno) kpiColForno.innerHTML = fornoData.map(getCardHtml).join('');
+  
+  const kpiColEle = document.getElementById('kpiColEle');
+  if (kpiColEle) kpiColEle.innerHTML = eleData.map(getCardHtml).join('');
+  
+  const kpiColQui = document.getElementById('kpiColQui');
+  if (kpiColQui) kpiColQui.innerHTML = quiData.map(getCardHtml).join('');
+  
+  const kpiColDes = document.getElementById('kpiColDes');
+  if (kpiColDes) kpiColDes.innerHTML = desData.map(getCardHtml).join('');
+}
+
+document.getElementById('tabKpi')?.addEventListener('click', renderKpiDashboard);
+renderKpiDashboard();

@@ -614,17 +614,73 @@
 
         <!-- ===== KPI VIEW ===== -->
         <div id="viewKpi" class="view-hidden w-full flex flex-col gap-6">
-            <section class="bg-white border border-outline-variant/60 rounded-lg overflow-hidden shadow-sm">
-                <div class="px-5 py-3.5 border-b border-outline-variant/40 flex justify-between items-center bg-surface-bright">
-                    <h2 class="font-display text-sm font-bold text-on-surface flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[18px] text-primary">insights</span>
-                        Painel de KPIs
+            
+            <!-- Kanban Header & Legend -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-white border border-outline-variant/60 rounded-lg p-4 shadow-sm gap-4">
+                <div>
+                    <h2 class="font-display text-lg font-extrabold text-primary flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[24px]">insights</span>
+                        Painel Kanban de KPIs
                     </h2>
+                    <p class="text-xs text-on-surface-variant font-semibold mt-0.5">Monitoramento de Variáveis Críticas</p>
                 </div>
-                <div class="p-6">
-                    <!-- Deixado em branco para conteúdo futuro de KPI -->
+                <div class="flex items-center gap-3 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider bg-surface-container-low px-4 py-2 rounded-md border border-outline-variant/30 flex-wrap">
+                    <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-green-600 shadow-[0_0_8px_rgba(22,163,74,0.4)]"></span>Dentro dos Limites</div>
+                    <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.4)]"></span>Próximo dos Limites</div>
+                    <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.4)] animate-pulse"></span>Fora dos Limites</div>
+                    <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-gray-500 shadow-[0_0_8px_rgba(107,114,128,0.4)]"></span>Limites Não Encontrados</div>
                 </div>
-            </section>
+            </div>
+
+            <!-- Kanban Board -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-start pb-6">
+                
+                <!-- COLUNA 1: FORNO -->
+                <div class="flex flex-col bg-white border border-outline-variant/60 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
+                    <div class="bg-surface-bright px-4 py-3 border-b border-outline-variant/40 flex flex-col items-center justify-center relative">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-400 to-orange-600"></div>
+                        <h3 class="font-display font-bold text-sm text-on-surface uppercase tracking-wide">Forno</h3>
+                        <span class="text-[10px] text-on-surface-variant/70 font-mono tracking-wider mt-0.5">160772T3002B</span>
+                    </div>
+                    <div class="p-3 bg-surface-container-lowest grid grid-cols-2 gap-2.5" id="kpiColForno">
+                        <!-- Cards injetados via JS -->
+                    </div>
+                </div>
+
+                <!-- COLUNA 2: DECAPAGEM ELETROLÍTICA -->
+                <div class="flex flex-col bg-white border border-outline-variant/60 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
+                    <div class="bg-surface-bright px-4 py-3 border-b border-outline-variant/40 flex flex-col items-center justify-center relative">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-blue-600"></div>
+                        <h3 class="font-display font-bold text-sm text-on-surface uppercase tracking-wide text-center leading-tight">Decapagem<br>Eletrolítica</h3>
+                        <span class="text-[10px] text-on-surface-variant/70 font-mono tracking-wider mt-0.5">605812G2000B</span>
+                    </div>
+                    <div class="p-3 bg-surface-container-lowest grid grid-cols-2 gap-2.5" id="kpiColEle">
+                    </div>
+                </div>
+
+                <!-- COLUNA 3: DECAPAGEM QUÍMICA -->
+                <div class="flex flex-col bg-white border border-outline-variant/60 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all h-full">
+                    <div class="bg-surface-bright px-4 py-3 border-b border-outline-variant/40 flex flex-col items-center justify-center relative">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-emerald-600"></div>
+                        <h3 class="font-display font-bold text-sm text-on-surface uppercase tracking-wide text-center leading-tight">Decapagem<br>Química</h3>
+                        <span class="text-[10px] text-on-surface-variant/70 font-mono tracking-wider mt-0.5">605812G2000B</span>
+                    </div>
+                    <div class="p-3 bg-surface-container-lowest grid grid-cols-2 gap-2.5" id="kpiColQui">
+                    </div>
+                </div>
+
+                <!-- COLUNA 4: DESEMPENHO E EFICIÊNCIA -->
+                <div class="flex flex-col bg-white border border-outline-variant/60 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all h-full">
+                    <div class="bg-surface-bright px-4 py-3 border-b border-outline-variant/40 flex flex-col items-center justify-center relative">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-purple-600"></div>
+                        <h3 class="font-display font-bold text-sm text-on-surface uppercase tracking-wide text-center leading-tight">Desempenho e<br>Eficiência</h3>
+                        <span class="text-[10px] text-on-surface-variant/70 font-mono tracking-wider mt-0.5">605812G2000B</span>
+                    </div>
+                    <div class="p-3 bg-surface-container-lowest flex flex-col gap-2.5" id="kpiColDes">
+                    </div>
+                </div>
+
+            </div>
         </div>
 
         <!-- ===== ADMIN VIEW ===== -->

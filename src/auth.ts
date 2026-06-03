@@ -3,7 +3,7 @@ import { supabase } from './supabase';
 const $ = (id: string) => document.getElementById(id)!;
 
 export type UserRole = 'viewer' | 'editor' | 'admin';
-export let currentUserRole: UserRole = 'viewer';
+export let currentUserRole: UserRole = 'editor';
 
 export function initAuth() {
   const loginSection = $('app-login');
@@ -90,7 +90,7 @@ export function initAuth() {
       const email = session.user.email || '';
       if (email.includes('admin')) currentUserRole = 'admin';
       else if (email.includes('editor')) currentUserRole = 'editor';
-      else currentUserRole = 'viewer';
+      else currentUserRole = 'editor';
 
       // Dispara evento para main.ts aplicar as permissões na UI
       window.dispatchEvent(new CustomEvent('authRoleChanged', { detail: currentUserRole }));
@@ -105,10 +105,10 @@ export function initAuth() {
       }, 300);
     } else {
       // Usuário deslogado
-      if(dashboardSection) dashboardSection.style.display = 'none';
-      if(loginSection) loginSection.style.display = 'flex';
+      if(dashboardSection) dashboardSection.style.display = 'flex';
+      if(loginSection) loginSection.style.display = 'none';
       
-      currentUserRole = 'viewer';
+      currentUserRole = 'editor';
       window.dispatchEvent(new CustomEvent('authRoleChanged', { detail: currentUserRole }));
 
       // Reseta a opacidade e escala

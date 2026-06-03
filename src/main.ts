@@ -25,6 +25,8 @@ export function applyCurrentRole() {
   document.querySelectorAll('.require-admin').forEach(el => {
     (el as HTMLElement).style.display = isAdmin ? '' : 'none';
   });
+  if ($('btnAdminLogin')) $('btnAdminLogin').style.display = isAdmin ? 'none' : 'flex';
+  if ($('btnLogout')) $('btnLogout').style.display = isAdmin ? 'flex' : 'none';
 }
 
 export function updateAdminMetrics() {
@@ -230,6 +232,16 @@ $('btnSavePrices')?.addEventListener('click', () => {
   savePrecos({ rolo: inRolo, escova: inEscova, arruelaForno: inArrForno, roloForno: inRoloForno });
   toast('Preços atualizados com sucesso!', 'success');
   updateAdminMetrics();
+});
+
+$('btnAdminLogin')?.addEventListener('click', () => {
+  const loginSection = $('app-login');
+  const loginCard = $('loginCard');
+  if (loginSection && loginCard) {
+    loginSection.style.display = 'flex';
+    loginSection.classList.replace('opacity-0', 'opacity-100');
+    loginCard.classList.replace('scale-95', 'scale-100');
+  }
 });
 
 // CSV Download listener

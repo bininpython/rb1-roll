@@ -1129,8 +1129,10 @@ function renderDecapagemMonthly() {
 
 $('prevYear').addEventListener('click', () => { selYear--; renderMonthly(); });
 $('nextYear').addEventListener('click', () => { selYear++; renderMonthly(); });
-$('prevDecapagemYear').addEventListener('click', () => { selDecapagemYear--; renderDecapagemMonthly(); });
-$('nextDecapagemYear').addEventListener('click', () => { selDecapagemYear++; renderDecapagemMonthly(); });
+const btnPrevDecap = document.getElementById('prevDecapagemYear');
+if (btnPrevDecap) btnPrevDecap.addEventListener('click', () => { selDecapagemYear--; renderDecapagemMonthly(); });
+const btnNextDecap = document.getElementById('nextDecapagemYear');
+if (btnNextDecap) btnNextDecap.addEventListener('click', () => { selDecapagemYear++; renderDecapagemMonthly(); });
 
 // ===== RB1 COMPLETA — Stats =====
 function renderRb1CompletaStats() {

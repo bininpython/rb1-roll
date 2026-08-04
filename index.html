@@ -1169,9 +1169,9 @@
                                 Estocagem (TM1 e TM2)
                             </h3>
                             <div class="flex gap-2">
-                                <button
+                                <button id="btnAtualizarTanque"
                                     class="border border-outline-variant hover:bg-surface-container text-on-surface text-[11px] font-bold px-3 py-1.5 rounded flex items-center gap-1 transition-colors">
-                                    <span class="material-symbols-outlined text-[14px]">sync_alt</span> Movimentar
+                                    <span class="material-symbols-outlined text-[14px]">edit</span> Atualizar Tanque
                                 </button>
                             </div>
                         </div>
@@ -1182,9 +1182,9 @@
                                     <div class="text-sm font-bold text-on-surface">Tanque TM1</div>
                                     <div
                                         class="relative w-28 h-36 border-2 border-orange-200 rounded-t flex flex-col justify-end overflow-hidden bg-white shadow-inner">
-                                        <div class="w-full bg-gradient-to-t from-orange-500 to-orange-400 relative flex items-center justify-center transition-all duration-1000"
-                                            style="height: 85%;">
-                                            <span class="text-white font-bold text-sm z-10 drop-shadow-md">85%</span>
+                                        <div id="tm1Fill" class="w-full bg-gradient-to-t from-orange-500 to-orange-400 relative flex items-center justify-center transition-all duration-1000"
+                                            style="height: 0%;">
+                                            <span id="tm1Label" class="text-white font-bold text-sm z-10 drop-shadow-md">0%</span>
                                         </div>
                                     </div>
                                     <div
@@ -1195,9 +1195,14 @@
                                     </div>
                                     <div
                                         class="bg-surface-container-low border border-outline-variant/50 rounded p-2 text-center w-full mt-2">
-                                        <div class="text-[10px] text-on-surface-variant font-bold uppercase mb-1">Volume
-                                            Atual</div>
-                                        <div class="text-sm font-bold text-on-surface font-mono">21.250 L</div>
+                                        <div class="text-[10px] text-on-surface-variant font-bold uppercase mb-1">Volume Atual</div>
+                                        <div id="tm1Volume" class="text-sm font-bold text-on-surface font-mono">0 L</div>
+                                    </div>
+                                    <div class="bg-surface-container-low border border-outline-variant/50 rounded p-2 text-center w-full mt-1 flex flex-col gap-1">
+                                        <div class="text-[9px] text-on-surface-variant font-bold uppercase border-b border-outline-variant/30 pb-0.5">Parâmetros (g/L)</div>
+                                        <div class="text-[11px] font-mono text-on-surface flex justify-between px-1"><span>HF:</span> <span id="tm1Hf">--</span></div>
+                                        <div class="text-[11px] font-mono text-on-surface flex justify-between px-1"><span>HNO₃:</span> <span id="tm1Hno3">--</span></div>
+                                        <div class="text-[11px] font-mono text-on-surface flex justify-between px-1"><span>Fe:</span> <span id="tm1Fe">--</span></div>
                                     </div>
                                 </div>
 
@@ -1206,9 +1211,9 @@
                                     <div class="text-sm font-bold text-on-surface">Tanque TM2</div>
                                     <div
                                         class="relative w-28 h-36 border-2 border-emerald-200 rounded-t flex flex-col justify-end overflow-hidden bg-white shadow-inner">
-                                        <div class="w-full bg-gradient-to-t from-emerald-500 to-emerald-400 relative flex items-center justify-center transition-all duration-1000"
-                                            style="height: 35%;">
-                                            <span class="text-white font-bold text-sm z-10 drop-shadow-md">35%</span>
+                                        <div id="tm2Fill" class="w-full bg-gradient-to-t from-emerald-500 to-emerald-400 relative flex items-center justify-center transition-all duration-1000"
+                                            style="height: 0%;">
+                                            <span id="tm2Label" class="text-white font-bold text-sm z-10 drop-shadow-md">0%</span>
                                         </div>
                                     </div>
                                     <div
@@ -1219,9 +1224,14 @@
                                     </div>
                                     <div
                                         class="bg-surface-container-low border border-outline-variant/50 rounded p-2 text-center w-full mt-2">
-                                        <div class="text-[10px] text-on-surface-variant font-bold uppercase mb-1">Volume
-                                            Atual</div>
-                                        <div class="text-sm font-bold text-on-surface font-mono">8.750 L</div>
+                                        <div class="text-[10px] text-on-surface-variant font-bold uppercase mb-1">Volume Atual</div>
+                                        <div id="tm2Volume" class="text-sm font-bold text-on-surface font-mono">0 L</div>
+                                    </div>
+                                    <div class="bg-surface-container-low border border-outline-variant/50 rounded p-2 text-center w-full mt-1 flex flex-col gap-1">
+                                        <div class="text-[9px] text-on-surface-variant font-bold uppercase border-b border-outline-variant/30 pb-0.5">Parâmetros (g/L)</div>
+                                        <div class="text-[11px] font-mono text-on-surface flex justify-between px-1"><span>HF:</span> <span id="tm2Hf">--</span></div>
+                                        <div class="text-[11px] font-mono text-on-surface flex justify-between px-1"><span>HNO₃:</span> <span id="tm2Hno3">--</span></div>
+                                        <div class="text-[11px] font-mono text-on-surface flex justify-between px-1"><span>Fe:</span> <span id="tm2Fe">--</span></div>
                                     </div>
                                 </div>
                             </div>
@@ -1698,6 +1708,62 @@
                 <div class="form-actions">
                     <button type="button" class="btn btn-ghost" id="btnCancelAmostra">Cancelar</button>
                     <button type="submit" class="btn btn-primary">✓ Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Atualizar Tanque -->
+    <div class="modal-overlay" id="modalTanque">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Atualizar Parâmetros do Tanque</h3><button class="modal-close" id="modalTanqueClose">&times;</button>
+            </div>
+            <form id="formTanque" class="modal-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tanque *</label>
+                        <select id="inTanqueTipo" required>
+                            <option value="">Selecione...</option>
+                            <option value="TM1">Tanque TM1</option>
+                            <option value="TM2">Tanque TM2</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Nível do Tanque (%) *</label>
+                        <input type="number" step="1" min="0" max="100" id="inTanqueNivel" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group"><label>HF (g/L)</label><input type="number" step="0.1" id="inTanqueHf"></div>
+                    <div class="form-group"><label>HNO₃ (g/L)</label><input type="number" step="0.1" id="inTanqueHno3"></div>
+                    <div class="form-group"><label>Ferro (g/L)</label><input type="number" step="0.1" id="inTanqueFe"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Operador *</label>
+                        <select id="inTanqueOperador" required>
+                            <option value="">Selecione...</option>
+                            <option value="Abner">Abner</option>
+                            <option value="Felipe">Felipe</option>
+                            <option value="Alexandre">Alexandre</option>
+                            <option value="Israel">Israel</option>
+                            <option value="Isabel">Isabel</option>
+                            <option value="Marcone">Marcone</option>
+                            <option value="Thales">Thales</option>
+                            <option value="Sharles">Sharles</option>
+                            <option value="Leonardo">Leonardo</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Data</label><input type="date" id="inTanqueData" required></div>
+                    <div class="form-group"><label>Hora</label><input type="time" id="inTanqueHora" required></div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-ghost" id="btnCancelTanque">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">✓ Atualizar</button>
                 </div>
             </form>
         </div>

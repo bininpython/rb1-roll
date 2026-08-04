@@ -3577,3 +3577,61 @@ formAmostra?.addEventListener('submit', e => {
   toast('Amostra registrada com sucesso!', 'success');
   closeAmostraModal();
 });
+
+// ===== TANQUE MODAL LOGIC =====
+const btnAtualizarTanque = document.getElementById('btnAtualizarTanque');
+const modalTanque = document.getElementById('modalTanque');
+const modalTanqueClose = document.getElementById('modalTanqueClose');
+const btnCancelTanque = document.getElementById('btnCancelTanque');
+const formTanque = document.getElementById('formTanque') as HTMLFormElement;
+
+function closeTanqueModal() {
+  modalTanque?.classList.remove('active');
+  formTanque?.reset();
+}
+
+if (btnAtualizarTanque) {
+  btnAtualizarTanque.addEventListener('click', () => {
+    modalTanque?.classList.add('active');
+  });
+}
+
+modalTanqueClose?.addEventListener('click', closeTanqueModal);
+btnCancelTanque?.addEventListener('click', closeTanqueModal);
+modalTanque?.addEventListener('click', e => {
+  if (e.target === modalTanque) closeTanqueModal();
+});
+
+formTanque?.addEventListener('submit', e => {
+  e.preventDefault();
+  const tanqueTipo = (document.getElementById('inTanqueTipo') as HTMLSelectElement).value;
+  const nivel = parseInt((document.getElementById('inTanqueNivel') as HTMLInputElement).value);
+  
+  const hf = (document.getElementById('inTanqueHf') as HTMLInputElement).value;
+  const hno3 = (document.getElementById('inTanqueHno3') as HTMLInputElement).value;
+  const fe = (document.getElementById('inTanqueFe') as HTMLInputElement).value;
+  
+  const maxVolume = 25000;
+  
+  const fillEl = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Fill' : 'tm2Fill');
+  const labelEl = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Label' : 'tm2Label');
+  const volumeEl = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Volume' : 'tm2Volume');
+  
+  const hfEl = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Hf' : 'tm2Hf');
+  const hno3El = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Hno3' : 'tm2Hno3');
+  const feEl = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Fe' : 'tm2Fe');
+
+  if (fillEl && labelEl && volumeEl) {
+    fillEl.style.height = `${nivel}%`;
+    labelEl.innerText = `${nivel}%`;
+    const volumeLitros = (maxVolume * nivel) / 100;
+    volumeEl.innerText = `${volumeLitros.toLocaleString('pt-BR')} L`;
+  }
+  
+  if (hfEl) hfEl.innerText = hf ? hf : '--';
+  if (hno3El) hno3El.innerText = hno3 ? hno3 : '--';
+  if (feEl) feEl.innerText = fe ? fe : '--';
+  
+  toast(`Parâmetros do ${tanqueTipo} atualizados!`, 'success');
+  closeTanqueModal();
+});

@@ -980,18 +980,26 @@ $('toggleRb1').addEventListener('click', () => {
   $('toggleRetifica').classList.remove('active');
   renderInventory();
 });
-$('toggleDecapagemRetifica').addEventListener('click', () => {
-  currentDecapagemInvView = 'retifica';
-  $('toggleDecapagemRetifica').classList.add('active');
-  $('toggleDecapagemRb1').classList.remove('active');
-  renderDecapagemInventory();
-});
-$('toggleDecapagemRb1').addEventListener('click', () => {
-  currentDecapagemInvView = 'rb1';
-  $('toggleDecapagemRb1').classList.add('active');
-  $('toggleDecapagemRetifica').classList.remove('active');
-  renderDecapagemInventory();
-});
+const btnToggleDecapRetifica = document.getElementById('toggleDecapagemRetifica');
+if (btnToggleDecapRetifica) {
+  btnToggleDecapRetifica.addEventListener('click', () => {
+    currentDecapagemInvView = 'retifica';
+    btnToggleDecapRetifica.classList.add('active');
+    const rb1Btn = document.getElementById('toggleDecapagemRb1');
+    if (rb1Btn) rb1Btn.classList.remove('active');
+    renderDecapagemInventory();
+  });
+}
+const btnToggleDecapRb1 = document.getElementById('toggleDecapagemRb1');
+if (btnToggleDecapRb1) {
+  btnToggleDecapRb1.addEventListener('click', () => {
+    currentDecapagemInvView = 'rb1';
+    btnToggleDecapRb1.classList.add('active');
+    const retBtn = document.getElementById('toggleDecapagemRetifica');
+    if (retBtn) retBtn.classList.remove('active');
+    renderDecapagemInventory();
+  });
+}
 $('modalEstClose').addEventListener('click', () => { $('modalEst').classList.remove('active'); ($('formEst') as HTMLFormElement).reset(); });
 $('btnCancelEst').addEventListener('click', () => { $('modalEst').classList.remove('active'); ($('formEst') as HTMLFormElement).reset(); });
 $('modalEst').addEventListener('click', e => { if (e.target === $('modalEst')) { $('modalEst').classList.remove('active'); ($('formEst') as HTMLFormElement).reset(); } });

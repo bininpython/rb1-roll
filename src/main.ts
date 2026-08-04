@@ -11,7 +11,7 @@ import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
 
-const $ = (id: string) => document.getElementById(id)!;
+const $ = (id: string) => { const el = document.getElementById(id); if (!el) console.error("MISSING ID:", id); return el as HTMLElement; };
 
 // ===== RBAC & Admin Logic =====
 let chartSetorLifeInstance: Chart | null = null;
@@ -911,7 +911,7 @@ function updateSubModalFields() {
   }
 }
 (window as any).updateSubModalFields = updateSubModalFields;
-$('inPos').addEventListener('change', updateSubModalFields);
+$('inPos')?.addEventListener('change', updateSubModalFields);
 
 function openSubModal() {
   const now = new Date(); now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
@@ -921,7 +921,7 @@ function openSubModal() {
 }
 function closeSubModal() { $('modalSub').classList.remove('active'); ($('formSub') as HTMLFormElement).reset(); document.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); ($('inDiam') as HTMLInputElement).value = ''; }
 
-$('inEstoqueRolo').addEventListener('change', () => {
+$('inEstoqueRolo')?.addEventListener('change', () => {
   const sel = ($('inEstoqueRolo') as HTMLSelectElement).value;
   if (sel === 'DIRECT') {
     const pos = parseInt(($('inPos') as HTMLSelectElement).value);
@@ -934,10 +934,10 @@ $('inEstoqueRolo').addEventListener('change', () => {
     ($('inDiam') as HTMLInputElement).value = item ? String(item.diametro) : '';
   }
 });
-$('btnNovaSub').addEventListener('click', openSubModal);
-$('modalSubClose').addEventListener('click', closeSubModal);
-$('btnCancelSub').addEventListener('click', closeSubModal);
-$('modalSub').addEventListener('click', e => { if (e.target === $('modalSub')) closeSubModal(); });
+$('btnNovaSub')?.addEventListener('click', openSubModal);
+$('modalSubClose')?.addEventListener('click', closeSubModal);
+$('btnCancelSub')?.addEventListener('click', closeSubModal);
+$('modalSub')?.addEventListener('click', e => { if (e.target === $('modalSub')) closeSubModal(); });
 
 document.querySelectorAll<HTMLButtonElement>('#motivoChips .chip').forEach(chip => {
   chip.addEventListener('click', () => {
@@ -965,16 +965,16 @@ function openEstoqueModal(defaultObs: string) {
   $('modalEst').classList.add('active');
   ($('inEstObs') as HTMLInputElement).value = defaultObs;
 }
-$('btnAddEstRetifica').addEventListener('click', () => openEstoqueModal('Retífica'));
-$('btnAddEstRb1').addEventListener('click', () => openEstoqueModal(''));
+$('btnAddEstRetifica')?.addEventListener('click', () => openEstoqueModal('Retífica'));
+$('btnAddEstRb1')?.addEventListener('click', () => openEstoqueModal(''));
 
-$('toggleRetifica').addEventListener('click', () => {
+$('toggleRetifica')?.addEventListener('click', () => {
   currentInvView = 'retifica';
   $('toggleRetifica').classList.add('active');
   $('toggleRb1').classList.remove('active');
   renderInventory();
 });
-$('toggleRb1').addEventListener('click', () => {
+$('toggleRb1')?.addEventListener('click', () => {
   currentInvView = 'rb1';
   $('toggleRb1').classList.add('active');
   $('toggleRetifica').classList.remove('active');
@@ -1000,9 +1000,9 @@ if (btnToggleDecapRb1) {
     renderDecapagemInventory();
   });
 }
-$('modalEstClose').addEventListener('click', () => { $('modalEst').classList.remove('active'); ($('formEst') as HTMLFormElement).reset(); });
-$('btnCancelEst').addEventListener('click', () => { $('modalEst').classList.remove('active'); ($('formEst') as HTMLFormElement).reset(); });
-$('modalEst').addEventListener('click', e => { if (e.target === $('modalEst')) { $('modalEst').classList.remove('active'); ($('formEst') as HTMLFormElement).reset(); } });
+$('modalEstClose')?.addEventListener('click', () => { $('modalEst').classList.remove('active'); ($('formEst') as HTMLFormElement).reset(); });
+$('btnCancelEst')?.addEventListener('click', () => { $('modalEst').classList.remove('active'); ($('formEst') as HTMLFormElement).reset(); });
+$('modalEst')?.addEventListener('click', e => { if (e.target === $('modalEst')) { $('modalEst').classList.remove('active'); ($('formEst') as HTMLFormElement).reset(); } });
 ($('formEst') as HTMLFormElement).addEventListener('submit', e => {
   e.preventDefault();
   const d = parseFloat(($('inEstDiam') as HTMLInputElement).value);
@@ -1059,9 +1059,9 @@ function openEditModal(id: string) {
   $('modalEdit').classList.add('active');
 }
 function closeEditModal() { $('modalEdit').classList.remove('active'); }
-$('modalEditClose').addEventListener('click', closeEditModal);
-$('btnCancelEdit').addEventListener('click', closeEditModal);
-$('modalEdit').addEventListener('click', e => { if (e.target === $('modalEdit')) closeEditModal(); });
+$('modalEditClose')?.addEventListener('click', closeEditModal);
+$('btnCancelEdit')?.addEventListener('click', closeEditModal);
+$('modalEdit')?.addEventListener('click', e => { if (e.target === $('modalEdit')) closeEditModal(); });
 ($('formEdit') as HTMLFormElement).addEventListener('submit', e => {
   e.preventDefault();
   const id = ($('editId') as HTMLInputElement).value;
@@ -1076,8 +1076,8 @@ $('modalEdit').addEventListener('click', e => { if (e.target === $('modalEdit'))
 });
 
 // Filters
-$('filterPos').addEventListener('change', renderHistory);
-$('filterTurno').addEventListener('change', renderHistory);
+$('filterPos')?.addEventListener('change', renderHistory);
+$('filterTurno')?.addEventListener('change', renderHistory);
 
 // Monthly Tab
 const MN = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
@@ -1135,8 +1135,8 @@ function renderDecapagemMonthly() {
   }).join('')}</div>`;
 }
 
-$('prevYear').addEventListener('click', () => { selYear--; renderMonthly(); });
-$('nextYear').addEventListener('click', () => { selYear++; renderMonthly(); });
+$('prevYear')?.addEventListener('click', () => { selYear--; renderMonthly(); });
+$('nextYear')?.addEventListener('click', () => { selYear++; renderMonthly(); });
 const btnPrevDecap = document.getElementById('prevDecapagemYear');
 if (btnPrevDecap) btnPrevDecap.addEventListener('click', () => { selDecapagemYear--; renderDecapagemMonthly(); });
 const btnNextDecap = document.getElementById('nextDecapagemYear');
@@ -3212,11 +3212,11 @@ function closeRoloModal() {
 }
 (window as any).closeRoloModal = closeRoloModal;
 
-$('roloModalClose').addEventListener('click', closeRoloModal);
-$('roloModal').addEventListener('click', e => { if (e.target === $('roloModal')) closeRoloModal(); });
+$('roloModalClose')?.addEventListener('click', closeRoloModal);
+$('roloModal')?.addEventListener('click', e => { if (e.target === $('roloModal')) closeRoloModal(); });
 
 // Event Delegation for RB1 Completa Diagram
-$('rb1CompletaDiagram').addEventListener('click', (e) => {
+$('rb1CompletaDiagram')?.addEventListener('click', (e) => {
   const target = e.target as SVGElement;
   const g = target.closest('.rolo-clickable');
   if (g) {

@@ -1236,8 +1236,20 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="p-5 flex flex-col gap-3 border-t border-outline-variant/30 bg-surface-container-lowest">
-                            <h4 class="font-bold text-sm text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-[16px]">history</span> Histórico de Estocagem</h4>
+                        <div class="flex flex-col border-t border-outline-variant/30 bg-surface-container-lowest">
+                            <div class="px-5 py-3.5 bg-surface-bright flex justify-between items-center border-b border-outline-variant/40">
+                                <h3 class="font-display text-sm font-bold text-on-surface flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-[16px] text-purple-600">calendar_month</span>
+                                    Histórico de Estocagem
+                                </h3>
+                                <div class="flex items-center gap-2">
+                                    <button id="prevEstocagemYear" class="w-7 h-7 rounded-md border border-outline-variant/40 flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-all text-xs">◀</button>
+                                    <span id="yearEstocagemLabel" class="font-mono font-bold text-sm min-w-[48px] text-center"></span>
+                                    <button id="nextEstocagemYear" class="w-7 h-7 rounded-md border border-outline-variant/40 flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-all text-xs">▶</button>
+                                </div>
+                            </div>
+                            <div class="p-5 flex flex-col gap-3">
+                                <div id="monthEstocagemTabs" class="grid grid-cols-6 md:grid-cols-12 gap-2 mb-2"></div>
                             <div class="overflow-x-auto rounded border border-outline-variant/40">
                                 <table class="w-full text-left text-xs">
                                     <thead class="bg-surface-container text-on-surface-variant font-bold border-b border-outline-variant/40">

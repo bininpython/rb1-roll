@@ -3242,6 +3242,7 @@ function renderAll() {
   renderHistory();
   renderMonthly();
   renderDecapagemMonthly();
+  renderHistoricoTanques();
 }
 
 function setupHoverTooltips() {
@@ -3603,15 +3604,53 @@ modalTanque?.addEventListener('click', e => {
 });
 
 const historicoTanques: any[] = [];
+let selEstocagemYear = new Date().getFullYear();
+let selEstocagemMonth = new Date().getMonth();
+
+const prevEstocagemYearBtn = document.getElementById('prevEstocagemYear');
+const nextEstocagemYearBtn = document.getElementById('nextEstocagemYear');
+
+if (prevEstocagemYearBtn) {
+  prevEstocagemYearBtn.addEventListener('click', () => { selEstocagemYear--; renderHistoricoTanques(); });
+}
+if (nextEstocagemYearBtn) {
+  nextEstocagemYearBtn.addEventListener('click', () => { selEstocagemYear++; renderHistoricoTanques(); });
+}
 
 function renderHistoricoTanques() {
+  const yearLabel = document.getElementById('yearEstocagemLabel');
+  if (yearLabel) yearLabel.textContent = String(selEstocagemYear);
+
+  const monthTabs = document.getElementById('monthEstocagemTabs');
+  if (monthTabs) {
+    monthTabs.innerHTML = MN.map((m, i) => {
+      const cnt = historicoTanques.filter(h => {
+        const parts = h.data.split('/');
+        const d = new Date(`${parts[2]}-${parts[1]}-${parts[0]}T12:00:00`);
+        return d.getFullYear() === selEstocagemYear && d.getMonth() === i;
+      }).length;
+      return `<button class="month-tab flex flex-col items-center gap-1 px-2 py-2 border rounded-md text-[11px] font-semibold ${i === selEstocagemMonth ? 'active border-primary-container bg-purple-50/50 text-primary-container' : 'border-outline-variant/40 bg-surface-container-low text-on-surface-variant'} ${cnt > 0 ? '' : ''}" data-month="${i}"><span>${m}</span>${cnt > 0 ? `<span class="month-tab-count">${cnt}</span>` : ''}</button>`;
+    }).join('');
+
+    monthTabs.querySelectorAll<HTMLButtonElement>('.month-tab').forEach(btn => {
+      btn.addEventListener('click', () => { selEstocagemMonth = parseInt(btn.dataset.month!); renderHistoricoTanques(); });
+    });
+  }
+
   const tbody = document.getElementById('historicoTanqueBody');
   if (!tbody) return;
-  if (historicoTanques.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="8" class="p-4 text-center text-on-surface-variant/60">Nenhum registro encontrado.</td></tr>';
+  
+  const data = historicoTanques.filter(h => {
+    const parts = h.data.split('/');
+    const d = new Date(`${parts[2]}-${parts[1]}-${parts[0]}T12:00:00`);
+    return d.getFullYear() === selEstocagemYear && d.getMonth() === selEstocagemMonth;
+  });
+
+  if (data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" class="p-4 text-center text-on-surface-variant/60">Nenhum registro encontrado neste mês.</td></tr>';
     return;
   }
-  tbody.innerHTML = historicoTanques.map(r => `
+  tbody.innerHTML = data.map(r => `
     <tr>
       <td class="p-2 whitespace-nowrap">${r.data} ${r.hora}</td>
       <td class="p-2 font-bold">${r.tanque}</td>

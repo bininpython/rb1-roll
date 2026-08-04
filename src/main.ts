@@ -3605,13 +3605,16 @@ modalTanque?.addEventListener('click', e => {
 formTanque?.addEventListener('submit', e => {
   e.preventDefault();
   const tanqueTipo = (document.getElementById('inTanqueTipo') as HTMLSelectElement).value;
-  const nivel = parseInt((document.getElementById('inTanqueNivel') as HTMLInputElement).value);
+  const nivelLiters = parseInt((document.getElementById('inTanqueNivel') as HTMLInputElement).value);
   
   const hf = (document.getElementById('inTanqueHf') as HTMLInputElement).value;
   const hno3 = (document.getElementById('inTanqueHno3') as HTMLInputElement).value;
   const fe = (document.getElementById('inTanqueFe') as HTMLInputElement).value;
   
   const maxVolume = 25000;
+  let perc = Math.round((nivelLiters / maxVolume) * 100);
+  if (perc > 100) perc = 100;
+  if (perc < 0) perc = 0;
   
   const fillEl = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Fill' : 'tm2Fill');
   const labelEl = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Label' : 'tm2Label');
@@ -3622,10 +3625,9 @@ formTanque?.addEventListener('submit', e => {
   const feEl = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Fe' : 'tm2Fe');
 
   if (fillEl && labelEl && volumeEl) {
-    fillEl.style.height = `${nivel}%`;
-    labelEl.innerText = `${nivel}%`;
-    const volumeLitros = (maxVolume * nivel) / 100;
-    volumeEl.innerText = `${volumeLitros.toLocaleString('pt-BR')} L`;
+    fillEl.style.height = `${perc}%`;
+    labelEl.innerText = `${perc}%`;
+    volumeEl.innerText = `${nivelLiters.toLocaleString('pt-BR')} L`;
   }
   
   if (hfEl) hfEl.innerText = hf ? hf : '--';

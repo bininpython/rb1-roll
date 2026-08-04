@@ -3602,16 +3602,44 @@ modalTanque?.addEventListener('click', e => {
   if (e.target === modalTanque) closeTanqueModal();
 });
 
+const historicoTanques: any[] = [];
+
+function renderHistoricoTanques() {
+  const tbody = document.getElementById('historicoTanqueBody');
+  if (!tbody) return;
+  if (historicoTanques.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" class="p-4 text-center text-on-surface-variant/60">Nenhum registro encontrado.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = historicoTanques.map(r => `
+    <tr>
+      <td class="p-2 whitespace-nowrap">${r.data} ${r.hora}</td>
+      <td class="p-2 font-bold">${r.tanque}</td>
+      <td class="p-2">${r.aco}</td>
+      <td class="p-2 font-mono">${r.nivel.toLocaleString('pt-BR')} L</td>
+      <td class="p-2 font-mono">${r.hf || '--'}</td>
+      <td class="p-2 font-mono">${r.hno3 || '--'}</td>
+      <td class="p-2 font-mono">${r.fe || '--'}</td>
+      <td class="p-2">${r.operador}</td>
+    </tr>
+  `).join('');
+}
+
 formTanque?.addEventListener('submit', e => {
   e.preventDefault();
   const tanqueTipo = (document.getElementById('inTanqueTipo') as HTMLSelectElement).value;
+  const aco = (document.getElementById('inTanqueAco') as HTMLSelectElement).value;
   const nivelLiters = parseInt((document.getElementById('inTanqueNivel') as HTMLInputElement).value);
   
   const hf = (document.getElementById('inTanqueHf') as HTMLInputElement).value;
   const hno3 = (document.getElementById('inTanqueHno3') as HTMLInputElement).value;
   const fe = (document.getElementById('inTanqueFe') as HTMLInputElement).value;
   
-  const maxVolume = 25000;
+  const operador = (document.getElementById('inTanqueOperador') as HTMLSelectElement).value;
+  const data = (document.getElementById('inTanqueData') as HTMLInputElement).value;
+  const hora = (document.getElementById('inTanqueHora') as HTMLInputElement).value;
+  
+  const maxVolume = 35000;
   let perc = Math.round((nivelLiters / maxVolume) * 100);
   if (perc > 100) perc = 100;
   if (perc < 0) perc = 0;
@@ -3633,6 +3661,12 @@ formTanque?.addEventListener('submit', e => {
   if (hfEl) hfEl.innerText = hf ? hf : '--';
   if (hno3El) hno3El.innerText = hno3 ? hno3 : '--';
   if (feEl) feEl.innerText = fe ? fe : '--';
+  
+  historicoTanques.unshift({
+    tanque: tanqueTipo, aco, nivel: nivelLiters, hf, hno3, fe, operador,
+    data: data.split('-').reverse().join('/'), hora
+  });
+  renderHistoricoTanques();
   
   toast(`Parâmetros do ${tanqueTipo} atualizados!`, 'success');
   closeTanqueModal();

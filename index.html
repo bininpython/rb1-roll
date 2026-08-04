@@ -1236,6 +1236,28 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="p-5 flex flex-col gap-3 border-t border-outline-variant/30 bg-surface-container-lowest">
+                            <h4 class="font-bold text-sm text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-[16px]">history</span> Histórico de Estocagem</h4>
+                            <div class="overflow-x-auto rounded border border-outline-variant/40">
+                                <table class="w-full text-left text-xs">
+                                    <thead class="bg-surface-container text-on-surface-variant font-bold border-b border-outline-variant/40">
+                                        <tr>
+                                            <th class="p-2">Data/Hora</th>
+                                            <th class="p-2">Tanque</th>
+                                            <th class="p-2">Tipo de Aço</th>
+                                            <th class="p-2">Nível</th>
+                                            <th class="p-2">HF</th>
+                                            <th class="p-2">HNO₃</th>
+                                            <th class="p-2">Fe</th>
+                                            <th class="p-2">Operador</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="historicoTanqueBody" class="divide-y divide-outline-variant/20">
+                                        <tr><td colspan="8" class="p-4 text-center text-on-surface-variant/60">Nenhum registro encontrado.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </section>
                 </div>
 
@@ -1730,8 +1752,19 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label>Tipo de Aço *</label>
+                        <select id="inTanqueAco" required>
+                            <option value="">Selecione...</option>
+                            <option value="3XX/4XX">3XX/4XX</option>
+                            <option value="430/410">430/410</option>
+                            <option value="420">420</option>
+                            <option value="409">409</option>
+                            <option value="439">439</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Nível do Tanque (L) *</label>
-                        <input type="number" step="1" min="0" max="25000" id="inTanqueNivel" required>
+                        <input type="number" step="1" min="0" max="35000" id="inTanqueNivel" required>
                     </div>
                 </div>
 

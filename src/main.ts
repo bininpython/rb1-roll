@@ -3657,7 +3657,6 @@ modalTanque?.addEventListener('click', e => {
   if (e.target === modalTanque) closeTanqueModal();
 });
 
-const historicoTanques: any[] = [];
 let selEstocagemYear = new Date().getFullYear();
 let selEstocagemMonth = new Date().getMonth();
 

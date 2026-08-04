@@ -11,7 +11,7 @@ import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
 
-const $ = (id: string) => { const el = document.getElementById(id); if (!el) console.error("MISSING ID:", id); return el as HTMLElement; };
+const $ = (id: string) => { const el = document.getElementById(id); if (el) return el as HTMLElement; console.warn("MISSING ID:", id); return document.createElement('div') as HTMLElement; };
 
 // ===== RBAC & Admin Logic =====
 let chartSetorLifeInstance: Chart | null = null;

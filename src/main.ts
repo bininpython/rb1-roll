@@ -3586,51 +3586,28 @@ inAmostraTipo?.addEventListener('change', () => {
   }
 });
 
-formAmostra?.addEventListener('submit', e => {
+formAmostra?.addEventListener('submit', async e => {
   e.preventDefault();
-  const tipo = inAmostraTipo.value;
-  const op = inAmostrasOperador.value;
-  const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-  let p1: string = '', p2: string = '', p3: string = '';
-  let color: string = 'orange';
-
-  if (tipo === 'Eletrolítica') {
-    const cond = (document.getElementById('inAmostraCond') as HTMLInputElement).value;
-    const ph = (document.getElementById('inAmostraPh') as HTMLInputElement).value;
-    const fe = (document.getElementById('inAmostraFeEle') as HTMLInputElement).value;
-    p1 = `<span class="text-[9px] text-on-surface-variant">Cond:</span> ${cond}`;
-    p2 = `<span class="text-[9px] text-on-surface-variant">pH:</span> ${ph}`;
-    p3 = `<span class="text-[9px] text-on-surface-variant">Fe:</span> ${fe}`;
-    color = 'orange';
-  } else {
-    const hf = (document.getElementById('inAmostraHf') as HTMLInputElement).value;
-    const fe = (document.getElementById('inAmostraFeQui') as HTMLInputElement).value;
-    const hno3 = (document.getElementById('inAmostraHno3') as HTMLInputElement).value;
-    p1 = `<span class="text-[9px] text-on-surface-variant">HF:</span> ${hf}`;
-    p2 = `<span class="text-[9px] text-on-surface-variant">Fe:</span> ${fe}`;
-    p3 = `<span class="text-[9px] text-on-surface-variant">HNO₃:</span> ${hno3}`;
-    color = 'purple';
-  }
-
-  const tr = document.createElement('tr');
-  tr.className = 'border-b border-outline-variant/20 hover:bg-surface-container-low/50';
-  tr.innerHTML = `
-    <td class="py-2">${hora}</td>
-    <td class="py-2 font-medium text-${color}-600">${tipo}</td>
-    <td class="py-2 font-medium">${op}</td>
-    <td class="py-2 font-mono">${p1}</td>
-    <td class="py-2 font-mono">${p2}</td>
-    <td class="py-2 font-mono font-bold">${p3}</td>
-    <td class="py-2 text-right"><span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-bold">Lançado</span></td>
-  `;
-
-  if (amostrasTableBody) {
-    amostrasTableBody.prepend(tr);
-  }
-
-  toast('Amostra registrada com sucesso!', 'success');
-  closeAmostraModal();
+  const btnSubmit = formAmostra.querySelector('button[type="submit"]') as HTMLButtonElement;
+  if (btnSubmit) btnSubmit.disabled = true;
+  try {
+    const tipo = inAmostraTipo.value;
+    const op = inAmostrasOperador.value;
+    const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    let cond = null, ph = null, fe_ele = null, hf = null, fe_qui = null, hno3 = null;
+    if (tipo === 'Eletrolítica') {
+      cond = parseFloat((document.getElementById('inAmostraCond') as HTMLInputElement).value) || null;
+      ph = parseFloat((document.getElementById('inAmostraPh') as HTMLInputElement).value) || null;
+      fe_ele = parseFloat((document.getElementById('inAmostraFeEle') as HTMLInputElement).value) || null;
+    } else {
+      hf = parseFloat((document.getElementById('inAmostraHf') as HTMLInputElement).value) || null;
+      fe_qui = parseFloat((document.getElementById('inAmostraFeQui') as HTMLInputElement).value) || null;
+      hno3 = parseFloat((document.getElementById('inAmostraHno3') as HTMLInputElement).value) || null;
+    }
+    await addAmostraDecapagem({ tipo, operador: op, hora, condutividade: cond, ph, fe_eletrolitica: fe_ele, hf, fe_quimica: fe_qui, hno3 });
+    toast('Amostra registrada com sucesso!', 'success');
+    closeAmostraModal();
+  } catch (err) { toast('Erro ao registrar amostra', 'error'); } finally { if (btnSubmit) btnSubmit.disabled = false; }
 });
 
 // ===== TANQUE MODAL LOGIC =====
@@ -3717,49 +3694,22 @@ function renderHistoricoTanques() {
   `).join('');
 }
 
-formTanque?.addEventListener('submit', e => {
+formTanque?.addEventListener('submit', async e => {
   e.preventDefault();
-  const tanqueTipo = (document.getElementById('inTanqueTipo') as HTMLSelectElement).value;
-  const aco = (document.getElementById('inTanqueAco') as HTMLSelectElement).value;
-  const nivelLiters = parseInt((document.getElementById('inTanqueNivel') as HTMLInputElement).value);
-  
-  const hf = (document.getElementById('inTanqueHf') as HTMLInputElement).value;
-  const hno3 = (document.getElementById('inTanqueHno3') as HTMLInputElement).value;
-  const fe = (document.getElementById('inTanqueFe') as HTMLInputElement).value;
-  
-  const operador = (document.getElementById('inTanqueOperador') as HTMLSelectElement).value;
-  const data = (document.getElementById('inTanqueData') as HTMLInputElement).value;
-  const hora = (document.getElementById('inTanqueHora') as HTMLInputElement).value;
-  
-  const maxVolume = 35000;
-  let perc = Math.round((nivelLiters / maxVolume) * 100);
-  if (perc > 100) perc = 100;
-  if (perc < 0) perc = 0;
-  
-  const fillEl = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Fill' : 'tm2Fill');
-  const labelEl = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Label' : 'tm2Label');
-  const volumeEl = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Volume' : 'tm2Volume');
-  
-  const hfEl = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Hf' : 'tm2Hf');
-  const hno3El = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Hno3' : 'tm2Hno3');
-  const feEl = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Fe' : 'tm2Fe');
-
-  if (fillEl && labelEl && volumeEl) {
-    fillEl.style.height = `${perc}%`;
-    labelEl.innerText = `${perc}%`;
-    volumeEl.innerText = `${nivelLiters.toLocaleString('pt-BR')} L`;
-  }
-  
-  if (hfEl) hfEl.innerText = hf ? hf : '--';
-  if (hno3El) hno3El.innerText = hno3 ? hno3 : '--';
-  if (feEl) feEl.innerText = fe ? fe : '--';
-  
-  historicoTanques.unshift({
-    tanque: tanqueTipo, aco, nivel: nivelLiters, hf, hno3, fe, operador,
-    data: data.split('-').reverse().join('/'), hora
-  });
-  renderHistoricoTanques();
-  
-  toast(`Parâmetros do ${tanqueTipo} atualizados!`, 'success');
-  closeTanqueModal();
+  const btnSubmit = formTanque.querySelector('button[type="submit"]') as HTMLButtonElement;
+  if (btnSubmit) btnSubmit.disabled = true;
+  try {
+    const tanqueTipo = (document.getElementById('inTanqueTipo') as HTMLSelectElement).value;
+    const aco = (document.getElementById('inTanqueAco') as HTMLSelectElement).value;
+    const nivelLiters = parseInt((document.getElementById('inTanqueNivel') as HTMLInputElement).value);
+    const hf = parseFloat((document.getElementById('inTanqueHf') as HTMLInputElement).value) || null;
+    const hno3 = parseFloat((document.getElementById('inTanqueHno3') as HTMLInputElement).value) || null;
+    const fe = parseFloat((document.getElementById('inTanqueFe') as HTMLInputElement).value) || null;
+    const operador = (document.getElementById('inTanqueOperador') as HTMLSelectElement).value;
+    const data = (document.getElementById('inTanqueData') as HTMLInputElement).value;
+    const hora = (document.getElementById('inTanqueHora') as HTMLInputElement).value;
+    await addHistoricoTanque({ tanque: tanqueTipo, aco, nivel: nivelLiters, hf, hno3, fe, operador, data: data.split('-').reverse().join('/'), hora });
+    toast('Parâmetros do ' + tanqueTipo + ' atualizados!', 'success');
+    closeTanqueModal();
+  } catch (err) { toast('Erro ao atualizar tanque', 'error'); } finally { if (btnSubmit) btnSubmit.disabled = false; }
 });

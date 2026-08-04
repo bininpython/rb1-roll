@@ -1,9 +1,11 @@
-import type { Rolo, EstoqueItem, HistoricoRecord, Posicao, Turno, KanbanStatus } from './types';
+import type { Rolo, EstoqueItem, HistoricoRecord, Posicao, Turno, KanbanStatus, AmostraDecapagem, HistoricoTanque } from './types';
 import { supabase } from './supabase';
 
 export let rolos: Rolo[] = [];
 export let estoque: EstoqueItem[] = [];
 export let historico: HistoricoRecord[] = [];
+export let amostrasDecapagem: AmostraDecapagem[] = [];
+export let historicoTanques: HistoricoTanque[] = [];
 
 // ===== Financeiro =====
 export let precosFinanceiro = {
@@ -314,14 +316,18 @@ export function unsanitize(str: string | null | undefined): string {
 // Carregar tudo do Supabase no início
 export async function loadData() {
   try {
-    const [resR, resE, resH] = await Promise.all([
+    const [resR, resE, resH, resA, resT] = await Promise.all([
       supabase.from('rolos').select('*'),
       supabase.from('estoque').select('*'),
-      supabase.from('historico').select('*')
+      supabase.from('historico').select('*'),
+      supabase.from('amostras_decapagem').select('*'),
+      supabase.from('historico_tanques').select('*')
     ]);
     if (resR.data) rolos = resR.data.map((r: any) => ({ ...r, obs_motivo: unsanitize(r.obs_motivo) }));
     if (resE.data) estoque = resE.data.map((e: any) => ({ ...e, obs: unsanitize(e.obs) }));
     if (resH.data) historico = resH.data.map((h: any) => ({ ...h, obs_motivo: unsanitize(h.obs_motivo) }));
+    if (resA.data) amostrasDecapagem = resA.data;
+    if (resT.data) historicoTanques = resT.data;
     // Dispara evento para o main.ts renderizar a tela após carregar
     window.dispatchEvent(new Event('dataLoaded'));
   } catch (e) {
@@ -412,6 +418,22 @@ export async function adicionarEstoque(diam: number, obs: string) {
 export async function removerEstoque(id: string) {
   estoque = estoque.filter(e => e.id !== id);
   await supabase.from('estoque').delete().eq('id', id);
+}
+
+export async function addAmostraDecapagem(amostra: Omit<AmostraDecapagem, 'id' | 'created_at'>) {
+  const { data } = await supabase.from('amostras_decapagem').insert([amostra]).select();
+  if (data && data.length > 0) {
+    amostrasDecapagem = [...amostrasDecapagem, data[0]];
+    window.dispatchEvent(new Event('dataLoaded'));
+  }
+}
+
+export async function addHistoricoTanque(hist: Omit<HistoricoTanque, 'id' | 'created_at'>) {
+  const { data } = await supabase.from('historico_tanques').insert([hist]).select();
+  if (data && data.length > 0) {
+    historicoTanques = [...historicoTanques, data[0]];
+    window.dispatchEvent(new Event('dataLoaded'));
+  }
 }
 
 export function initDemo(): void {

@@ -3,6 +3,7 @@ import './style.css';
 import {
   rolos, estoque, historico, calcDays, getStatus, getRolo, fmtDate, sanitize,
   registrarSubstituicao, editarHistorico, adicionarEstoque, removerEstoque, initDemo, salvarMetadados, DECAPAGEM_MAP, DECAPAGEM_ORDER, RB1_COMPLETA_MAP, RollerInfo, precosFinanceiro, savePrecos
+, amostrasDecapagem, historicoTanques, addAmostraDecapagem, addHistoricoTanque
 } from './store';
 import type { Posicao, Turno, KanbanStatus } from './types';
 import panzoom from 'panzoom';
@@ -3243,6 +3244,59 @@ function renderAll() {
   renderMonthly();
   renderDecapagemMonthly();
   renderHistoricoTanques();
+}
+
+
+function renderDecapagemTanks() {
+  ['TM1', 'TM2'].forEach(tanqueTipo => {
+    const data = historicoTanques.filter(h => h.tanque === tanqueTipo).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    if (data.length > 0) {
+      const r = data[0];
+      const maxVolume = 35000;
+      let perc = Math.round((r.nivel / maxVolume) * 100);
+      if (perc > 100) perc = 100;
+      if (perc < 0) perc = 0;
+      const fillEl = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Fill' : 'tm2Fill');
+      const labelEl = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Label' : 'tm2Label');
+      const volumeEl = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Volume' : 'tm2Volume');
+      const hfEl = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Hf' : 'tm2Hf');
+      const hno3El = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Hno3' : 'tm2Hno3');
+      const feEl = document.getElementById(tanqueTipo === 'TM1' ? 'tm1Fe' : 'tm2Fe');
+      if (fillEl && labelEl && volumeEl) {
+        fillEl.style.height = perc + '%';
+        labelEl.innerText = perc + '%';
+        volumeEl.innerText = r.nivel.toLocaleString('pt-BR') + ' L';
+      }
+      if (hfEl) hfEl.innerText = r.hf !== null ? String(r.hf) : '--';
+      if (hno3El) hno3El.innerText = r.hno3 !== null ? String(r.hno3) : '--';
+      if (feEl) feEl.innerText = r.fe !== null ? String(r.fe) : '--';
+    }
+  });
+}
+
+function renderAmostrasDecapagem() {
+  const tbody = document.getElementById('amostrasTableBody');
+  if (!tbody) return;
+  const sorted = [...amostrasDecapagem].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  if (sorted.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="py-4 text-center text-on-surface-variant/60">Nenhuma amostra registrada.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = sorted.map(a => {
+    let p1 = '', p2 = '', p3 = '', color = '';
+    if (a.tipo === 'Eletrolítica') {
+      p1 = '<span class="text-[9px] text-on-surface-variant">Cond:</span> ' + (a.condutividade !== null ? a.condutividade : '--');
+      p2 = '<span class="text-[9px] text-on-surface-variant">pH:</span> ' + (a.ph !== null ? a.ph : '--');
+      p3 = '<span class="text-[9px] text-on-surface-variant">Fe:</span> ' + (a.fe_eletrolitica !== null ? a.fe_eletrolitica : '--');
+      color = 'orange';
+    } else {
+      p1 = '<span class="text-[9px] text-on-surface-variant">HF:</span> ' + (a.hf !== null ? a.hf : '--');
+      p2 = '<span class="text-[9px] text-on-surface-variant">Fe:</span> ' + (a.fe_quimica !== null ? a.fe_quimica : '--');
+      p3 = '<span class="text-[9px] text-on-surface-variant">HNO₃:</span> ' + (a.hno3 !== null ? a.hno3 : '--');
+      color = 'purple';
+    }
+    return '<tr class="border-b border-outline-variant/20 hover:bg-surface-container-low/50"><td class="py-2">' + a.hora + '</td><td class="py-2 font-medium text-' + color + '-600">' + a.tipo + '</td><td class="py-2 font-medium">' + a.operador + '</td><td class="py-2 font-mono">' + p1 + '</td><td class="py-2 font-mono">' + p2 + '</td><td class="py-2 font-mono font-bold">' + p3 + '</td><td class="py-2 text-right"><span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-bold">Lançado</span></td></tr>';
+  }).join('');
 }
 
 function setupHoverTooltips() {

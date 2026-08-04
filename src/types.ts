@@ -33,3 +33,30 @@ export interface HistoricoRecord {
         created_at: string;
         rolamento?: string;
 }
+export interface AmostraDecapagem {
+    id: string;
+    created_at: string;
+    tipo: string;
+    operador: string;
+    hora: string;
+    condutividade: number | null;
+    ph: number | null;
+    fe_eletrolitica: number | null;
+    hf: number | null;
+    fe_quimica: number | null;
+    hno3: number | null;
+}
+
+export interface HistoricoTanque {
+    id: string;
+    created_at: string;
+    tanque: string;
+    aco: string;
+    nivel: number;
+    hf: number | null;
+    hno3: number | null;
+    fe: number | null;
+    operador: string;
+    data: string;
+    hora: string;
+}

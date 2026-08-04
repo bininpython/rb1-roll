@@ -3527,8 +3527,8 @@ formAmostra?.addEventListener('submit', e => {
   const op = inAmostrasOperador.value;
   const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-  let p1, p2, p3;
-  let color = 'orange';
+  let p1: string = '', p2: string = '', p3: string = '';
+  let color: string = 'orange';
 
   if (tipo === 'Eletrolítica') {
     const cond = (document.getElementById('inAmostraCond') as HTMLInputElement).value;

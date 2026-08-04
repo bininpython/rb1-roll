@@ -430,6 +430,7 @@ function renderFurnace() {
 
 // Decapagem SVG
 function renderDecapagem() {
+  if (!document.getElementById('decapagemDiagram')) return;
   const svgW = 1700, svgH = 500;
   let s = `<svg viewBox="0 0 ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;background-color:#11141a;">`;
   
@@ -816,6 +817,7 @@ function renderInventory() {
 }
 
 function renderDecapagemInventory() {
+  if (!document.getElementById('inventoryDecapagemList')) return;
   const list=$('inventoryDecapagemList'), empty=$('inventoryDecapagemEmpty');
   const decapagemEstoque = estoque.filter(e => e.obs.startsWith('[Decapagem]'));
   const estRetifica = decapagemEstoque.filter(e => e.obs.toLowerCase().includes('retifica') || e.obs.toLowerCase().includes('retífica'));
@@ -1093,6 +1095,7 @@ function renderMonthly(){
 }
 
 function renderDecapagemMonthly(){
+  if (!document.getElementById('yearDecapagemLabel')) return;
   $('yearDecapagemLabel').textContent=String(selDecapagemYear);
   $('monthDecapagemTabs').innerHTML=MN.map((m,i)=>{
     const cnt=historico.filter(h=>{const d=new Date(h.data_troca);return h.posicao >= 100 && d.getFullYear()===selDecapagemYear&&d.getMonth()===i;}).length;
@@ -3466,3 +3469,98 @@ function renderKpiDashboard() {
 
 document.getElementById('tabKpi')?.addEventListener('click', renderKpiDashboard);
 renderKpiDashboard();
+
+// ===== AMOSTRAS MODAL LOGIC =====
+const btnNovaAmostra = document.getElementById('btnNovaAmostra');
+const modalAmostra = document.getElementById('modalAmostra');
+const modalAmostraClose = document.getElementById('modalAmostraClose');
+const btnCancelAmostra = document.getElementById('btnCancelAmostra');
+const formAmostra = document.getElementById('formAmostra') as HTMLFormElement;
+const inAmostraTipo = document.getElementById('inAmostraTipo') as HTMLSelectElement;
+const amostraCamposEle = document.getElementById('amostraCamposEle');
+const amostraCamposQui = document.getElementById('amostraCamposQui');
+const inAmostrasOperador = document.getElementById('inAmostrasOperador') as HTMLSelectElement;
+const amostrasTableBody = document.getElementById('amostrasTableBody');
+
+function closeAmostraModal() {
+  modalAmostra?.classList.remove('active');
+  formAmostra?.reset();
+  if (amostraCamposEle) amostraCamposEle.style.display = 'none';
+  if (amostraCamposQui) amostraCamposQui.style.display = 'none';
+}
+
+if (btnNovaAmostra) {
+  btnNovaAmostra.addEventListener('click', () => {
+    if (!inAmostrasOperador.value) {
+      toast('Selecione um Operador primeiro!', 'error');
+      return;
+    }
+    modalAmostra?.classList.add('active');
+  });
+}
+
+modalAmostraClose?.addEventListener('click', closeAmostraModal);
+btnCancelAmostra?.addEventListener('click', closeAmostraModal);
+modalAmostra?.addEventListener('click', e => {
+  if (e.target === modalAmostra) closeAmostraModal();
+});
+
+inAmostraTipo?.addEventListener('change', () => {
+  if (inAmostraTipo.value === 'Eletrolítica') {
+    if (amostraCamposEle) amostraCamposEle.style.display = 'flex';
+    if (amostraCamposQui) amostraCamposQui.style.display = 'none';
+  } else if (inAmostraTipo.value === 'Química') {
+    if (amostraCamposEle) amostraCamposEle.style.display = 'none';
+    if (amostraCamposQui) amostraCamposQui.style.display = 'flex';
+  } else {
+    if (amostraCamposEle) amostraCamposEle.style.display = 'none';
+    if (amostraCamposQui) amostraCamposQui.style.display = 'none';
+  }
+});
+
+formAmostra?.addEventListener('submit', e => {
+  e.preventDefault();
+  const tipo = inAmostraTipo.value;
+  const op = inAmostrasOperador.value;
+  const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  let p1, p2, p3;
+  let color = 'orange';
+
+  if (tipo === 'Eletrolítica') {
+    const cond = (document.getElementById('inAmostraCond') as HTMLInputElement).value;
+    const ph = (document.getElementById('inAmostraPh') as HTMLInputElement).value;
+    const fe = (document.getElementById('inAmostraFeEle') as HTMLInputElement).value;
+    p1 = `<span class="text-[9px] text-on-surface-variant">Cond:</span> ${cond}`;
+    p2 = `<span class="text-[9px] text-on-surface-variant">pH:</span> ${ph}`;
+    p3 = `<span class="text-[9px] text-on-surface-variant">Fe:</span> ${fe}`;
+    color = 'orange';
+  } else {
+    const hf = (document.getElementById('inAmostraHf') as HTMLInputElement).value;
+    const fe = (document.getElementById('inAmostraFeQui') as HTMLInputElement).value;
+    const hno3 = (document.getElementById('inAmostraHno3') as HTMLInputElement).value;
+    p1 = `<span class="text-[9px] text-on-surface-variant">HF:</span> ${hf}`;
+    p2 = `<span class="text-[9px] text-on-surface-variant">Fe:</span> ${fe}`;
+    p3 = `<span class="text-[9px] text-on-surface-variant">HNO₃:</span> ${hno3}`;
+    color = 'purple';
+  }
+
+  const tr = document.createElement('tr');
+  tr.className = 'border-b border-outline-variant/20 hover:bg-surface-container-low/50';
+  tr.innerHTML = `
+    <td class="py-2">${hora}</td>
+    <td class="py-2 font-medium text-${color}-600">${tipo}</td>
+    <td class="py-2 font-medium">${op}</td>
+    <td class="py-2 font-mono">${p1}</td>
+    <td class="py-2 font-mono">${p2}</td>
+    <td class="py-2 font-mono font-bold">${p3}</td>
+    <td class="py-2 text-right"><span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-bold">Lançado</span></td>
+  `;
+
+  if (amostrasTableBody) {
+    amostrasTableBody.prepend(tr);
+  }
+
+  toast('Amostra registrada com sucesso!', 'success');
+  closeAmostraModal();
+});

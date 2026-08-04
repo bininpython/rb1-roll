@@ -421,113 +421,168 @@
         <!-- ===== DECAPAGEM VIEW ===== -->
         <div id="viewDecapagem" class="view-hidden w-full flex flex-col gap-6">
 
-            <!-- Stats -->
-            <section id="statsDecapagemBar" class="grid grid-cols-2 md:grid-cols-4 gap-3"></section>
 
-            <!-- Decapagem Diagram -->
-            <section class="bg-white border border-outline-variant/60 rounded-lg overflow-hidden shadow-sm">
-                <div class="px-5 py-3.5 border-b border-outline-variant/40 flex justify-between items-center bg-surface-bright">
-                    <h2 class="font-display text-sm font-bold text-on-surface flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[18px] text-orange-500">bolt</span>
-                        Decapagem Química e Eletrolítica
-                    </h2>
-                    <div class="flex items-center gap-1.5 text-[10px] font-bold text-orange-500 uppercase tracking-wider">
-                        <div class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></div>
-                        Ao Vivo
-                    </div>
-                </div>
-                <div class="bg-[#110d14] overflow-x-auto">
-                    <div id="decapagemDiagram" class="w-full min-h-[380px]"></div>
-                </div>
-            </section>
 
-            <!-- Decapagem Table -->
-            <section class="bg-white border border-outline-variant/60 rounded-lg overflow-hidden shadow-sm">
-                <div class="px-5 py-3.5 border-b border-outline-variant/40 bg-surface-bright">
-                    <h3 class="font-display text-sm font-bold text-on-surface flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[16px] text-purple-600">list_alt</span>
-                        Status e Identificação dos Rolos e Escovas (Decapagem)
-                    </h3>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-[13px]">
-                        <thead class="bg-surface-container-low/80 text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">
-                            <tr>
-                                <th class="px-4 py-3 border-b border-outline-variant/30">Posição / Nome</th>
-                                <th class="px-4 py-3 border-b border-outline-variant/30">Tipo</th>
-                                <th class="px-4 py-3 border-b border-outline-variant/30">Diâmetro</th>
-                                <th class="px-4 py-3 border-b border-outline-variant/30">Perímetro</th>
-                                <th class="px-4 py-3 border-b border-outline-variant/30">Instalação</th>
-                                <th class="px-4 py-3 border-b border-outline-variant/30">Turno</th>
-                                <th class="px-4 py-3 border-b border-outline-variant/30">Tempo Ativo</th>
-                                <th class="px-4 py-3 border-b border-outline-variant/30">Motivo / Obs</th>
-                                <th class="px-4 py-3 border-b border-outline-variant/30">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="decapagemTableBody"></tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Decapagem: Estoque + Monthly side-by-side -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-                <!-- Estoque Decapagem -->
+            <!-- Monitoramento TM1/TM2 e Amostras -->
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                <!-- Controle de Banhos e Amostras -->
                 <section class="bg-white border border-outline-variant/60 rounded-lg overflow-hidden shadow-sm flex flex-col">
                     <div class="px-5 py-3.5 border-b border-outline-variant/40 bg-surface-bright flex justify-between items-center">
                         <h3 class="font-display text-sm font-bold text-on-surface flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[16px] text-purple-600">inventory_2</span>
-                            Estoque (Decapagem)
+                            <span class="material-symbols-outlined text-[16px] text-purple-600">science</span>
+                            Controle de Banhos (Amostras)
                         </h3>
-                        <div class="flex gap-1 bg-surface-container rounded-md p-0.5 border border-outline-variant/40">
-                            <button id="toggleDecapagemRetifica" class="inv-toggle-btn active text-[11px] font-semibold px-3 py-1 rounded transition-all">🛠️ Retífica <span id="countDecapagemRetifica" class="font-mono text-[10px] ml-1 opacity-70">0</span></button>
-                            <button id="toggleDecapagemRb1" class="inv-toggle-btn text-[11px] font-semibold px-3 py-1 rounded transition-all text-on-surface-variant">📦 RB1 <span id="countDecapagemRb1" class="font-mono text-[10px] ml-1 opacity-70">0</span></button>
+                        <div class="flex items-center gap-3">
+                            <select id="inAmostrasOperador" class="bg-surface-container-low border border-outline-variant text-[11px] font-bold text-on-surface-variant rounded px-2 py-1.5 focus:outline-none focus:border-orange-500">
+                                <option value="" disabled selected>👤 Operador</option>
+                                <option value="Abner">Abner</option>
+                                <option value="Felipe">Felipe</option>
+                                <option value="Alexandre">Alexandre</option>
+                                <option value="Israel">Israel</option>
+                                <option value="Isabel">Isabel</option>
+                                <option value="Marcone">Marcone</option>
+                                <option value="Thales">Thales</option>
+                                <option value="Sharles">Sharles</option>
+                                <option value="Leonardo">Leonardo</option>
+                            </select>
+                            <button id="btnNovaAmostra" class="bg-orange-500 hover:bg-orange-600 text-white text-[11px] font-bold px-3 py-1.5 rounded flex items-center gap-1 transition-colors">
+                                <span class="material-symbols-outlined text-[14px]">add</span> Nova Amostra
+                            </button>
                         </div>
                     </div>
-                    <div class="p-4 flex-1 min-h-[180px]">
-                        <div id="inventoryDecapagemList" class="flex flex-col gap-2"></div>
-                        <div id="inventoryDecapagemEmpty" class="text-center text-on-surface-variant/60 py-8 text-sm">
-                            <p class="font-semibold">Nenhum rolo nesta categoria</p>
-                            <span class="text-xs">Adicione rolos usando os botões no topo</span>
+                    <div class="p-5 flex-1">
+                        <!-- Eletrolítica -->
+                        <div class="mb-4">
+                            <h4 class="text-xs font-bold text-on-surface mb-2 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span> Decapagem Eletrolítica</h4>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="bg-surface-container-low rounded p-3 border border-outline-variant/50 shadow-sm">
+                                    <div class="text-[10px] font-bold text-on-surface-variant uppercase mb-1">Condutividade</div>
+                                    <div class="flex items-end gap-2">
+                                        <div class="text-2xl font-bold text-on-surface-variant/50 font-mono">--</div>
+                                        <div class="text-[11px] text-on-surface-variant/50 font-bold mb-1">--</div>
+                                    </div>
+                                </div>
+                                <div class="bg-surface-container-low rounded p-3 border border-outline-variant/50 shadow-sm">
+                                    <div class="text-[10px] font-bold text-on-surface-variant uppercase mb-1">pH</div>
+                                    <div class="flex items-end gap-2">
+                                        <div class="text-2xl font-bold text-on-surface-variant/50 font-mono">--</div>
+                                        <div class="text-[11px] text-on-surface-variant/50 font-bold mb-1">--</div>
+                                    </div>
+                                </div>
+                                <div class="bg-surface-container-low rounded p-3 border border-outline-variant/50 shadow-sm">
+                                    <div class="text-[10px] font-bold text-on-surface-variant uppercase mb-1">Ferro (Fe)</div>
+                                    <div class="flex items-end gap-2">
+                                        <div class="text-2xl font-bold text-on-surface-variant/50 font-mono">--</div>
+                                        <div class="text-[11px] text-on-surface-variant/50 font-bold mb-1">--</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Química -->
+                        <div class="mb-5">
+                            <h4 class="text-xs font-bold text-on-surface mb-2 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span> Decapagem Química</h4>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="bg-surface-container-low rounded p-3 border border-outline-variant/50 shadow-sm">
+                                    <div class="text-[10px] font-bold text-on-surface-variant uppercase mb-1">HF (Ácido Fluorídrico)</div>
+                                    <div class="flex items-end gap-2">
+                                        <div class="text-2xl font-bold text-on-surface-variant/50 font-mono">--</div>
+                                        <div class="text-[11px] text-on-surface-variant/50 font-bold mb-1">--</div>
+                                    </div>
+                                </div>
+                                <div class="bg-surface-container-low rounded p-3 border border-outline-variant/50 shadow-sm">
+                                    <div class="text-[10px] font-bold text-on-surface-variant uppercase mb-1">Ferro (Fe)</div>
+                                    <div class="flex items-end gap-2">
+                                        <div class="text-2xl font-bold text-on-surface-variant/50 font-mono">--</div>
+                                        <div class="text-[11px] text-on-surface-variant/50 font-bold mb-1">--</div>
+                                    </div>
+                                </div>
+                                <div class="bg-surface-container-low rounded p-3 border border-outline-variant/50 shadow-sm">
+                                    <div class="text-[10px] font-bold text-on-surface-variant uppercase mb-1">HNO₃ (Nítrico)</div>
+                                    <div class="flex items-end gap-2">
+                                        <div class="text-2xl font-bold text-on-surface-variant/50 font-mono">--</div>
+                                        <div class="text-[11px] text-on-surface-variant/50 font-bold mb-1">--</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-outline-variant/30 pt-4">
+                            <h4 class="text-xs font-bold text-on-surface mb-3 flex items-center gap-1"><span class="material-symbols-outlined text-[14px] text-on-surface-variant">history</span> Histórico Recente (Turno Atual)</h4>
+                            <table class="w-full text-left border-collapse text-[12px]">
+                                <thead>
+                                    <tr class="text-[10px] text-on-surface-variant uppercase border-b border-outline-variant/30">
+                                        <th class="py-2">Hora</th>
+                                        <th class="py-2">Tipo</th>
+                                        <th class="py-2">Operador</th>
+                                        <th class="py-2">Parâmetro 1</th>
+                                        <th class="py-2">Parâmetro 2</th>
+                                        <th class="py-2">Parâmetro 3</th>
+                                        <th class="py-2 text-right">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="amostrasTableBody">
+                                    <!-- Dados vazios no momento -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </section>
 
-                <!-- Trocas por Mês Decapagem -->
+                <!-- Monitoramento TM1 e TM2 -->
                 <section class="bg-white border border-outline-variant/60 rounded-lg overflow-hidden shadow-sm flex flex-col">
                     <div class="px-5 py-3.5 border-b border-outline-variant/40 bg-surface-bright flex justify-between items-center">
                         <h3 class="font-display text-sm font-bold text-on-surface flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[16px] text-purple-600">calendar_month</span>
-                            Trocas por Mês (Decapagem)
+                            <span class="material-symbols-outlined text-[16px] text-purple-600">water_drop</span>
+                            Estocagem (TM1 e TM2)
                         </h3>
-                        <div class="flex items-center gap-2">
-                            <button id="prevDecapagemYear" class="w-7 h-7 rounded-md border border-outline-variant/40 flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-all text-xs">◀</button>
-                            <span id="yearDecapagemLabel" class="font-mono font-bold text-sm min-w-[48px] text-center"></span>
-                            <button id="nextDecapagemYear" class="w-7 h-7 rounded-md border border-outline-variant/40 flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-all text-xs">▶</button>
+                        <div class="flex gap-2">
+                            <button class="border border-outline-variant hover:bg-surface-container text-on-surface text-[11px] font-bold px-3 py-1.5 rounded flex items-center gap-1 transition-colors">
+                                <span class="material-symbols-outlined text-[14px]">sync_alt</span> Movimentar
+                            </button>
                         </div>
                     </div>
-                    <div class="p-4 flex-1">
-                        <div id="monthDecapagemTabs" class="grid grid-cols-6 md:grid-cols-12 gap-2 mb-4"></div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse text-[13px]">
-                                <thead class="bg-surface-container-low/80 text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">
-                                    <tr>
-                                        <th class="px-4 py-3 border-b border-outline-variant/30">Data/Hora</th>
-                                        <th class="px-4 py-3 border-b border-outline-variant/30">Posição</th>
-                                        <th class="px-4 py-3 border-b border-outline-variant/30">Turno</th>
-                                        <th class="px-4 py-3 border-b border-outline-variant/30">Diâmetro</th>
-                                        <th class="px-4 py-3 border-b border-outline-variant/30">Motivo</th>
-                                        <th class="px-4 py-3 border-b border-outline-variant/30">Idade</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="monthDecapagemBody"></tbody>
-                            </table>
+                    <div class="p-5 flex-1 flex flex-col justify-center relative">
+                        <div class="flex justify-around items-end mt-4 pb-2">
+                            <!-- TM1 -->
+                            <div class="flex flex-col items-center gap-2 relative group">
+                                <div class="text-sm font-bold text-on-surface">Tanque TM1</div>
+                                <div class="relative w-28 h-36 border-2 border-orange-200 rounded-t flex flex-col justify-end overflow-hidden bg-white shadow-inner">
+                                    <div class="w-full bg-gradient-to-t from-orange-500 to-orange-400 relative flex items-center justify-center transition-all duration-1000" style="height: 85%;">
+                                        <span class="text-white font-bold text-sm z-10 drop-shadow-md">85%</span>
+                                    </div>
+                                </div>
+                                <div class="w-0 h-0 border-l-[56px] border-l-transparent border-r-[56px] border-r-transparent border-t-[40px] border-t-orange-200 mt-0.5 relative">
+                                    <div class="absolute -top-[40px] -left-[54px] w-0 h-0 border-l-[54px] border-l-transparent border-r-[54px] border-r-transparent border-t-[38px] border-t-orange-500"></div>
+                                </div>
+                                <div class="bg-surface-container-low border border-outline-variant/50 rounded p-2 text-center w-full mt-2">
+                                    <div class="text-[10px] text-on-surface-variant font-bold uppercase mb-1">Volume Atual</div>
+                                    <div class="text-sm font-bold text-on-surface font-mono">21.250 L</div>
+                                </div>
+                            </div>
+                            
+                            <!-- TM2 -->
+                            <div class="flex flex-col items-center gap-2 relative group">
+                                <div class="text-sm font-bold text-on-surface">Tanque TM2</div>
+                                <div class="relative w-28 h-36 border-2 border-emerald-200 rounded-t flex flex-col justify-end overflow-hidden bg-white shadow-inner">
+                                    <div class="w-full bg-gradient-to-t from-emerald-500 to-emerald-400 relative flex items-center justify-center transition-all duration-1000" style="height: 35%;">
+                                        <span class="text-white font-bold text-sm z-10 drop-shadow-md">35%</span>
+                                    </div>
+                                </div>
+                                <div class="w-0 h-0 border-l-[56px] border-l-transparent border-r-[56px] border-r-transparent border-t-[40px] border-t-emerald-200 mt-0.5 relative">
+                                    <div class="absolute -top-[40px] -left-[54px] w-0 h-0 border-l-[54px] border-l-transparent border-r-[54px] border-r-transparent border-t-[38px] border-t-emerald-500"></div>
+                                </div>
+                                <div class="bg-surface-container-low border border-outline-variant/50 rounded p-2 text-center w-full mt-2">
+                                    <div class="text-[10px] text-on-surface-variant font-bold uppercase mb-1">Volume Atual</div>
+                                    <div class="text-sm font-bold text-on-surface font-mono">8.750 L</div>
+                                </div>
+                            </div>
                         </div>
-                        <div id="monthDecapagemEmpty" class="text-center text-on-surface-variant/50 py-6 text-sm">Nenhuma troca neste mês</div>
-                        <div id="monthDecapagemSummary" class="mt-4"></div>
                     </div>
                 </section>
             </div>
+
+
         </div>
 
         <!-- ===== RB1 COMPLETA VIEW ===== -->
@@ -829,6 +884,46 @@
     </div> <!-- END DASHBOARD -->
 
     <!-- ====== MODALS ====== -->
+
+    <!-- Modal: Nova Amostra -->
+    <div class="modal-overlay" id="modalAmostra">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header"><h3>Registrar Nova Amostra</h3><button class="modal-close" id="modalAmostraClose">&times;</button></div>
+            <form id="formAmostra" class="modal-form">
+                <div class="form-group">
+                    <label>Tipo de Banho *</label>
+                    <select id="inAmostraTipo" required>
+                        <option value="">Selecione...</option>
+                        <option value="Eletrolítica">Decapagem Eletrolítica</option>
+                        <option value="Química">Decapagem Química</option>
+                    </select>
+                </div>
+                
+                <!-- Campos Eletrolítica -->
+                <div id="amostraCamposEle" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group"><label>Condutividade</label><input type="number" step="0.1" id="inAmostraCond"></div>
+                        <div class="form-group"><label>pH</label><input type="number" step="0.1" id="inAmostraPh"></div>
+                        <div class="form-group"><label>Ferro (Fe)</label><input type="number" step="0.1" id="inAmostraFeEle"></div>
+                    </div>
+                </div>
+
+                <!-- Campos Química -->
+                <div id="amostraCamposQui" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group"><label>HF</label><input type="number" step="0.1" id="inAmostraHf"></div>
+                        <div class="form-group"><label>Ferro (Fe)</label><input type="number" step="0.1" id="inAmostraFeQui"></div>
+                        <div class="form-group"><label>HNO₃</label><input type="number" step="0.1" id="inAmostraHno3"></div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-ghost" id="btnCancelAmostra">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">✓ Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Modal: Substituição -->
     <div class="modal-overlay" id="modalSub">

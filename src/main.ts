@@ -3230,7 +3230,9 @@ $('rb1CompletaDiagram')?.addEventListener('click', (e) => {
 
 
 function renderAll() {
-  renderStats();
+    renderStats();
+    renderDecapagemTanks();
+    renderAmostrasDecapagem();
   renderDecapagemStats();
   renderRb1CompletaStats();
   renderFurnace();
@@ -3655,6 +3657,7 @@ function renderHistoricoTanques() {
   if (monthTabs) {
     monthTabs.innerHTML = MN.map((m, i) => {
       const cnt = historicoTanques.filter(h => {
+        if (!h || !h.data) return false;
         const parts = h.data.split('/');
         const d = new Date(`${parts[2]}-${parts[1]}-${parts[0]}T12:00:00`);
         return d.getFullYear() === selEstocagemYear && d.getMonth() === i;
@@ -3671,6 +3674,7 @@ function renderHistoricoTanques() {
   if (!tbody) return;
   
   const data = historicoTanques.filter(h => {
+    if (!h || !h.data) return false;
     const parts = h.data.split('/');
     const d = new Date(`${parts[2]}-${parts[1]}-${parts[0]}T12:00:00`);
     return d.getFullYear() === selEstocagemYear && d.getMonth() === selEstocagemMonth;
